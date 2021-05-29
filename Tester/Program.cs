@@ -10,6 +10,8 @@ namespace Tester
         {
             const int WORKLOAD = 100000000;
 
+            Console.WriteLine("Initializing data.");
+
             double[] a = new double[WORKLOAD];
             double[] b = new double[WORKLOAD];
             double[] c = new double[WORKLOAD];
@@ -22,6 +24,8 @@ namespace Tester
                 c[i] = r.NextDouble();
             }
 
+            Console.WriteLine("Starting test.");
+
             Stopwatch s = new Stopwatch();
             s.Start();
 
@@ -30,12 +34,16 @@ namespace Tester
                 Parallel.For(0, WORKLOAD,
                     action: i =>
                 {
+                    if (i == 0)
+                        Console.WriteLine("For loop started");
+
                     a[i] = a[i] * b[i] + c[i];
-                    //Console.WriteLine(i);
                 });
             }
 
             s.Stop();
+
+            Console.WriteLine("Test ended.");
 
             Console.WriteLine("For loop took {0} milliseconds.", s.ElapsedMilliseconds / 10);
         }

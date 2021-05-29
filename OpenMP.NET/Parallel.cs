@@ -8,6 +8,8 @@ namespace OpenMP
     {
         public enum Schedule { Static, Dynamic, Guided };
 
+        private static object critical_lock = new object();
+
         private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, ref uint? num_threads)
         {
             if (num_threads == null)
@@ -35,17 +37,25 @@ namespace OpenMP
         {
             FixArgs(start, end, schedule, ref chunk_size, ref num_threads);
 
-            Console.WriteLine("Executing for loop from {0} to {1} with schedule({2},{3}) on {4} threads.",
+            /*Console.WriteLine("Executing for loop from {0} to {1} with schedule({2},{3}) on {4} threads.",
                 start,
                 end,
                 schedule == Schedule.Static ? "static" : schedule == Schedule.Dynamic ? "dynamic" : "guided",
                 chunk_size,
-                num_threads);
+                num_threads);*/
 
             Init.CreateThreadpool(start, end, schedule, chunk_size.Value, num_threads.Value, action);
             Init.StartThreadpool();
 
             Init.ws.num_threads = 1;
+        }
+
+        public static void Critical(Action action)
+        {
+            lock (critical_lock)
+            {
+                action();
+            }
         }
 
         public static int GetNumProcs()
@@ -62,7 +72,7 @@ namespace OpenMP
                 Init.ws.num_threads = 1;
                 return 1;
             }
-            
+
             return num_threads;
         }
 
