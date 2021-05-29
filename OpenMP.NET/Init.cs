@@ -16,6 +16,7 @@ namespace OpenMP
     {
         internal Thr[] threads;
         internal int start;
+        internal object ws_lock;
         internal int end;
         internal uint chunk_size;
         internal uint num_threads;
@@ -28,6 +29,7 @@ namespace OpenMP
             for (int i = 0; i < num_threads; i++)
                 threads[i] = new Thr();
             threads_complete = 0;
+            ws_lock = new object();
             this.start = start;
             this.end = end;
             this.chunk_size = chunk_size;
@@ -49,6 +51,9 @@ namespace OpenMP
                 {
                     case Parallel.Schedule.Static:
                         ws.threads[i].thread = new Thread(Iter.StaticLoop);
+                        break;
+                    case Parallel.Schedule.Dynamic:
+                        ws.threads[i].thread = new Thread(Iter.DynamicLoop);
                         break;
                 }
                 ws.threads[i].curr_iter = 0;

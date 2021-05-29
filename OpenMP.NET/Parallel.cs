@@ -21,7 +21,7 @@ namespace OpenMP
                         chunk_size = (uint)((end - start) / num_threads.Value);
                         break;
                     case Schedule.Dynamic:
-                        chunk_size = 1;
+                        chunk_size = (uint)((end - start) / num_threads.Value) / 32;
                         break;
                     case Schedule.Guided:
                         chunk_size = 1;
@@ -34,7 +34,7 @@ namespace OpenMP
         {
             FixArgs(start, end, schedule, ref chunk_size, ref num_threads);
 
-            Console.WriteLine("Executing for loop from {0} to {1} with {2},{3} scheduling on {4} threads.",
+            Console.WriteLine("Executing for loop from {0} to {1} with schedule({2},{3}) on {4} threads.",
                 start,
                 end,
                 schedule == Schedule.Static ? "static" : schedule == Schedule.Dynamic ? "dynamic" : "guided",
