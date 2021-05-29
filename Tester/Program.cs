@@ -25,18 +25,21 @@ namespace Tester
             Stopwatch s = new Stopwatch();
             s.Start();
 
-            Parallel.For(0, WORKLOAD,
-                schedule: Parallel.Schedule.Static,
-                num_threads: 8,
-                chunk_size: 128,
-                action: i =>
+            for (int i = 0; i < 10; i++)
             {
-                a[i] = a[i] * b[i] + c[i];
-            });
+                Parallel.For(0, WORKLOAD,
+                    schedule: Parallel.Schedule.Dynamic,
+                    num_threads: 8,
+                    chunk_size: 1000,
+                    action: i =>
+                {
+                    a[i] = a[i] * b[i] + c[i];
+                });
+            }
 
             s.Stop();
 
-            Console.WriteLine("For loop took {0} milliseconds.", s.ElapsedMilliseconds);
+            Console.WriteLine("For loop took {0} milliseconds.", s.ElapsedMilliseconds / 10);
         }
     }
 }
