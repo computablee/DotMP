@@ -32,12 +32,12 @@ namespace Tester
             for (int i = 0; i < 10; i++)
             {
                 Parallel.For(0, WORKLOAD,
-                    action: i =>
+                    action: j =>
                 {
-                    if (i == 0)
-                        Console.WriteLine("For loop started");
+                    //if (j == 0)
+                    //    Console.WriteLine("For loop {0} started.", i);
 
-                    a[i] = a[i] * b[i] + c[i];
+                    a[j] = a[j] * b[j] + c[j];
                 });
             }
 
