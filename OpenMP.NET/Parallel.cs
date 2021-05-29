@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenMP;
+using System.Threading;
 
 namespace OpenMP
 {
@@ -43,11 +44,31 @@ namespace OpenMP
 
             Init.CreateThreadpool(start, end, schedule, chunk_size.Value, num_threads.Value, action);
             Init.StartThreadpool();
+
+            Init.ws.num_threads = 1;
         }
 
         public static int GetNumProcs()
         {
             return Environment.ProcessorCount;
+        }
+
+        public static int GetNumThreads()
+        {
+            int num_threads = (int)Init.ws.num_threads;
+
+            if (num_threads == 0)
+            {
+                Init.ws.num_threads = 1;
+                return 1;
+            }
+            
+            return num_threads;
+        }
+
+        public static int GetThreadNum()
+        {
+            return Convert.ToInt32(Thread.CurrentThread.Name);
         }
     }
 }

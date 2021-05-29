@@ -59,6 +59,7 @@ namespace OpenMP
                         ws.threads[i].thread = new Thread(Iter.GuidedLoop);
                         break;
                 }
+                ws.threads[i].thread.Name = i.ToString();
                 ws.threads[i].curr_iter = 0;
             }
         }
