@@ -55,6 +55,9 @@ namespace OpenMP
                     case Parallel.Schedule.Dynamic:
                         ws.threads[i].thread = new Thread(Iter.DynamicLoop);
                         break;
+                    case Parallel.Schedule.Guided:
+                        ws.threads[i].thread = new Thread(Iter.GuidedLoop);
+                        break;
                 }
                 ws.threads[i].curr_iter = 0;
             }

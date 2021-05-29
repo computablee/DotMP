@@ -66,5 +66,38 @@ namespace OpenMP
                 omp_fn(i);
             }
         }
+
+        internal static void GuidedLoop(object thread_id)
+        {
+            int tid = (int)thread_id;
+            Thr thr = Init.ws.threads[tid];
+            int end = Init.ws.end;
+
+            while (Init.ws.start < end)
+            {
+                GuidedNext();
+            }
+        }
+
+        private static void GuidedNext()
+        {
+            int chunk_start, chunk_size;
+
+            lock (Init.ws.ws_lock)
+            {
+                chunk_start = Init.ws.start;
+                chunk_size = (int)Math.Max(Init.ws.chunk_size, (Init.ws.end - chunk_start) / Init.ws.num_threads);
+                Init.ws.start += chunk_size;
+            }
+
+            int chunk_end = (int)Math.Min(chunk_start + chunk_size, Init.ws.end);
+            Action<int> omp_fn = Init.ws.omp_fn;
+
+            for (int i = chunk_start; i < chunk_end; i++)
+            {
+                //Console.WriteLine("Executing iteration {0} on thread {1}.", i, thread_id);
+                omp_fn(i);
+            }
+        }
     }
 }
