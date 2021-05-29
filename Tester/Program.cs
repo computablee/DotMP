@@ -9,6 +9,7 @@ namespace Tester
         static void Main(string[] args)
         {
             const int WORKLOAD = 100000000;
+            const int FORITERS = 10;
 
             Console.WriteLine("Initializing data.");
 
@@ -29,9 +30,10 @@ namespace Tester
             Stopwatch s = new Stopwatch();
             s.Start();
 
-            for (int i = 0; i < 10; i++)
+            for (int i = 0; i < FORITERS; i++)
             {
                 Parallel.For(0, WORKLOAD,
+                    num_threads: 8,
                     action: j =>
                 {
                     //if (j == 0)
@@ -45,7 +47,7 @@ namespace Tester
 
             Console.WriteLine("Test ended.");
 
-            Console.WriteLine("For loop took {0} milliseconds.", s.ElapsedMilliseconds / 10);
+            Console.WriteLine("For loop took {0} milliseconds.", s.ElapsedMilliseconds / FORITERS);
         }
     }
 }
