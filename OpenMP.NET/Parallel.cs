@@ -31,7 +31,7 @@ namespace OpenMP
             }
         }
 
-        public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Dynamic, uint? chunk_size = null, uint? num_threads = null)
         {
             FixArgs(start, end, schedule, ref chunk_size, ref num_threads);
 

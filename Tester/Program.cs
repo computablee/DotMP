@@ -28,9 +28,6 @@ namespace Tester
             for (int i = 0; i < 10; i++)
             {
                 Parallel.For(0, WORKLOAD,
-                    schedule: Parallel.Schedule.Guided,
-                    num_threads: 4,
-                    //chunk_size: 1000,
                     action: i =>
                 {
                     a[i] = a[i] * b[i] + c[i];
