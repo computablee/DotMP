@@ -8,21 +8,21 @@ namespace Tester
     {
         static void Main(string[] args)
         {
-            const int WORKLOAD = 100000000;
+            const int WORKLOAD = 200000000;
             const int FORITERS = 10;
 
             Console.WriteLine("Initializing data.");
 
-            double[] a = new double[WORKLOAD];
-            double[] b = new double[WORKLOAD];
-            double[] c = new double[WORKLOAD];
+            float[] a = new float[WORKLOAD];
+            float[] b = new float[WORKLOAD];
+            float[] c = new float[WORKLOAD];
             Random r = new Random();
 
             for (int i = 0; i < WORKLOAD; i++)
             {
-                a[i] = r.NextDouble();
-                b[i] = r.NextDouble();
-                c[i] = r.NextDouble();
+                a[i] = (float)r.NextDouble();
+                b[i] = (float)r.NextDouble();
+                c[i] = (float)r.NextDouble();
             }
 
             Console.WriteLine("Starting test.");
@@ -33,7 +33,7 @@ namespace Tester
             for (int i = 0; i < FORITERS; i++)
             {
                 Parallel.For(0, WORKLOAD,
-                    num_threads: 8,
+                    num_threads: 4,
                     action: j =>
                 {
                     //if (j == 0)
