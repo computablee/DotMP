@@ -45,7 +45,12 @@ namespace OpenMP
             ws = new WorkShare(num_threads, start, end, chunk_size, omp_fn);
             for (int i = 0; i < num_threads; i++)
             {
-                ws.threads[i].thread = new Thread(Iter.StaticLoop);
+                switch (sched)
+                {
+                    case Parallel.Schedule.Static:
+                        ws.threads[i].thread = new Thread(Iter.StaticLoop);
+                        break;
+                }
                 ws.threads[i].curr_iter = 0;
             }
         }
