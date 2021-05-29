@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Text;
+using System.Threading;
 
 namespace OpenMP
 {
@@ -15,13 +15,15 @@ namespace OpenMP
 
             while (thr.curr_iter < Init.ws.end)
                 StaticNext(thr, tid);
+
+            Interlocked.Add(ref Init.ws.threads_complete, 1);
         }
 
         private static void StaticNext(Thr thr, int thread_id)
         {
             for (int i = thr.curr_iter; i < Math.Min(thr.curr_iter + Init.ws.chunk_size, Init.ws.end); i++)
             {
-                Console.WriteLine("Executing iteration {0} on thread {1}.", i, thread_id);
+                //Console.WriteLine("Executing iteration {0} on thread {1}.", i, thread_id);
                 Init.ws.omp_fn(i);
             }
 

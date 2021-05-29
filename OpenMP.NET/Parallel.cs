@@ -30,18 +30,18 @@ namespace OpenMP
             }
         }
 
-        public static void For(int start, int end, Action<int> omp_fn, Schedule sched = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
         {
-            FixArgs(start, end, sched, ref chunk_size, ref num_threads);
+            FixArgs(start, end, schedule, ref chunk_size, ref num_threads);
 
             Console.WriteLine("Executing for loop from {0} to {1} with {2},{3} scheduling on {4} threads.",
                 start,
                 end,
-                sched == Schedule.Static ? "static" : sched == Schedule.Dynamic ? "dynamic" : "guided",
+                schedule == Schedule.Static ? "static" : schedule == Schedule.Dynamic ? "dynamic" : "guided",
                 chunk_size,
                 num_threads);
 
-            Init.CreateThreadpool(start, end, sched, chunk_size.Value, num_threads.Value, omp_fn);
+            Init.CreateThreadpool(start, end, schedule, chunk_size.Value, num_threads.Value, action);
             Init.StartThreadpool();
         }
 

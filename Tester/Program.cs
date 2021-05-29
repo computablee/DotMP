@@ -7,11 +7,13 @@ namespace Tester
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            Parallel.For(0, 100, i =>
+            Parallel.For(0, 100,
+                schedule: Parallel.Schedule.Static,
+                num_threads: 8,
+                action: i =>
             {
-                //Console.WriteLine(i);
-            }, Parallel.Schedule.Static, chunk_size: 5, num_threads: 2);
+                Console.WriteLine(i);
+            });
         }
     }
 }

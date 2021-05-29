@@ -20,12 +20,14 @@ namespace OpenMP
         internal uint chunk_size;
         internal uint num_threads;
         internal Action<int> omp_fn;
+        volatile internal int threads_complete;
 
         internal WorkShare(uint num_threads, int start, int end, uint chunk_size, Action<int> omp_fn)
         {
             threads = new Thr[num_threads];
             for (int i = 0; i < num_threads; i++)
                 threads[i] = new Thr();
+            threads_complete = 0;
             this.start = start;
             this.end = end;
             this.chunk_size = chunk_size;
@@ -52,6 +54,9 @@ namespace OpenMP
         {
             for (int i = 0; i < ws.num_threads; i++)
                 ws.threads[i].thread.Start(i);
+
+            for (int i = 0; i < ws.num_threads; i++)
+                ws.threads[i].thread.Join();
         }
     }
 }
