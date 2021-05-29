@@ -1,4 +1,5 @@
 ﻿using System;
+using OpenMP;
 
 namespace OpenMP
 {
@@ -9,7 +10,7 @@ namespace OpenMP
         private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, ref uint? num_threads)
         {
             if (num_threads == null)
-                num_threads = (uint)GetNumThreads();
+                num_threads = (uint)GetNumProcs();
 
 
             if (chunk_size == null)
@@ -39,9 +40,12 @@ namespace OpenMP
                 sched == Schedule.Static ? "static" : sched == Schedule.Dynamic ? "dynamic" : "guided",
                 chunk_size,
                 num_threads);
+
+            Init.CreateThreadpool(start, end, sched, chunk_size.Value, num_threads.Value, omp_fn);
+            Init.StartThreadpool();
         }
 
-        public static int GetNumThreads()
+        public static int GetNumProcs()
         {
             return Environment.ProcessorCount;
         }
