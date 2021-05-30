@@ -25,6 +25,7 @@ namespace OpenMP
                         break;
                     case Schedule.Dynamic:
                         chunk_size = (uint)((end - start) / num_threads.Value) / 32;
+                        if (chunk_size < 1) chunk_size = 1;
                         break;
                     case Schedule.Guided:
                         chunk_size = 1;
