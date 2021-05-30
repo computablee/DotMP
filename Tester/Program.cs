@@ -8,8 +8,8 @@ namespace Tester
     {
         static void Main(string[] args)
         {
-            const int WORKLOAD = 200000000;
-            const int FORITERS = 10;
+            const int WORKLOAD = 1_000_000;
+            const int FORITERS = 20;
 
             Console.WriteLine("Initializing data.");
 
@@ -36,10 +36,12 @@ namespace Tester
                     num_threads: 4,
                     action: j =>
                 {
-                    //if (j == 0)
-                    //    Console.WriteLine("For loop {0} started.", i);
-
-                    a[j] = a[j] * b[j] + c[j];
+                    a[j] = (a[j] * b[j] + c[j]) / c[j];
+                    while (a[j] > 1000 || a[j] < -1000)
+                        a[j] /= 10;
+                    int temp = Convert.ToInt32(a[j]);
+                    for (int i = 0; i < temp; i++)
+                        a[j] += i;
                 });
             }
 
