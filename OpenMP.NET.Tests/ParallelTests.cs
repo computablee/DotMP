@@ -1,6 +1,7 @@
 ﻿using FluentAssertions;
 using System;
 using System.Diagnostics;
+using System.Threading;
 using Xunit;
 
 namespace OpenMP.NET.Tests
@@ -14,6 +15,60 @@ namespace OpenMP.NET.Tests
             var elapsedSeries = Workload(false);
 
             elapsedParallel.Should().BeLessThan(elapsedSeries);
+        }
+
+        [Fact]
+        public void Parallel_should_work()
+        {
+            var expected = 1024u;
+            var actual = CreateRegion(expected);
+
+            actual.Should().Be(expected);
+        }
+
+        [Fact]
+        public void Parallelfor_should_work()
+        {
+            int workload = 4096;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+            }
+
+            float[] z = saxpy_parallelregion_for(2.0f, x, y);
+            float[] z2 = saxpy_parallelfor(2.0f, x, y);
+
+            for (int i = 0; i < z.Length; i++)
+            {
+                z[i].Should().Be(z2[i]);
+            }
+        }
+
+        [Fact]
+        public void Static_should_produce_correct_results()
+        {
+            int workload = 4096;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+            }
+
+            float[] z = saxpy_parallelregion_for(2.0f, x, y);
+
+            for (int i = 0; i < z.Length; i++)
+            {
+                z[i].Should().Be(3.0f);
+            }
         }
 
         private static long Workload(bool inParallel)
@@ -41,8 +96,7 @@ namespace OpenMP.NET.Tests
             {
                 if (inParallel)
                 {
-                    Parallel.For(0, WORKLOAD,
-                        num_threads: 4,
+                    Parallel.ParallelFor(0, WORKLOAD, schedule: Parallel.Schedule.Dynamic,
                         action: j => InnerWorkload(j, a, b, c));
                 }
                 else
@@ -66,6 +120,45 @@ namespace OpenMP.NET.Tests
             int temp = Convert.ToInt32(a[j]);
             for (int i = 0; i < temp; i++)
                 a[j] += i;
+        }
+
+        private static uint CreateRegion(uint threads)
+        {
+            uint threads_spawned = 0;
+
+            Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                Interlocked.Add(ref threads_spawned, 1);
+            });
+
+            return threads_spawned;
+        }
+
+        float[] saxpy_parallelregion_for(float a, float[] x, float[] y)
+        {
+            float[] z = new float[x.Length];
+
+            Parallel.ParallelRegion(num_threads: 4, action: () =>
+            {
+                Parallel.For(0, x.Length, schedule: Parallel.Schedule.Static, action: i =>
+                {
+                    z[i] = a * x[i] + y[i];
+                });
+            });
+
+            return z;
+        }
+
+        float[] saxpy_parallelfor(float a, float[] x, float[] y)
+        {
+            float[] z = new float[x.Length];
+
+            Parallel.ParallelFor(0, x.Length, schedule: Parallel.Schedule.Static, num_threads: 4, action: i =>
+            {
+                z[i] = a * x[i] + y[i];
+            });
+
+            return z;
         }
     }
 }
