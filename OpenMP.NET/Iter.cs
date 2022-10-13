@@ -45,6 +45,8 @@ namespace OpenMP
             {
                 DynamicNext();
             }
+
+            Interlocked.Add(ref Init.ws.threads_complete, 1);
         }
 
         private static void DynamicNext()
@@ -77,6 +79,8 @@ namespace OpenMP
             {
                 GuidedNext();
             }
+
+            Interlocked.Add(ref Init.ws.threads_complete, 1);
         }
 
         private static void GuidedNext()

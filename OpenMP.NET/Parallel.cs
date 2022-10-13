@@ -38,7 +38,7 @@ namespace OpenMP
 
             if (GetThreadNum() == 0)
             {
-
+                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads);
                 Init.ws.start = start;
                 Init.ws.end = end;
                 Init.ws.chunk_size = chunk_size.Value;
@@ -64,7 +64,8 @@ namespace OpenMP
             while (Init.ws.threads_complete < GetNumThreads()) ;
 
             Init.ws.num_threads = 1;
-            init_is_finished = false;
+
+            if (GetThreadNum() == 0) init_is_finished = false;
         }
 
         public static void ParallelRegion(Action action, uint? num_threads = null)
@@ -72,7 +73,6 @@ namespace OpenMP
             num_threads ??= (uint)GetNumProcs();
 
             ForkedRegion.CreateThreadpool(num_threads.Value, action);
-            Init.ws = new WorkShare(num_threads.Value, ForkedRegion.ws.threads);
             ForkedRegion.StartThreadpool();
         }
 
@@ -101,7 +101,7 @@ namespace OpenMP
 
         public static int GetNumThreads()
         {
-            int num_threads = (int)Init.ws.num_threads;
+            int num_threads = (int)ForkedRegion.ws.num_threads;
 
             if (num_threads == 0)
             {
