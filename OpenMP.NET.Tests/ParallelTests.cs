@@ -77,16 +77,19 @@ namespace OpenMP.NET.Tests
             uint threads = 1024;
             int total = 0;
             int one = critical_ids(false);
+            Parallel.__reset_lambda_memory();
             int two = critical_ids(true);
+            Parallel.__reset_lambda_memory();
 
             OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
                 int id = OpenMP.Parallel.Critical(() => ++total);
-                id.Should().Be(4);
+                id.Should().Be(1);
             });
+            Parallel.__reset_lambda_memory();
 
             one.Should().Be(1);
-            two.Should().Be(3);
+            two.Should().Be(2);
             threads.Should().Be((uint)total);
         }
 
@@ -188,22 +191,25 @@ namespace OpenMP.NET.Tests
             int x, y;
             x = y = 0;
 
-            OpenMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+            for (int i = 0; i < 5; i++)
             {
-                int id1 = OpenMP.Parallel.Critical(() => ++x);
-                int id2 = -1;
-
-                if (two_regions)
+                OpenMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
                 {
-                    id2 = OpenMP.Parallel.Critical(() => ++y);
-                }
+                    int id1 = OpenMP.Parallel.Critical(() => ++x);
+                    int id2 = -1;
 
-                lock (mylock)
-                {
-                    found_critical_regions = Math.Max(found_critical_regions, id1);
-                    found_critical_regions = Math.Max(found_critical_regions, id2);
-                }
-            });
+                    if (two_regions)
+                    {
+                        id2 = OpenMP.Parallel.Critical(() => ++y);
+                    }
+
+                    lock (mylock)
+                    {
+                        found_critical_regions = Math.Max(found_critical_regions, id1);
+                        found_critical_regions = Math.Max(found_critical_regions, id2);
+                    }
+                });
+            }
 
             return found_critical_regions;
         }
