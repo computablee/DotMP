@@ -34,6 +34,7 @@ namespace OpenMP
 
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
+            SpinWait spin = new SpinWait();
             FixArgs(start, end, schedule, ref chunk_size, GetNumThreads());
 
             if (GetThreadNum() == 0)
@@ -46,7 +47,7 @@ namespace OpenMP
                 init_is_finished = true;
             }
 
-            while (!init_is_finished) ;
+            while (!init_is_finished) spin.SpinOnce();
 
             switch (schedule)
             {
@@ -61,7 +62,7 @@ namespace OpenMP
                     break;
             }
 
-            while (Init.ws.threads_complete < GetNumThreads()) ;
+            while (Init.ws.threads_complete < GetNumThreads()) spin.SpinOnce();
 
             Init.ws.num_threads = 1;
 
