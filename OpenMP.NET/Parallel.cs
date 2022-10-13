@@ -7,10 +7,8 @@ namespace OpenMP
     public static class Parallel
     {
         public enum Schedule { Static, Dynamic, Guided };
-
         private static object critical_lock = new object();
-
-        private static volatile bool init_is_finished = false;
+        private static volatile Barrier barrier;
 
         private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, int num_threads)
         {
@@ -34,7 +32,6 @@ namespace OpenMP
 
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
-            SpinWait spin = new SpinWait();
             FixArgs(start, end, schedule, ref chunk_size, GetNumThreads());
 
             if (GetThreadNum() == 0)
@@ -44,10 +41,9 @@ namespace OpenMP
                 Init.ws.end = end;
                 Init.ws.chunk_size = chunk_size.Value;
                 Init.ws.omp_fn = action;
-                init_is_finished = true;
             }
 
-            while (!init_is_finished) spin.SpinOnce();
+            Barrier();
 
             switch (schedule)
             {
@@ -62,11 +58,7 @@ namespace OpenMP
                     break;
             }
 
-            while (Init.ws.threads_complete < GetNumThreads()) spin.SpinOnce();
-
-            Init.ws.num_threads = 1;
-
-            if (GetThreadNum() == 0) init_is_finished = false;
+            Barrier();
         }
 
         public static void ParallelRegion(Action action, uint? num_threads = null)
@@ -74,6 +66,7 @@ namespace OpenMP
             num_threads ??= (uint)GetNumProcs();
 
             ForkedRegion.CreateThreadpool(num_threads.Value, action);
+            barrier = new Barrier((int)num_threads.Value);
             ForkedRegion.StartThreadpool();
         }
 
@@ -95,6 +88,11 @@ namespace OpenMP
             }
         }
 
+        public static void Barrier()
+        {
+            barrier.SignalAndWait();
+        }
+
         public static int GetNumProcs()
         {
             return Environment.ProcessorCount;
@@ -106,7 +104,7 @@ namespace OpenMP
 
             if (num_threads == 0)
             {
-                Init.ws.num_threads = 1;
+                ForkedRegion.ws.num_threads = 1;
                 return 1;
             }
 

@@ -9,6 +9,7 @@ namespace OpenMP
         internal object ws_lock;
         internal uint num_threads;
         internal Action omp_fn;
+        internal SpinWait[] spin;
 
         internal Region(uint num_threads, Action omp_fn)
         {
@@ -18,6 +19,9 @@ namespace OpenMP
             ws_lock = new object();
             this.num_threads = num_threads;
             this.omp_fn = omp_fn;
+            this.spin = new SpinWait[num_threads];
+            for (int i = 0; i < num_threads; i++)
+                this.spin[i] = new SpinWait();
         }
     }
 
