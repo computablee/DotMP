@@ -133,5 +133,11 @@ namespace OpenMP
         {
             return Convert.ToInt32(Thread.CurrentThread.Name);
         }
+
+        public static void __reset_lambda_memory()
+        {
+            critical_lock.Clear();
+            found_criticals = 0;
+        }
     }
 }

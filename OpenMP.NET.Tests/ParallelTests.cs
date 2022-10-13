@@ -198,16 +198,19 @@ namespace OpenMP.NET.Tests
                     int id1 = OpenMP.Parallel.Critical(() => ++x);
                     int id2 = -1;
 
-                    if (two_regions)
+                    OpenMP.Parallel.For(0, 100, schedule: OpenMP.Parallel.Schedule.Static, action: j =>
                     {
-                        id2 = OpenMP.Parallel.Critical(() => ++y);
-                    }
+                        if (two_regions)
+                        {
+                            id2 = OpenMP.Parallel.Critical(() => ++y);
+                        }
 
-                    lock (mylock)
-                    {
-                        found_critical_regions = Math.Max(found_critical_regions, id1);
-                        found_critical_regions = Math.Max(found_critical_regions, id2);
-                    }
+                        lock (mylock)
+                        {
+                            found_critical_regions = Math.Max(found_critical_regions, id1);
+                            found_critical_regions = Math.Max(found_critical_regions, id2);
+                        }
+                    });
                 });
             }
 
