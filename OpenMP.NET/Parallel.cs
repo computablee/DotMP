@@ -1,5 +1,6 @@
 ﻿using System;
 using OpenMP;
+using System.Collections.Generic;
 using System.Threading;
 
 namespace OpenMP
@@ -7,7 +8,8 @@ namespace OpenMP
     public static class Parallel
     {
         public enum Schedule { Static, Dynamic, Guided };
-        private static object critical_lock = new object();
+        private static Dictionary<Action, (int, object)> critical_lock = new Dictionary<Action, (int, object)>();
+        private static int found_criticals = 0;
         private static volatile Barrier barrier;
 
         private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, int num_threads)
@@ -81,12 +83,27 @@ namespace OpenMP
             });
         }
 
-        public static void Critical(Action action)
+        public static int Critical(Action action)
         {
+            int id;
+            object lock_obj;
+
             lock (critical_lock)
+            {
+                if (!critical_lock.ContainsKey(action))
+                {
+                    critical_lock.Add(action, (++found_criticals, new object()));
+                }
+
+                (id, lock_obj) = critical_lock[action];
+            }
+
+            lock (lock_obj)
             {
                 action();
             }
+
+            return id;
         }
 
         public static void Barrier()

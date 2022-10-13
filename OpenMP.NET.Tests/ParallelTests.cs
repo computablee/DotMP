@@ -71,6 +71,25 @@ namespace OpenMP.NET.Tests
             }
         }
 
+        [Fact]
+        public void Critical_works()
+        {
+            uint threads = 1024;
+            int total = 0;
+            int one = critical_ids(false);
+            int two = critical_ids(true);
+
+            OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                int id = OpenMP.Parallel.Critical(() => ++total);
+                id.Should().Be(4);
+            });
+
+            one.Should().Be(1);
+            two.Should().Be(3);
+            threads.Should().Be((uint)total);
+        }
+
         private static long Workload(bool inParallel)
         {
             const int WORKLOAD = 1_000_000;
@@ -159,6 +178,34 @@ namespace OpenMP.NET.Tests
             });
 
             return z;
+        }
+
+        int critical_ids(bool two_regions)
+        {
+            object mylock = new object();
+            int found_critical_regions = 0;
+
+            int x, y;
+            x = y = 0;
+
+            OpenMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+            {
+                int id1 = OpenMP.Parallel.Critical(() => ++x);
+                int id2 = -1;
+
+                if (two_regions)
+                {
+                    id2 = OpenMP.Parallel.Critical(() => ++y);
+                }
+
+                lock (mylock)
+                {
+                    found_critical_regions = Math.Max(found_critical_regions, id1);
+                    found_critical_regions = Math.Max(found_critical_regions, id2);
+                }
+            });
+
+            return found_critical_regions;
         }
     }
 }
