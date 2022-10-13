@@ -10,6 +10,8 @@ namespace OpenMP
 
         private static object critical_lock = new object();
 
+        private static volatile bool init_is_finished = false;
+
         private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, int num_threads)
         {
             if (chunk_size == null)
@@ -34,13 +36,17 @@ namespace OpenMP
         {
             FixArgs(start, end, schedule, ref chunk_size, GetNumThreads());
 
-            for (int i = 0; i < GetNumThreads(); i++)
+            if (GetThreadNum() == 0)
             {
+
                 Init.ws.start = start;
                 Init.ws.end = end;
                 Init.ws.chunk_size = chunk_size.Value;
                 Init.ws.omp_fn = action;
+                init_is_finished = true;
             }
+
+            while (!init_is_finished) ;
 
             switch (schedule)
             {
@@ -55,7 +61,10 @@ namespace OpenMP
                     break;
             }
 
+            while (Init.ws.threads_complete < GetNumThreads()) ;
+
             Init.ws.num_threads = 1;
+            init_is_finished = false;
         }
 
         public static void ParallelRegion(Action action, uint? num_threads = null)
