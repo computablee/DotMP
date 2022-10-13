@@ -10,20 +10,17 @@ namespace OpenMP
 
         private static object critical_lock = new object();
 
-        private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, ref uint? num_threads)
+        private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, int num_threads)
         {
-            num_threads ??= (uint)GetNumProcs();
-
-
             if (chunk_size == null)
             {
                 switch (sched)
                 {
                     case Schedule.Static:
-                        chunk_size = (uint)((end - start) / num_threads.Value);
+                        chunk_size = (uint)((end - start) / num_threads);
                         break;
                     case Schedule.Dynamic:
-                        chunk_size = (uint)((end - start) / num_threads.Value) / 32;
+                        chunk_size = (uint)((end - start) / num_threads) / 32;
                         if (chunk_size < 1) chunk_size = 1;
                         break;
                     case Schedule.Guided:
@@ -33,21 +30,51 @@ namespace OpenMP
             }
         }
 
-        public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Dynamic, uint? chunk_size = null, uint? num_threads = null)
+        public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
-            FixArgs(start, end, schedule, ref chunk_size, ref num_threads);
+            FixArgs(start, end, schedule, ref chunk_size, GetNumThreads());
 
-            /*Console.WriteLine("Executing for loop from {0} to {1} with schedule({2},{3}) on {4} threads.",
-                start,
-                end,
-                schedule == Schedule.Static ? "static" : schedule == Schedule.Dynamic ? "dynamic" : "guided",
-                chunk_size,
-                num_threads);*/
+            for (int i = 0; i < GetNumThreads(); i++)
+            {
+                Init.ws.start = start;
+                Init.ws.end = end;
+                Init.ws.chunk_size = chunk_size.Value;
+                Init.ws.omp_fn = action;
+            }
 
-            Init.CreateThreadpool(start, end, schedule, chunk_size.Value, num_threads.Value, action);
-            Init.StartThreadpool();
+            switch (schedule)
+            {
+                case Schedule.Static:
+                    Iter.StaticLoop(GetThreadNum());
+                    break;
+                case Schedule.Dynamic:
+                    Iter.DynamicLoop(GetThreadNum());
+                    break;
+                case Schedule.Guided:
+                    Iter.GuidedLoop(GetThreadNum());
+                    break;
+            }
 
             Init.ws.num_threads = 1;
+        }
+
+        public static void ParallelRegion(Action action, uint? num_threads = null)
+        {
+            num_threads ??= (uint)GetNumProcs();
+
+            ForkedRegion.CreateThreadpool(num_threads.Value, action);
+            Init.ws = new WorkShare(num_threads.Value, ForkedRegion.ws.threads);
+            ForkedRegion.StartThreadpool();
+        }
+
+        public static void ParallelFor(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        {
+            num_threads ??= (uint)GetNumProcs();
+
+            ParallelRegion(num_threads: num_threads.Value, action: () =>
+            {
+                For(start, end, action, schedule, chunk_size);
+            });
         }
 
         public static void Critical(Action action)
