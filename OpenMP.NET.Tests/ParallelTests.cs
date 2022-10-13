@@ -96,7 +96,7 @@ namespace OpenMP.NET.Tests
             {
                 if (inParallel)
                 {
-                    Parallel.ParallelFor(0, WORKLOAD, schedule: Parallel.Schedule.Dynamic,
+                    Parallel.ParallelFor(0, WORKLOAD, schedule: Parallel.Schedule.Guided,
                         action: j => InnerWorkload(j, a, b, c));
                 }
                 else
@@ -140,7 +140,7 @@ namespace OpenMP.NET.Tests
 
             Parallel.ParallelRegion(num_threads: 4, action: () =>
             {
-                Parallel.For(0, x.Length, schedule: Parallel.Schedule.Static, action: i =>
+                Parallel.For(0, x.Length, schedule: Parallel.Schedule.Guided, action: i =>
                 {
                     z[i] = a * x[i] + y[i];
                 });
@@ -153,7 +153,7 @@ namespace OpenMP.NET.Tests
         {
             float[] z = new float[x.Length];
 
-            Parallel.ParallelFor(0, x.Length, schedule: Parallel.Schedule.Static, num_threads: 4, action: i =>
+            Parallel.ParallelFor(0, x.Length, schedule: Parallel.Schedule.Guided, num_threads: 4, action: i =>
             {
                 z[i] = a * x[i] + y[i];
             });
