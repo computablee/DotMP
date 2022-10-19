@@ -163,6 +163,7 @@ namespace OpenMP
         public static void __reset_lambda_memory()
         {
             critical_lock.Clear();
+            single_thread.Clear();
             found_criticals = 0;
         }
     }
