@@ -71,6 +71,7 @@ namespace OpenMP
             barrier = new Barrier((int)num_threads.Value);
             ForkedRegion.StartThreadpool();
             ForkedRegion.ws.num_threads = 1;
+            barrier = new Barrier(1);
         }
 
         public static void ParallelFor(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
