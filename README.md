@@ -90,6 +90,34 @@ OpenMP.NET provides:
 OpenMP.Parallel.Barrier();
 ```
 
+## Atomics
+
+OpenMP atomics are implemented as follows:
+```c
+#pragma omp atomic
+a op b;
+```
+where `op` is some supported operator.
+
+OpenMP.NET supports a subset of this for the `int`, `uint`, `long`, and `ulong` types.
+The only implemented atomic operations are `a += b`, `a &= b`, `a |= b`, `++a`, and `--a`.
+`a -= b` is implemented, but for signed types only, due to restrictions interfacting with C#'s `Interlocked` class.
+
+The following table documents the supported atomics:
+
+| Operation | OpenMP.NET function           |
+------------|--------------------------------
+| `a += b`  | `OpenMP.Atomic.Add(ref a, b)` |
+| `a -= b`  | `OpenMP.Atomic.Sub(ref a, b)` |
+| `a &= b`  | `OpenMP.Atomic.And(ref a, b)` |
+| `a \|= b` | `OpenMP.Atomic.Or(ref a, b)`  |
+| `++a`     | `OpenMP.Atomic.Inc(ref a)`    |
+| `--a`     | `OpenMP.Atomic.Dec(ref a)`    |
+
+For atomic operations like compare-exchange, we recommend interfacting directly with `System.Threading.Interlocked`.
+For non-supported atomic operations or types, we recommend using `OpenMP.Parallel.Critical`.
+This is more of a limitation of the underlying hardware than anything.
+
 ## Supported Functions
 
 OpenMP provides an analog of the following functions:
