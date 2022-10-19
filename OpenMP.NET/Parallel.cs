@@ -9,6 +9,7 @@ namespace OpenMP
     {
         public enum Schedule { Static, Dynamic, Guided };
         private static volatile Dictionary<int, (int, object)> critical_lock = new Dictionary<int, (int, object)>();
+        private static volatile Dictionary<int, int> single_thread = new Dictionary<int, int>();
         private static volatile int found_criticals = 0;
         private static volatile Barrier barrier;
 
@@ -71,6 +72,7 @@ namespace OpenMP
             barrier = new Barrier((int)num_threads.Value);
             ForkedRegion.StartThreadpool();
             ForkedRegion.ws.num_threads = 1;
+            barrier = new Barrier(1);
         }
 
         public static void ParallelFor(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
@@ -116,6 +118,30 @@ namespace OpenMP
             return Environment.ProcessorCount;
         }
 
+        public static void Master(Action action)
+        {
+            if (GetThreadNum() == 0)
+            {
+                action();
+            }
+        }
+
+        public static void Single(Action action)
+        {
+            lock (single_thread)
+            {
+                if (!single_thread.ContainsKey(action.GetHashCode()))
+                {
+                    single_thread.Add(action.GetHashCode(), GetThreadNum());
+                }
+            }
+
+            if (single_thread[action.GetHashCode()] == GetThreadNum())
+            {
+                action();
+            }
+        }
+
         public static int GetNumThreads()
         {
             int num_threads = (int)ForkedRegion.ws.num_threads;
@@ -137,6 +163,7 @@ namespace OpenMP
         public static void __reset_lambda_memory()
         {
             critical_lock.Clear();
+            single_thread.Clear();
             found_criticals = 0;
         }
     }

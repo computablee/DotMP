@@ -90,6 +90,51 @@ namespace OpenMP.NET.Tests
             threads.Should().Be((uint)total);
         }
 
+        [Fact]
+        public void Master_works()
+        {
+            uint threads = 1024;
+            int total = 0;
+
+            OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                OpenMP.Parallel.Master(() => ++total);
+            });
+
+            total.Should().Be(1);
+        }
+
+        [Fact]
+        public void Single_works()
+        {
+            uint threads = 1024;
+            int total = 0;
+
+            OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                OpenMP.Parallel.Single(() => ++total);
+            });
+
+            total.Should().Be(1);
+        }
+
+        [Fact]
+        public void Atomic_works()
+        {
+            uint threads = 1024;
+            uint total = 0;
+            long total2 = 0;
+
+            OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                OpenMP.Atomic.Inc(ref total);
+                OpenMP.Atomic.Sub(ref total2, 2);
+            });
+
+            total.Should().Be(threads);
+            total2.Should().Be(-threads * 2);
+        }
+
         private static long Workload(bool inParallel)
         {
             const int WORKLOAD = 1_000_000;
