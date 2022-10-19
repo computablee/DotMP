@@ -9,6 +9,7 @@ namespace OpenMP
     {
         public enum Schedule { Static, Dynamic, Guided };
         private static volatile Dictionary<int, (int, object)> critical_lock = new Dictionary<int, (int, object)>();
+        private static volatile Dictionary<int, int> single_thread = new Dictionary<int, int>();
         private static volatile int found_criticals = 0;
         private static volatile Barrier barrier;
 
@@ -115,6 +116,30 @@ namespace OpenMP
         public static int GetNumProcs()
         {
             return Environment.ProcessorCount;
+        }
+
+        public static void Master(Action action)
+        {
+            if (GetThreadNum() == 0)
+            {
+                action();
+            }
+        }
+
+        public static void Single(Action action)
+        {
+            lock (single_thread)
+            {
+                if (!single_thread.ContainsKey(action.GetHashCode()))
+                {
+                    single_thread.Add(action.GetHashCode(), GetThreadNum());
+                }
+            }
+
+            if (single_thread[action.GetHashCode()] == GetThreadNum())
+            {
+                action();
+            }
         }
 
         public static int GetNumThreads()
