@@ -8,8 +8,8 @@ namespace OpenMP
     public static class Parallel
     {
         public enum Schedule { Static, Dynamic, Guided };
-        private static Dictionary<Action, (int, object)> critical_lock = new Dictionary<Action, (int, object)>();
-        private static int found_criticals = 0;
+        private static volatile Dictionary<int, (int, object)> critical_lock = new Dictionary<int, (int, object)>();
+        private static volatile int found_criticals = 0;
         private static volatile Barrier barrier;
 
         private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, int num_threads)
@@ -90,12 +90,12 @@ namespace OpenMP
 
             lock (critical_lock)
             {
-                if (!critical_lock.ContainsKey(action))
+                if (!critical_lock.ContainsKey(action.GetHashCode()))
                 {
-                    critical_lock.Add(action, (++found_criticals, new object()));
+                    critical_lock.Add(action.GetHashCode(), (++found_criticals, new object()));
                 }
 
-                (id, lock_obj) = critical_lock[action];
+                (id, lock_obj) = critical_lock[action.GetHashCode()];
             }
 
             lock (lock_obj)
