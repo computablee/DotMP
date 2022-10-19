@@ -77,16 +77,13 @@ namespace OpenMP.NET.Tests
             uint threads = 1024;
             int total = 0;
             int one = critical_ids(false);
-            Parallel.__reset_lambda_memory();
             int two = critical_ids(true);
-            Parallel.__reset_lambda_memory();
 
             OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
                 int id = OpenMP.Parallel.Critical(() => ++total);
-                id.Should().Be(1);
+                id.Should().Be(3);
             });
-            Parallel.__reset_lambda_memory();
 
             one.Should().Be(1);
             two.Should().Be(2);
