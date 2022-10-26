@@ -26,9 +26,10 @@ namespace OpenMP
             int end = (int)Math.Min(thr.curr_iter + chunk_size, Init.ws.end);
             Action<int> omp_fn = Init.ws.omp_fn;
 
-            for (int i = start; i < end; i++)
+            ref int i = ref thr.working_iter;
+
+            for (i = start; i < end; i++)
             {
-                //Console.WriteLine("Executing iteration {0} on thread {1}.", i, thread_id);
                 omp_fn(i);
             }
 
@@ -43,13 +44,13 @@ namespace OpenMP
 
             while (Init.ws.start < end)
             {
-                DynamicNext();
+                DynamicNext(thr);
             }
 
             Interlocked.Add(ref Init.ws.threads_complete, 1);
         }
 
-        private static void DynamicNext()
+        private static void DynamicNext(Thr thr)
         {
             int chunk_start;
 
@@ -62,9 +63,10 @@ namespace OpenMP
             int chunk_end = (int)Math.Min(chunk_start + Init.ws.chunk_size, Init.ws.end);
             Action<int> omp_fn = Init.ws.omp_fn;
 
-            for (int i = chunk_start; i < chunk_end; i++)
+            ref int i = ref thr.working_iter;
+
+            for (i = chunk_start; i < chunk_end; i++)
             {
-                //Console.WriteLine("Executing iteration {0} on thread {1}.", i, thread_id);
                 omp_fn(i);
             }
         }
@@ -77,13 +79,13 @@ namespace OpenMP
 
             while (Init.ws.start < end)
             {
-                GuidedNext();
+                GuidedNext(thr);
             }
 
             Interlocked.Add(ref Init.ws.threads_complete, 1);
         }
 
-        private static void GuidedNext()
+        private static void GuidedNext(Thr thr)
         {
             int chunk_start, chunk_size;
 
@@ -97,9 +99,10 @@ namespace OpenMP
             int chunk_end = (int)Math.Min(chunk_start + chunk_size, Init.ws.end);
             Action<int> omp_fn = Init.ws.omp_fn;
 
-            for (int i = chunk_start; i < chunk_end; i++)
+            ref int i = ref thr.working_iter;
+
+            for (i = chunk_start; i < chunk_end; i++)
             {
-                //Console.WriteLine("Executing iteration {0} on thread {1}.", i, thread_id);
                 omp_fn(i);
             }
         }

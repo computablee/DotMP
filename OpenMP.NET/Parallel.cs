@@ -10,6 +10,7 @@ namespace OpenMP
         public enum Schedule { Static, Dynamic, Guided };
         private static volatile Dictionary<int, (int, object)> critical_lock = new Dictionary<int, (int, object)>();
         private static volatile Dictionary<int, int> single_thread = new Dictionary<int, int>();
+        private static volatile Dictionary<int, int> ordered = new Dictionary<int, int>();
         private static volatile int found_criticals = 0;
         private static volatile Barrier barrier;
 
@@ -139,6 +140,38 @@ namespace OpenMP
             if (single_thread[action.GetHashCode()] == GetThreadNum())
             {
                 action();
+            }
+        }
+
+        public static void Ordered(Action action)
+        {
+            int tid = GetThreadNum();
+            int code = action.GetHashCode();
+            Console.WriteLine("Thread {0} has code {1}", tid, code);
+
+            lock (ordered)
+            {
+                if (!ordered.ContainsKey(action.GetHashCode()))
+                {
+                    Console.WriteLine("adding");
+                    ordered.Add(action.GetHashCode(), 0);
+                }
+                Thread.MemoryBarrier();
+            }
+
+            while (ordered[code] != Init.ws.threads[tid].working_iter)
+            {
+                ForkedRegion.ws.spin[tid].SpinOnce();
+                //Console.WriteLine(ordered[action.GetHashCode()]);
+            }
+
+            action();
+
+            lock (ordered)
+            {
+                Console.WriteLine("here");
+                ordered[code]++;
+                Console.WriteLine(ordered[code]);
             }
         }
 

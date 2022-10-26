@@ -8,7 +8,7 @@ namespace OpenMP.NET.Tests
 {
     public class ParallelTests
     {
-        [Fact]
+        /*[Fact]
         public void Parallel_performance_should_be_higher()
         {
             var elapsedParallel = Workload(true);
@@ -133,6 +133,25 @@ namespace OpenMP.NET.Tests
 
             total.Should().Be(threads);
             total2.Should().Be(-threads * 2);
+        }*/
+
+        [Fact]
+        public void Ordered_works()
+        {
+            uint threads = 8;
+            int[] incrementing = new int[threads];
+
+            OpenMP.Parallel.ParallelFor(0, 1024, schedule: OpenMP.Parallel.Schedule.Static,
+                                        num_threads: threads, action: i =>
+            {
+                Console.WriteLine("Thread {0} is working on {1}", OpenMP.Parallel.GetThreadNum(), i);
+                OpenMP.Parallel.Ordered(() => incrementing[i] = i);
+            });
+
+            for (int i = 0; i < incrementing.Length; i++)
+            {
+                incrementing[i].Should().Be(i);
+            }
         }
 
         private static long Workload(bool inParallel)
