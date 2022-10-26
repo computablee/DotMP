@@ -10,11 +10,13 @@ namespace OpenMP
     {
         internal Thread thread;
         volatile internal int curr_iter;
+        internal int working_iter;
 
         internal Thr(Thread thread)
         {
             this.thread = thread;
             curr_iter = 0;
+            working_iter = 0;
         }
     }
 
