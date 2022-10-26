@@ -8,7 +8,7 @@ namespace OpenMP.NET.Tests
 {
     public class ParallelTests
     {
-        /*[Fact]
+        [Fact]
         public void Parallel_performance_should_be_higher()
         {
             var elapsedParallel = Workload(true);
@@ -81,7 +81,7 @@ namespace OpenMP.NET.Tests
 
             OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                int id = OpenMP.Parallel.Critical(() => ++total);
+                int id = OpenMP.Parallel.Critical(5, () => ++total);
                 id.Should().Be(3);
             });
 
@@ -112,7 +112,7 @@ namespace OpenMP.NET.Tests
 
             OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                OpenMP.Parallel.Single(() => ++total);
+                OpenMP.Parallel.Single(0, () => ++total);
             });
 
             total.Should().Be(1);
@@ -133,19 +133,18 @@ namespace OpenMP.NET.Tests
 
             total.Should().Be(threads);
             total2.Should().Be(-threads * 2);
-        }*/
+        }
 
         [Fact]
         public void Ordered_works()
         {
             uint threads = 8;
-            int[] incrementing = new int[threads];
+            int[] incrementing = new int[1024];
 
             OpenMP.Parallel.ParallelFor(0, 1024, schedule: OpenMP.Parallel.Schedule.Static,
                                         num_threads: threads, action: i =>
             {
-                Console.WriteLine("Thread {0} is working on {1}", OpenMP.Parallel.GetThreadNum(), i);
-                OpenMP.Parallel.Ordered(() => incrementing[i] = i);
+                OpenMP.Parallel.Ordered(0, () => incrementing[i] = i);
             });
 
             for (int i = 0; i < incrementing.Length; i++)
@@ -256,14 +255,14 @@ namespace OpenMP.NET.Tests
             {
                 OpenMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
                 {
-                    int id1 = OpenMP.Parallel.Critical(() => ++x);
+                    int id1 = OpenMP.Parallel.Critical(0, () => ++x);
                     int id2 = -1;
 
                     OpenMP.Parallel.For(0, 100, schedule: OpenMP.Parallel.Schedule.Static, action: j =>
                     {
                         if (two_regions)
                         {
-                            id2 = OpenMP.Parallel.Critical(() => ++y);
+                            id2 = OpenMP.Parallel.Critical(1, () => ++y);
                         }
 
                         lock (mylock)

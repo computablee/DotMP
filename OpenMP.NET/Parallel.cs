@@ -2,6 +2,7 @@
 using OpenMP;
 using System.Collections.Generic;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace OpenMP
 {
@@ -63,6 +64,8 @@ namespace OpenMP
             }
 
             Barrier();
+
+            Master(() => ordered.Clear());
         }
 
         public static void ParallelRegion(Action action, uint? num_threads = null)
@@ -86,19 +89,18 @@ namespace OpenMP
             });
         }
 
-        public static int Critical(Action action)
+        public static int Critical(int id, Action action)
         {
-            int id;
             object lock_obj;
 
             lock (critical_lock)
             {
-                if (!critical_lock.ContainsKey(action.GetHashCode()))
+                if (!critical_lock.ContainsKey(id))
                 {
-                    critical_lock.Add(action.GetHashCode(), (++found_criticals, new object()));
+                    critical_lock.Add(id, (++found_criticals, new object()));
                 }
 
-                (id, lock_obj) = critical_lock[action.GetHashCode()];
+                (id, lock_obj) = critical_lock[id];
             }
 
             lock (lock_obj)
@@ -127,51 +129,45 @@ namespace OpenMP
             }
         }
 
-        public static void Single(Action action)
+        public static void Single(int id, Action action)
         {
             lock (single_thread)
             {
-                if (!single_thread.ContainsKey(action.GetHashCode()))
+                if (!single_thread.ContainsKey(id))
                 {
-                    single_thread.Add(action.GetHashCode(), GetThreadNum());
+                    single_thread.Add(id, GetThreadNum());
                 }
             }
 
-            if (single_thread[action.GetHashCode()] == GetThreadNum())
+            if (single_thread[id] == GetThreadNum())
             {
                 action();
             }
         }
 
-        public static void Ordered(Action action)
+        public static void Ordered(int id, Action action)
         {
             int tid = GetThreadNum();
-            int code = action.GetHashCode();
-            Console.WriteLine("Thread {0} has code {1}", tid, code);
 
             lock (ordered)
             {
-                if (!ordered.ContainsKey(action.GetHashCode()))
+                if (!ordered.ContainsKey(id))
                 {
-                    Console.WriteLine("adding");
-                    ordered.Add(action.GetHashCode(), 0);
+                    ordered.Add(id, 0);
                 }
                 Thread.MemoryBarrier();
             }
 
-            while (ordered[code] != Init.ws.threads[tid].working_iter)
+            while (ordered[id] != Init.ws.threads[tid].working_iter)
             {
                 ForkedRegion.ws.spin[tid].SpinOnce();
-                //Console.WriteLine(ordered[action.GetHashCode()]);
             }
 
             action();
 
             lock (ordered)
             {
-                Console.WriteLine("here");
-                ordered[code]++;
-                Console.WriteLine(ordered[code]);
+                ordered[id]++;
             }
         }
 
