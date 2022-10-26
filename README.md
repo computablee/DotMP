@@ -72,13 +72,13 @@ Given the OpenMP:
 ```
 OpenMP.NET provides:
 ```cs
-OpenMP.Parallel.Critical(() => {
+OpenMP.Parallel.Critical(id, () => {
     work();
 });
 ```
-Mutual exclusion is based on `.GetHashCode()` of the provided `Action` object.
-This behavior was chosen to more faithfully model the OpenMP syntax.
-Therefore, if two `Critical` regions are provided that use the same `Action`, mutual exclusion is not guaranteed.
+This function requires an `id` parameter, which is used as a unique identifier for a particular critical region.
+If multiple critical regions are present in the code, they should each have a unique `id`.
+The `id` should likely be a `const int` or an integer literal.
 
 ### Barrier
 Given the OpenMP:
@@ -86,9 +86,64 @@ Given the OpenMP:
 #pragma omp barrier
 ```
 OpenMP.NET provides:
-```
+```cs
 OpenMP.Parallel.Barrier();
 ```
+
+### Master
+Given the OpenMP:
+```c
+#pragma omp master
+{
+    work();
+}
+```
+OpenMP.NET provides:
+```cs
+OpenMP.Parallel.Master(() => {
+    work();
+});
+```
+`Master`'s behavior is left undefined if used inside of a `For`.
+
+### Single
+Given the OpenMP:
+```c
+#pragma omp single
+{
+    work();
+}
+```
+OpenMP.NET provides:
+```cs
+OpenMP.Parallel.Single(id, () => {
+    work();
+});
+```
+The `id` parameter provided should follow the same guidelines as specified in `Critical`.
+
+The behavior of a `single` region is as follows: the first thread in a team to reach a given `Single` region will "own" the `Single` for the duration of the `ParallelRegion`.
+On all subsequent encounters, only that first thread will execute the region. All other threads will ignore it.
+
+`Single`'s behavior is left undefined if used inside of a `For`.
+
+### Ordered
+Given the OpenMP:
+```c
+#pragma omp ordered
+{
+    work();
+}
+```
+OpenMP.NET provides:
+```cs
+OpenMP.Parallel.Ordered(id, () => {
+    work();
+});
+```
+The `id` parameter provided should follow the same guidelines as specified in `Critical`.
+
+`Ordered`'s behavior is left undefined if used outside of a `For`.
 
 ## Atomics
 
