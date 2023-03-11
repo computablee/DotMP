@@ -62,6 +62,50 @@ OpenMP.Parallel.ParallelFor(a, b, i => {
 ```
 This function supports all of the optional parameters of `ParallelRegion` and `For`, and is merely a wrapper around those two functions for conciseness.
 
+### For with Reduction
+Given the OpenMP:
+```c
+type local = c;
+
+#pragma omp for reduction(op:var)
+for (int i = a; i < b; i++)
+{
+    local `op` d;
+}
+```
+OpenMP.NET provides:
+```cs
+type local = c;
+
+OpenMP.Parallel.ForReduction(a, b, op, ref local, (ref type local, int i) => {
+    local `op` d;
+});
+```
+`op` is a value provided by the `OpenMP.Operations` enum, which supports the values `Add`, `Subtract`, `Multiply`, `BinaryAnd`, `BinaryOr`, `BinaryXor`, `BooleanAnd`, `BooleanOr`, `Min`, and `Max`.
+
+This function supports all of the optional parameters of `For`.
+
+### Parallel For with Reduction
+Given the OpenMP:
+```c
+type local = c;
+
+#pragma omp parallel for reduction(op:var)
+for (int i = a; i < b; i++)
+{
+    local `op` d;
+}
+```
+OpenMP.NET provides:
+```cs
+type local = c;
+
+OpenMP.Parallel.ParallelForReduction(a, b, op, ref local, (ref type local, int i) => {
+    local `op` d;
+});
+```
+This function supports all of the optional parameters of `ParallelRegion` and `ForReduction`, and is merely a wrapper around those two functions for conciseness.
+
 ### Critical
 Given the OpenMP:
 ```c
