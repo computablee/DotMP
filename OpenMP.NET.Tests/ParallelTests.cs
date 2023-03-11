@@ -153,6 +153,19 @@ namespace OpenMP.NET.Tests
             }
         }
 
+        [Fact]
+        public void Reduction_works()
+        {
+            int total = 0;
+
+            OpenMP.Parallel.ParallelForReduction(0, 1024, OpenMP.Operations.Add, ref total, num_threads: 8, schedule: OpenMP.Parallel.Schedule.Static, action: (ref int total, int i) =>
+            {
+                total += i;
+            });
+
+            total.Should().Be(1024 * 1023 / 2);
+        }
+
         private static long Workload(bool inParallel)
         {
             const int WORKLOAD = 1_000_000;

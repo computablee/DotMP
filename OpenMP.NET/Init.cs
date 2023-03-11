@@ -28,8 +28,9 @@ namespace OpenMP
         internal int end;
         internal uint chunk_size;
         internal uint num_threads;
-        internal Action<int> omp_fn;
         volatile internal int threads_complete;
+        internal Operations? op;
+        internal List<dynamic> reduction_list;
 
         internal WorkShare(uint num_threads, Thread[] threads)
         {
@@ -42,7 +43,8 @@ namespace OpenMP
             this.end = 0;
             this.chunk_size = 0;
             this.num_threads = num_threads;
-            this.omp_fn = null;
+            this.op = null;
+            this.reduction_list = new List<dynamic>();
         }
     }
 

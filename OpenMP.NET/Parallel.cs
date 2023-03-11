@@ -2,10 +2,11 @@
 using OpenMP;
 using System.Collections.Generic;
 using System.Threading;
-using System.Runtime.InteropServices;
 
 namespace OpenMP
 {
+    public delegate void ActionRef<T>(ref T a, int i);
+
     public static class Parallel
     {
         public enum Schedule { Static, Dynamic, Guided };
@@ -39,13 +40,46 @@ namespace OpenMP
         {
             FixArgs(start, end, schedule, ref chunk_size, GetNumThreads());
 
+            Master(() =>
+            {
+                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads);
+                Init.ws.start = start;
+                Init.ws.end = end;
+                Init.ws.chunk_size = chunk_size.Value;
+            });
+
+            Barrier();
+
+            switch (schedule)
+            {
+                case Schedule.Static:
+                    Iter.StaticLoop<object>(GetThreadNum(), action, null, false);
+                    break;
+                case Schedule.Dynamic:
+                    Iter.DynamicLoop<object>(GetThreadNum(), action, null, false);
+                    break;
+                case Schedule.Guided:
+                    Iter.GuidedLoop<object>(GetThreadNum(), action, null, false);
+                    break;
+            }
+
+            Barrier();
+
+            Master(() => ordered.Clear());
+        }
+
+        public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        {
+            FixArgs(start, end, schedule, ref chunk_size, GetNumThreads());
+
             if (GetThreadNum() == 0)
             {
                 Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads);
                 Init.ws.start = start;
                 Init.ws.end = end;
                 Init.ws.chunk_size = chunk_size.Value;
-                Init.ws.omp_fn = action;
+                Init.ws.op = op;
+                Init.ws.reduction_list.Clear();
             }
 
             Barrier();
@@ -53,19 +87,57 @@ namespace OpenMP
             switch (schedule)
             {
                 case Schedule.Static:
-                    Iter.StaticLoop(GetThreadNum());
+                    Iter.StaticLoop(GetThreadNum(), null, action, true);
                     break;
                 case Schedule.Dynamic:
-                    Iter.DynamicLoop(GetThreadNum());
+                    Iter.DynamicLoop(GetThreadNum(), null, action, true);
                     break;
                 case Schedule.Guided:
-                    Iter.GuidedLoop(GetThreadNum());
+                    Iter.GuidedLoop(GetThreadNum(), null, action, true);
                     break;
             }
 
             Barrier();
 
-            Master(() => ordered.Clear());
+            if (GetThreadNum() == 0)
+            {
+                foreach (T i in Init.ws.reduction_list)
+                {
+                    switch (Init.ws.op)
+                    {
+                        case Operations.Add:
+                        case Operations.Subtract:
+                            reduce_to += (dynamic)i;
+                            break;
+                        case Operations.Multiply:
+                            reduce_to *= (dynamic)i;
+                            break;
+                        case Operations.BinaryAnd:
+                            reduce_to &= (dynamic)i;
+                            break;
+                        case Operations.BinaryOr:
+                            reduce_to |= (dynamic)i;
+                            break;
+                        case Operations.BinaryXor:
+                            reduce_to ^= (dynamic)i;
+                            break;
+                        case Operations.BooleanAnd:
+                            reduce_to = (dynamic)reduce_to && (dynamic)i;
+                            break;
+                        case Operations.BooleanOr:
+                            reduce_to = (dynamic)reduce_to || (dynamic)i;
+                            break;
+                        case Operations.Min:
+                            reduce_to = Math.Min((dynamic)reduce_to, (dynamic)i);
+                            break;
+                        case Operations.Max:
+                            reduce_to = Math.Max((dynamic)reduce_to, (dynamic)i);
+                            break;
+                    }
+                }
+
+                ordered.Clear();
+            }
         }
 
         public static void ParallelRegion(Action action, uint? num_threads = null)
@@ -87,6 +159,20 @@ namespace OpenMP
             {
                 For(start, end, action, schedule, chunk_size);
             });
+        }
+
+        public static void ParallelForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        {
+            num_threads ??= (uint)GetNumProcs();
+
+            T local = reduce_to;
+
+            ParallelRegion(num_threads: num_threads.Value, action: () =>
+            {
+                ForReduction(start, end, op, ref local, action, schedule, chunk_size);
+            });
+
+            reduce_to = local;
         }
 
         public static int Critical(int id, Action action)
