@@ -217,6 +217,23 @@ For atomic operations like compare-exchange, we recommend interfacting directly 
 For non-supported atomic operations or types, we recommend using `OpenMP.Parallel.Critical`.
 This is more of a limitation of the underlying hardware than anything.
 
+## Locks
+OpenMP.NET supports OpenMP-style locks.
+It is recommended to use C#'s native `lock` keyword where possible for performance.
+However, this API is provided to those who want the familiarity of OpenMP locks.
+
+OpenMP.NET supports the `OpenMP.Lock` object, which is the replacement for `omp_lock_t`.
+`omp_init_lock` and `omp_destroy_lock` are not implemented.
+Instead, users should instantiate the `OpenMP.Lock` object using the `new` keyword.
+
+OpenMP.NET provides the following functions:
+
+| <omp.h> function     | OpenMP.NET function        | Comments
+-----------------------|----------------------------|---------
+| omp_set_lock(lock)   | OpenMP.Locking.Set(lock)   | Halt the current thread until the lock is obtained
+| omp_unset_lock(lock) | OpenMP.Locking.Unset(lock) | Free the current lock, making it available for other threads
+| omp_test_lock(lock)  | OpenMP.Locking.Test(lock)  | Attempt to obtain a lock without blocking, returns true if locking is successful
+
 ## Supported Functions
 
 OpenMP.NET provides an analog of the following functions:
