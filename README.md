@@ -250,4 +250,4 @@ OpenMP.NET provides an analog of the following functions:
 | omp_get_dynamic()        | OpenMP.Parallel.GetDynamic()       | Returns true if the runtime can dynamically adjust the number of threads
 | omp_set_nested(int)      | OpenMP.Parallel.SetNested(int)     | Returns a NotImplementedException
 | omp_get_nested()         | OpenMP.Parallel.GetNested()        | Returns false
-| omp_get_wtime()          | OpenMP.Parallel.GetWTime()         | Returns the number of seconds since the Unix Epoch
+| omp_get_wtime()          | OpenMP.Parallel.GetWTime()         | Returns the number of seconds since the Unix Epoch as a double
