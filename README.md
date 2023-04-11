@@ -148,7 +148,7 @@ OpenMP.Parallel.Master(() => {
     work();
 });
 ```
-`Master`'s behavior is left undefined if used inside of a `For`.
+`Master`'s behavior is left undefined if used outside of a `For`.
 
 ### Single
 Given the OpenMP:
@@ -169,7 +169,7 @@ The `id` parameter provided should follow the same guidelines as specified in `C
 The behavior of a `single` region is as follows: the first thread in a team to reach a given `Single` region will "own" the `Single` for the duration of the `ParallelRegion`.
 On all subsequent encounters, only that first thread will execute the region. All other threads will ignore it.
 
-`Single`'s behavior is left undefined if used inside of a `For`.
+`Single`'s behavior is left undefined if used outside of a `For`.
 
 ### Ordered
 Given the OpenMP:
