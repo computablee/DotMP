@@ -15,8 +15,9 @@ namespace OpenMP
         private static volatile Dictionary<int, int> ordered = new Dictionary<int, int>();
         private static volatile int found_criticals = 0;
         private static volatile Barrier barrier;
+        private static volatile uint num_threads = 0;
 
-        private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, int num_threads)
+        private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, uint num_threads)
         {
             if (chunk_size == null)
             {
@@ -38,7 +39,7 @@ namespace OpenMP
 
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
-            FixArgs(start, end, schedule, ref chunk_size, GetNumThreads());
+            FixArgs(start, end, schedule, ref chunk_size, Init.ws.num_threads);
 
             Master(() =>
             {
@@ -70,7 +71,7 @@ namespace OpenMP
 
         public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
-            FixArgs(start, end, schedule, ref chunk_size, GetNumThreads());
+            FixArgs(start, end, schedule, ref chunk_size, Init.ws.num_threads);
 
             if (GetThreadNum() == 0)
             {
@@ -142,7 +143,10 @@ namespace OpenMP
 
         public static void ParallelRegion(Action action, uint? num_threads = null)
         {
-            num_threads ??= (uint)GetNumProcs();
+            if (num_threads == null && Parallel.num_threads == 0)
+                num_threads = (uint)GetNumProcs();
+            else
+                num_threads ??= Parallel.num_threads;
 
             ForkedRegion.CreateThreadpool(num_threads.Value, action);
             barrier = new Barrier((int)num_threads.Value);
@@ -153,7 +157,10 @@ namespace OpenMP
 
         public static void ParallelFor(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
         {
-            num_threads ??= (uint)GetNumProcs();
+            if (num_threads == null && Parallel.num_threads == 0)
+                num_threads = (uint)GetNumProcs();
+            else
+                num_threads ??= Parallel.num_threads;
 
             ParallelRegion(num_threads: num_threads.Value, action: () =>
             {
@@ -163,7 +170,10 @@ namespace OpenMP
 
         public static void ParallelForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
         {
-            num_threads ??= (uint)GetNumProcs();
+            if (num_threads == null && Parallel.num_threads == 0)
+                num_threads = (uint)GetNumProcs();
+            else
+                num_threads ??= Parallel.num_threads;
 
             T local = reduce_to;
 
@@ -273,6 +283,43 @@ namespace OpenMP
         public static int GetThreadNum()
         {
             return Convert.ToInt32(Thread.CurrentThread.Name);
+        }
+
+        public static void SetNumThreads(int num_threads)
+        {
+            Parallel.num_threads = (uint)num_threads;
+        }
+
+        public static int GetMaxThreads()
+        {
+            return Parallel.num_threads != 0 ? (int)Parallel.num_threads : GetNumProcs();
+        }
+
+        public static bool InParallel()
+        {
+            return ForkedRegion.in_parallel;
+        }
+
+        public static void SetDynamic()
+        {
+            Parallel.num_threads = 0;
+        }
+
+        public static bool GetDynamic()
+        {
+            return Parallel.num_threads == 0;
+        }
+
+        public static void SetNested(bool _)
+        {
+            throw new NotImplementedException();
+        }
+
+        public static bool GetNested() => false;
+
+        public static double GetWTime()
+        {
+            return DateTime.Now.Ticks / 10000000.0;
         }
 
         public static void __reset_lambda_memory()

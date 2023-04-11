@@ -171,6 +171,84 @@ namespace OpenMP.NET.Tests
             total.Should().Be(1024 * 1023);
         }
 
+        [Fact]
+        public void SetNumThreads_works()
+        {
+            OpenMP.Parallel.GetMaxThreads().Should().Be(OpenMP.Parallel.GetNumProcs());
+
+            OpenMP.Parallel.ParallelRegion(() =>
+            {
+                OpenMP.Parallel.GetNumThreads().Should().Be(OpenMP.Parallel.GetNumProcs());
+            });
+
+            OpenMP.Parallel.ParallelRegion(num_threads: 2, action: () =>
+            {
+                OpenMP.Parallel.GetNumThreads().Should().Be(2);
+            });
+
+            OpenMP.Parallel.SetNumThreads(15);
+            OpenMP.Parallel.GetMaxThreads().Should().Be(15);
+
+            OpenMP.Parallel.ParallelRegion(() =>
+            {
+                OpenMP.Parallel.GetNumThreads().Should().Be(15);
+            });
+        }
+
+        [Fact]
+        public void InParallel_works()
+        {
+            OpenMP.Parallel.InParallel().Should().BeFalse();
+
+            OpenMP.Parallel.ParallelRegion(() =>
+            {
+                OpenMP.Parallel.InParallel().Should().BeTrue();
+            });
+
+            OpenMP.Parallel.InParallel().Should().BeFalse();
+        }
+
+        [Fact]
+        public void SetDynamic_works()
+        {
+            OpenMP.Parallel.SetNumThreads(2);
+            OpenMP.Parallel.GetDynamic().Should().BeFalse();
+            OpenMP.Parallel.SetDynamic();
+            OpenMP.Parallel.GetDynamic().Should().BeTrue();
+            OpenMP.Parallel.ParallelRegion(() =>
+            {
+                OpenMP.Parallel.GetNumThreads().Should().Be(OpenMP.Parallel.GetNumProcs());
+            });
+            OpenMP.Parallel.GetDynamic().Should().BeTrue();
+            OpenMP.Parallel.SetNumThreads(OpenMP.Parallel.GetNumProcs());
+            OpenMP.Parallel.GetDynamic().Should().BeFalse();
+        }
+
+        [Fact]
+        public void GetWTime_works()
+        {
+            double start = OpenMP.Parallel.GetWTime();
+            Thread.Sleep(1000);
+            double end = OpenMP.Parallel.GetWTime();
+            (end - start).Should().BeGreaterOrEqualTo(1.0);
+            (end - start).Should().BeLessThan(1.1);
+        }
+
+        [Fact]
+        public void GetNested_works()
+        {
+            OpenMP.Parallel.GetNested().Should().BeFalse();
+            try
+            {
+                OpenMP.Parallel.SetNested(true);
+                true.Should().BeFalse();
+            }
+            catch (NotImplementedException e)
+            {
+                e.Should().NotBeNull();
+            }
+        }
+
         private static long Workload(bool inParallel)
         {
             const int WORKLOAD = 1_000_000;

@@ -28,6 +28,7 @@ namespace OpenMP
     internal static class ForkedRegion
     {
         internal static Region ws;
+        internal static bool in_parallel = false;
 
         internal static void CreateThreadpool(uint num_threads, Action omp_fn)
         {
@@ -38,11 +39,15 @@ namespace OpenMP
 
         internal static void StartThreadpool()
         {
+            in_parallel = true;
+
             for (int i = 0; i < ws.num_threads; i++)
                 ws.threads[i].Start();
 
             for (int i = 0; i < ws.num_threads; i++)
                 ws.threads[i].Join();
+
+            in_parallel = false;
         }
     }
 }
