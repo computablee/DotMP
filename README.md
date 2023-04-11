@@ -90,7 +90,7 @@ Given the OpenMP:
 ```c
 type local = c;
 
-#pragma omp parallel for reduction(op:var)
+#pragma omp parallel for reduction(op:local)
 for (int i = a; i < b; i++)
 {
     local `op` d;
