@@ -67,7 +67,7 @@ Given the OpenMP:
 ```c
 type local = c;
 
-#pragma omp for reduction(op:var)
+#pragma omp for reduction(op:local)
 for (int i = a; i < b; i++)
 {
     local `op` d;
