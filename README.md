@@ -221,8 +221,16 @@ This is more of a limitation of the underlying hardware than anything.
 
 OpenMP provides an analog of the following functions:
 
-| <omp.h> function      | OpenMP.NET function             |
-------------------------|----------------------------------
-| omp_get_num_procs()   | OpenMP.Parallel.GetNumProcs()   |
-| omp_get_num_threads() | OpenMP.Parallel.GetNumThreads() |
-| omp_get_thread_num()  | OpenMP.Parallel.GetThreadNum()  |
+| <omp.h> function         | OpenMP.NET function                | Comments
+---------------------------|------------------------------------|---------
+| omp_get_num_procs()      | OpenMP.Parallel.GetNumProcs()      | Returns the number of logical threads on the system
+| omp_get_num_threads()    | OpenMP.Parallel.GetNumThreads()    | Returns the number of active threads in the current region
+| omp_set_num_threads(int) | OpenMP.Parallel.SetNumThreads(int) | Sets the number of threads for the next parallel region to use
+| omp_get_thread_num()     | OpenMP.Parallel.GetThreadNum()     | Gets the ID of the current thread
+| omp_get_max_threads()    | OpenMP.Parallel.GetMaxThreads()    | Gets the maximum number of threads the runtime may use in the next region
+| omp_in_parallel()        | OpenMP.Parallel.InParallel()       | Returns true if called from within a parallel region
+| omp_set_dynamic(int)     | OpenMP.Parallel.SetDynamic()       | Tells the runtime to dynamically adjust the number of threads, can disable by calling SetNumThreads
+| omp_get_dynamic()        | OpenMP.Parallel.GetDynamic()       | Returns true if the runtime can dynamically adjust the number of threads
+| omp_set_nested(int)      | OpenMP.Parallel.SetNested(int)     | Returns a NotImplementedException
+| omp_get_nested()         | OpenMP.Parallel.GetNested()        | Returns false
+| omp_get_wtime()          | OpenMP.Parallel.GetWTime()         | Returns the number of seconds since the Unix Epoch
