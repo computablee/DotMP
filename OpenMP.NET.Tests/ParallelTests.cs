@@ -249,6 +249,34 @@ namespace OpenMP.NET.Tests
             }
         }
 
+        [Fact]
+        public void Locks_work()
+        {
+            uint threads = 16;
+            OpenMP.Lock l = new OpenMP.Lock();
+
+            double time = OpenMP.Parallel.GetWTime();
+
+            OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                OpenMP.Locking.Set(l);
+                Thread.Sleep(100);
+                OpenMP.Locking.Unset(l);
+            });
+
+            double elapsed = OpenMP.Parallel.GetWTime() - time;
+            elapsed.Should().BeGreaterThan(1.6);
+
+            OpenMP.Locking.Test(l).Should().BeTrue();
+            OpenMP.Locking.Test(l).Should().BeFalse();
+            OpenMP.Locking.Test(l).Should().BeFalse();
+            OpenMP.Locking.Unset(l);
+            OpenMP.Locking.Test(l).Should().BeTrue();
+            OpenMP.Locking.Test(l).Should().BeFalse();
+            OpenMP.Locking.Test(l).Should().BeFalse();
+            OpenMP.Locking.Unset(l);
+        }
+
         private static long Workload(bool inParallel)
         {
             const int WORKLOAD = 1_000_000;
