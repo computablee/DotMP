@@ -1,6 +1,6 @@
 # OpenMP.NET
 A library for writing OpenMP-style parallel code in .NET.
-Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the OpenMP programming style as faithfully as possible.
+Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the OpenMP programming style as faithfully as possible, though breaking spec at times.
 
 ## Supported Constructs
 
@@ -219,7 +219,7 @@ This is more of a limitation of the underlying hardware than anything.
 
 ## Supported Functions
 
-OpenMP provides an analog of the following functions:
+OpenMP.NET provides an analog of the following functions:
 
 | <omp.h> function         | OpenMP.NET function                | Comments
 ---------------------------|------------------------------------|---------
