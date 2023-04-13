@@ -67,7 +67,7 @@ Given the OpenMP:
 ```c
 type local = c;
 
-#pragma omp for reduction(op:var)
+#pragma omp for reduction(op:local)
 for (int i = a; i < b; i++)
 {
     local `op` d;
@@ -90,7 +90,7 @@ Given the OpenMP:
 ```c
 type local = c;
 
-#pragma omp parallel for reduction(op:var)
+#pragma omp parallel for reduction(op:local)
 for (int i = a; i < b; i++)
 {
     local `op` d;
@@ -148,7 +148,7 @@ OpenMP.Parallel.Master(() => {
     work();
 });
 ```
-`Master`'s behavior is left undefined if used inside of a `For`.
+`Master`'s behavior is left undefined if used outside of a `For`.
 
 ### Single
 Given the OpenMP:
@@ -169,7 +169,7 @@ The `id` parameter provided should follow the same guidelines as specified in `C
 The behavior of a `single` region is as follows: the first thread in a team to reach a given `Single` region will "own" the `Single` for the duration of the `ParallelRegion`.
 On all subsequent encounters, only that first thread will execute the region. All other threads will ignore it.
 
-`Single`'s behavior is left undefined if used inside of a `For`.
+`Single`'s behavior is left undefined if used outside of a `For`.
 
 ### Ordered
 Given the OpenMP:
@@ -217,6 +217,23 @@ For atomic operations like compare-exchange, we recommend interfacting directly 
 For non-supported atomic operations or types, we recommend using `OpenMP.Parallel.Critical`.
 This is more of a limitation of the underlying hardware than anything.
 
+## Locks
+OpenMP.NET supports OpenMP-style locks.
+It is recommended to use C#'s native `lock` keyword where possible for performance.
+However, this API is provided to those who want the familiarity of OpenMP locks.
+
+OpenMP.NET supports the `OpenMP.Lock` object, which is the replacement for `omp_lock_t`.
+`omp_init_lock` and `omp_destroy_lock` are not implemented.
+Instead, users should instantiate the `OpenMP.Lock` object using the `new` keyword.
+
+OpenMP.NET provides the following functions:
+
+| <omp.h> function     | OpenMP.NET function        | Comments
+-----------------------|----------------------------|---------
+| omp_set_lock(lock)   | OpenMP.Locking.Set(lock)   | Halt the current thread until the lock is obtained
+| omp_unset_lock(lock) | OpenMP.Locking.Unset(lock) | Free the current lock, making it available for other threads
+| omp_test_lock(lock)  | OpenMP.Locking.Test(lock)  | Attempt to obtain a lock without blocking, returns true if locking is successful
+
 ## Supported Functions
 
 OpenMP.NET provides an analog of the following functions:
@@ -233,4 +250,4 @@ OpenMP.NET provides an analog of the following functions:
 | omp_get_dynamic()        | OpenMP.Parallel.GetDynamic()       | Returns true if the runtime can dynamically adjust the number of threads
 | omp_set_nested(int)      | OpenMP.Parallel.SetNested(int)     | Returns a NotImplementedException
 | omp_get_nested()         | OpenMP.Parallel.GetNested()        | Returns false
-| omp_get_wtime()          | OpenMP.Parallel.GetWTime()         | Returns the number of seconds since the Unix Epoch
+| omp_get_wtime()          | OpenMP.Parallel.GetWTime()         | Returns the number of seconds since the Unix Epoch as a double
