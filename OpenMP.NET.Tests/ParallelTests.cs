@@ -343,7 +343,7 @@ namespace OpenMP.NET.Tests
         {
             float[] z = new float[x.Length];
 
-            Parallel.ParallelRegion(num_threads: 4, action: () =>
+            Parallel.ParallelRegion(() =>
             {
                 Parallel.For(0, x.Length, schedule: Parallel.Schedule.Guided, action: i =>
                 {
@@ -358,7 +358,7 @@ namespace OpenMP.NET.Tests
         {
             float[] z = new float[x.Length];
 
-            Parallel.ParallelFor(0, x.Length, schedule: Parallel.Schedule.Guided, num_threads: 4, action: i =>
+            Parallel.ParallelFor(0, x.Length, schedule: Parallel.Schedule.Guided, action: i =>
             {
                 z[i] = a * x[i] + y[i];
             });
