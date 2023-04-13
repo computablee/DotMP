@@ -19,6 +19,11 @@ namespace OpenMP
 
         private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, uint num_threads)
         {
+            if (num_threads == 0)
+            {
+                num_threads = (uint)GetNumProcs();
+            }
+
             if (chunk_size == null)
             {
                 switch (sched)

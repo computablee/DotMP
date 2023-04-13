@@ -20,10 +20,9 @@ namespace OpenMP.NET.Tests
         [Fact]
         public void Parallel_should_work()
         {
-            var expected = 1024u;
-            var actual = CreateRegion(expected);
+            var actual = CreateRegion();
 
-            actual.Should().Be(expected);
+            actual.Should().Be((uint)OpenMP.Parallel.GetMaxThreads());
         }
 
         [Fact]
@@ -328,11 +327,11 @@ namespace OpenMP.NET.Tests
                 a[j] += i;
         }
 
-        private static uint CreateRegion(uint threads)
+        private static uint CreateRegion()
         {
             uint threads_spawned = 0;
 
-            Parallel.ParallelRegion(num_threads: threads, action: () =>
+            Parallel.ParallelRegion(() =>
             {
                 Interlocked.Add(ref threads_spawned, 1);
             });
