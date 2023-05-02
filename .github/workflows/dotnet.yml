@@ -20,17 +20,13 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Navigate to project folder
-      run: cd OpenMP.NET
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore OpenMP.NET/
     - name: Build
-      run: dotnet build --no-restore
-    - name: Navigate to test folder
-      run: cd ../OpenMP.NET.Tests
+      run: dotnet build --no-restore OpenMP.NET
     - name: Restore dependencies
-      run: dotnet restore
+      run: dotnet restore OpenMP.NET.Tests/
     - name: Build
-      run: dotnet build --no-restore
+      run: dotnet build --no-restore OpenMP.NET.Tests/
     - name: Test
-      run: dotnet test --no-build --verbosity normal
+      run: dotnet test --no-build --verbosity normal OpenMP.NET.Tests/
