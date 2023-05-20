@@ -234,6 +234,43 @@ OpenMP.NET provides the following functions:
 | omp_unset_lock(lock) | OpenMP.Locking.Unset(lock) | Free the current lock, making it available for other threads
 | omp_test_lock(lock)  | OpenMP.Locking.Test(lock)  | Attempt to obtain a lock without blocking, returns true if locking is successful
 
+## Shared Memory
+
+OpenMP.NET supports an API for declaring thread-shared memory within a parallel region.
+Shared memory is provided through the `OpenMP.Shared` class.
+
+The following provides an example of a parallel vector initialization:
+```cs
+static void InitVector()
+{
+    double[] returnVector;
+    
+    OpenMP.Parallel.ParallelRegion(() =>
+    {
+        OpenMP.Shared<double[]> vec = new OpenMP.Shared<double[]>("vec", new double[1024]);
+        OpenMP.Parallel.For(0, 1024, i =>
+        {
+            vec.Get()[i] = 1.0;
+        });
+        
+        returnVector = vec.Get();
+        vec.Clear()
+    });
+    
+    return returnVector;
+}
+```
+
+The `OpenMP.Shared` class supports the following methods:
+| Method                            | Action 
+------------------------------------|-------
+| Constructor(string name, T value) | Initializes a shared variable with name `name` and starting value `value`
+| Clear()                           | Cleares a shared variable
+| Set(T value)                      | Sets a shared variable to value `value`
+| Get()                             | Gets a shared variable
+
+The `OpenMP.Shared` constructor and `Clear()` methods serve as implicit barriers, ensuring that all threads can access the memory before proceeding.
+
 ## Supported Functions
 
 OpenMP.NET provides an analog of the following functions:
