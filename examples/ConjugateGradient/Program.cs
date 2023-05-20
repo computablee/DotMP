@@ -79,12 +79,9 @@ static class ConjugateGradient
         return x;
     }
 
-    private static volatile double[] SpMV_y = new double[0];
-
     static double[] SpMV(CSRMatrix A, double[] x)
     {
-        OpenMP.Parallel.Master(() => SpMV_y = new double[A.m]);
-        OpenMP.Parallel.Barrier();
+        OpenMP.Shared<double[]> y = new OpenMP.Shared<double[]>("y", new double[A.m]);
 
         OpenMP.Parallel.For(0, A.m,
             schedule: OpenMP.Parallel.Schedule.Guided,
@@ -95,9 +92,10 @@ static class ConjugateGradient
             {
                 sum += A.values[j] * x[A.colInd[j]];
             }
-            SpMV_y[i] = sum;
+            y.Get()[i] = sum;
         });
-        return SpMV_y;
+
+        return y.Get();
     }
 
     static double[] SubtractVectors(double[] x, double[] y)
@@ -129,7 +127,6 @@ static class ConjugateGradient
         double[] x = MakeVector(A.m, 0.0);
         double[] p = new double[A.m];
         double[] r = SubtractVectors(b, SpMV(A, x));
-        double[] temp = new double[A.m];
         Array.Copy(r, p, r.Length);
 
         double delta = 0;
@@ -142,6 +139,7 @@ static class ConjugateGradient
         OpenMP.Parallel.ParallelRegion(() =>
         {
             int k = 0;
+            OpenMP.Shared<double[]> temp = new OpenMP.Shared<double[]>("temp", new double[A.m]);
 
             while (k < max)
             {
@@ -160,8 +158,8 @@ static class ConjugateGradient
                     break;
                 }
 
-                Daxpy(delta / deltaOld, p, r, temp);
-                OpenMP.Parallel.Master(() => Array.Copy(temp, p, temp.Length));
+                Daxpy(delta / deltaOld, p, r, temp.Get());
+                OpenMP.Parallel.Master(() => Array.Copy(temp.Get(), p, temp.Get().Length));
                 OpenMP.Parallel.Barrier();
 
                 deltaOld = delta;
