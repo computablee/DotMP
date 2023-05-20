@@ -144,6 +144,8 @@ namespace OpenMP
 
                 ordered.Clear();
             }
+
+            Barrier();
         }
 
         public static void ParallelRegion(Action action, uint? num_threads = null)
