@@ -162,6 +162,7 @@ static class ConjugateGradient
 
                 Daxpy(delta / deltaOld, p, r, temp);
                 OpenMP.Parallel.Master(() => Array.Copy(temp, p, temp.Length));
+                OpenMP.Parallel.Barrier();
 
                 deltaOld = delta;
             }
@@ -220,13 +221,6 @@ static class ConjugateGradient
         int numWrong = 0;
 
         double[] error = SubtractVectors(SpMV(A, x), b);
-
-        for (int i = 0; i < 10; i++)
-        {
-            Console.Write(x[i]);
-            Console.Write(" ");
-        }
-        Console.WriteLine();
 
         for (int i = 0; i < A.m; i++)
         {
