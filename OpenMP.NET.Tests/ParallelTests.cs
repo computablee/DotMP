@@ -276,6 +276,20 @@ namespace OpenMP.NET.Tests
             OpenMP.Locking.Unset(l);
         }
 
+        [Fact]
+        public void Shared_works()
+        {
+            OpenMP.Parallel.ParallelRegion(() =>
+            {
+                OpenMP.Shared<int> s = new OpenMP.Shared<int>("s", 6);
+                s.Get().Should().Be(6);
+                OpenMP.Parallel.Master(() => s.Set(7));
+                OpenMP.Parallel.Barrier();
+                s.Get().Should().Be(7);
+                s.Clear();
+            });
+        }
+
         private static long Workload(bool inParallel)
         {
             const int WORKLOAD = 1_000_000;
