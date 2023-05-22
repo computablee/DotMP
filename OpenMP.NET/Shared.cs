@@ -20,9 +20,10 @@ namespace OpenMP
             OpenMP.Parallel.Barrier();
         }
 
-        public static void Clear(string name)
+        public void Clear()
         {
-            shared.Remove(name);
+            OpenMP.Parallel.Master(() => shared.Remove(name));
+            OpenMP.Parallel.Barrier();
         }
 
         public void Set(T value)
