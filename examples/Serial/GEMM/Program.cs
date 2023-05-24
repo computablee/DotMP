@@ -3,36 +3,8 @@ using OpenMP;
 
 static class GEMM
 {
-    //parallel GEMM
-    public static void ParallelGEMM(double[][] A, double[][] B, double[][] C)
-    {
-        //get the appropriate lengths of the arrays
-        int m = A.Length;
-        int n = B[0].Length;
-        int k = A[0].Length;
-
-        //parallel for loop on the outermost loop
-        OpenMP.Parallel.ParallelFor(0, m, schedule: OpenMP.Parallel.Schedule.Dynamic, action: i =>
-        {
-            //inner loop is serial
-            for (int j = 0; j < n; j++)
-            {
-                double sum = 0;
-
-                //iterate across the row and calculate the dot product of the first matrix's row vector and the second matrix's column vector
-                for (int l = 0; l < k; l++)
-                {
-                    sum += A[i][l] * B[l][j];
-                }
-
-                //store the result in the output matrix
-                C[i][j] = sum;
-            }
-        });
-    }
-
     //serial GEMM
-    public static void SerialGEMM(double[][] A, double[][] B, double[][] C)
+    public static void DoGEMM(double[][] A, double[][] B, double[][] C)
     {
         //get the appropriate lengths of the arrays
         int m = A.Length;
@@ -81,16 +53,16 @@ class Driver
 {
     public static void Main(string[] args)
     {
-        //get the matrix dimensions from the command line, or set to 250 if left unspecified
-        int m, n, k;
-        if (args.Length < 1)
+        //check the command line arguments
+        if (args.Length < 2)
         {
-            m = n = k = 250;
+            Console.WriteLine("Usage: dotnet run <mat dims> <num runs>");
+            return;
         }
-        else
-        {
-            m = n = k = int.Parse(args[0]);
-        }
+
+        int m, n, k, numRuns;
+        m = n = k = Convert.ToInt32(args[0]);
+        numRuns = Convert.ToInt32(args[1]);
 
         //create the matrices
         double[][] A = new double[m][];
@@ -114,15 +86,37 @@ class Driver
         GEMM.RandomMatrix(A);
         GEMM.RandomMatrix(B);
 
-        //run the serial and parallel GEMM functions, timed
-        double start = OpenMP.Parallel.GetWTime();
-        GEMM.SerialGEMM(A, B, C);
-        double end = OpenMP.Parallel.GetWTime();
-        Console.WriteLine("SerialGEMM: {0}", end - start);
+        //warmup
+        for (int i = 0; i < 5; i++)
+        {
+            GEMM.DoGEMM(A, B, C);
+        }
 
-        start = OpenMP.Parallel.GetWTime();
-        GEMM.ParallelGEMM(A, B, C);
-        end = OpenMP.Parallel.GetWTime();
-        Console.WriteLine("ParallelGEMM: {0}", end - start);
+        //create min, max, avg variables
+        double min = double.MaxValue;
+        double max = double.MinValue;
+        double avg = 0.0f;
+
+        //run the algorithm numRuns times
+        for (int i = 0; i < numRuns; i++)
+        {
+            //time the algorithm
+            double tick = OpenMP.Parallel.GetWTime();
+            GEMM.DoGEMM(A, B, C);
+            double tock = OpenMP.Parallel.GetWTime();
+
+            //update min, max, avg
+            tock = tock - tick;
+            avg += tock;
+            min = Math.Min(min, tock);
+            max = Math.Max(max, tock);
+        }
+
+        avg /= numRuns;
+
+        //print the results
+        Console.WriteLine("Min: {0}", min);
+        Console.WriteLine("Max: {0}", max);
+        Console.WriteLine("Avg: {0}", avg);
     }
 }

@@ -28,7 +28,7 @@ class CSRMatrix
 static class ConjugateGradient
 {
     // read CSR matrix from file
-    static CSRMatrix ReadCSRMatrix(string filename)
+    public static CSRMatrix ReadCSRMatrix(string filename)
     {
         //create an empty CSR matrix
         CSRMatrix A = new CSRMatrix();
@@ -86,26 +86,26 @@ static class ConjugateGradient
     }
 
     //make a vector
-    static double[] MakeVector(int m, double val)
+    public static double[] MakeVector(int m, double val)
     {
         //create an array of size m
         double[] x = new double[m];
-        //initialize all elements to val in parallel
-        OpenMP.Parallel.ParallelFor(0, m, i => x[i] = val);
+        //initialize all elements to val
+        for (int i = 0; i < m; i++)
+        {
+            x[i] = val;
+        }
         return x;
     }
 
     //compute the sparse matrix-vector product y = A*x
-    static double[] SpMV(CSRMatrix A, double[] x)
+    public static double[] SpMV(CSRMatrix A, double[] x)
     {
-        //create a shared array y which will be used to store the result of the matrix-vector product
-        OpenMP.Shared<double[]> y = new OpenMP.Shared<double[]>("y", new double[A.m]);
+        //create an array y which will be used to store the result of the matrix-vector product
+        double[] y = new double[A.m];
 
-        //compute the matrix-vector product in parallel
-        //we use guided scheduling to balance the irregular load between threads
-        OpenMP.Parallel.For(0, A.m,
-            schedule: OpenMP.Parallel.Schedule.Guided,
-            action: i =>
+        //compute the matrix-vector product
+        for (int i = 0; i < A.m; i++)
         {
             //compute the i-th element of the result
             double sum = 0.0;
@@ -114,49 +114,51 @@ static class ConjugateGradient
                 //sum += A[i,j] * x[j]
                 sum += A.values[j] * x[A.colInd[j]];
             }
-            //store the result in the shared array y
-            y.Get()[i] = sum;
-        });
+            //store the result in the array y
+            y[i] = sum;
+        }
 
-        return y.Get();
+        return y;
     }
 
     //compute the vector difference dest = x - y
-    static double[] SubtractVectors(double[] x, double[] y)
+    public static double[] SubtractVectors(double[] x, double[] y)
     {
         //create an array to store the result
         double[] dest = new double[x.Length];
-        //compute the difference in parallel
-        OpenMP.Parallel.ParallelFor(0, x.Length, i => dest[i] = x[i] - y[i]);
+        //compute the difference
+        for (int i = 0; i < x.Length; i++)
+        {
+            dest[i] = x[i] - y[i];
+        }
         return dest;
     }
 
     //compute the dot product of two vectors
-    static void DotProduct(double[] x, double[] y, ref double sum)
+    public static void DotProduct(double[] x, double[] y, ref double sum)
     {
         //initialize the sum to 0
-        if (OpenMP.Parallel.GetThreadNum() == 0)
-            sum = 0.0;
-        OpenMP.Parallel.Barrier();
-        //compute the dot product in parallel
-        OpenMP.Parallel.ForReduction(0, x.Length,
-            OpenMP.Operations.Add, ref sum,
-            (ref double sum, int i) =>
+        sum = 0;
+        //compute the dot product
+        for (int i = 0; i < x.Length; i++)
         {
             //inner loop of the reduction
             sum += x[i] * y[i];
-        });
+        }
     }
 
     //compute the vector sum dest = a*x + y
-    static void Daxpy(double a, double[] x, double[] y, double[] dest)
+    public static void Daxpy(double a, double[] x, double[] y, double[] dest)
     {
-        //compute the daxpy in parallel
-        OpenMP.Parallel.For(0, x.Length, i => dest[i] = a * x[i] + y[i]);
+        //compute the daxpy
+        for (int i = 0; i < x.Length; i++)
+        {
+            dest[i] = a * x[i] + y[i];
+        }
     }
 
     //compute the conjugate gradient method
-    static (double[], double) DoConjugateGradient(CSRMatrix A, double[] b, int max, double tolerance)
+    public static (double[], double) DoConjugateGradient(CSRMatrix A, double[] b, int max, double tolerance)
     {
         //initialize x to 0
         double[] x = MakeVector(A.m, 0.0);
@@ -174,53 +176,50 @@ static class ConjugateGradient
         double temp_scalar = 0;
 
         int iters = 0;
+        int k = 0;
 
-        //we create a parallel region out here instead of inside the while loop
-        //because we want to avoid the overhead of creating and destroying threads
-        OpenMP.Parallel.ParallelRegion(() =>
+        //iterate until convergence or max iterations
+        while (k < max)
         {
-            int k = 0;
+            //increment the iteration counter
+            ++k;
 
-            //iterate until convergence or max iterations
-            while (k < max)
+            //w = A*p
+            double[] w = SpMV(A, p);
+            //temp_scalar = p*w
+            DotProduct(p, w, ref temp_scalar);
+            //alpha = deltaOld / (p*w)
+            double alpha = deltaOld / temp_scalar;
+            //x = x + alpha*p
+            Daxpy(alpha, p, x, x);
+            //r = r - alpha*w
+            Daxpy(-alpha, w, r, r);
+
+            //delta = r*r
+            DotProduct(r, r, ref delta);
+
+            //check for convergence
+            if (Math.Sqrt(delta) < tolerance)
             {
-                //increment the iteration counter
-                ++k;
-
-                //w = A*p
-                double[] w = SpMV(A, p);
-                //temp_scalar = p*w
-                DotProduct(p, w, ref temp_scalar);
-                //alpha = deltaOld / (p*w)
-                double alpha = deltaOld / temp_scalar;
-                //x = x + alpha*p
-                Daxpy(alpha, p, x, x);
-                //r = r - alpha*w
-                Daxpy(-alpha, w, r, r);
-
-                //delta = r*r
-                DotProduct(r, r, ref delta);
-
-                //check for convergence
-                if (Math.Sqrt(delta) < tolerance)
-                {
-                    break;
-                }
-
-                //p = r + (delta/deltaOld)*p
-                Daxpy(delta / deltaOld, p, r, p);
-
-                //swap delta and deltaOld
-                deltaOld = delta;
+                break;
             }
 
-            //store the number of iterations in the shared variable iters
-            OpenMP.Parallel.Single(1, () => iters = k);
-        });
+            //p = r + (delta/deltaOld)*p
+            Daxpy(delta / deltaOld, p, r, p);
+
+            //swap delta and deltaOld
+            deltaOld = delta;
+        }
+
+        //store the number of iterations in the variable iters
+        iters = k;
 
         return (x, iters);
     }
+}
 
+class Driver
+{
     public static void Main(string[] args)
     {
         //check the command line arguments
@@ -231,9 +230,9 @@ static class ConjugateGradient
         }
 
         //read the matrix from the file
-        CSRMatrix A = ReadCSRMatrix(args[0]);
+        CSRMatrix A = ConjugateGradient.ReadCSRMatrix(args[0]);
         //create the b vector, initialize all elements to 1
-        double[] b = MakeVector(A.n, 1.0);
+        double[] b = ConjugateGradient.MakeVector(A.n, 1.0);
 
         //number of times to run the algorithm
         int numRuns = int.Parse(args[1]);
@@ -244,7 +243,7 @@ static class ConjugateGradient
         //warmup
         for (int i = 0; i < 5; i++)
         {
-            (x, _) = DoConjugateGradient(A, b, 1000, 0.01);
+            (x, _) = ConjugateGradient.DoConjugateGradient(A, b, 1000, 0.01);
         }
 
         //create min, max, avg variables
@@ -259,7 +258,7 @@ static class ConjugateGradient
         {
             //time the algorithm
             double tick = OpenMP.Parallel.GetWTime();
-            (x, iters) = DoConjugateGradient(A, b, 1000, 0.01);
+            (x, iters) = ConjugateGradient.DoConjugateGradient(A, b, 1000, 0.01);
             double tock = OpenMP.Parallel.GetWTime();
 
             //update min, max, avg
@@ -280,7 +279,7 @@ static class ConjugateGradient
         int numWrong = 0;
 
         //check the result
-        double[] error = SubtractVectors(SpMV(A, x), b);
+        double[] error = ConjugateGradient.SubtractVectors(ConjugateGradient.SpMV(A, x), b);
 
         //check for errors
         for (int i = 0; i < A.m; i++)
