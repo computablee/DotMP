@@ -26,7 +26,7 @@ namespace OpenMP
 
         public static bool Test(Lock lck)
         {
-            return Interlocked.CompareExchange(ref lck._lock, 1, 0) == 0 ? true : false;
+            return Interlocked.CompareExchange(ref lck._lock, 1, 0) == 0;
         }
     }
 }
