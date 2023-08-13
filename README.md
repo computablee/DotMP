@@ -106,6 +106,61 @@ OpenMP.Parallel.ParallelForReduction(a, b, op, ref local, (ref type local, int i
 ```
 This function supports all of the optional parameters of `ParallelRegion` and `ForReduction`, and is merely a wrapper around those two functions for conciseness.
 
+### Sections/Section
+Given the OpenMP:
+```c
+#pragma omp sections
+{
+    #pragma omp section
+    {
+        work();
+    }
+    #pragma omp section
+    {
+        work2();
+    }
+}
+```
+OpenMP.NET provides:
+```cs
+OpenMP.Parallel.Sections(() => {
+    OpenMP.Parallel.Section(() => {
+        work();
+    });
+    OpenMP.Parallel.Section(() => {
+        work();
+    });
+});
+```
+
+### Parallel Sections
+Given the OpenMP:
+```c
+#pragma omp parallel sections
+{
+    #pragma omp section
+    {
+        work();
+    }
+    #pragma omp section
+    {
+        work2();
+    }
+}
+```
+OpenMP.NET provides:
+```cs
+OpenMP.Parallel.ParallelSections(() => {
+    OpenMP.Parallel.Section(() => {
+        work();
+    });
+    OpenMP.Parallel.Section(() => {
+        work();
+    });
+});
+```
+This function supports the optional parameter `num_threads` from `OpenMP.Parallel.ParallelRegion`.
+
 ### Critical
 Given the OpenMP:
 ```c
