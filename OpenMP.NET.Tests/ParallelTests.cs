@@ -290,6 +290,37 @@ namespace OpenMP.NET.Tests
             });
         }
 
+        [Fact]
+        public void Sections_works()
+        {
+            uint num_threads = 6;
+            bool[] threads_used = new bool[num_threads];
+
+            for (int i = 0; i < num_threads; i++)
+                threads_used[i] = false;
+
+            double start = OpenMP.Parallel.GetWTime();
+
+            OpenMP.Parallel.ParallelSections(num_threads: num_threads, action: () =>
+            {
+                for (int i = 0; i < num_threads; i++)
+                {
+                    OpenMP.Parallel.Section(() =>
+                    {
+                        threads_used[OpenMP.Parallel.GetThreadNum()] = true;
+                        Thread.Sleep(100);
+                    });
+                }
+            });
+
+            double end = OpenMP.Parallel.GetWTime() - start;
+
+            for (int i = 0; i < num_threads; i++)
+                threads_used[i].Should().Be(true);
+
+            end.Should().BeLessThan(0.15);
+        }
+
         private static long Workload(bool inParallel)
         {
             const int WORKLOAD = 1_000_000;

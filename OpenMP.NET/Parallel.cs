@@ -2,6 +2,7 @@
 using OpenMP;
 using System.Collections.Generic;
 using System.Threading;
+using System.ComponentModel.DataAnnotations;
 
 namespace OpenMP
 {
@@ -44,6 +45,11 @@ namespace OpenMP
 
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
+            if (!ForkedRegion.in_parallel)
+            {
+                throw new NotInParallelRegionException();
+            }
+
             FixArgs(start, end, schedule, ref chunk_size, Init.ws.num_threads);
 
             Master(() =>
@@ -76,6 +82,11 @@ namespace OpenMP
 
         public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
+            if (!ForkedRegion.in_parallel)
+            {
+                throw new NotInParallelRegionException();
+            }
+
             FixArgs(start, end, schedule, ref chunk_size, Init.ws.num_threads);
 
             if (GetThreadNum() == 0)
@@ -190,6 +201,68 @@ namespace OpenMP
             });
 
             reduce_to = local;
+        }
+
+        public static void Sections(Action action)
+        {
+            if (!ForkedRegion.in_parallel)
+            {
+                throw new NotInParallelRegionException();
+            }
+
+            SectionHandler.in_sections = true;
+
+            if (GetThreadNum() == 0)
+            {
+                action();
+            }
+
+            Barrier();
+
+            while (SectionHandler.num_actions > 0)
+            {
+                Action do_action;
+
+                lock (SectionHandler.actions_list_lock)
+                {
+                    if (SectionHandler.actions.Count > 0)
+                        do_action = SectionHandler.actions.Dequeue();
+                    else break;
+                }
+
+                Interlocked.Decrement(ref SectionHandler.num_actions);
+
+                do_action();
+            }
+
+            Barrier();
+        }
+
+        public static void Section(Action action)
+        {
+            if (!ForkedRegion.in_parallel)
+            {
+                throw new NotInParallelRegionException();
+            }
+
+            if (!SectionHandler.in_sections)
+            {
+                throw new NotInSectionsRegionException();
+            }
+
+            lock (SectionHandler.actions_list_lock)
+            {
+                SectionHandler.actions.Enqueue(action);
+                Interlocked.Increment(ref SectionHandler.num_actions);
+            }
+        }
+
+        public static void ParallelSections(Action action, uint? num_threads = null)
+        {
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                Sections(action);
+            });
         }
 
         public static int Critical(int id, Action action)
