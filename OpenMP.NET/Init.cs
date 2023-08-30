@@ -1,17 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Threading;
-using OpenMP;
 
 namespace OpenMP
 {
-
+    /// <summary>
+    /// Encapsulates a Thread object with information about its progress through a parallel for loop.
+    /// </summary>
     internal class Thr
     {
+        /// <summary>
+        /// The Thread object to be encapsulated.
+        /// </summary>
         internal Thread thread;
+        /// <summary>
+        /// The current iteration of the parallel for loop.
+        /// </summary>
         volatile internal int curr_iter;
+        /// <summary>
+        /// The iteration the thread is currently working on.
+        /// </summary>
         internal int working_iter;
 
+        /// <summary>
+        /// Creates a Thr object with the specified Thread object.
+        /// </summary>
+        /// <param name="thread">The Thread object to be encapsulated.</param>
         internal Thr(Thread thread)
         {
             this.thread = thread;
@@ -20,18 +33,53 @@ namespace OpenMP
         }
     }
 
+    /// <summary>
+    /// Contains all relevant information about a parallel for loop.
+    /// </summary>
     internal struct WorkShare
     {
+        /// <summary>
+        /// The threads to be used in the parallel for loop.
+        /// </summary>
         internal Thr[] threads;
+        /// <summary>
+        /// The starting iteration of the parallel for loop, inclusive.
+        /// </summary>
         internal int start;
+        /// <summary>
+        /// A generic lock to be used within the parallel for loop.
+        /// </summary>
         internal object ws_lock;
+        /// <summary>
+        /// The ending iteration of the parallel for loop, exclusive.
+        /// </summary>
         internal int end;
+        /// <summary>
+        /// The chunk size to be used with the selected scheduler.
+        /// </summary>
         internal uint chunk_size;
+        /// <summary>
+        /// The number of threads to be used in the parallel for loop.
+        /// </summary>
         internal uint num_threads;
+        /// <summary>
+        /// The number of threads that have completed their work.
+        /// </summary>
         volatile internal int threads_complete;
+        /// <summary>
+        /// The operation to be performed if doing a reduction.
+        /// </summary>
         internal Operations? op;
+        /// <summary>
+        /// The list of reduction variables from each thread.
+        /// </summary>
         internal List<dynamic> reduction_list;
 
+        /// <summary>
+        /// Creates a WorkShare struct.
+        /// </summary>
+        /// <param name="num_threads">The number of threads to be used in the parallel for loop.</param>
+        /// <param name="threads">The Thread objects to be used in the parallel for loop.</param>
         internal WorkShare(uint num_threads, Thread[] threads)
         {
             this.threads = new Thr[num_threads];
@@ -48,8 +96,15 @@ namespace OpenMP
         }
     }
 
+    /// <summary>
+    /// Contains the WorkShare struct.
+    /// Surely there's a better way to do this. What was I thinking?
+    /// </summary>
     internal static class Init
     {
+        /// <summary>
+        /// The WorkShare struct.
+        /// </summary>
         internal static WorkShare ws;
     }
 }
