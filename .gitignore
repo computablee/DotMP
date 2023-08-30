@@ -3,6 +3,14 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+search/*
+*.svg
+*.js
+*.map
+*.css
+*.md5
+*.html
+*.png
 *.mtx
 *.csr
 .vscode
