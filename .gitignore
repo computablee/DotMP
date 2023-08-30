@@ -3,7 +3,11 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
+Makefile
 search/*
+*.sty
+*.pdf
+*.tex
 *.svg
 *.js
 *.map
