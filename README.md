@@ -10,7 +10,7 @@ To build the documentation, run the following commands:
 cd OpenMP.NET
 doxygen Doxyfile
 ```
-This will generate documentation in the root of the project under the `OpenMP.NET.Docs` directory.
+This will generate documentation in the root of the project under the `OpenMP.NET.Docs` directory in both LaTeX and HTML formats.
 
 ## Supported Constructs
 
