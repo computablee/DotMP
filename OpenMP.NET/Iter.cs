@@ -4,8 +4,17 @@ using System.Threading;
 
 namespace OpenMP
 {
+    /// <summary>
+    /// Contains all of the scheduling code for parallel for loops.
+    /// </summary>
     internal static class Iter
     {
+        /// <summary>
+        /// Sets the local variable to the appropriate value based on the operation for parallel for reduction loops.
+        /// </summary>
+        /// <typeparam name="T">The type of the local variable.</typeparam>
+        /// <param name="local">The local variable to be set.</param>
+        /// <param name="op">The operation to be performed.</param>
         internal static void SetLocal<T>(ref T local, Operations? op)
         {
             switch (Init.ws.op)
@@ -43,6 +52,14 @@ namespace OpenMP
             }
         }
 
+        /// <summary>
+        /// Starts and controls a parallel for loop with static scheduling.
+        /// </summary>
+        /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="thread_id">The thread ID.</param>
+        /// <param name="omp_fn">The function to be executed.</param>
+        /// <param name="omp_fn_red">The function to be executed for reductions.</param>
+        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
         internal static void StaticLoop<T>(object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
         {
             int tid = (int)thread_id;
@@ -51,7 +68,7 @@ namespace OpenMP
             thr.curr_iter = (int)(Init.ws.start + tid * Init.ws.chunk_size);
             int end = Init.ws.end;
 
-            T local = default(T);
+            T local = default;
             SetLocal(ref local, Init.ws.op);
 
             while (thr.curr_iter < end)
@@ -65,6 +82,17 @@ namespace OpenMP
             }
         }
 
+        /// <summary>
+        /// Calculates the next chunk of iterations for a static scheduling parallel for loop and executes the appropriate function.
+        /// </summary>
+        /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="thr">The Thr object for the current thread.</param>
+        /// <param name="thread_id">The thread ID.</param>
+        /// <param name="chunk_size">The chunk size.</param>
+        /// <param name="omp_fn">The function to be executed.</param>
+        /// <param name="omp_fn_red">The function to be executed for reductions.</param>
+        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
+        /// <param name="local">The local variable for reductions.</param>
         private static void StaticNext<T>(Thr thr, int thread_id, uint chunk_size, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, ref T local)
         {
             int start = thr.curr_iter;
@@ -84,13 +112,21 @@ namespace OpenMP
             thr.curr_iter += (int)(Init.ws.num_threads * chunk_size);
         }
 
+        /// <summary>
+        /// Starts and controls a parallel for loop with dynamic scheduling.
+        /// </summary>
+        /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="thread_id">The thread ID.</param>
+        /// <param name="omp_fn">The function to be executed.</param>
+        /// <param name="omp_fn_red">The function to be executed for reductions.</param>
+        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
         internal static void DynamicLoop<T>(object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
         {
             int tid = (int)thread_id;
             Thr thr = Init.ws.threads[tid];
             int end = Init.ws.end;
 
-            T local = default(T);
+            T local = default;
             SetLocal(ref local, Init.ws.op);
 
             while (Init.ws.start < end)
@@ -106,6 +142,15 @@ namespace OpenMP
             }
         }
 
+        /// <summary>
+        /// Calculates the next chunk of iterations for a dynamic scheduling parallel for loop and executes the appropriate function.
+        /// </summary>
+        /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="thr">The Thr object for the current thread.</param>
+        /// <param name="omp_fn">The function to be executed.</param>
+        /// <param name="omp_fn_red">The function to be executed for reductions.</param>
+        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
+        /// <param name="local">The local variable for reductions.</param>
         private static void DynamicNext<T>(Thr thr, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, ref T local)
         {
             int chunk_start;
@@ -130,13 +175,21 @@ namespace OpenMP
                 }
         }
 
+        /// <summary>
+        /// Starts and controls a parallel for loop with guided scheduling.
+        /// </summary>
+        /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="thread_id">The thread ID.</param>
+        /// <param name="omp_fn">The function to be executed.</param>
+        /// <param name="omp_fn_red">The function to be executed for reductions.</param>
+        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
         internal static void GuidedLoop<T>(object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
         {
             int tid = (int)thread_id;
             Thr thr = Init.ws.threads[tid];
             int end = Init.ws.end;
 
-            T local = default(T);
+            T local = default;
             SetLocal(ref local, Init.ws.op);
 
             while (Init.ws.start < end)
@@ -152,6 +205,15 @@ namespace OpenMP
             }
         }
 
+        /// <summary>
+        /// Calculates the next chunk of iterations for a guided scheduling parallel for loop and executes the appropriate function.
+        /// </summary>
+        /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="thr">The Thr object for the current thread.</param>
+        /// <param name="omp_fn">The function to be executed.</param>
+        /// <param name="omp_fn_red">The function to be executed for reductions.</param>
+        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
+        /// <param name="local">The local variable for reductions.</param>
         private static void GuidedNext<T>(Thr thr, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, ref T local)
         {
             int chunk_start, chunk_size;
