@@ -82,7 +82,7 @@ OpenMP.Parallel.ForReduction(a, b, op, ref local, (ref type local, int i) => {
 });
 ```
 `op` is a value provided by the `OpenMP.Operations` enum, which supports the values `Add`, `Subtract`, `Multiply`, `BinaryAnd`, `BinaryOr`, `BinaryXor`, `BooleanAnd`, `BooleanOr`, `Min`, and `Max`.
-`\`op\`` is an operator corresponding to the operator specified by `OpenMP.Operations`, including `+`, `-`, `*`, `&`, `|`, `^`, and so on.
+The operation on `local` is an operator corresponding to the operator specified by `OpenMP.Operations`, including `+`, `-`, `*`, `&`, `|`, `^`, and so on.
 
 This function supports all of the optional parameters of `For`.
 
