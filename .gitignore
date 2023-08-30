@@ -3,18 +3,7 @@
 ##
 ## Get latest from https://github.com/github/gitignore/blob/master/VisualStudio.gitignore
 
-Makefile
-search/*
-*.sty
-*.pdf
-*.tex
-*.svg
-*.js
-*.map
-*.css
-*.md5
-*.html
-*.png
+OpenMP.NET.Docs/*
 *.mtx
 *.csr
 .vscode
