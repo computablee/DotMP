@@ -8,10 +8,25 @@ namespace OpenMP
     /// </summary>
     internal struct Region
     {
+        /// <summary>
+        /// The threads to be created and executed.
+        /// </summary>
         internal Thread[] threads;
+        /// <summary>
+        /// Generic lock to be used within the workspace.
+        /// </summary>
         internal object ws_lock;
+        /// <summary>
+        /// The number of threads in play.
+        /// </summary>
         internal uint num_threads;
+        /// <summary>
+        /// The function to be executed.
+        /// </summary>
         internal Action omp_fn;
+        /// <summary>
+        /// Generic SpinWait objects for each thread.
+        /// </summary>
         internal SpinWait[] spin;
 
         /// <summary>
@@ -39,7 +54,13 @@ namespace OpenMP
     /// </summary>
     internal static class ForkedRegion
     {
+        /// <summary>
+        /// The Region object which the methods act on.
+        /// </summary>
         internal static Region ws;
+        /// <summary>
+        /// Whether or not the program is currently in a parallel region.
+        /// </summary>
         internal static bool in_parallel = false;
 
         /// <summary>

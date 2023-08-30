@@ -7,6 +7,9 @@ namespace OpenMP
     /// </summary>
     public class Lock
     {
+        /// <summary>
+        /// The int acting as the lock.
+        /// </summary>
         volatile internal int _lock;
 
         /// <summary>

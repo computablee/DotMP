@@ -8,9 +8,14 @@ namespace OpenMP
     /// <typeparam name="T">The type of the shared variable.</typeparam>
     public class Shared<T>
     {
-
+        /// <summary>
+        /// The shared variables.
+        /// </summary>
         private static Dictionary<string, dynamic> shared = new Dictionary<string, dynamic>();
 
+        /// <summary>
+        /// The name of the shared variable.
+        /// </summary>
         private string name;
 
         /// <summary>

@@ -18,12 +18,33 @@ namespace OpenMP
     /// </summary>
     public static class Parallel
     {
+        /// <summary>
+        /// The different types of schedules for a parallel for loop.
+        /// </summary>
         public enum Schedule { Static, Dynamic, Guided };
+        /// <summary>
+        /// The dictionary for critical regions.
+        /// </summary>
         private static volatile Dictionary<int, (int, object)> critical_lock = new Dictionary<int, (int, object)>();
+        /// <summary>
+        /// The dictionary for single regions.
+        /// </summary>
         private static volatile Dictionary<int, int> single_thread = new Dictionary<int, int>();
+        /// <summary>
+        /// The dictionary for ordered regions.
+        /// </summary>
         private static volatile Dictionary<int, int> ordered = new Dictionary<int, int>();
+        /// <summary>
+        /// The number of critical regions found.
+        /// </summary>
         private static volatile int found_criticals = 0;
+        /// <summary>
+        /// Barrier object for OpenMP.Parallel.Barrier()
+        /// </summary>
         private static volatile Barrier barrier;
+        /// <summary>
+        /// Number of threads to be used in the next parallel region, where 0 means that it will be determined on-the-fly.
+        /// </summary>
         private static volatile uint num_threads = 0;
 
         /// <summary>
