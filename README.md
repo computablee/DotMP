@@ -3,7 +3,7 @@ A library for writing OpenMP-style parallel code in .NET.
 Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the OpenMP programming style as faithfully as possible, though breaking spec at times.
 
 ## Documentation
-You can use [https://github.com/doxygen/doxygen](Doxygen) to build the documentation for this project.
+You can use [Doxygen](https://github.com/doxygen/doxygen) to build the documentation for this project.
 A Doxyfile is located under the `OpenMP.NET` directory.
 To build the documentation, run the following commands:
 ```sh
