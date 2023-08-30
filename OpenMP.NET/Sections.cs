@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace OpenMP
 {
+    /// <summary>
+    /// Static class that contains necessary information for sections.
+    /// </summary>
     internal static class SectionHandler
     {
         internal static bool in_sections = false;
