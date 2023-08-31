@@ -4,10 +4,16 @@ using System.Diagnostics;
 using System.Threading;
 using Xunit;
 
-namespace OpenMP.NET.Tests
+namespace OmpNETTests
 {
+    /// <summary>
+    /// Tests for the OpenMP.NET library.
+    /// </summary>
     public class ParallelTests
     {
+        /// <summary>
+        /// Tests to make sure that parallel performance is higher than sequential performance.
+        /// </summary>
         [Fact]
         public void Parallel_performance_should_be_higher()
         {
@@ -17,6 +23,9 @@ namespace OpenMP.NET.Tests
             elapsedParallel.Should().BeLessThan(elapsedSeries);
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.ParallelRegion()'s are actually created.
+        /// </summary>
         [Fact]
         public void Parallel_should_work()
         {
@@ -25,6 +34,9 @@ namespace OpenMP.NET.Tests
             actual.Should().Be((uint)OpenMP.Parallel.GetMaxThreads());
         }
 
+        /// <summary>
+        /// Tests the functionality of OpenMP.Parallel.For().
+        /// </summary>
         [Fact]
         public void Parallelfor_should_work()
         {
@@ -48,6 +60,9 @@ namespace OpenMP.NET.Tests
             }
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.Schedule.Static produces correct results.
+        /// </summary>
         [Fact]
         public void Static_should_produce_correct_results()
         {
@@ -70,6 +85,9 @@ namespace OpenMP.NET.Tests
             }
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.Critical() works.
+        /// </summary>
         [Fact]
         public void Critical_works()
         {
@@ -89,6 +107,9 @@ namespace OpenMP.NET.Tests
             threads.Should().Be((uint)total);
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.Master() works.
+        /// </summary>
         [Fact]
         public void Master_works()
         {
@@ -103,6 +124,9 @@ namespace OpenMP.NET.Tests
             total.Should().Be(1);
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.Single() works.
+        /// </summary>
         [Fact]
         public void Single_works()
         {
@@ -117,6 +141,9 @@ namespace OpenMP.NET.Tests
             total.Should().Be(1);
         }
 
+        /// <summary>
+        /// Tests to make sure that the OpenMP.Atomic class works.
+        /// </summary>
         [Fact]
         public void Atomic_works()
         {
@@ -134,6 +161,9 @@ namespace OpenMP.NET.Tests
             total2.Should().Be(-threads * 2);
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.Ordered() works.
+        /// </summary>
         [Fact]
         public void Ordered_works()
         {
@@ -152,6 +182,9 @@ namespace OpenMP.NET.Tests
             }
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.ForReduction<T>() works.
+        /// </summary>
         [Fact]
         public void Reduction_works()
         {
@@ -170,6 +203,9 @@ namespace OpenMP.NET.Tests
             total.Should().Be(1024 * 1023);
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.SetNumThreads() works.
+        /// </summary>
         [Fact]
         public void SetNumThreads_works()
         {
@@ -194,6 +230,9 @@ namespace OpenMP.NET.Tests
             });
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.InParallel() works.
+        /// </summary>
         [Fact]
         public void InParallel_works()
         {
@@ -207,6 +246,9 @@ namespace OpenMP.NET.Tests
             OpenMP.Parallel.InParallel().Should().BeFalse();
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.SetDynamic() works.
+        /// </summary>
         [Fact]
         public void SetDynamic_works()
         {
@@ -223,6 +265,9 @@ namespace OpenMP.NET.Tests
             OpenMP.Parallel.GetDynamic().Should().BeFalse();
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.GetWTime() works.
+        /// </summary>
         [Fact]
         public void GetWTime_works()
         {
@@ -233,6 +278,9 @@ namespace OpenMP.NET.Tests
             (end - start).Should().BeLessThan(1.1);
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.GetNested() and OpenMP.Parallel.SetNested() work.
+        /// </summary>
         [Fact]
         public void GetNested_works()
         {
@@ -248,6 +296,9 @@ namespace OpenMP.NET.Tests
             }
         }
 
+        /// <summary>
+        /// Tests to make sure that the OpenMP.Locking and OpenMP.Lock classes work.
+        /// </summary>
         [Fact]
         public void Locks_work()
         {
@@ -276,6 +327,9 @@ namespace OpenMP.NET.Tests
             OpenMP.Locking.Unset(l);
         }
 
+        /// <summary>
+        /// Tests to make sure the OpenMP.Shared class works.
+        /// </summary>
         [Fact]
         public void Shared_works()
         {
@@ -290,6 +344,9 @@ namespace OpenMP.NET.Tests
             });
         }
 
+        /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.Sections() and OpenMP.Parallel.Section() work.
+        /// </summary>
         [Fact]
         public void Sections_works()
         {
@@ -321,6 +378,11 @@ namespace OpenMP.NET.Tests
             end.Should().BeLessThan(0.15);
         }
 
+        /// <summary>
+        /// A sample workload for OpenMP.Parallel.ParallelFor().
+        /// </summary>
+        /// <param name="inParallel">Whether or not to enable parallelism.</param>
+        /// <returns>Elapsed milliseconds of the test.</returns>
         private static long Workload(bool inParallel)
         {
             const int WORKLOAD = 1_000_000;
@@ -362,6 +424,13 @@ namespace OpenMP.NET.Tests
             return s.ElapsedMilliseconds;
         }
 
+        /// <summary>
+        /// A heavy workload for tests.
+        /// </summary>
+        /// <param name="j">Index to use into a, b, and c.</param>
+        /// <param name="a">Float array 1 (destination).</param>
+        /// <param name="b">Float array 2 (source).</param>
+        /// <param name="c">Float array 3 (source).</param>
         private static void InnerWorkload(int j, float[] a, float[] b, float[] c)
         {
             a[j] = (a[j] * b[j] + c[j]) / c[j];
@@ -372,6 +441,10 @@ namespace OpenMP.NET.Tests
                 a[j] += i;
         }
 
+        /// <summary>
+        /// Creates a parallel region and returns the number of threads spawned.
+        /// </summary>
+        /// <returns></returns>
         private static uint CreateRegion()
         {
             uint threads_spawned = 0;
@@ -384,6 +457,13 @@ namespace OpenMP.NET.Tests
             return threads_spawned;
         }
 
+        /// <summary>
+        /// A sample workload for saxpy.
+        /// </summary>
+        /// <param name="a">Scalar for saxpy.</param>
+        /// <param name="x">Vector to multiply by the scalar.</param>
+        /// <param name="y">Vector to add.</param>
+        /// <returns>Result of saxpy.</returns>
         float[] saxpy_parallelregion_for(float a, float[] x, float[] y)
         {
             float[] z = new float[x.Length];
@@ -399,6 +479,13 @@ namespace OpenMP.NET.Tests
             return z;
         }
 
+        /// <summary>
+        /// Same as saxpy_parallelregion_for, but uses OpenMP.Parallel.ParallelFor() instead of OpenMP.Parallel.ParallelRegion() and OpenMP.Parallel.For().
+        /// </summary>
+        /// <param name="a">Scalar for saxpy.</param>
+        /// <param name="x">Vector to multiply by the scalar.</param>
+        /// <param name="y">Vector to add.</param>
+        /// <returns>Result of saxpy.</returns>
         float[] saxpy_parallelfor(float a, float[] x, float[] y)
         {
             float[] z = new float[x.Length];
@@ -411,6 +498,11 @@ namespace OpenMP.NET.Tests
             return z;
         }
 
+        /// <summary>
+        /// Convoluted test to calculate how many critical regions were found. Outdated, can probably be removed.
+        /// </summary>
+        /// <param name="two_regions">Whether or not to spawn 2 regions or 1.</param>
+        /// <returns>The number of encountered critical regions.</returns>
         int critical_ids(bool two_regions)
         {
             object mylock = new object();
