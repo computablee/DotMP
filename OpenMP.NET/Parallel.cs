@@ -23,8 +23,9 @@ namespace OpenMP
         /// The different types of schedules for a parallel for loop.
         /// The default schedule if none is specified is static.
         /// Detailed explanations of each schedule can be found in the Iter class.
+        /// The Runtime schedule simply fetches the schedule from the OMP_SCHEDULE environment variable.
         /// </summary>
-        public enum Schedule { Static, Dynamic, Guided };
+        public enum Schedule { Static, Dynamic, Guided, Runtime };
         /// <summary>
         /// The dictionary for critical regions.
         /// </summary>
@@ -52,19 +53,63 @@ namespace OpenMP
 
         /// <summary>
         /// Fixes the arguments for a parallel for loop.
-        /// In reality, just calculates the chunk size.
-        /// TODO: Change to a traditional function just returning the chunk size instead of using ref.
+        /// If a Schedule is set to Static, Dynamic, or Guided, then the function simply calculates chunk size if none is given.
+        /// If a Schedule is set to Runtime, then the function checks the OMP_SCHEDULE environment variable and sets the appropriate values.
         /// </summary>
         /// <param name="start">The start of the loop.</param>
         /// <param name="end">The end of the loop.</param>
         /// <param name="sched">The schedule of the loop.</param>
         /// <param name="chunk_size">The chunk size of the loop.</param>
         /// <param name="num_threads">The number of threads to be used in the loop.</param>
-        private static void FixArgs(int start, int end, Schedule sched, ref uint? chunk_size, uint num_threads)
+        private static void FixArgs(int start, int end, ref Schedule sched, ref uint? chunk_size, uint num_threads)
         {
             if (num_threads == 0)
             {
                 num_threads = (uint)GetNumProcs();
+            }
+
+            if (sched == Schedule.Runtime)
+            {
+                string schedule = Environment.GetEnvironmentVariable("OMP_SCHEDULE");
+
+                if (schedule == null)
+                {
+                    sched = Schedule.Static;
+                }
+                else
+                {
+                    string[] parts = schedule.Split(',');
+
+                    switch (parts[0].ToLower())
+                    {
+                        case "dynamic":
+                            sched = Schedule.Dynamic;
+                            break;
+                        case "guided":
+                            sched = Schedule.Guided;
+                            break;
+                        case "static":
+                            sched = Schedule.Static;
+                            break;
+                        default:
+                            Console.WriteLine("Invalid schedule specified by OMP_SCHEDULE, defaulting to static.");
+                            sched = Schedule.Static;
+                            break;
+                    }
+
+                    if (parts.Length > 1)
+                    {
+                        uint try_chunk_size;
+                        if (uint.TryParse(parts[1], out try_chunk_size))
+                        {
+                            chunk_size = try_chunk_size;
+                        }
+                        else
+                        {
+                            chunk_size = null;
+                        }
+                    }
+                }
             }
 
             if (chunk_size == null)
@@ -105,7 +150,7 @@ namespace OpenMP
                 throw new NotInParallelRegionException();
             }
 
-            FixArgs(start, end, schedule, ref chunk_size, Init.ws.num_threads);
+            FixArgs(start, end, ref schedule, ref chunk_size, Init.ws.num_threads);
 
             Master(() =>
             {
@@ -113,6 +158,7 @@ namespace OpenMP
                 Init.ws.start = start;
                 Init.ws.end = end;
                 Init.ws.chunk_size = chunk_size.Value;
+                Init.ws.schedule = schedule;
             });
 
             Barrier();
@@ -159,7 +205,7 @@ namespace OpenMP
                 throw new NotInParallelRegionException();
             }
 
-            FixArgs(start, end, schedule, ref chunk_size, Init.ws.num_threads);
+            FixArgs(start, end, ref schedule, ref chunk_size, Init.ws.num_threads);
 
             if (GetThreadNum() == 0)
             {
@@ -168,6 +214,7 @@ namespace OpenMP
                 Init.ws.end = end;
                 Init.ws.chunk_size = chunk_size.Value;
                 Init.ws.op = op;
+                Init.ws.schedule = schedule;
                 Init.ws.reduction_list.Clear();
             }
 
@@ -647,6 +694,24 @@ namespace OpenMP
         public static double GetWTime()
         {
             return DateTime.Now.Ticks / 10000000.0;
+        }
+
+        /// <summary>
+        /// Returns the current schedule being used in the parallel for loop.
+        /// </summary>
+        /// <returns></returns>
+        public static Schedule? GetSchedule()
+        {
+            return Init.ws.schedule;
+        }
+
+        /// <summary>
+        /// Returns the current chunk size being used in the parallel for loop.
+        /// </summary>
+        /// <returns></returns>
+        public static uint GetChunkSize()
+        {
+            return Init.ws.chunk_size;
         }
 
         /// <summary>

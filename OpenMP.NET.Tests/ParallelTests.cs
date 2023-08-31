@@ -86,6 +86,27 @@ namespace OmpNETTests
         }
 
         /// <summary>
+        /// Tests to make sure that OpenMP.Parallel.Schedule.Runtime properly reads values from the environment variable.
+        /// </summary>
+        [Fact]
+        public void Schedule_runtime_works()
+        {
+            Environment.SetEnvironmentVariable("OMP_SCHEDULE", "guided,2");
+            OpenMP.Parallel.ParallelFor(0, 1024, schedule: OpenMP.Parallel.Schedule.Runtime, action: i =>
+            {
+                OpenMP.Parallel.GetSchedule().Should().Be(OpenMP.Parallel.Schedule.Guided);
+                OpenMP.Parallel.GetChunkSize().Should().Be(2);
+            });
+
+            Environment.SetEnvironmentVariable("OMP_SCHEDULE", "dynamic,4");
+            OpenMP.Parallel.ParallelFor(0, 1024, schedule: OpenMP.Parallel.Schedule.Runtime, action: i =>
+            {
+                OpenMP.Parallel.GetSchedule().Should().Be(OpenMP.Parallel.Schedule.Dynamic);
+                OpenMP.Parallel.GetChunkSize().Should().Be(4);
+            });
+        }
+
+        /// <summary>
         /// Tests to make sure that OpenMP.Parallel.Critical() works.
         /// </summary>
         [Fact]
