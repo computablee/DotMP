@@ -76,6 +76,10 @@ namespace OpenMP
         /// The list of reduction variables from each thread.
         /// </summary>
         internal List<dynamic> reduction_list;
+        /// <summary>
+        /// The schedule to be used in the parallel for loop.
+        /// </summary>
+        internal Parallel.Schedule? schedule;
 
         /// <summary>
         /// Creates a WorkShare struct.
@@ -95,6 +99,7 @@ namespace OpenMP
             this.num_threads = num_threads;
             this.op = null;
             this.reduction_list = new List<dynamic>();
+            this.schedule = null;
         }
     }
 
