@@ -21,7 +21,9 @@ I see no reason to ever use `public` member variables for this project.
 If you have to, make sure it follows the conventions of OpenMP, and use getters/setters with checks to make sure the values are legal.
 I use `internal` a lot, but I also access a lot of member variables directly within the source. This is following the style of `libgomp`.
 I am happy to see this improved with heavier use of `private` and getters/setters.
-* I am not a believer in ``self-documenting code'', nor am I believer in overdocumentation. Write comments where necessary. Use your best judgment.
+* Documentation is handled with Doxygen and XML-style comments. See the existing code for examples.
+There is a CD pipeline to automatically generate Doxygen files and publish to the GitHub Pages site upon a push to Main.
+Please adequately document your code, and where it makes sense to explain the functionality and use case of the code, do so.
 
 ## Optimization Guidelines
 
