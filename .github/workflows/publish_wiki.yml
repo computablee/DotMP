@@ -11,6 +11,8 @@ jobs:
     steps:
     - name: Build Doxygen documentation
       uses: mattnotmitt/doxygen-action@1.9.5
+      with:
+        doxyfile-path: './Doxyfile'
     - name: Publish wiki
       uses: SwiftDocOrg/github-wiki-publish-action@v1
       with:
