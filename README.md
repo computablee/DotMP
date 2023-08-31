@@ -1,8 +1,14 @@
-# OpenMP.NET
+# [OpenMP.NET](https://github.com/computablee/OpenMP.NET)
 A library for writing OpenMP-style parallel code in .NET.
 Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the OpenMP programming style as faithfully as possible, though breaking spec at times.
 
-## Building OpenMP.NET
+## Building OpenMP.NET from Source
+First, clone OpenMP.NET and navigate to the source directory:
+```sh
+git clone git@github.com:computablee/OpenMP.NET.git
+cd OpenMP.NET
+```
+
 OpenMP.NET can be built using the `make` command.
 To build the entire project, including all tests, examples, and documentation, run the following command:
 ```sh
