@@ -1,4 +1,4 @@
-name: Publish OpenMP.NET Site
+name: Publish DotMP Site
 
 on:
   push:
