@@ -1,0 +1,18 @@
+name: Publish OpenMP.NET Wiki
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+    - name: Publish wiki
+      uses: SwiftDocOrg/github-wiki-publish-action@v1
+      with:
+        path: "OpenMP.NET.Docs/html"
+      env:
+        GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}

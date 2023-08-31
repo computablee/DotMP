@@ -32,15 +32,3 @@ jobs:
     steps:
     - name: Run tests
       run: dotnet test --no-build --verbosity normal OpenMP.NET.Tests/
-
-  publish:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-    - name: Publish wiki
-      uses: SwiftDocOrg/github-wiki-publish-action@v1
-      with:
-        path: "OpenMP.NET.Docs/html"
-      env:
-        GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
