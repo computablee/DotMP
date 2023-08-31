@@ -5,7 +5,7 @@ Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the Open
 ## Building DotMP from Source
 First, clone DotMP and navigate to the source directory:
 ```sh
-git clone git@github.com:computablee/ODotMP.git
+git clone git@github.com:computablee/DotMP.git
 cd DotMP
 ```
 
