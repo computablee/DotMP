@@ -5,6 +5,13 @@ on:
     branches: [ "main" ]
 
 jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build Doxygen documentation
+      uses: mattnotmitt/doxygen-action@1.9.5
+
   publish:
     runs-on: ubuntu-latest
     needs: build
