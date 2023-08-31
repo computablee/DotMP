@@ -6,7 +6,8 @@ fork the repository (choose the branch based on the issue you want to work on),
 make local edits, then open a pull request.
 
 In your pull request, make sure to specify **which issue you are addressing, how you've addressed it, and how you've tested it.**
-One of the issues is to configure proper unit and integration testing. If you are able to write unit tests for your PR, please do.
+We have a CI pipeline to run unit tests on pull requests. Those **must** pass before a pull request will be merged.
+If you add new functionality, add a new unit test.
 
 ## Style Conventions
 
