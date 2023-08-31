@@ -43,7 +43,7 @@ To build the documentation, run the following command:
 ```sh
 make docs
 ```
-This will generate documentation in the root of the project under the `OpenMP.NET.Docs` directory in both LaTeX and HTML formats.
+This will generate documentation in the root of the project under the `docs` directory in both LaTeX and HTML formats.
 
 ## Supported Constructs
 

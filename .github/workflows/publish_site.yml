@@ -1,4 +1,4 @@
-name: Publish OpenMP.NET Wiki
+name: Publish OpenMP.NET Site
 
 on:
   push:
