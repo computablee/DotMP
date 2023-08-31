@@ -1,7 +1,4 @@
-# This workflow will build a .NET project
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-net
-
-name: .NET
+name: Test OpenMP.NET
 
 on:
   push:
@@ -20,13 +17,13 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Restore dependencies
-      run: dotnet restore OpenMP.NET/
-    - name: Build
-      run: dotnet build --no-restore OpenMP.NET
-    - name: Restore dependencies
-      run: dotnet restore OpenMP.NET.Tests/
-    - name: Build
-      run: dotnet build --no-restore OpenMP.NET.Tests/
-    - name: Test
+    - name: Build main project
+      run: make build
+    - name: Build tests
+      run: make tests
+    - name: Build examples
+      run: make examples
+    - name: Build documentation
+      run: make docs
+    - name: Run tests
       run: dotnet test --no-build --verbosity normal OpenMP.NET.Tests/
