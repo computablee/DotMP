@@ -340,6 +340,7 @@ namespace OmpNETTests
                 OpenMP.Parallel.Master(() => s.Set(7));
                 OpenMP.Parallel.Barrier();
                 s.Get().Should().Be(7);
+                OpenMP.Parallel.Barrier();
                 s.Clear();
             });
         }
