@@ -11,12 +11,6 @@ jobs:
     steps:
     - name: Build Doxygen documentation
       uses: mattnotmitt/doxygen-action@1.9.5
-
-  publish:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
     - name: Publish wiki
       uses: SwiftDocOrg/github-wiki-publish-action@v1
       with:
