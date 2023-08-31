@@ -1,12 +1,12 @@
-# [DotMP](https://github.com/computablee/OpenMP.NET)
+# [DotMP](https://github.com/computablee/DotMP)
 A library for writing OpenMP-style parallel code in .NET.
 Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the OpenMP programming style as faithfully as possible, though breaking spec at times.
 
 ## Building DotMP from Source
 First, clone DotMP and navigate to the source directory:
 ```sh
-git clone git@github.com:computablee/OpenMP.NET.git
-cd OpenMP.NET
+git clone git@github.com:computablee/ODotMP.git
+cd DotMP
 ```
 
 DotMP can be built using the `make` command.
