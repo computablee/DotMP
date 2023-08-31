@@ -358,6 +358,7 @@ namespace OmpNETTests
             {
                 OpenMP.Shared<int> s = new OpenMP.Shared<int>("s", 6);
                 s.Get().Should().Be(6);
+                OpenMP.Parallel.Barrier();
                 OpenMP.Parallel.Master(() => s.Set(7));
                 OpenMP.Parallel.Barrier();
                 s.Get().Should().Be(7);
