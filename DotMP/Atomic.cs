@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace OpenMP
+namespace DotMP
 {
     /// <summary>
     /// Provides atomic operations for integral types as a wrapper around the Interlocked class.

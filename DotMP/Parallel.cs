@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading;
 
-namespace OpenMP
+namespace DotMP
 {
     /// <summary>
     /// Action delegate that takes an int and a ref T as parameters.
@@ -13,7 +13,7 @@ namespace OpenMP
     public delegate void ActionRef<T>(ref T a, int i);
 
     /// <summary>
-    /// The main class of OpenMP.NET.
+    /// The main class of DotMP.
     /// Contains all the main methods for parallelism.
     /// For users, this is the main class you want to worry about, along with Locking, Lock, Shared, and Atomic
     /// </summary>
@@ -43,7 +43,7 @@ namespace OpenMP
         /// </summary>
         private static volatile int found_criticals = 0;
         /// <summary>
-        /// Barrier object for OpenMP.Parallel.Barrier()
+        /// Barrier object for DotMP.Parallel.Barrier()
         /// </summary>
         private static volatile Barrier barrier;
         /// <summary>
@@ -672,7 +672,7 @@ namespace OpenMP
 
         /// <summary>
         /// Enables nested parallelism.
-        /// This function is not implemented, as nested parallelism does not exist in the current version of OpenMP.NET.
+        /// This function is not implemented, as nested parallelism does not exist in the current version of DotMP.
         /// There are no plans to implement nested parallelism at the moment.
         /// </summary>
         /// <param name="_">Unused.</param>

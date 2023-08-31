@@ -1,6 +1,6 @@
-# Contributing to OpenMP.NET
+# Contributing to DotMP
 
-Contributing to OpenMP.NET is pretty simple.
+Contributing to DotMP is pretty simple.
 As with contributing to any open-source project,
 fork the repository (choose the branch based on the issue you want to work on),
 make local edits, then open a pull request.
@@ -28,7 +28,7 @@ Please adequately document your code, and where it makes sense to explain the fu
 
 ## Optimization Guidelines
 
-This is a clone of OpenMP. OpenMP is heavily optimized. Avoid mutual exclusion where possible, and use locks efficiently where necessary.
+This is a pseudo-implementation of OpenMP. OpenMP is heavily optimized. Avoid mutual exclusion where possible, and use locks efficiently where necessary.
 Don't worry about optimizing to obscurity, but benchmark your code and make sure that you get reasonable scaling.
 
 ## Code of Conduct

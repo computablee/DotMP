@@ -1,6 +1,6 @@
 using System;
 
-namespace OpenMP
+namespace DotMP
 {
     /// <summary>
     /// Exception thrown if a parallel-only construct is used outside of a parallel region.

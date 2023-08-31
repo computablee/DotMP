@@ -1,5 +1,5 @@
 ﻿using System;
-using OpenMP;
+using DotMP;
 
 static class HeatTransfer
 {
@@ -8,7 +8,7 @@ static class HeatTransfer
     private static void DoStep(double[,] grid, double[,] scratch, int dim)
     {
         //iterate over all cells not on the border
-        OpenMP.Parallel.For(1, dim - 1, schedule: OpenMP.Parallel.Schedule.Dynamic, action: i =>
+        DotMP.Parallel.For(1, dim - 1, schedule: DotMP.Parallel.Schedule.Dynamic, action: i =>
         {
             for (int j = 1; j < dim - 1; j++)
             {
@@ -18,7 +18,7 @@ static class HeatTransfer
         });
 
         //copy the scratch array to the grid array
-        OpenMP.Parallel.For(1, dim - 1, schedule: OpenMP.Parallel.Schedule.Static, action: i =>
+        DotMP.Parallel.For(1, dim - 1, schedule: DotMP.Parallel.Schedule.Static, action: i =>
         {
             for (int j = 1; j < dim - 1; j++)
             {
@@ -35,7 +35,7 @@ static class HeatTransfer
         Array.Copy(grid, scratch, dim * dim);
 
         //do the steps
-        OpenMP.Parallel.ParallelRegion(num_threads: 6, action: () =>
+        DotMP.Parallel.ParallelRegion(num_threads: 6, action: () =>
         {
             for (int i = 0; i < steps; i++)
             {
@@ -106,9 +106,9 @@ class Driver
             grid[0, dim / 2] = 100.0;
 
             //do the simulation
-            double tick = OpenMP.Parallel.GetWTime();
+            double tick = DotMP.Parallel.GetWTime();
             HeatTransfer.DoSimulation(grid, steps, dim);
-            double tock = OpenMP.Parallel.GetWTime();
+            double tock = DotMP.Parallel.GetWTime();
 
             //update min, max, avg
             tock = tock - tick;

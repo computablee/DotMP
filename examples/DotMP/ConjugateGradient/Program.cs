@@ -1,4 +1,4 @@
-﻿using OpenMP;
+﻿using DotMP;
 using System;
 using System.IO;
 using System.Threading;
@@ -91,7 +91,7 @@ static class ConjugateGradient
         //create an array of size m
         double[] x = new double[m];
         //initialize all elements to val in parallel
-        OpenMP.Parallel.ParallelFor(0, m, i => x[i] = val);
+        DotMP.Parallel.ParallelFor(0, m, i => x[i] = val);
         return x;
     }
 
@@ -99,12 +99,12 @@ static class ConjugateGradient
     public static double[] SpMV(CSRMatrix A, double[] x)
     {
         //create a shared array y which will be used to store the result of the matrix-vector product
-        OpenMP.Shared<double[]> y = new OpenMP.Shared<double[]>("y", new double[A.m]);
+        DotMP.Shared<double[]> y = new DotMP.Shared<double[]>("y", new double[A.m]);
 
         //compute the matrix-vector product in parallel
         //we use guided scheduling to balance the irregular load between threads
-        OpenMP.Parallel.For(0, A.m,
-            schedule: OpenMP.Parallel.Schedule.Guided,
+        DotMP.Parallel.For(0, A.m,
+            schedule: DotMP.Parallel.Schedule.Guided,
             action: i =>
         {
             //compute the i-th element of the result
@@ -127,7 +127,7 @@ static class ConjugateGradient
         //create an array to store the result
         double[] dest = new double[x.Length];
         //compute the difference in parallel
-        OpenMP.Parallel.ParallelFor(0, x.Length, i => dest[i] = x[i] - y[i]);
+        DotMP.Parallel.ParallelFor(0, x.Length, i => dest[i] = x[i] - y[i]);
         return dest;
     }
 
@@ -135,12 +135,12 @@ static class ConjugateGradient
     public static void DotProduct(double[] x, double[] y, ref double sum)
     {
         //initialize the sum to 0
-        if (OpenMP.Parallel.GetThreadNum() == 0)
+        if (DotMP.Parallel.GetThreadNum() == 0)
             sum = 0.0;
-        OpenMP.Parallel.Barrier();
+        DotMP.Parallel.Barrier();
         //compute the dot product in parallel
-        OpenMP.Parallel.ForReduction(0, x.Length,
-            OpenMP.Operations.Add, ref sum,
+        DotMP.Parallel.ForReduction(0, x.Length,
+            DotMP.Operations.Add, ref sum,
             (ref double sum, int i) =>
         {
             //inner loop of the reduction
@@ -152,7 +152,7 @@ static class ConjugateGradient
     public static void Daxpy(double a, double[] x, double[] y, double[] dest)
     {
         //compute the daxpy in parallel
-        OpenMP.Parallel.For(0, x.Length, i => dest[i] = a * x[i] + y[i]);
+        DotMP.Parallel.For(0, x.Length, i => dest[i] = a * x[i] + y[i]);
     }
 
     //compute the conjugate gradient method
@@ -177,7 +177,7 @@ static class ConjugateGradient
 
         //we create a parallel region out here instead of inside the while loop
         //because we want to avoid the overhead of creating and destroying threads
-        OpenMP.Parallel.ParallelRegion(num_threads: 6, action: () =>
+        DotMP.Parallel.ParallelRegion(num_threads: 6, action: () =>
         {
             int k = 0;
 
@@ -215,7 +215,7 @@ static class ConjugateGradient
             }
 
             //store the number of iterations in the shared variable iters
-            OpenMP.Parallel.Single(1, () => iters = k);
+            DotMP.Parallel.Single(1, () => iters = k);
         });
 
         return (x, iters);
@@ -261,9 +261,9 @@ class Driver
         for (int i = 0; i < numRuns; i++)
         {
             //time the algorithm
-            double tick = OpenMP.Parallel.GetWTime();
+            double tick = DotMP.Parallel.GetWTime();
             (x, iters) = ConjugateGradient.DoConjugateGradient(A, b, 1000, 0.01);
-            double tock = OpenMP.Parallel.GetWTime();
+            double tock = DotMP.Parallel.GetWTime();
 
             //update min, max, avg
             tock = tock - tick;

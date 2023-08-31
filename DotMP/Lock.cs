@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace OpenMP
+namespace DotMP
 {
     /// <summary>
     /// A lock that can be used in a parallel region.
