@@ -408,7 +408,7 @@ namespace OmpNETTests
             {
                 if (inParallel)
                 {
-                    Parallel.ParallelFor(0, WORKLOAD, schedule: Parallel.Schedule.Guided,
+                    OpenMP.Parallel.ParallelFor(0, WORKLOAD, schedule: OpenMP.Parallel.Schedule.Guided,
                         action: j => InnerWorkload(j, a, b, c));
                 }
                 else
@@ -449,7 +449,7 @@ namespace OmpNETTests
         {
             uint threads_spawned = 0;
 
-            Parallel.ParallelRegion(() =>
+            OpenMP.Parallel.ParallelRegion(() =>
             {
                 Interlocked.Add(ref threads_spawned, 1);
             });
@@ -468,9 +468,9 @@ namespace OmpNETTests
         {
             float[] z = new float[x.Length];
 
-            Parallel.ParallelRegion(() =>
+            OpenMP.Parallel.ParallelRegion(() =>
             {
-                Parallel.For(0, x.Length, schedule: Parallel.Schedule.Guided, action: i =>
+                OpenMP.Parallel.For(0, x.Length, schedule: OpenMP.Parallel.Schedule.Guided, action: i =>
                 {
                     z[i] = a * x[i] + y[i];
                 });
@@ -490,7 +490,7 @@ namespace OmpNETTests
         {
             float[] z = new float[x.Length];
 
-            Parallel.ParallelFor(0, x.Length, schedule: Parallel.Schedule.Guided, action: i =>
+            OpenMP.Parallel.ParallelFor(0, x.Length, schedule: OpenMP.Parallel.Schedule.Guided, action: i =>
             {
                 z[i] = a * x[i] + y[i];
             });
