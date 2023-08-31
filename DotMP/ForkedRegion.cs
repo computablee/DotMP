@@ -1,7 +1,7 @@
 using System;
 using System.Threading;
 
-namespace OpenMP
+namespace DotMP
 {
     /// <summary>
     /// Contains relevant internal information about parallel regions, including the threads and the function to be executed.

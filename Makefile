@@ -10,9 +10,9 @@ examples-cs:
 	$(DN) build -c Release examples/CSParallel/GEMM
 
 examples-omp:
-	$(DN) build -c Release examples/OpenMP.NET/ConjugateGradient
-	$(DN) build -c Release examples/OpenMP.NET/HeatTransfer
-	$(DN) build -c Release examples/OpenMP.NET/GEMM
+	$(DN) build -c Release examples/DotMP/ConjugateGradient
+	$(DN) build -c Release examples/DotMP/HeatTransfer
+	$(DN) build -c Release examples/DotMP/GEMM
 
 examples-seq:
 	$(DN) build -c Release examples/Serial/ConjugateGradient
@@ -20,27 +20,27 @@ examples-seq:
 	$(DN) build -c Release examples/Serial/GEMM
 
 tests:
-	$(DN) build -c Release OpenMP.NET.Tests
+	$(DN) build -c Release DotMP-Tests
 
 test:
-	$(DN) test -c Release OpenMP.NET.Tests
+	$(DN) test -c Release DotMP-Tests
 
-build: OpenMP.NET
-	$(DN) build -c Release OpenMP.NET
+build:
+	$(DN) build -c Release DotMP
 
 docs:
 	doxygen
 
 clean:
 	rm -rf docs
-	rm -rf OpenMP.NET/bin OpenMP.NET/obj
-	rm -rf OpenMP.NET.Tests/bin OpenMP.NET.Tests/obj
+	rm -rf DotMP/bin DotMP/obj
+	rm -rf DotMP-Tests/bin DotMP-Tests/obj
 	rm -rf examples/CSParallel/ConjugateGradient/bin examples/CSParallel/ConjugateGradient/obj
 	rm -rf examples/CSParallel/HeatTransfer/bin examples/CSParallel/HeatTransfer/obj
 	rm -rf examples/CSParallel/GEMM/bin examples/CSParallel/GEMM/obj
-	rm -rf examples/OpenMP.NET/ConjugateGradient/bin examples/OpenMP.NET/ConjugateGradient/obj
-	rm -rf examples/OpenMP.NET/HeatTransfer/bin examples/OpenMP.NET/HeatTransfer/obj
-	rm -rf examples/OpenMP.NET/GEMM/bin examples/OpenMP.NET/GEMM/obj
+	rm -rf examples/DotMP/ConjugateGradient/bin examples/DotMP/ConjugateGradient/obj
+	rm -rf examples/DotMP/HeatTransfer/bin examples/DotMP/HeatTransfer/obj
+	rm -rf examples/DotMP/GEMM/bin examples/DotMP/GEMM/obj
 	rm -rf examples/Serial/ConjugateGradient/bin examples/Serial/ConjugateGradient/obj
 	rm -rf examples/Serial/HeatTransfer/bin examples/Serial/HeatTransfer/obj
 	rm -rf examples/Serial/GEMM/bin examples/Serial/GEMM/obj

@@ -1,11 +1,11 @@
 using System.Collections.Generic;
 
-namespace OpenMP
+namespace DotMP
 {
     /// <summary>
     /// A shared variable that can be used in a parallel region.
     /// This allows for a variable to be declared inside of a parallel region that is shared among all threads, which has some nice use cases.
-    /// The OpenMP.NET-parallelized Conjugate Gradient example shows this off fairly well inside of the SpMV function.
+    /// The DotMP-parallelized Conjugate Gradient example shows this off fairly well inside of the SpMV function.
     /// </summary>
     /// <typeparam name="T">The type of the shared variable.</typeparam>
     public class Shared<T>
@@ -29,13 +29,13 @@ namespace OpenMP
         /// <param name="value">Initial starting value of the shared variable.</param>
         public Shared(string name, T value)
         {
-            OpenMP.Parallel.Master(() =>
+            DotMP.Parallel.Master(() =>
             {
                 shared[name] = value;
             });
             this.name = name;
 
-            OpenMP.Parallel.Barrier();
+            DotMP.Parallel.Barrier();
         }
 
         /// <summary>
@@ -45,8 +45,8 @@ namespace OpenMP
         /// </summary>
         public void Clear()
         {
-            OpenMP.Parallel.Master(() => shared.Remove(name));
-            OpenMP.Parallel.Barrier();
+            DotMP.Parallel.Master(() => shared.Remove(name));
+            DotMP.Parallel.Barrier();
         }
 
         /// <summary>

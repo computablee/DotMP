@@ -244,9 +244,9 @@ class Driver
         for (int i = 0; i < numRuns; i++)
         {
             //time the algorithm
-            double tick = OpenMP.Parallel.GetWTime();
+            double tick = DotMP.Parallel.GetWTime();
             (x, iters) = ConjugateGradient.DoConjugateGradient(A, b, 1000, 0.01);
-            double tock = OpenMP.Parallel.GetWTime();
+            double tock = DotMP.Parallel.GetWTime();
 
             //update min, max, avg
             tock = tock - tick;

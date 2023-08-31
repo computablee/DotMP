@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
 
-namespace OpenMP
+namespace DotMP
 {
     /// <summary>
     /// Encapsulates a Thread object with information about its progress through a parallel for loop.

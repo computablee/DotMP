@@ -1,5 +1,5 @@
 ﻿using System;
-using OpenMP;
+using DotMP;
 
 static class GEMM
 {
@@ -12,7 +12,7 @@ static class GEMM
         int k = A[0].Length;
 
         //parallel for loop on the outermost loop
-        OpenMP.Parallel.ParallelFor(0, m, schedule: OpenMP.Parallel.Schedule.Dynamic, action: i =>
+        DotMP.Parallel.ParallelFor(0, m, schedule: DotMP.Parallel.Schedule.Dynamic, action: i =>
         {
             //inner loop is serial
             for (int j = 0; j < n; j++)
@@ -101,9 +101,9 @@ class Driver
         for (int i = 0; i < numRuns; i++)
         {
             //time the algorithm
-            double tick = OpenMP.Parallel.GetWTime();
+            double tick = DotMP.Parallel.GetWTime();
             GEMM.DoGEMM(A, B, C);
-            double tock = OpenMP.Parallel.GetWTime();
+            double tock = DotMP.Parallel.GetWTime();
 
             //update min, max, avg
             tock = tock - tick;

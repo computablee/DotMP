@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace OpenMP
+namespace DotMP
 {
     /// <summary>
     /// Static class that contains necessary information for sections.

@@ -4,10 +4,10 @@ using System.Diagnostics;
 using System.Threading;
 using Xunit;
 
-namespace OmpNETTests
+namespace DotMPTests
 {
     /// <summary>
-    /// Tests for the OpenMP.NET library.
+    /// Tests for the DotMP library.
     /// </summary>
     public class ParallelTests
     {
@@ -24,18 +24,18 @@ namespace OmpNETTests
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.ParallelRegion()'s are actually created.
+        /// Tests to make sure that DotMP.Parallel.ParallelRegion()'s are actually created.
         /// </summary>
         [Fact]
         public void Parallel_should_work()
         {
             var actual = CreateRegion();
 
-            actual.Should().Be((uint)OpenMP.Parallel.GetMaxThreads());
+            actual.Should().Be((uint)DotMP.Parallel.GetMaxThreads());
         }
 
         /// <summary>
-        /// Tests the functionality of OpenMP.Parallel.For().
+        /// Tests the functionality of DotMP.Parallel.For().
         /// </summary>
         [Fact]
         public void Parallelfor_should_work()
@@ -61,7 +61,7 @@ namespace OmpNETTests
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.Schedule.Static produces correct results.
+        /// Tests to make sure that DotMP.Parallel.Schedule.Static produces correct results.
         /// </summary>
         [Fact]
         public void Static_should_produce_correct_results()
@@ -86,28 +86,28 @@ namespace OmpNETTests
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.Schedule.Runtime properly reads values from the environment variable.
+        /// Tests to make sure that DotMP.Parallel.Schedule.Runtime properly reads values from the environment variable.
         /// </summary>
         [Fact]
         public void Schedule_runtime_works()
         {
             Environment.SetEnvironmentVariable("OMP_SCHEDULE", "guided,2");
-            OpenMP.Parallel.ParallelFor(0, 1024, schedule: OpenMP.Parallel.Schedule.Runtime, action: i =>
+            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Parallel.Schedule.Runtime, action: i =>
             {
-                OpenMP.Parallel.GetSchedule().Should().Be(OpenMP.Parallel.Schedule.Guided);
-                OpenMP.Parallel.GetChunkSize().Should().Be(2);
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Parallel.Schedule.Guided);
+                DotMP.Parallel.GetChunkSize().Should().Be(2);
             });
 
             Environment.SetEnvironmentVariable("OMP_SCHEDULE", "dynamic,4");
-            OpenMP.Parallel.ParallelFor(0, 1024, schedule: OpenMP.Parallel.Schedule.Runtime, action: i =>
+            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Parallel.Schedule.Runtime, action: i =>
             {
-                OpenMP.Parallel.GetSchedule().Should().Be(OpenMP.Parallel.Schedule.Dynamic);
-                OpenMP.Parallel.GetChunkSize().Should().Be(4);
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Parallel.Schedule.Dynamic);
+                DotMP.Parallel.GetChunkSize().Should().Be(4);
             });
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.Critical() works.
+        /// Tests to make sure that DotMP.Parallel.Critical() works.
         /// </summary>
         [Fact]
         public void Critical_works()
@@ -117,9 +117,9 @@ namespace OmpNETTests
             int one = critical_ids(false);
             int two = critical_ids(true);
 
-            OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                int id = OpenMP.Parallel.Critical(5, () => ++total);
+                int id = DotMP.Parallel.Critical(5, () => ++total);
                 id.Should().Be(3);
             });
 
@@ -129,7 +129,7 @@ namespace OmpNETTests
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.Master() works.
+        /// Tests to make sure that DotMP.Parallel.Master() works.
         /// </summary>
         [Fact]
         public void Master_works()
@@ -137,16 +137,16 @@ namespace OmpNETTests
             uint threads = 1024;
             int total = 0;
 
-            OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                OpenMP.Parallel.Master(() => ++total);
+                DotMP.Parallel.Master(() => ++total);
             });
 
             total.Should().Be(1);
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.Single() works.
+        /// Tests to make sure that DotMP.Parallel.Single() works.
         /// </summary>
         [Fact]
         public void Single_works()
@@ -154,16 +154,16 @@ namespace OmpNETTests
             uint threads = 1024;
             int total = 0;
 
-            OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                OpenMP.Parallel.Single(0, () => ++total);
+                DotMP.Parallel.Single(0, () => ++total);
             });
 
             total.Should().Be(1);
         }
 
         /// <summary>
-        /// Tests to make sure that the OpenMP.Atomic class works.
+        /// Tests to make sure that the DotMP.Atomic class works.
         /// </summary>
         [Fact]
         public void Atomic_works()
@@ -172,10 +172,10 @@ namespace OmpNETTests
             uint total = 0;
             long total2 = 0;
 
-            OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                OpenMP.Atomic.Inc(ref total);
-                OpenMP.Atomic.Sub(ref total2, 2);
+                DotMP.Atomic.Inc(ref total);
+                DotMP.Atomic.Sub(ref total2, 2);
             });
 
             total.Should().Be(threads);
@@ -183,7 +183,7 @@ namespace OmpNETTests
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.Ordered() works.
+        /// Tests to make sure that DotMP.Parallel.Ordered() works.
         /// </summary>
         [Fact]
         public void Ordered_works()
@@ -191,10 +191,10 @@ namespace OmpNETTests
             uint threads = 8;
             int[] incrementing = new int[1024];
 
-            OpenMP.Parallel.ParallelFor(0, 1024, schedule: OpenMP.Parallel.Schedule.Static,
+            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Parallel.Schedule.Static,
                                         num_threads: threads, action: i =>
             {
-                OpenMP.Parallel.Ordered(0, () => incrementing[i] = i);
+                DotMP.Parallel.Ordered(0, () => incrementing[i] = i);
             });
 
             for (int i = 0; i < incrementing.Length; i++)
@@ -204,19 +204,19 @@ namespace OmpNETTests
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.ForReduction<T>() works.
+        /// Tests to make sure that DotMP.Parallel.ForReduction<T>() works.
         /// </summary>
         [Fact]
         public void Reduction_works()
         {
             int total = 0;
 
-            OpenMP.Parallel.ParallelForReduction(0, 1024, OpenMP.Operations.Add, ref total, num_threads: 8, schedule: OpenMP.Parallel.Schedule.Static, action: (ref int total, int i) =>
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Parallel.Schedule.Static, action: (ref int total, int i) =>
             {
                 total += i;
             });
 
-            OpenMP.Parallel.ParallelForReduction(0, 1024, OpenMP.Operations.Add, ref total, num_threads: 8, schedule: OpenMP.Parallel.Schedule.Static, action: (ref int total, int i) =>
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Parallel.Schedule.Static, action: (ref int total, int i) =>
             {
                 total += i;
             });
@@ -225,90 +225,90 @@ namespace OmpNETTests
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.SetNumThreads() works.
+        /// Tests to make sure that DotMP.Parallel.SetNumThreads() works.
         /// </summary>
         [Fact]
         public void SetNumThreads_works()
         {
-            OpenMP.Parallel.GetMaxThreads().Should().Be(OpenMP.Parallel.GetNumProcs());
+            DotMP.Parallel.GetMaxThreads().Should().Be(DotMP.Parallel.GetNumProcs());
 
-            OpenMP.Parallel.ParallelRegion(() =>
+            DotMP.Parallel.ParallelRegion(() =>
             {
-                OpenMP.Parallel.GetNumThreads().Should().Be(OpenMP.Parallel.GetNumProcs());
+                DotMP.Parallel.GetNumThreads().Should().Be(DotMP.Parallel.GetNumProcs());
             });
 
-            OpenMP.Parallel.ParallelRegion(num_threads: 2, action: () =>
+            DotMP.Parallel.ParallelRegion(num_threads: 2, action: () =>
             {
-                OpenMP.Parallel.GetNumThreads().Should().Be(2);
+                DotMP.Parallel.GetNumThreads().Should().Be(2);
             });
 
-            OpenMP.Parallel.SetNumThreads(15);
-            OpenMP.Parallel.GetMaxThreads().Should().Be(15);
+            DotMP.Parallel.SetNumThreads(15);
+            DotMP.Parallel.GetMaxThreads().Should().Be(15);
 
-            OpenMP.Parallel.ParallelRegion(() =>
+            DotMP.Parallel.ParallelRegion(() =>
             {
-                OpenMP.Parallel.GetNumThreads().Should().Be(15);
+                DotMP.Parallel.GetNumThreads().Should().Be(15);
             });
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.InParallel() works.
+        /// Tests to make sure that DotMP.Parallel.InParallel() works.
         /// </summary>
         [Fact]
         public void InParallel_works()
         {
-            OpenMP.Parallel.InParallel().Should().BeFalse();
+            DotMP.Parallel.InParallel().Should().BeFalse();
 
-            OpenMP.Parallel.ParallelRegion(() =>
+            DotMP.Parallel.ParallelRegion(() =>
             {
-                OpenMP.Parallel.InParallel().Should().BeTrue();
+                DotMP.Parallel.InParallel().Should().BeTrue();
             });
 
-            OpenMP.Parallel.InParallel().Should().BeFalse();
+            DotMP.Parallel.InParallel().Should().BeFalse();
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.SetDynamic() works.
+        /// Tests to make sure that DotMP.Parallel.SetDynamic() works.
         /// </summary>
         [Fact]
         public void SetDynamic_works()
         {
-            OpenMP.Parallel.SetNumThreads(2);
-            OpenMP.Parallel.GetDynamic().Should().BeFalse();
-            OpenMP.Parallel.SetDynamic();
-            OpenMP.Parallel.GetDynamic().Should().BeTrue();
-            OpenMP.Parallel.ParallelRegion(() =>
+            DotMP.Parallel.SetNumThreads(2);
+            DotMP.Parallel.GetDynamic().Should().BeFalse();
+            DotMP.Parallel.SetDynamic();
+            DotMP.Parallel.GetDynamic().Should().BeTrue();
+            DotMP.Parallel.ParallelRegion(() =>
             {
-                OpenMP.Parallel.GetNumThreads().Should().Be(OpenMP.Parallel.GetNumProcs());
+                DotMP.Parallel.GetNumThreads().Should().Be(DotMP.Parallel.GetNumProcs());
             });
-            OpenMP.Parallel.GetDynamic().Should().BeTrue();
-            OpenMP.Parallel.SetNumThreads(OpenMP.Parallel.GetNumProcs());
-            OpenMP.Parallel.GetDynamic().Should().BeFalse();
+            DotMP.Parallel.GetDynamic().Should().BeTrue();
+            DotMP.Parallel.SetNumThreads(DotMP.Parallel.GetNumProcs());
+            DotMP.Parallel.GetDynamic().Should().BeFalse();
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.GetWTime() works.
+        /// Tests to make sure that DotMP.Parallel.GetWTime() works.
         /// </summary>
         [Fact]
         public void GetWTime_works()
         {
-            double start = OpenMP.Parallel.GetWTime();
+            double start = DotMP.Parallel.GetWTime();
             Thread.Sleep(1000);
-            double end = OpenMP.Parallel.GetWTime();
+            double end = DotMP.Parallel.GetWTime();
             (end - start).Should().BeGreaterOrEqualTo(1.0);
             (end - start).Should().BeLessThan(1.1);
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.GetNested() and OpenMP.Parallel.SetNested() work.
+        /// Tests to make sure that DotMP.Parallel.GetNested() and DotMP.Parallel.SetNested() work.
         /// </summary>
         [Fact]
         public void GetNested_works()
         {
-            OpenMP.Parallel.GetNested().Should().BeFalse();
+            DotMP.Parallel.GetNested().Should().BeFalse();
             try
             {
-                OpenMP.Parallel.SetNested(true);
+                DotMP.Parallel.SetNested(true);
                 true.Should().BeFalse();
             }
             catch (NotImplementedException e)
@@ -318,57 +318,57 @@ namespace OmpNETTests
         }
 
         /// <summary>
-        /// Tests to make sure that the OpenMP.Locking and OpenMP.Lock classes work.
+        /// Tests to make sure that the DotMP.Locking and DotMP.Lock classes work.
         /// </summary>
         [Fact]
         public void Locks_work()
         {
             uint threads = 16;
-            OpenMP.Lock l = new OpenMP.Lock();
+            DotMP.Lock l = new DotMP.Lock();
 
-            double time = OpenMP.Parallel.GetWTime();
+            double time = DotMP.Parallel.GetWTime();
 
-            OpenMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                OpenMP.Locking.Set(l);
+                DotMP.Locking.Set(l);
                 Thread.Sleep(100);
-                OpenMP.Locking.Unset(l);
+                DotMP.Locking.Unset(l);
             });
 
-            double elapsed = OpenMP.Parallel.GetWTime() - time;
+            double elapsed = DotMP.Parallel.GetWTime() - time;
             elapsed.Should().BeGreaterThan(1.6);
 
-            OpenMP.Locking.Test(l).Should().BeTrue();
-            OpenMP.Locking.Test(l).Should().BeFalse();
-            OpenMP.Locking.Test(l).Should().BeFalse();
-            OpenMP.Locking.Unset(l);
-            OpenMP.Locking.Test(l).Should().BeTrue();
-            OpenMP.Locking.Test(l).Should().BeFalse();
-            OpenMP.Locking.Test(l).Should().BeFalse();
-            OpenMP.Locking.Unset(l);
+            DotMP.Locking.Test(l).Should().BeTrue();
+            DotMP.Locking.Test(l).Should().BeFalse();
+            DotMP.Locking.Test(l).Should().BeFalse();
+            DotMP.Locking.Unset(l);
+            DotMP.Locking.Test(l).Should().BeTrue();
+            DotMP.Locking.Test(l).Should().BeFalse();
+            DotMP.Locking.Test(l).Should().BeFalse();
+            DotMP.Locking.Unset(l);
         }
 
         /// <summary>
-        /// Tests to make sure the OpenMP.Shared class works.
+        /// Tests to make sure the DotMP.Shared class works.
         /// </summary>
         [Fact]
         public void Shared_works()
         {
-            OpenMP.Parallel.ParallelRegion(() =>
+            DotMP.Parallel.ParallelRegion(() =>
             {
-                OpenMP.Shared<int> s = new OpenMP.Shared<int>("s", 6);
+                DotMP.Shared<int> s = new DotMP.Shared<int>("s", 6);
                 s.Get().Should().Be(6);
-                OpenMP.Parallel.Barrier();
-                OpenMP.Parallel.Master(() => s.Set(7));
-                OpenMP.Parallel.Barrier();
+                DotMP.Parallel.Barrier();
+                DotMP.Parallel.Master(() => s.Set(7));
+                DotMP.Parallel.Barrier();
                 s.Get().Should().Be(7);
-                OpenMP.Parallel.Barrier();
+                DotMP.Parallel.Barrier();
                 s.Clear();
             });
         }
 
         /// <summary>
-        /// Tests to make sure that OpenMP.Parallel.Sections() and OpenMP.Parallel.Section() work.
+        /// Tests to make sure that DotMP.Parallel.Sections() and DotMP.Parallel.Section() work.
         /// </summary>
         [Fact]
         public void Sections_works()
@@ -379,21 +379,21 @@ namespace OmpNETTests
             for (int i = 0; i < num_threads; i++)
                 threads_used[i] = false;
 
-            double start = OpenMP.Parallel.GetWTime();
+            double start = DotMP.Parallel.GetWTime();
 
-            OpenMP.Parallel.ParallelSections(num_threads: num_threads, action: () =>
+            DotMP.Parallel.ParallelSections(num_threads: num_threads, action: () =>
             {
                 for (int i = 0; i < num_threads; i++)
                 {
-                    OpenMP.Parallel.Section(() =>
+                    DotMP.Parallel.Section(() =>
                     {
-                        threads_used[OpenMP.Parallel.GetThreadNum()] = true;
+                        threads_used[DotMP.Parallel.GetThreadNum()] = true;
                         Thread.Sleep(100);
                     });
                 }
             });
 
-            double end = OpenMP.Parallel.GetWTime() - start;
+            double end = DotMP.Parallel.GetWTime() - start;
 
             for (int i = 0; i < num_threads; i++)
                 threads_used[i].Should().Be(true);
@@ -402,7 +402,7 @@ namespace OmpNETTests
         }
 
         /// <summary>
-        /// A sample workload for OpenMP.Parallel.ParallelFor().
+        /// A sample workload for DotMP.Parallel.ParallelFor().
         /// </summary>
         /// <param name="inParallel">Whether or not to enable parallelism.</param>
         /// <returns>Elapsed milliseconds of the test.</returns>
@@ -431,7 +431,7 @@ namespace OmpNETTests
             {
                 if (inParallel)
                 {
-                    OpenMP.Parallel.ParallelFor(0, WORKLOAD, schedule: OpenMP.Parallel.Schedule.Guided,
+                    DotMP.Parallel.ParallelFor(0, WORKLOAD, schedule: DotMP.Parallel.Schedule.Guided,
                         action: j => InnerWorkload(j, a, b, c));
                 }
                 else
@@ -472,7 +472,7 @@ namespace OmpNETTests
         {
             uint threads_spawned = 0;
 
-            OpenMP.Parallel.ParallelRegion(() =>
+            DotMP.Parallel.ParallelRegion(() =>
             {
                 Interlocked.Add(ref threads_spawned, 1);
             });
@@ -491,9 +491,9 @@ namespace OmpNETTests
         {
             float[] z = new float[x.Length];
 
-            OpenMP.Parallel.ParallelRegion(() =>
+            DotMP.Parallel.ParallelRegion(() =>
             {
-                OpenMP.Parallel.For(0, x.Length, schedule: OpenMP.Parallel.Schedule.Guided, action: i =>
+                DotMP.Parallel.For(0, x.Length, schedule: DotMP.Parallel.Schedule.Guided, action: i =>
                 {
                     z[i] = a * x[i] + y[i];
                 });
@@ -503,7 +503,7 @@ namespace OmpNETTests
         }
 
         /// <summary>
-        /// Same as saxpy_parallelregion_for, but uses OpenMP.Parallel.ParallelFor() instead of OpenMP.Parallel.ParallelRegion() and OpenMP.Parallel.For().
+        /// Same as saxpy_parallelregion_for, but uses DotMP.Parallel.ParallelFor() instead of DotMP.Parallel.ParallelRegion() and DotMP.Parallel.For().
         /// </summary>
         /// <param name="a">Scalar for saxpy.</param>
         /// <param name="x">Vector to multiply by the scalar.</param>
@@ -513,7 +513,7 @@ namespace OmpNETTests
         {
             float[] z = new float[x.Length];
 
-            OpenMP.Parallel.ParallelFor(0, x.Length, schedule: OpenMP.Parallel.Schedule.Guided, action: i =>
+            DotMP.Parallel.ParallelFor(0, x.Length, schedule: DotMP.Parallel.Schedule.Guided, action: i =>
             {
                 z[i] = a * x[i] + y[i];
             });
@@ -536,16 +536,16 @@ namespace OmpNETTests
 
             for (int i = 0; i < 5; i++)
             {
-                OpenMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+                DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
                 {
-                    int id1 = OpenMP.Parallel.Critical(0, () => ++x);
+                    int id1 = DotMP.Parallel.Critical(0, () => ++x);
                     int id2 = -1;
 
-                    OpenMP.Parallel.For(0, 100, schedule: OpenMP.Parallel.Schedule.Static, action: j =>
+                    DotMP.Parallel.For(0, 100, schedule: DotMP.Parallel.Schedule.Static, action: j =>
                     {
                         if (two_regions)
                         {
-                            id2 = OpenMP.Parallel.Critical(1, () => ++y);
+                            id2 = DotMP.Parallel.Critical(1, () => ++y);
                         }
 
                         lock (mylock)

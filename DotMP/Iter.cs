@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Threading;
 
-namespace OpenMP
+namespace DotMP
 {
     /// <summary>
     /// Contains all of the scheduling code for parallel for loops.

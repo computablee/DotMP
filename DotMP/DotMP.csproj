@@ -2,7 +2,7 @@
 
   <PropertyGroup>
     <TargetFramework>netcoreapp6.0</TargetFramework>
-    <RootNamespace>OpenMP</RootNamespace>
+    <RootNamespace>DotMP</RootNamespace>
   </PropertyGroup>
 
 </Project>

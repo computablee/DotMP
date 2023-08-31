@@ -1,4 +1,4 @@
-namespace OpenMP
+namespace DotMP
 {
     /// <summary>
     /// Enum that represents the different operations that can be used in a for-reduction.

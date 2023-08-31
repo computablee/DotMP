@@ -103,9 +103,9 @@ class Driver
             grid[0, dim / 2] = 100.0;
 
             //do the simulation
-            double tick = OpenMP.Parallel.GetWTime();
+            double tick = DotMP.Parallel.GetWTime();
             HeatTransfer.DoSimulation(grid, steps, dim);
-            double tock = OpenMP.Parallel.GetWTime();
+            double tock = DotMP.Parallel.GetWTime();
 
             //update min, max, avg
             tock = tock - tick;
