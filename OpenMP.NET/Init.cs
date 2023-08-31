@@ -5,6 +5,7 @@ namespace OpenMP
 {
     /// <summary>
     /// Encapsulates a Thread object with information about its progress through a parallel for loop.
+    /// For keeping track of its progress through a parallel for loop, we keep track of the current next iteration of the loop to be worked on, and the iteration the current thread is currently working on.
     /// </summary>
     internal class Thr
     {
@@ -35,6 +36,7 @@ namespace OpenMP
 
     /// <summary>
     /// Contains all relevant information about a parallel for loop.
+    /// Contains a collection of Thr objects, the loop's start and end iterations, the chunk size, the number of threads, and the number of threads that have completed their work.
     /// </summary>
     internal struct WorkShare
     {
@@ -103,7 +105,7 @@ namespace OpenMP
     internal static class Init
     {
         /// <summary>
-        /// The WorkShare struct.
+        /// The WorkShare struct being encapsulated by the Init static class.
         /// </summary>
         internal static WorkShare ws;
     }

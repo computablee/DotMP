@@ -15,11 +15,14 @@ namespace OpenMP
     /// <summary>
     /// The main class of OpenMP.NET.
     /// Contains all the main methods for parallelism.
+    /// For users, this is the main class you want to worry about, along with Locking, Lock, Shared, and Atomic
     /// </summary>
     public static class Parallel
     {
         /// <summary>
         /// The different types of schedules for a parallel for loop.
+        /// The default schedule if none is specified is static.
+        /// Detailed explanations of each schedule can be found in the Iter class.
         /// </summary>
         public enum Schedule { Static, Dynamic, Guided };
         /// <summary>
@@ -84,6 +87,10 @@ namespace OpenMP
 
         /// <summary>
         /// Creates a for loop inside a parallel region.
+        /// A for loop created with For inside of a parallel region is executed in parallel, with iterations being distributed among the threads, and potentially out-of-order.
+        /// A schedule is provided to inform the runtime how to distribute iterations of the loop to threads.
+        /// Available schedules are specified by the Schedule enum, and have detailed documentation in the Iter class.
+        /// Acts as an implicit Barrier().
         /// </summary>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
@@ -130,6 +137,11 @@ namespace OpenMP
 
         /// <summary>
         /// Creates a for loop inside a parallel region with a reduction.
+        /// This is similar to For(), but the reduction allows multiple threads to reduce their work down to a single variable.
+        /// Using ForReduction<T> allows the runtime to perform this operation much more efficiently than a naive approach using the Locking or Atomic classes.
+        /// Each thread gets a thread-local version of the reduction variable, and the runtime performs a global reduction at the end of the loop.
+        /// Since the global reduction only involves as many variables as there are threads, it is much more efficient than a naive approach.
+        /// Acts as an implicit Barrier().
         /// </summary>
         /// <typeparam name="T">The type of the reduction.</typeparam>
         /// <param name="start">The start of the loop, inclusive.</param>
@@ -221,6 +233,9 @@ namespace OpenMP
 
         /// <summary>
         /// Creates a parallel region.
+        /// The body of a parallel region is executed by as many threads as specified by the num_threads parameter.
+        /// If the num_threads parameter is absent, then the runtime checks if SetNumThreads has been called.
+        /// If so, it will use that many threads. If not, the runtime will try to use as many threads as there are logical processors.
         /// </summary>
         /// <param name="action">The action to be performed in the parallel region.</param>
         /// <param name="num_threads">The number of threads to be used in the parallel region, defaulting to null. If null, will be calculated on-the-fly.</param>
@@ -239,7 +254,8 @@ namespace OpenMP
         }
 
         /// <summary>
-        /// Creates a parallel for loop. Contains all of the parameters from ParallelRegion and For.
+        /// Creates a parallel for loop. Contains all of the parameters from ParallelRegion() and For().
+        /// This is simply a convenience method for creating a parallel region and a for loop inside of it.
         /// </summary>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
@@ -261,7 +277,8 @@ namespace OpenMP
         }
 
         /// <summary>
-        /// Creates a parallel for loop with a reduction. Contains all of the parameters from ParallelRegion and ForReduction.
+        /// Creates a parallel for loop with a reduction. Contains all of the parameters from ParallelRegion() and ForReduction<T>().
+        /// This is simply a convenience method for creating a parallel region and a for loop with a reduction inside of it.
         /// </summary>
         /// <typeparam name="T">The type of the reduction.</typeparam>
         /// <param name="start">The start of the loop, inclusive.</param>
@@ -291,6 +308,12 @@ namespace OpenMP
 
         /// <summary>
         /// Creates a sections region.
+        /// Sections allows for the user to submit multiple, individual tasks to be distributed among threads in parallel.
+        /// This allows the user to submit a callback using Section(). Each callback specified with Section() is thrown into a central queue.
+        /// In parallel, each thread will dequeue a callback and execute it.
+        /// This is useful if you have lots of individual tasks that need to be executed in parallel, and each task requires its own lambda.
+        /// Any code not specified in a Section() will be executed by the master thread only.
+        /// Acts as an implicit Barrier().
         /// </summary>
         /// <param name="action">The action to be performed in the sections region.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
@@ -331,6 +354,8 @@ namespace OpenMP
 
         /// <summary>
         /// Creates a section inside a sections region.
+        /// See the Sections() documentation for more information.
+        /// Each task submitted by Section() in a Sections() region will be executed by a single thread in parallel with all other Section() tasks submitted.
         /// </summary>
         /// <param name="action">The action to be performed in the section.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
@@ -355,7 +380,8 @@ namespace OpenMP
         }
 
         /// <summary>
-        /// Creates a parallel sections region. Contains all of the parameters from ParallelRegion and Sections.
+        /// Creates a parallel sections region. Contains all of the parameters from ParallelRegion() and Sections().
+        /// This is simply a convenience method for creating a parallel region and a sections region inside of it.
         /// </summary>
         /// <param name="action">The action to be performed in the parallel sections region.</param>
         /// <param name="num_threads">The number of threads to be used in the parallel sections region, defaulting to null. If null, will be calculated on-the-fly.</param>
@@ -369,6 +395,8 @@ namespace OpenMP
 
         /// <summary>
         /// Creates a critical region.
+        /// A critical region is a region of code that can only be executed by one thread at a time.
+        /// If a thread encounters a critical region while another thread is inside a critical region, it will wait until the other thread is finished.
         /// </summary>
         /// <param name="id">The ID of the critical region. Must be unique per region but consistent across all threads.</param>
         /// <param name="action">The action to be performed in the critical region.</param>
@@ -403,6 +431,8 @@ namespace OpenMP
 
         /// <summary>
         /// Creates a barrier.
+        /// All threads must reach the barrier before any thread can continue.
+        /// This is useful for synchronization. Many functions inside the Parallel class act as implicit barriers.
         /// </summary>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Barrier()
@@ -416,7 +446,7 @@ namespace OpenMP
         }
 
         /// <summary>
-        /// Gets the number of processors.
+        /// Gets the number of available processors on the host system.
         /// </summary>
         /// <returns>The number of processors.</returns>
         public static int GetNumProcs()
@@ -426,6 +456,9 @@ namespace OpenMP
 
         /// <summary>
         /// Creates a master region.
+        /// The master region is a region of code that is only executed by the master thread.
+        /// The master thread is the thread with a thread ID of 0.
+        /// You can get the thread ID of the calling thread with GetThreadNum().
         /// </summary>
         /// <param name="action">The action to be performed in the master region.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
@@ -444,6 +477,9 @@ namespace OpenMP
 
         /// <summary>
         /// Creates a single region.
+        /// A single region is only executed by a single thread.
+        /// The thread which "owns" a single region is the first thread to encounter it.
+        /// From thereon, only that thread will execute the single region.
         /// </summary>
         /// <param name="id">The ID of the single region. Must be unique per region but consistent across all threads.</param>
         /// <param name="action">The action to be performed in the single region.</param>
@@ -471,6 +507,8 @@ namespace OpenMP
 
         /// <summary>
         /// Creates an ordered region.
+        /// An ordered region is a region of code that is executed in order inside of a For() or ForReduction<T>() loop.
+        /// This also acts as an implicit Critical() region.
         /// </summary>
         /// <param name="id">The ID of the ordered region. Must be unique per region but consistent across all threads.</param>
         /// <param name="action">The action to be performed in the ordered region.</param>
@@ -507,7 +545,8 @@ namespace OpenMP
         }
 
         /// <summary>
-        /// Gets the number of threads.
+        /// Gets the number of active threads.
+        /// If not inside of a ParallelRegion(), returns 1.
         /// </summary>
         /// <returns>The number of threads.</returns>
         public static int GetNumThreads()
@@ -524,7 +563,7 @@ namespace OpenMP
         }
 
         /// <summary>
-        /// Gets the number of the calling thread.
+        /// Gets the ID of the calling thread.
         /// </summary>
         /// <returns>The number of the calling thread.</returns>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
@@ -584,6 +623,8 @@ namespace OpenMP
 
         /// <summary>
         /// Enables nested parallelism.
+        /// This function is not implemented, as nested parallelism does not exist in the current version of OpenMP.NET.
+        /// There are no plans to implement nested parallelism at the moment.
         /// </summary>
         /// <param name="_">Unused.</param>
         /// <exception cref="NotImplementedException">Is always thrown.</exception>
@@ -594,6 +635,7 @@ namespace OpenMP
 
         /// <summary>
         /// Gets whether or not nested parallelism is enabled.
+        /// There are no plans to implement nested parallelism at the moment.
         /// </summary>
         /// <returns>Always returns false.</returns>
         public static bool GetNested() => false;

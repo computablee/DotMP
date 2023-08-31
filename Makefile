@@ -25,14 +25,14 @@ tests:
 test:
 	$(DN) test -c Release OpenMP.NET.Tests
 
-build:
+build: OpenMP.NET
 	$(DN) build -c Release OpenMP.NET
 
 docs:
 	doxygen
 
 clean:
-	rm -rf OpenMP.NET.Docs
+	rm -rf docs
 	rm -rf OpenMP.NET/bin OpenMP.NET/obj
 	rm -rf OpenMP.NET.Tests/bin OpenMP.NET.Tests/obj
 	rm -rf examples/CSParallel/ConjugateGradient/bin examples/CSParallel/ConjugateGradient/obj
