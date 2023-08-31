@@ -480,6 +480,7 @@ namespace OpenMP
         /// Creates a barrier.
         /// All threads must reach the barrier before any thread can continue.
         /// This is useful for synchronization. Many functions inside the Parallel class act as implicit barriers.
+        /// Also acts as a memory barrier.
         /// </summary>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Barrier()
@@ -489,6 +490,7 @@ namespace OpenMP
                 throw new NotInParallelRegionException();
             }
 
+            Thread.MemoryBarrier();
             barrier.SignalAndWait();
         }
 
