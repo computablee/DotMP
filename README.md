@@ -384,6 +384,8 @@ OpenMP.NET provides an analog of the following functions:
 | omp_in_parallel()        | OpenMP.Parallel.InParallel()       | Returns true if called from within a parallel region
 | omp_set_dynamic(int)     | OpenMP.Parallel.SetDynamic()       | Tells the runtime to dynamically adjust the number of threads, can disable by calling SetNumThreads
 | omp_get_dynamic()        | OpenMP.Parallel.GetDynamic()       | Returns true if the runtime can dynamically adjust the number of threads
-| omp_set_nested(int)      | OpenMP.Parallel.SetNested(int)     | Returns a NotImplementedException
+| omp_set_nested(int)      | OpenMP.Parallel.SetNested(bool)    | Returns a NotImplementedException
 | omp_get_nested()         | OpenMP.Parallel.GetNested()        | Returns false
 | omp_get_wtime()          | OpenMP.Parallel.GetWTime()         | Returns the number of seconds since the Unix Epoch as a double
+| N/A                      | OpenMP.Parallel.GetSchedule()      | Gets the current schedule of the parallel for loop
+| N/A                      | OpenMP.Parallel.GetChunkSize()     | Gets the current chunk size of the parallel for loop
