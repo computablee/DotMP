@@ -699,18 +699,18 @@ namespace OpenMP
         }
 
         /// <summary>
-        /// Returns the current schedule being used in the parallel for loop.
+        /// Returns the current schedule being used in a For() or ForReduction<T>() loop.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The schedule being used in the For() or ForReduction<T>() loop, or null if a For() or ForReduction<T>() has not been encountered yet.</returns>
         public static Schedule? GetSchedule()
         {
             return Init.ws.schedule;
         }
 
         /// <summary>
-        /// Returns the current chunk size being used in the parallel for loop.
+        /// Returns the current chunk size being used in a For() or ForReduction<T>() loop.
         /// </summary>
-        /// <returns></returns>
+        /// <returns>The chunk size being used in a For() or ForReduction<T>() loop. If 0, a For() or ForReduction<T>() has not been encountered yet.</returns>
         public static uint GetChunkSize()
         {
             return Init.ws.chunk_size;
