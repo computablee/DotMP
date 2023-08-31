@@ -10,11 +10,19 @@ namespace OpenMP
     {
         /// <summary>
         /// Sets the local variable to the appropriate value based on the operation for parallel for reduction loops.
+        /// For addition and subtraction, the initial starting value is 0.
+        /// For multiplication, the initial starting value is 1.
+        /// For binary And, the initial starting value is -1.
+        /// For binary Or and Xor, the initial starting value is 0.
+        /// For boolean And, the initial starting value is true.
+        /// For boolean Or, the initial starting value is false.
+        /// For min, the initial starting value is int.MaxValue.
+        /// For max, the initial starting value is int.MinValue.
         /// </summary>
         /// <typeparam name="T">The type of the local variable.</typeparam>
         /// <param name="local">The local variable to be set.</param>
         /// <param name="op">The operation to be performed.</param>
-        internal static void SetLocal<T>(ref T local, Operations? op)
+        private static void SetLocal<T>(ref T local, Operations? op)
         {
             switch (Init.ws.op)
             {
@@ -53,6 +61,14 @@ namespace OpenMP
 
         /// <summary>
         /// Starts and controls a parallel for loop with static scheduling.
+        /// Static scheduling works as follows:
+        /// Iterations are submitted to threads via round-robin scheduling. Unless the chunk size is 1, each thread will receive a chunk of iterations to work on.
+        /// This chunk is specified by the chunk_size variable, found in Init.ws.chunk_size.
+        /// By default, if no chunk size is specified, the chunk size is the number of iterations divided by the number of threads.
+        /// There is a tradeoff with having a large vs. small chunk size.
+        /// A large chunk size will result in less overhead, but may result in load imbalance.
+        /// A small chunk size will result in more overhead, but will result in better load balancing.
+        /// Static scheduling is the default scheduling method for parallel for loops if none is specified.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="thread_id">The thread ID.</param>
@@ -83,6 +99,7 @@ namespace OpenMP
 
         /// <summary>
         /// Calculates the next chunk of iterations for a static scheduling parallel for loop and executes the appropriate function.
+        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.StaticLoop<T> documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="thr">The Thr object for the current thread.</param>
@@ -113,6 +130,15 @@ namespace OpenMP
 
         /// <summary>
         /// Starts and controls a parallel for loop with dynamic scheduling.
+        /// Dynamic scheduling works as follows:
+        /// Iterations are thrown into a central queue.
+        /// When a thread has no current assigned work, it will grab a chunk of iterations from the queue.
+        /// This chunk is specified by the chunk_size variable, found in Init.ws.chunk_size.
+        /// By default, if no chunk size is specified, the Parallel.FixArgs method will calulate a chunk size based on a simple heuristic.
+        /// When the central queue is empty, each thread will wait at a barrier until all other threads have completed their work.
+        /// There is a tradeoff with having a large vs. small chunk size.
+        /// A large chunk size will result in less overhead, but may result in load imbalance.
+        /// A small chunk size will result in more overhead, but will result in better load balancing.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="thread_id">The thread ID.</param>
@@ -143,6 +169,7 @@ namespace OpenMP
 
         /// <summary>
         /// Calculates the next chunk of iterations for a dynamic scheduling parallel for loop and executes the appropriate function.
+        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.DynamicLoop<T> documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="thr">The Thr object for the current thread.</param>
@@ -176,6 +203,18 @@ namespace OpenMP
 
         /// <summary>
         /// Starts and controls a parallel for loop with guided scheduling.
+        /// Guided scheduling works as follows:
+        /// Iterations are thrown into a central queue.
+        /// When a thread has no current assigned work, it will grab a chunk of iterations from the queue.
+        /// This chunk is starts large and decreases in size as the loop progresses.
+        /// The chunk size is equal to the number of remaining iterations divided by the number of threads.
+        /// The chunk_size variable, found in Init.ws.chunk_size, is used as a minimum chunk size.
+        /// When the central queue is empty, each thread will wait at a barrier until all other threads have completed their work.
+        /// There is a tradeoff with having a large vs. small chunk size.
+        /// A large chunk size will result in less overhead, but may result in load imbalance.
+        /// A small chunk size will result in more overhead, but will result in better load balancing.
+        /// Guided scheduling is usually a great default choice for parallel for loops,
+        /// but may not be adequate if a loop is irregular with heavy load imbalance biased towards the start of the loop.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="thread_id">The thread ID.</param>
@@ -206,6 +245,7 @@ namespace OpenMP
 
         /// <summary>
         /// Calculates the next chunk of iterations for a guided scheduling parallel for loop and executes the appropriate function.
+        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.GuidedLoop<T> documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="thr">The Thr object for the current thread.</param>

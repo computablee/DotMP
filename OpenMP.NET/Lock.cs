@@ -23,6 +23,7 @@ namespace OpenMP
 
     /// <summary>
     /// Static class that contains methods for locking.
+    /// Available methods are Set, Unset, and Test.
     /// </summary>
     public static class Locking
     {

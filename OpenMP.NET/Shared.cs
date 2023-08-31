@@ -4,6 +4,8 @@ namespace OpenMP
 {
     /// <summary>
     /// A shared variable that can be used in a parallel region.
+    /// This allows for a variable to be declared inside of a parallel region that is shared among all threads, which has some nice use cases.
+    /// The OpenMP.NET-parallelized Conjugate Gradient example shows this off fairly well inside of the SpMV function.
     /// </summary>
     /// <typeparam name="T">The type of the shared variable.</typeparam>
     public class Shared<T>

@@ -4,6 +4,8 @@ namespace OpenMP
 {
     /// <summary>
     /// Provides atomic operations for integral types as a wrapper around the Interlocked class.
+    /// Adds support for signed and unsigned 32- and 64-bit integers.
+    /// Supports addition, subtraction (for signed types), increment, decrement, bitwise And, and bitwise Or.
     /// </summary>
     public static class Atomic
     {

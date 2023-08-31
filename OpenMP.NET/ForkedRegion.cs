@@ -5,6 +5,7 @@ namespace OpenMP
 {
     /// <summary>
     /// Contains relevant internal information about parallel regions, including the threads and the function to be executed.
+    /// Provides a region-wide lock and SpinWait objects for each thread.
     /// </summary>
     internal struct Region
     {
