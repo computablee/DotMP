@@ -2,13 +2,46 @@
 A library for writing OpenMP-style parallel code in .NET.
 Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the OpenMP programming style as faithfully as possible, though breaking spec at times.
 
+## Building OpenMP.NET
+OpenMP.NET can be built using the `make` command.
+To build the entire project, including all tests, examples, and documentation, run the following command:
+```sh
+make
+```
+This command will build the main library, all tests, all examples, and the documentation into their respective directories, but will not run any tests.
+
+To build only the main library, run the following command:
+```sh
+make build
+```
+
+To build only the tests, run the following command:
+```sh
+make tests
+```
+To run the tests, run the following command:
+```sh
+make test
+```
+
+To build only the examples, run the following command:
+```sh
+make examples
+```
+This will build all of the examples, including the native C# parallelized, the OpenMP.NET parallelized, and the sequential examples.
+You can also individually build each of these classes of examples by running one or all of the following commands:
+```sh
+make examples-cs
+make examples-omp
+make examples-seq
+```
+
 ## Documentation
 You can use [Doxygen](https://github.com/doxygen/doxygen) to build the documentation for this project.
-A Doxyfile is located under the `OpenMP.NET` directory.
-To build the documentation, run the following commands:
+A Doxyfile is located in the root of the project directory.
+To build the documentation, run the following command:
 ```sh
-cd OpenMP.NET
-doxygen Doxyfile
+make docs
 ```
 This will generate documentation in the root of the project under the `OpenMP.NET.Docs` directory in both LaTeX and HTML formats.
 

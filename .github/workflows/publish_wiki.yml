@@ -1,0 +1,19 @@
+name: Publish OpenMP.NET Wiki
+
+on:
+  push:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Build Doxygen documentation
+      uses: mattnotmitt/doxygen-action@1.9.5
+    - name: Publish wiki
+      uses: SwiftDocOrg/github-wiki-publish-action@v1
+      with:
+        path: "OpenMP.NET.Docs/html"
+      env:
+        GH_PERSONAL_ACCESS_TOKEN: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
