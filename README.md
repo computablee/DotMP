@@ -339,9 +339,9 @@ DotMP provides the following functions:
 
 | <omp.h> function     | DotMP function        | Comments
 -----------------------|----------------------------|---------
-| omp_set_lock(lock)   | DotMP.Locking.Set(lock)   | Halt the current thread until the lock is obtained
-| omp_unset_lock(lock) | DotMP.Locking.Unset(lock) | Free the current lock, making it available for other threads
-| omp_test_lock(lock)  | DotMP.Locking.Test(lock)  | Attempt to obtain a lock without blocking, returns true if locking is successful
+| omp_set_lock(lock)   | DotMP.Lock.Set(lock)   | Halt the current thread until the lock is obtained
+| omp_unset_lock(lock) | DotMP.Lock.Unset(lock) | Free the current lock, making it available for other threads
+| omp_test_lock(lock)  | DotMP.Lock.Test(lock)  | Attempt to obtain a lock without blocking, returns true if locking is successful
 
 ## Shared Memory
 

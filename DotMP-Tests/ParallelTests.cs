@@ -330,22 +330,22 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                DotMP.Locking.Set(l);
+                DotMP.Lock.Set(l);
                 Thread.Sleep(100);
-                DotMP.Locking.Unset(l);
+                DotMP.Lock.Unset(l);
             });
 
             double elapsed = DotMP.Parallel.GetWTime() - time;
             elapsed.Should().BeGreaterThan(1.6);
 
-            DotMP.Locking.Test(l).Should().BeTrue();
-            DotMP.Locking.Test(l).Should().BeFalse();
-            DotMP.Locking.Test(l).Should().BeFalse();
-            DotMP.Locking.Unset(l);
-            DotMP.Locking.Test(l).Should().BeTrue();
-            DotMP.Locking.Test(l).Should().BeFalse();
-            DotMP.Locking.Test(l).Should().BeFalse();
-            DotMP.Locking.Unset(l);
+            DotMP.Lock.Test(l).Should().BeTrue();
+            DotMP.Lock.Test(l).Should().BeFalse();
+            DotMP.Lock.Test(l).Should().BeFalse();
+            DotMP.Lock.Unset(l);
+            DotMP.Lock.Test(l).Should().BeTrue();
+            DotMP.Lock.Test(l).Should().BeFalse();
+            DotMP.Lock.Test(l).Should().BeFalse();
+            DotMP.Lock.Unset(l);
         }
 
         /// <summary>

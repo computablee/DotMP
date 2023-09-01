@@ -4,6 +4,8 @@ namespace DotMP
 {
     /// <summary>
     /// A lock that can be used in a parallel region.
+    /// Also contains static methods for locking.
+    /// Available methods are Set, Unset, and Test.
     /// </summary>
     public class Lock
     {
@@ -19,14 +21,7 @@ namespace DotMP
         {
             _lock = 0;
         }
-    }
 
-    /// <summary>
-    /// Static class that contains methods for locking.
-    /// Available methods are Set, Unset, and Test.
-    /// </summary>
-    public static class Locking
-    {
         /// <summary>
         /// Stalls the thread until the lock is set.
         /// </summary>
