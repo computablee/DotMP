@@ -3,14 +3,14 @@ BUILD=Release
 
 all: docs build tests examples
 
-examples: examples-cs examples-omp examples-seq
+examples: examples-cs examples-dmp examples-seq
 
 examples-cs:
 	$(DN) build -c $(BUILD) examples/CSParallel/ConjugateGradient
 	$(DN) build -c $(BUILD) examples/CSParallel/HeatTransfer
 	$(DN) build -c $(BUILD) examples/CSParallel/GEMM
 
-examples-omp:
+examples-dmp:
 	$(DN) build -c $(BUILD) examples/DotMP/ConjugateGradient
 	$(DN) build -c $(BUILD) examples/DotMP/HeatTransfer
 	$(DN) build -c $(BUILD) examples/DotMP/GEMM
