@@ -25,4 +25,16 @@ namespace DotMP
 
         public NotInSectionsRegionException(string msg, Exception ex) : base(msg, ex) { }
     }
+
+    /// <summary>
+    /// Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel.ParallelRegion.
+    /// </summary>
+    class CannotPerformNestedParallelismException : Exception
+    {
+        public CannotPerformNestedParallelismException() { }
+
+        public CannotPerformNestedParallelismException(string msg) : base(msg) { }
+
+        public CannotPerformNestedParallelismException(string msg, Exception ex) : base(msg, ex) { }
+    }
 }

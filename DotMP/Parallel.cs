@@ -286,8 +286,12 @@ namespace DotMP
         /// </summary>
         /// <param name="action">The action to be performed in the parallel region.</param>
         /// <param name="num_threads">The number of threads to be used in the parallel region, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         public static void ParallelRegion(Action action, uint? num_threads = null)
         {
+            if (InParallel())
+                throw new CannotPerformNestedParallelismException();
+
             if (num_threads == null && Parallel.num_threads == 0)
                 num_threads = (uint)GetNumProcs();
             else
