@@ -42,7 +42,7 @@ This will build all of the examples, including the native C# parallelized, the D
 You can also individually build each of these classes of examples by running one or all of the following commands:
 ```sh
 make examples-cs
-make examples-omp
+make examples-dmp
 make examples-seq
 ```
 
