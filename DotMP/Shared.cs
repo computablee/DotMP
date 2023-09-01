@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace DotMP
@@ -8,7 +9,7 @@ namespace DotMP
     /// The DotMP-parallelized Conjugate Gradient example shows this off fairly well inside of the SpMV function.
     /// </summary>
     /// <typeparam name="T">The type of the shared variable.</typeparam>
-    public class Shared<T>
+    public class Shared<T> : IDisposable
     {
         /// <summary>
         /// The shared variables.
@@ -19,6 +20,11 @@ namespace DotMP
         /// The name of the shared variable.
         /// </summary>
         private string name;
+
+        /// <summary>
+        /// Whether or not the shared variable has been disposed.
+        /// </summary>
+        public bool Disposed { get; private set; }
 
         /// <summary>
         /// Creates a new shared variable with the given name and value.
@@ -34,6 +40,7 @@ namespace DotMP
                 shared[name] = value;
             });
             this.name = name;
+            this.Disposed = false;
 
             DotMP.Parallel.Barrier();
         }
@@ -43,10 +50,28 @@ namespace DotMP
         /// Must be called from all threads in the parallel region.
         /// Acts as a barrier.
         /// </summary>
-        public void Clear()
+        public void Dispose()
         {
-            DotMP.Parallel.Master(() => shared.Remove(name));
-            DotMP.Parallel.Barrier();
+            Dispose(true);
+        }
+
+        /// <summary>
+        /// Clears the shared variable from memory.
+        /// Virtual implementation for IDisposable interface.
+        /// </summary>
+        /// <param name="disposing">Whether or not to dispose of the shared variable.</param>
+        public virtual void Dispose(bool disposing)
+        {
+            if (!Disposed)
+            {
+                if (disposing)
+                {
+                    DotMP.Parallel.Master(() => shared.Remove(name));
+                    DotMP.Parallel.Barrier();
+                }
+
+                Disposed = true;
+            }
         }
 
         /// <summary>

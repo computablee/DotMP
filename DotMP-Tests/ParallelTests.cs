@@ -356,14 +356,17 @@ namespace DotMPTests
         {
             DotMP.Parallel.ParallelRegion(() =>
             {
-                DotMP.Shared<int> s = new DotMP.Shared<int>("s", 6);
-                s.Get().Should().Be(6);
-                DotMP.Parallel.Barrier();
-                DotMP.Parallel.Master(() => s.Set(7));
-                DotMP.Parallel.Barrier();
-                s.Get().Should().Be(7);
-                DotMP.Parallel.Barrier();
-                s.Clear();
+                DotMP.Shared<int> s;
+                using (s = new DotMP.Shared<int>("s", 6))
+                {
+                    s.Get().Should().Be(6);
+                    DotMP.Parallel.Barrier();
+                    DotMP.Parallel.Master(() => s.Set(7));
+                    DotMP.Parallel.Barrier();
+                    s.Get().Should().Be(7);
+                    DotMP.Parallel.Barrier();
+                }
+                s.Disposed.Should().BeTrue();
             });
         }
 
