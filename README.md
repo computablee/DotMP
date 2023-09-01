@@ -339,44 +339,57 @@ DotMP provides the following functions:
 
 | <omp.h> function     | DotMP function        | Comments
 -----------------------|----------------------------|---------
-| omp_set_lock(lock)   | DotMP.Lock.Set(lock)   | Halt the current thread until the lock is obtained
-| omp_unset_lock(lock) | DotMP.Lock.Unset(lock) | Free the current lock, making it available for other threads
-| omp_test_lock(lock)  | DotMP.Lock.Test(lock)  | Attempt to obtain a lock without blocking, returns true if locking is successful
+| omp_set_lock(lock)   | DotMP.Lock.Set(Lock)   | Halt the current thread until the lock is obtained
+| omp_unset_lock(lock) | DotMP.Lock.Unset(Lock) | Free the current lock, making it available for other threads
+| omp_test_lock(lock)  | DotMP.Lock.Test(Lock)  | Attempt to obtain a lock without blocking, returns true if locking is successful
 
 ## Shared Memory
 
 DotMP supports an API for declaring thread-shared memory within a parallel region.
-Shared memory is provided through the `DotMP.Shared` class.
+Shared memory is provided through the `DotMP.Shared<T>` class, which implements the `IDisposable` interface.
+`DotMP.Shared<T>` objects support implicit casting to type `T`, and can be used as such.
+They also allow an explicit `DotMP.Shared<T>.Get()` method to be used to retrieve the value of the shared variable.
+For setting, the `DotMP.Shared<T>.Set(T value)` method must be used.
 
-The following provides an example of a parallel vector initialization:
+For indexable types, such as arrays, the `DotMP.SharedEnumerable<T>` class is provided.
+This class implements the `IDisposable` interface, and supports implicit casting to type `T[]` and `List<T>`.
+This class also overloads the `[]` operator to allow for indexing.
+
+The following provides an example of a parallel vector initialization using `DotMP.SharedEnumerable<T>`:
 ```cs
-static void InitVector()
+static double[] InitVector()
 {
     double[] returnVector;
     
     DotMP.Parallel.ParallelRegion(() =>
     {
-        DotMP.Shared<double[]> vec = new DotMP.Shared<double[]>("vec", new double[1024]);
-        DotMP.Parallel.For(0, 1024, i =>
+        using (DotMP.SharedEnumerable<double> vec = new DotMP.SharedEnumerable<double>("vec", new double[1024]))
         {
-            vec.Get()[i] = 1.0;
-        });
-        
-        returnVector = vec.Get();
-        vec.Clear()
+            DotMP.Parallel.For(0, 1024, i =>
+            {
+                vec[i] = 1.0;
+            });
+
+            returnVector = vec;
+        }
     });
     
     return returnVector;
 }
 ```
 
-The `DotMP.Shared` class supports the following methods:
-| Method                            | Action 
-------------------------------------|-------
-| Constructor(string name, T value) | Initializes a shared variable with name `name` and starting value `value`
-| Clear()                           | Cleares a shared variable
-| Set(T value)                      | Sets a shared variable to value `value`
-| Get()                             | Gets a shared variable
+The `DotMP.Shared` and `DotMP.SharedEnumerable` classes supports the following methods:
+| Method                                       | Action 
+-----------------------------------------------|-------
+| DotMP.Shared.Shared(string name, T value)    | Initializes a shared variable with name `name` and starting value `value`
+| DotMP.Shared.Dispose()                       | Disposes of a shared variable
+| DotMP.Shared.Set(T value)                    | Sets a shared variable to value `value`
+| DotMP.Shared.Get()                           | Gets a shared variable
+| DotMP.SharedEnumerable.SharedEnumerable(string name, IList<T> value) | Initializes a shared array with name `name` and starting value `value`
+| DotMP.SharedEnumerable.Dispose()             | Disposes of a shared array
+| DotMP.SharedEnumerable.Get()                 | Gets a shared array as an `IList<T>`
+| DotMP.SharedEnumerable.GetArray()            | Gets a shared array as a `T[]`
+| DotMP.SharedEnumerable.GetList()             | Gets a shared array as a `List<T>`
 
 The `DotMP.Shared` constructor and `Clear()` methods serve as implicit barriers, ensuring that all threads can access the memory before proceeding.
 
@@ -388,14 +401,14 @@ DotMP provides an analog of the following functions:
 ---------------------------|------------------------------------|---------
 | omp_get_num_procs()      | DotMP.Parallel.GetNumProcs()      | Returns the number of logical threads on the system
 | omp_get_num_threads()    | DotMP.Parallel.GetNumThreads()    | Returns the number of active threads in the current region
-| omp_set_num_threads(int) | DotMP.Parallel.SetNumThreads(int) | Sets the number of threads for the next parallel region to use
+| omp_set_num_threads()    | DotMP.Parallel.SetNumThreads()    | Sets the number of threads for the next parallel region to use
 | omp_get_thread_num()     | DotMP.Parallel.GetThreadNum()     | Gets the ID of the current thread
 | omp_get_max_threads()    | DotMP.Parallel.GetMaxThreads()    | Gets the maximum number of threads the runtime may use in the next region
 | omp_in_parallel()        | DotMP.Parallel.InParallel()       | Returns true if called from within a parallel region
-| omp_set_dynamic(int)     | DotMP.Parallel.SetDynamic()       | Tells the runtime to dynamically adjust the number of threads, can disable by calling SetNumThreads
+| omp_set_dynamic()        | DotMP.Parallel.SetDynamic()       | Tells the runtime to dynamically adjust the number of threads, can disable by calling SetNumThreads
 | omp_get_dynamic()        | DotMP.Parallel.GetDynamic()       | Returns true if the runtime can dynamically adjust the number of threads
-| omp_set_nested(int)      | DotMP.Parallel.SetNested(bool)    | Returns a NotImplementedException
+| omp_set_nested()         | DotMP.Parallel.SetNested()        | Returns a NotImplementedException
 | omp_get_nested()         | DotMP.Parallel.GetNested()        | Returns false
 | omp_get_wtime()          | DotMP.Parallel.GetWTime()         | Returns the number of seconds since the Unix Epoch as a double
-| N/A                      | DotMP.Parallel.GetSchedule()      | Gets the current schedule of the parallel for loop
-| N/A                      | DotMP.Parallel.GetChunkSize()     | Gets the current chunk size of the parallel for loop
+| omp_get_schedule()       | DotMP.Parallel.GetSchedule()      | Gets the current schedule of the parallel for loop
+| omp_get_schedule()       | DotMP.Parallel.GetChunkSize()     | Gets the current chunk size of the parallel for loop

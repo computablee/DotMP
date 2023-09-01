@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Xunit;
@@ -360,6 +361,7 @@ namespace DotMPTests
                 using (s = new DotMP.Shared<int>("s", 6))
                 {
                     s.Get().Should().Be(6);
+                    (s + 1).Should().Be(7);
                     DotMP.Parallel.Barrier();
                     DotMP.Parallel.Master(() => s.Set(7));
                     DotMP.Parallel.Barrier();
@@ -367,6 +369,48 @@ namespace DotMPTests
                     DotMP.Parallel.Barrier();
                 }
                 s.Disposed.Should().BeTrue();
+            });
+        }
+
+        /// <summary>
+        /// Tests to make sure the DotMP.SharedEnumerable class works.
+        /// </summary>
+        [Fact]
+        public void SharedEnumerable_works()
+        {
+            double[] returnVector = new double[0];
+
+            DotMP.Parallel.ParallelRegion(() =>
+            {
+                DotMP.SharedEnumerable<double> vec;
+                using (vec = new DotMP.SharedEnumerable<double>("vec", new double[1024]))
+                {
+                    DotMP.Parallel.For(0, 1024, i =>
+                    {
+                        vec[i] = 1.0;
+                    });
+
+                    returnVector = vec;
+                }
+                vec.Disposed.Should().BeTrue();
+            });
+
+            for (int i = 0; i < returnVector.Length; i++)
+            {
+                returnVector[i].Should().Be(1.0);
+            }
+
+            DotMP.Parallel.ParallelRegion(() =>
+            {
+                DotMP.SharedEnumerable<double> a = new DotMP.SharedEnumerable<double>("a", new double[1024]);
+                DotMP.SharedEnumerable<double> x = new DotMP.SharedEnumerable<double>("x", new List<double>(new double[1024]));
+
+                a[0] = x[0];
+                double[] a_arr = a;
+                List<double> x_arr = x;
+
+                a_arr = a.GetArray();
+                x_arr = x.GetList();
             });
         }
 
