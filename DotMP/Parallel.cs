@@ -15,7 +15,7 @@ namespace DotMP
     /// <summary>
     /// The main class of DotMP.
     /// Contains all the main methods for parallelism.
-    /// For users, this is the main class you want to worry about, along with Locking, Lock, Shared, and Atomic
+    /// For users, this is the main class you want to worry about, along with Lock, Shared, and Atomic
     /// </summary>
     public static class Parallel
     {
