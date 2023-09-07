@@ -93,16 +93,16 @@ namespace DotMPTests
         public void Schedule_runtime_works()
         {
             Environment.SetEnvironmentVariable("OMP_SCHEDULE", "guided,2");
-            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Parallel.Schedule.Runtime, action: i =>
+            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Runtime, action: i =>
             {
-                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Parallel.Schedule.Guided);
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Guided);
                 DotMP.Parallel.GetChunkSize().Should().Be(2);
             });
 
             Environment.SetEnvironmentVariable("OMP_SCHEDULE", "dynamic,4");
-            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Parallel.Schedule.Runtime, action: i =>
+            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Runtime, action: i =>
             {
-                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Parallel.Schedule.Dynamic);
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Dynamic);
                 DotMP.Parallel.GetChunkSize().Should().Be(4);
             });
         }
@@ -192,7 +192,7 @@ namespace DotMPTests
             uint threads = 8;
             int[] incrementing = new int[1024];
 
-            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Parallel.Schedule.Static,
+            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Static,
                                         num_threads: threads, action: i =>
             {
                 DotMP.Parallel.Ordered(0, () => incrementing[i] = i);
@@ -212,12 +212,12 @@ namespace DotMPTests
         {
             int total = 0;
 
-            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Parallel.Schedule.Static, action: (ref int total, int i) =>
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
             {
                 total += i;
             });
 
-            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Parallel.Schedule.Static, action: (ref int total, int i) =>
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
             {
                 total += i;
             });
@@ -481,7 +481,7 @@ namespace DotMPTests
             {
                 if (inParallel)
                 {
-                    DotMP.Parallel.ParallelFor(0, WORKLOAD, schedule: DotMP.Parallel.Schedule.Guided,
+                    DotMP.Parallel.ParallelFor(0, WORKLOAD, schedule: DotMP.Schedule.Guided,
                         action: j => InnerWorkload(j, a, b, c));
                 }
                 else
@@ -543,7 +543,7 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(() =>
             {
-                DotMP.Parallel.For(0, x.Length, schedule: DotMP.Parallel.Schedule.Guided, action: i =>
+                DotMP.Parallel.For(0, x.Length, schedule: DotMP.Schedule.Guided, action: i =>
                 {
                     z[i] = a * x[i] + y[i];
                 });
@@ -563,7 +563,7 @@ namespace DotMPTests
         {
             float[] z = new float[x.Length];
 
-            DotMP.Parallel.ParallelFor(0, x.Length, schedule: DotMP.Parallel.Schedule.Guided, action: i =>
+            DotMP.Parallel.ParallelFor(0, x.Length, schedule: DotMP.Schedule.Guided, action: i =>
             {
                 z[i] = a * x[i] + y[i];
             });
@@ -591,7 +591,7 @@ namespace DotMPTests
                     int id1 = DotMP.Parallel.Critical(0, () => ++x);
                     int id2 = -1;
 
-                    DotMP.Parallel.For(0, 100, schedule: DotMP.Parallel.Schedule.Static, action: j =>
+                    DotMP.Parallel.For(0, 100, schedule: DotMP.Schedule.Static, action: j =>
                     {
                         if (two_regions)
                         {
