@@ -163,7 +163,6 @@ namespace DotMP
         /// </summary>
         public new void Dispose()
         {
-            Parallel.Barrier();
             base.Dispose();
         }
 
