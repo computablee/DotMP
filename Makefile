@@ -9,16 +9,19 @@ examples-cs:
 	$(DN) build -c $(BUILD) examples/CSParallel/ConjugateGradient
 	$(DN) build -c $(BUILD) examples/CSParallel/HeatTransfer
 	$(DN) build -c $(BUILD) examples/CSParallel/GEMM
+	$(DN) build -c $(BUILD) examples/CSParallel/KNN
 
 examples-dmp:
 	$(DN) build -c $(BUILD) examples/DotMP/ConjugateGradient
 	$(DN) build -c $(BUILD) examples/DotMP/HeatTransfer
 	$(DN) build -c $(BUILD) examples/DotMP/GEMM
+	$(DN) build -c $(BUILD) examples/DotMP/KNN
 
 examples-seq:
 	$(DN) build -c $(BUILD) examples/Serial/ConjugateGradient
 	$(DN) build -c $(BUILD) examples/Serial/HeatTransfer
 	$(DN) build -c $(BUILD) examples/Serial/GEMM
+	$(DN) build -c $(BUILD) examples/Serial/KNN
 
 tests:
 	$(DN) build -c $(BUILD) DotMP-Tests
