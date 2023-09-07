@@ -86,6 +86,9 @@ namespace DotMP
         /// </summary>
         volatile internal bool[] in_for;
 
+        /// <summary>
+        /// Default constructor for WorkShare struct.
+        /// </summary>
         public WorkShare()
         {
             this.threads = null;
