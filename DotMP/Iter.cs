@@ -10,6 +10,7 @@ namespace DotMP
     /// The Runtime schedule simply fetches the schedule from the OMP_SCHEDULE environment variable.
     /// </summary>
     public enum Schedule { Static, Dynamic, Guided, Runtime };
+
     /// <summary>
     /// Contains all of the scheduling code for parallel for loops.
     /// </summary>
