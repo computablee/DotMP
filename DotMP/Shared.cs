@@ -61,6 +61,7 @@ namespace DotMP
         /// <param name="disposing">Whether or not to dispose of the shared variable.</param>
         public virtual void Dispose(bool disposing)
         {
+            Parallel.Barrier();
             if (!Disposed)
             {
                 if (disposing)
@@ -162,6 +163,7 @@ namespace DotMP
         /// </summary>
         public new void Dispose()
         {
+            Parallel.Barrier();
             base.Dispose();
         }
 
