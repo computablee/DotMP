@@ -143,14 +143,21 @@ namespace DotMP
                 throw new NotInParallelRegionException();
             }
 
+            if (Init.ws.in_for.Length > 0 && Init.ws.in_for[GetThreadNum()])
+            {
+                throw new CannotPerformNestedForException();
+            }
+
             FixArgs(start, end, ref schedule, ref chunk_size, Init.ws.num_threads);
 
             Master(() =>
             {
-                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, num_threads, null, schedule);
+                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, null, schedule);
             });
 
             Barrier();
+
+            Init.ws.in_for[GetThreadNum()] = true;
 
             switch (schedule)
             {
@@ -167,7 +174,13 @@ namespace DotMP
 
             Barrier();
 
-            Master(() => ordered.Clear());
+            Master(() =>
+            {
+                ordered.Clear();
+                Init.ws.in_for = new bool[0];
+            });
+
+            Barrier();
         }
 
         /// <summary>
@@ -194,6 +207,11 @@ namespace DotMP
                 throw new NotInParallelRegionException();
             }
 
+            if (Init.ws.in_for.Length > 0 && Init.ws.in_for[GetThreadNum()])
+            {
+                throw new CannotPerformNestedForException();
+            }
+
             FixArgs(start, end, ref schedule, ref chunk_size, Init.ws.num_threads);
 
             if (GetThreadNum() == 0)
@@ -203,6 +221,8 @@ namespace DotMP
             }
 
             Barrier();
+
+            Init.ws.in_for[GetThreadNum()] = true;
 
             switch (schedule)
             {
@@ -258,6 +278,10 @@ namespace DotMP
 
                 ordered.Clear();
             }
+
+            Barrier();
+
+            Master(() => Init.ws.in_for = new bool[0]);
 
             Barrier();
         }
