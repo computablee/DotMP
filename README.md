@@ -90,8 +90,8 @@ DotMP.Parallel.For(a, b, i => {
 });
 ```
 This function supports the `schedule` optional parameter, which sets the parallel scheduler to use.
-Permissible values are `DotMP.Parallel.Schedule.Static`, `DotMP.Parallel.Schedule.Dynamic`, `DotMP.Parallel.Schedule.Guided`, and `DotMP.Parallel.Schedule.Runtime`.
-The default value is `DotMP.Parallel.Schedule.Static`.
+Permissible values are `DotMP.Schedule.Static`, `DotMP.Schedule.Dynamic`, `DotMP.Schedule.Guided`, and `DotMP.Schedule.Runtime`.
+The default value is `DotMP.Schedule.Static`.
 
 This function supports the `chunk_size` optional parameter, which sets the chunk size for the scheduler to use.
 The default value is dependent on the scheduler and is not documented, as it may change from version to version.
