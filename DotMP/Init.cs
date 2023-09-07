@@ -81,6 +81,25 @@ namespace DotMP
         /// The schedule to be used in the parallel for loop.
         /// </summary>
         internal Schedule? schedule;
+        /// <summary>
+        /// Booleans per-thread to check if we're currently in a Parallel.For or Parallel.ForReduction<T>.
+        /// </summary>
+        volatile internal bool[] in_for;
+
+        public WorkShare()
+        {
+            this.threads = null;
+            this.threads_complete = 0;
+            this.ws_lock = null;
+            this.start = 0;
+            this.end = 0;
+            this.chunk_size = 0;
+            this.op = null;
+            this.reduction_list = null;
+            this.schedule = null;
+            this.in_for = new bool[0];
+            this.num_threads = 0;
+        }
 
         /// <summary>
         /// The constructor for a WorkShare object.
@@ -106,6 +125,9 @@ namespace DotMP
             this.op = op;
             this.reduction_list = new List<dynamic>();
             this.schedule = schedule;
+            this.in_for = new bool[num_threads];
+            for (int i = 0; i < num_threads; i++)
+                this.in_for[i] = false;
         }
     }
 
@@ -118,7 +140,7 @@ namespace DotMP
         /// <summary>
         /// The WorkShare struct being encapsulated by the Init static class.
         /// </summary>
-        internal static WorkShare ws;
+        internal static WorkShare ws = new WorkShare();
 
         /// <summary>
         /// Sets the local variable to the appropriate value based on the operation for parallel for reduction loops.
