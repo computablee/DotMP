@@ -99,12 +99,12 @@ static class ConjugateGradient
     public static double[] SpMV(CSRMatrix A, double[] x)
     {
         //create a shared array y which will be used to store the result of the matrix-vector product
-        using (DotMP.SharedEnumerable<double> y = new DotMP.SharedEnumerable<double>("y", new double[A.m]))
+        using (var y = DotMP.SharedEnumerable.Create("y", new double[A.m]))
         {
             //compute the matrix-vector product in parallel
             //we use guided scheduling to balance the irregular load between threads
             DotMP.Parallel.For(0, A.m,
-                schedule: DotMP.Parallel.Schedule.Guided,
+                schedule: DotMP.Schedule.Guided,
                 action: i =>
             {
                 //compute the i-th element of the result
