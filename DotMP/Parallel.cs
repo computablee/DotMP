@@ -136,6 +136,7 @@ namespace DotMP
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        /// <exception cref="CannotPerformNestedForException">Thrown if nested within another For or ForReduction<T>.</exception>
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
             if (!ForkedRegion.in_parallel)
@@ -200,6 +201,7 @@ namespace DotMP
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        /// <exception cref="CannotPerformNestedForException">Thrown if nested within another For or ForReduction<T>.</exception>
         public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
             if (!ForkedRegion.in_parallel)
