@@ -352,7 +352,7 @@ They also allow an explicit `DotMP.Shared<T>.Get()` method to be used to retriev
 For setting, the `DotMP.Shared<T>.Set(T value)` method must be used.
 
 For indexable types, such as arrays, the `DotMP.SharedEnumerable<T>` class is provided.
-This class implements the `IDisposable` interface, and supports implicit casting to type `T[]` and `List<T>`.
+This class implements the `IDisposable` interface, and supports implicit casting to the containing type.
 This class also overloads the `[]` operator to allow for indexing.
 
 The following provides an example of a parallel vector initialization using `DotMP.SharedEnumerable<T>`:
@@ -363,7 +363,7 @@ static double[] InitVector()
     
     DotMP.Parallel.ParallelRegion(() =>
     {
-        using (DotMP.SharedEnumerable<double> vec = new DotMP.SharedEnumerable<double>("vec", new double[1024]))
+        using (var vec = DotMP.SharedEnumerable.Create("vec", new double[1024]))
         {
             DotMP.Parallel.For(0, 1024, i =>
             {
@@ -385,13 +385,14 @@ The `DotMP.Shared` and `DotMP.SharedEnumerable` classes supports the following m
 | DotMP.Shared.Dispose()                       | Disposes of a shared variable
 | DotMP.Shared.Set(T value)                    | Sets a shared variable to value `value`
 | DotMP.Shared.Get()                           | Gets a shared variable
-| DotMP.SharedEnumerable.SharedEnumerable(string name, IList<T> value) | Initializes a shared array with name `name` and starting value `value`
+| DotMP.SharedEnumerable.SharedEnumerable(string name, U value) | Initializes a shared array with name `name` and starting value `value`
 | DotMP.SharedEnumerable.Dispose()             | Disposes of a shared array
-| DotMP.SharedEnumerable.Get()                 | Gets a shared array as an `IList<T>`
-| DotMP.SharedEnumerable.GetArray()            | Gets a shared array as a `T[]`
-| DotMP.SharedEnumerable.GetList()             | Gets a shared array as a `List<T>`
+| DotMP.SharedEnumerable.Get()                 | Gets a shared enumerable as its containing type.
 
 The `DotMP.Shared` constructor and `Clear()` methods serve as implicit barriers, ensuring that all threads can access the memory before proceeding.
+
+`DotMP.Shared` provides a factory method for creating `DotMP.Shared` instances via the `DotMP.Shared.Create()` method.
+`DotMP.SharedEnumerable` provides factory methods for creating `DotMP.SharedEnumerable` instances containing either `T[]` or `List<T>` enumerables via the `DotMP.SharedEnumerable.Create()` methods.
 
 ## Supported Functions
 

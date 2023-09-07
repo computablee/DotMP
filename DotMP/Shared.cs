@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Dynamic;
 
 namespace DotMP
 {
@@ -35,14 +34,14 @@ namespace DotMP
         /// <param name="value">Initial starting value of the shared variable.</param>
         public Shared(string name, T value)
         {
-            DotMP.Parallel.Master(() =>
+            Parallel.Master(() =>
             {
                 shared[name] = value;
             });
             this.name = name;
             this.Disposed = false;
 
-            DotMP.Parallel.Barrier();
+            Parallel.Barrier();
         }
 
         /// <summary>
@@ -66,8 +65,8 @@ namespace DotMP
             {
                 if (disposing)
                 {
-                    DotMP.Parallel.Master(() => shared.Remove(name));
-                    DotMP.Parallel.Barrier();
+                    Parallel.Master(() => shared.Remove(name));
+                    Parallel.Barrier();
                 }
 
                 Disposed = true;
@@ -104,18 +103,37 @@ namespace DotMP
     }
 
     /// <summary>
+    /// Factory class for Shared<T>
+    /// </summary>
+    public static class Shared
+    {
+        /// <summary>
+        /// Factory method for creating shared variables.
+        /// </summary>
+        /// <typeparam name="T">The type of the shared variable to create.</typeparam>
+        /// <param name="name">The name of the shared variable.</param>
+        /// <param name="value">The value of the shared variable.</param>
+        /// <returns>A Shared object.</returns>
+        public static Shared<T> Create<T>(string name, T value)
+        {
+            return new Shared<T>(name, value);
+        }
+    }
+
+    /// <summary>
     /// A specialization of Shared for items that can be indexed with square brackets.
     /// The DotMP-parallelized Conjugate Gradient example shows this off fairly well inside of the SpMV function.
     /// </summary>
-    /// <typeparam name="T"></typeparam>
-    public class SharedEnumerable<T> : Shared<IList<T>>
+    /// <typeparam name="T">The type that the IList is containing.</typeparam>
+    /// <typeparam name="U">The full IList type.</typeparam>
+    public class SharedEnumerable<T, U> : Shared<U> where U : IList<T>
     {
         /// <summary>
         /// Constructs a new shared variable with the given name and value.
         /// </summary>
         /// <param name="name">The name of the shared variable.</param>
         /// <param name="value">The value of the shared variable.</param>
-        public SharedEnumerable(string name, IList<T> value) : base(name, value) { }
+        public SharedEnumerable(string name, U value) : base(name, value) { }
 
         /// <summary>
         /// Allows for indexing into the shared variable with square brackets.
@@ -132,18 +150,9 @@ namespace DotMP
         /// Allows for implicit conversion to an array.
         /// </summary>
         /// <param name="shared">A SharedEnumerable object.</param>
-        public static implicit operator T[](SharedEnumerable<T> shared)
+        public static implicit operator U(SharedEnumerable<T, U> shared)
         {
-            return shared.GetArray();
-        }
-
-        /// <summary>
-        /// Allows for implicit conversion to a System.List<T>.
-        /// </summary>
-        /// <param name="shared">A SharedEnumerable object.</param>
-        public static implicit operator List<T>(SharedEnumerable<T> shared)
-        {
-            return shared.GetList();
+            return shared.Get();
         }
 
         /// <summary>
@@ -160,29 +169,39 @@ namespace DotMP
         /// Gets the value of the shared variable as an IList<T>.
         /// </summary>
         /// <returns>The value of the shared variable as an IList<T>.</returns>
-        public new IList<T> Get()
+        public new U Get()
         {
             return base.Get();
         }
+    }
 
+    /// <summary>
+    /// The factory class for SharedEnumerable<T, U>
+    /// </summary>
+    public static class SharedEnumerable
+    {
         /// <summary>
-        /// Returns the value of the shared variable as an array.
-        /// Undefined behavior if the shared variable is not an array.
+        /// Factory method for creating shared arrays.
         /// </summary>
-        /// <returns>The value of the shared variable as an array.</returns>
-        public T[] GetArray()
+        /// <typeparam name="T">The type the array contains.</typeparam>
+        /// <param name="name">The name of the shared enumerable.</param>
+        /// <param name="value">Initial starting value of the shared enumerable.</param>
+        /// <returns>A SharedEnumerable object.</returns>
+        public static SharedEnumerable<T, T[]> Create<T>(string name, T[] value)
         {
-            return (T[])Get();
+            return new SharedEnumerable<T, T[]>(name, value);
         }
 
         /// <summary>
-        /// Returns the value of the shared variable as a System.List<T>.
-        /// Undefined behavior if the shared variable is not a System.List<T>.
+        /// Factory method for creating shared Lists.
         /// </summary>
-        /// <returns>The value of the shared variable as a System.List<T>.</returns>
-        public List<T> GetList()
+        /// <typeparam name="T">The type the array contains.</typeparam>
+        /// <param name="name">The name of the shared enumerable.</param>
+        /// <param name="value">Initial starting value of the shared enumerable.</param>
+        /// <returns>A SharedEnumerable object.</returns>
+        public static SharedEnumerable<T, List<T>> Create<T>(string name, List<T> value)
         {
-            return (List<T>)Get();
+            return new SharedEnumerable<T, List<T>>(name, value);
         }
     }
 }
