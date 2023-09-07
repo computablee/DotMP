@@ -4,61 +4,17 @@ using System.Threading;
 namespace DotMP
 {
     /// <summary>
+    /// The different types of schedules for a parallel for loop.
+    /// The default schedule if none is specified is static.
+    /// Detailed explanations of each schedule can be found in the Iter class.
+    /// The Runtime schedule simply fetches the schedule from the OMP_SCHEDULE environment variable.
+    /// </summary>
+    public enum Schedule { Static, Dynamic, Guided, Runtime };
+    /// <summary>
     /// Contains all of the scheduling code for parallel for loops.
     /// </summary>
     internal static class Iter
     {
-        /// <summary>
-        /// Sets the local variable to the appropriate value based on the operation for parallel for reduction loops.
-        /// For addition and subtraction, the initial starting value is 0.
-        /// For multiplication, the initial starting value is 1.
-        /// For binary And, the initial starting value is -1.
-        /// For binary Or and Xor, the initial starting value is 0.
-        /// For boolean And, the initial starting value is true.
-        /// For boolean Or, the initial starting value is false.
-        /// For min, the initial starting value is int.MaxValue.
-        /// For max, the initial starting value is int.MinValue.
-        /// </summary>
-        /// <typeparam name="T">The type of the local variable.</typeparam>
-        /// <param name="local">The local variable to be set.</param>
-        /// <param name="op">The operation to be performed.</param>
-        private static void SetLocal<T>(ref T local, Operations? op)
-        {
-            switch (Init.ws.op)
-            {
-                case Operations.Add:
-                case Operations.Subtract:
-                    local = (T)Convert.ChangeType(0, typeof(T));
-                    break;
-                case Operations.Multiply:
-                    local = (T)Convert.ChangeType(1, typeof(T));
-                    break;
-                case Operations.BinaryAnd:
-                    local = (T)Convert.ChangeType(-1, typeof(T));
-                    break;
-                case Operations.BinaryOr:
-                    local = (T)Convert.ChangeType(0, typeof(T));
-                    break;
-                case Operations.BinaryXor:
-                    local = (T)Convert.ChangeType(0, typeof(T));
-                    break;
-                case Operations.BooleanAnd:
-                    local = (T)Convert.ChangeType(true, typeof(T));
-                    break;
-                case Operations.BooleanOr:
-                    local = (T)Convert.ChangeType(false, typeof(T));
-                    break;
-                case Operations.Min:
-                    local = (T)Convert.ChangeType(int.MaxValue, typeof(T));
-                    break;
-                case Operations.Max:
-                    local = (T)Convert.ChangeType(int.MinValue, typeof(T));
-                    break;
-                default:
-                    break;
-            }
-        }
-
         /// <summary>
         /// Starts and controls a parallel for loop with static scheduling.
         /// Static scheduling works as follows:
@@ -84,7 +40,7 @@ namespace DotMP
             int end = Init.ws.end;
 
             T local = default;
-            SetLocal(ref local, Init.ws.op);
+            Init.SetLocal(ref local);
 
             while (thr.curr_iter < end)
                 StaticNext(thr, tid, Init.ws.chunk_size, omp_fn, omp_fn_red, is_reduction, ref local);
@@ -152,7 +108,7 @@ namespace DotMP
             int end = Init.ws.end;
 
             T local = default;
-            SetLocal(ref local, Init.ws.op);
+            Init.SetLocal(ref local);
 
             while (Init.ws.start < end)
             {
@@ -228,7 +184,7 @@ namespace DotMP
             int end = Init.ws.end;
 
             T local = default;
-            SetLocal(ref local, Init.ws.op);
+            Init.SetLocal(ref local);
 
             while (Init.ws.start < end)
             {
