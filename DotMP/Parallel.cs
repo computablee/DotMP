@@ -20,13 +20,6 @@ namespace DotMP
     public static class Parallel
     {
         /// <summary>
-        /// The different types of schedules for a parallel for loop.
-        /// The default schedule if none is specified is static.
-        /// Detailed explanations of each schedule can be found in the Iter class.
-        /// The Runtime schedule simply fetches the schedule from the OMP_SCHEDULE environment variable.
-        /// </summary>
-        public enum Schedule { Static, Dynamic, Guided, Runtime };
-        /// <summary>
         /// The dictionary for critical regions.
         /// </summary>
         private static volatile Dictionary<int, (int, object)> critical_lock = new Dictionary<int, (int, object)>();
@@ -154,11 +147,7 @@ namespace DotMP
 
             Master(() =>
             {
-                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads);
-                Init.ws.start = start;
-                Init.ws.end = end;
-                Init.ws.chunk_size = chunk_size.Value;
-                Init.ws.schedule = schedule;
+                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, num_threads, null, schedule);
             });
 
             Barrier();
@@ -209,12 +198,7 @@ namespace DotMP
 
             if (GetThreadNum() == 0)
             {
-                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads);
-                Init.ws.start = start;
-                Init.ws.end = end;
-                Init.ws.chunk_size = chunk_size.Value;
-                Init.ws.op = op;
-                Init.ws.schedule = schedule;
+                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, op, schedule);
                 Init.ws.reduction_list.Clear();
             }
 
