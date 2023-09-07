@@ -358,7 +358,7 @@ namespace DotMPTests
             DotMP.Parallel.ParallelRegion(() =>
             {
                 DotMP.Shared<int> s;
-                using (s = new DotMP.Shared<int>("s", 6))
+                using (s = DotMP.Shared.Create("s", 6))
                 {
                     s.Get().Should().Be(6);
                     (s + 1).Should().Be(7);
@@ -382,8 +382,8 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(() =>
             {
-                DotMP.SharedEnumerable<double> vec;
-                using (vec = new DotMP.SharedEnumerable<double>("vec", new double[1024]))
+                DotMP.SharedEnumerable<double, double[]> vec;
+                using (vec = DotMP.SharedEnumerable.Create("vec", new double[1024]))
                 {
                     DotMP.Parallel.For(0, 1024, i =>
                     {
@@ -402,15 +402,18 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(() =>
             {
-                DotMP.SharedEnumerable<double> a = new DotMP.SharedEnumerable<double>("a", new double[1024]);
-                DotMP.SharedEnumerable<double> x = new DotMP.SharedEnumerable<double>("x", new List<double>(new double[1024]));
+                var a = DotMP.SharedEnumerable.Create("a", new double[1024]);
+                var x = DotMP.SharedEnumerable.Create("x", new List<double>(new double[1024]));
 
                 a[0] = x[0];
                 double[] a_arr = a;
                 List<double> x_arr = x;
 
-                a_arr = a.GetArray();
-                x_arr = x.GetList();
+                DotMP.Parallel.Barrier();
+                a.Dispose();
+                x.Dispose();
+                a.Disposed.Should().BeTrue();
+                x.Disposed.Should().BeTrue();
             });
         }
 
