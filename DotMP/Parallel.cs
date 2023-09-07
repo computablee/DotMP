@@ -15,17 +15,10 @@ namespace DotMP
     /// <summary>
     /// The main class of DotMP.
     /// Contains all the main methods for parallelism.
-    /// For users, this is the main class you want to worry about, along with Locking, Lock, Shared, and Atomic
+    /// For users, this is the main class you want to worry about, along with Lock, Shared, and Atomic
     /// </summary>
     public static class Parallel
     {
-        /// <summary>
-        /// The different types of schedules for a parallel for loop.
-        /// The default schedule if none is specified is static.
-        /// Detailed explanations of each schedule can be found in the Iter class.
-        /// The Runtime schedule simply fetches the schedule from the OMP_SCHEDULE environment variable.
-        /// </summary>
-        public enum Schedule { Static, Dynamic, Guided, Runtime };
         /// <summary>
         /// The dictionary for critical regions.
         /// </summary>
@@ -143,6 +136,7 @@ namespace DotMP
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        /// <exception cref="CannotPerformNestedForException">Thrown if nested within another For or ForReduction<T>.</exception>
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
             if (!ForkedRegion.in_parallel)
@@ -150,18 +144,21 @@ namespace DotMP
                 throw new NotInParallelRegionException();
             }
 
+            if (Init.ws.in_for.Length > 0 && Init.ws.in_for[GetThreadNum()])
+            {
+                throw new CannotPerformNestedForException();
+            }
+
             FixArgs(start, end, ref schedule, ref chunk_size, Init.ws.num_threads);
 
             Master(() =>
             {
-                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads);
-                Init.ws.start = start;
-                Init.ws.end = end;
-                Init.ws.chunk_size = chunk_size.Value;
-                Init.ws.schedule = schedule;
+                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, null, schedule);
             });
 
             Barrier();
+
+            Init.ws.in_for[GetThreadNum()] = true;
 
             switch (schedule)
             {
@@ -178,7 +175,13 @@ namespace DotMP
 
             Barrier();
 
-            Master(() => ordered.Clear());
+            Master(() =>
+            {
+                ordered.Clear();
+                Init.ws.in_for = new bool[0];
+            });
+
+            Barrier();
         }
 
         /// <summary>
@@ -198,6 +201,7 @@ namespace DotMP
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        /// <exception cref="CannotPerformNestedForException">Thrown if nested within another For or ForReduction<T>.</exception>
         public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
             if (!ForkedRegion.in_parallel)
@@ -205,20 +209,22 @@ namespace DotMP
                 throw new NotInParallelRegionException();
             }
 
+            if (Init.ws.in_for.Length > 0 && Init.ws.in_for[GetThreadNum()])
+            {
+                throw new CannotPerformNestedForException();
+            }
+
             FixArgs(start, end, ref schedule, ref chunk_size, Init.ws.num_threads);
 
             if (GetThreadNum() == 0)
             {
-                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads);
-                Init.ws.start = start;
-                Init.ws.end = end;
-                Init.ws.chunk_size = chunk_size.Value;
-                Init.ws.op = op;
-                Init.ws.schedule = schedule;
+                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, op, schedule);
                 Init.ws.reduction_list.Clear();
             }
 
             Barrier();
+
+            Init.ws.in_for[GetThreadNum()] = true;
 
             switch (schedule)
             {
@@ -276,6 +282,10 @@ namespace DotMP
             }
 
             Barrier();
+
+            Master(() => Init.ws.in_for = new bool[0]);
+
+            Barrier();
         }
 
         /// <summary>
@@ -286,8 +296,12 @@ namespace DotMP
         /// </summary>
         /// <param name="action">The action to be performed in the parallel region.</param>
         /// <param name="num_threads">The number of threads to be used in the parallel region, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         public static void ParallelRegion(Action action, uint? num_threads = null)
         {
+            if (InParallel())
+                throw new CannotPerformNestedParallelismException();
+
             if (num_threads == null && Parallel.num_threads == 0)
                 num_threads = (uint)GetNumProcs();
             else

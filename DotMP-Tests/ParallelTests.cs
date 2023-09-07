@@ -1,5 +1,6 @@
 ﻿using FluentAssertions;
 using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.Threading;
 using Xunit;
@@ -92,16 +93,16 @@ namespace DotMPTests
         public void Schedule_runtime_works()
         {
             Environment.SetEnvironmentVariable("OMP_SCHEDULE", "guided,2");
-            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Parallel.Schedule.Runtime, action: i =>
+            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Runtime, action: i =>
             {
-                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Parallel.Schedule.Guided);
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Guided);
                 DotMP.Parallel.GetChunkSize().Should().Be(2);
             });
 
             Environment.SetEnvironmentVariable("OMP_SCHEDULE", "dynamic,4");
-            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Parallel.Schedule.Runtime, action: i =>
+            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Runtime, action: i =>
             {
-                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Parallel.Schedule.Dynamic);
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Dynamic);
                 DotMP.Parallel.GetChunkSize().Should().Be(4);
             });
         }
@@ -191,7 +192,7 @@ namespace DotMPTests
             uint threads = 8;
             int[] incrementing = new int[1024];
 
-            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Parallel.Schedule.Static,
+            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Static,
                                         num_threads: threads, action: i =>
             {
                 DotMP.Parallel.Ordered(0, () => incrementing[i] = i);
@@ -211,12 +212,12 @@ namespace DotMPTests
         {
             int total = 0;
 
-            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Parallel.Schedule.Static, action: (ref int total, int i) =>
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
             {
                 total += i;
             });
 
-            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Parallel.Schedule.Static, action: (ref int total, int i) =>
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
             {
                 total += i;
             });
@@ -330,22 +331,22 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                DotMP.Locking.Set(l);
+                DotMP.Lock.Set(l);
                 Thread.Sleep(100);
-                DotMP.Locking.Unset(l);
+                DotMP.Lock.Unset(l);
             });
 
             double elapsed = DotMP.Parallel.GetWTime() - time;
             elapsed.Should().BeGreaterThan(1.6);
 
-            DotMP.Locking.Test(l).Should().BeTrue();
-            DotMP.Locking.Test(l).Should().BeFalse();
-            DotMP.Locking.Test(l).Should().BeFalse();
-            DotMP.Locking.Unset(l);
-            DotMP.Locking.Test(l).Should().BeTrue();
-            DotMP.Locking.Test(l).Should().BeFalse();
-            DotMP.Locking.Test(l).Should().BeFalse();
-            DotMP.Locking.Unset(l);
+            DotMP.Lock.Test(l).Should().BeTrue();
+            DotMP.Lock.Test(l).Should().BeFalse();
+            DotMP.Lock.Test(l).Should().BeFalse();
+            DotMP.Lock.Unset(l);
+            DotMP.Lock.Test(l).Should().BeTrue();
+            DotMP.Lock.Test(l).Should().BeFalse();
+            DotMP.Lock.Test(l).Should().BeFalse();
+            DotMP.Lock.Unset(l);
         }
 
         /// <summary>
@@ -356,14 +357,63 @@ namespace DotMPTests
         {
             DotMP.Parallel.ParallelRegion(() =>
             {
-                DotMP.Shared<int> s = new DotMP.Shared<int>("s", 6);
-                s.Get().Should().Be(6);
+                DotMP.Shared<int> s;
+                using (s = DotMP.Shared.Create("s", 6))
+                {
+                    s.Get().Should().Be(6);
+                    (s + 1).Should().Be(7);
+                    DotMP.Parallel.Barrier();
+                    DotMP.Parallel.Master(() => s.Set(7));
+                    DotMP.Parallel.Barrier();
+                    s.Get().Should().Be(7);
+                    DotMP.Parallel.Barrier();
+                }
+                s.Disposed.Should().BeTrue();
+            });
+        }
+
+        /// <summary>
+        /// Tests to make sure the DotMP.SharedEnumerable class works.
+        /// </summary>
+        [Fact]
+        public void SharedEnumerable_works()
+        {
+            double[] returnVector = new double[0];
+
+            DotMP.Parallel.ParallelRegion(() =>
+            {
+                DotMP.SharedEnumerable<double, double[]> vec;
+                using (vec = DotMP.SharedEnumerable.Create("vec", new double[1024]))
+                {
+                    DotMP.Parallel.For(0, 1024, i =>
+                    {
+                        vec[i] = 1.0;
+                    });
+
+                    returnVector = vec;
+                }
+                vec.Disposed.Should().BeTrue();
+            });
+
+            for (int i = 0; i < returnVector.Length; i++)
+            {
+                returnVector[i].Should().Be(1.0);
+            }
+
+            DotMP.Parallel.ParallelRegion(() =>
+            {
+                var a = DotMP.SharedEnumerable.Create("a", new double[1024]);
+                var x = DotMP.SharedEnumerable.Create("x", new List<double>(new double[1024]));
+
+                a[0] = x[0];
+                double[] a_arr = a;
+                List<double> x_arr = x;
+
                 DotMP.Parallel.Barrier();
-                DotMP.Parallel.Master(() => s.Set(7));
-                DotMP.Parallel.Barrier();
-                s.Get().Should().Be(7);
-                DotMP.Parallel.Barrier();
-                s.Clear();
+                a.Dispose();
+                x.Dispose();
+                a.Disposed.Should().BeTrue();
+                x.Disposed.Should().BeTrue();
             });
         }
 
@@ -431,7 +481,7 @@ namespace DotMPTests
             {
                 if (inParallel)
                 {
-                    DotMP.Parallel.ParallelFor(0, WORKLOAD, schedule: DotMP.Parallel.Schedule.Guided,
+                    DotMP.Parallel.ParallelFor(0, WORKLOAD, schedule: DotMP.Schedule.Guided,
                         action: j => InnerWorkload(j, a, b, c));
                 }
                 else
@@ -493,7 +543,7 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(() =>
             {
-                DotMP.Parallel.For(0, x.Length, schedule: DotMP.Parallel.Schedule.Guided, action: i =>
+                DotMP.Parallel.For(0, x.Length, schedule: DotMP.Schedule.Guided, action: i =>
                 {
                     z[i] = a * x[i] + y[i];
                 });
@@ -513,7 +563,7 @@ namespace DotMPTests
         {
             float[] z = new float[x.Length];
 
-            DotMP.Parallel.ParallelFor(0, x.Length, schedule: DotMP.Parallel.Schedule.Guided, action: i =>
+            DotMP.Parallel.ParallelFor(0, x.Length, schedule: DotMP.Schedule.Guided, action: i =>
             {
                 z[i] = a * x[i] + y[i];
             });
@@ -541,7 +591,7 @@ namespace DotMPTests
                     int id1 = DotMP.Parallel.Critical(0, () => ++x);
                     int id2 = -1;
 
-                    DotMP.Parallel.For(0, 100, schedule: DotMP.Parallel.Schedule.Static, action: j =>
+                    DotMP.Parallel.For(0, 100, schedule: DotMP.Schedule.Static, action: j =>
                     {
                         if (two_regions)
                         {

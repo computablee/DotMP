@@ -12,7 +12,7 @@ static class GEMM
         int k = A[0].Length;
 
         //parallel for loop on the outermost loop
-        DotMP.Parallel.ParallelFor(0, m, schedule: DotMP.Parallel.Schedule.Dynamic, action: i =>
+        DotMP.Parallel.ParallelFor(0, m, schedule: DotMP.Schedule.Dynamic, action: i =>
         {
             //inner loop is serial
             for (int j = 0; j < n; j++)

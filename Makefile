@@ -1,32 +1,36 @@
 DN=dotnet
+BUILD=Release
 
 all: docs build tests examples
 
-examples: examples-cs examples-omp examples-seq
+examples: examples-cs examples-dmp examples-seq
 
 examples-cs:
-	$(DN) build -c Release examples/CSParallel/ConjugateGradient
-	$(DN) build -c Release examples/CSParallel/HeatTransfer
-	$(DN) build -c Release examples/CSParallel/GEMM
+	$(DN) build -c $(BUILD) examples/CSParallel/ConjugateGradient
+	$(DN) build -c $(BUILD) examples/CSParallel/HeatTransfer
+	$(DN) build -c $(BUILD) examples/CSParallel/GEMM
+	$(DN) build -c $(BUILD) examples/CSParallel/KNN
 
-examples-omp:
-	$(DN) build -c Release examples/DotMP/ConjugateGradient
-	$(DN) build -c Release examples/DotMP/HeatTransfer
-	$(DN) build -c Release examples/DotMP/GEMM
+examples-dmp:
+	$(DN) build -c $(BUILD) examples/DotMP/ConjugateGradient
+	$(DN) build -c $(BUILD) examples/DotMP/HeatTransfer
+	$(DN) build -c $(BUILD) examples/DotMP/GEMM
+	$(DN) build -c $(BUILD) examples/DotMP/KNN
 
 examples-seq:
-	$(DN) build -c Release examples/Serial/ConjugateGradient
-	$(DN) build -c Release examples/Serial/HeatTransfer
-	$(DN) build -c Release examples/Serial/GEMM
+	$(DN) build -c $(BUILD) examples/Serial/ConjugateGradient
+	$(DN) build -c $(BUILD) examples/Serial/HeatTransfer
+	$(DN) build -c $(BUILD) examples/Serial/GEMM
+	$(DN) build -c $(BUILD) examples/Serial/KNN
 
 tests:
-	$(DN) build -c Release DotMP-Tests
+	$(DN) build -c $(BUILD) DotMP-Tests
 
 test:
-	$(DN) test -c Release DotMP-Tests
+	$(DN) test -c $(BUILD) DotMP-Tests
 
 build:
-	$(DN) build -c Release DotMP
+	$(DN) build -c $(BUILD) DotMP
 
 docs:
 	doxygen

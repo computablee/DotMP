@@ -99,26 +99,28 @@ static class ConjugateGradient
     public static double[] SpMV(CSRMatrix A, double[] x)
     {
         //create a shared array y which will be used to store the result of the matrix-vector product
-        DotMP.Shared<double[]> y = new DotMP.Shared<double[]>("y", new double[A.m]);
-
-        //compute the matrix-vector product in parallel
-        //we use guided scheduling to balance the irregular load between threads
-        DotMP.Parallel.For(0, A.m,
-            schedule: DotMP.Parallel.Schedule.Guided,
-            action: i =>
+        using (var y = DotMP.SharedEnumerable.Create("y", new double[A.m]))
         {
-            //compute the i-th element of the result
-            double sum = 0.0;
-            for (int j = A.rowPtr[i]; j < A.rowPtr[i + 1]; j++)
+            //compute the matrix-vector product in parallel
+            //we use guided scheduling to balance the irregular load between threads
+            DotMP.Parallel.For(0, A.m,
+                schedule: DotMP.Schedule.Guided,
+                action: i =>
             {
-                //sum += A[i,j] * x[j]
-                sum += A.values[j] * x[A.colInd[j]];
-            }
-            //store the result in the shared array y
-            y.Get()[i] = sum;
-        });
+                //compute the i-th element of the result
+                double sum = 0.0;
+                for (int j = A.rowPtr[i]; j < A.rowPtr[i + 1]; j++)
+                {
+                    //sum += A[i,j] * x[j]
+                    sum += A.values[j] * x[A.colInd[j]];
+                }
+                //store the result in the shared array y
+                y[i] = sum;
+            });
 
-        return y.Get();
+            return y;
+        }
+
     }
 
     //compute the vector difference dest = x - y
