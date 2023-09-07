@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Threading;
+using System;
 
 namespace DotMP
 {
@@ -79,27 +80,32 @@ namespace DotMP
         /// <summary>
         /// The schedule to be used in the parallel for loop.
         /// </summary>
-        internal Parallel.Schedule? schedule;
+        internal Schedule? schedule;
 
         /// <summary>
-        /// Creates a WorkShare struct.
+        /// The constructor for a WorkShare object.
         /// </summary>
-        /// <param name="num_threads">The number of threads to be used in the parallel for loop.</param>
-        /// <param name="threads">The Thread objects to be used in the parallel for loop.</param>
-        internal WorkShare(uint num_threads, Thread[] threads)
+        /// <param name="num_threads">The number of threads in the WorkShare.</param>
+        /// <param name="threads">The Thread[] array of threads.</param>
+        /// <param name="start">Starting iteration, inclusive.</param>
+        /// <param name="end">Ending iteration, exclusive.</param>
+        /// <param name="chunk_size">The chunk size to use.</param>
+        /// <param name="op">The operation for reduction, null if not a reduction.</param>
+        /// <param name="schedule">The Parallel.Schedule to use.</param>
+        internal WorkShare(uint num_threads, Thread[] threads, int start, int end, uint chunk_size, Operations? op, Schedule schedule)
         {
             this.threads = new Thr[num_threads];
             for (int i = 0; i < num_threads; i++)
                 this.threads[i] = new Thr(threads[i]);
             threads_complete = 0;
             ws_lock = new object();
-            this.start = 0;
-            this.end = 0;
-            this.chunk_size = 0;
+            this.start = start;
+            this.end = end;
+            this.chunk_size = chunk_size;
             this.num_threads = num_threads;
-            this.op = null;
+            this.op = op;
             this.reduction_list = new List<dynamic>();
-            this.schedule = null;
+            this.schedule = schedule;
         }
     }
 
@@ -113,5 +119,55 @@ namespace DotMP
         /// The WorkShare struct being encapsulated by the Init static class.
         /// </summary>
         internal static WorkShare ws;
+
+        /// <summary>
+        /// Sets the local variable to the appropriate value based on the operation for parallel for reduction loops.
+        /// For addition and subtraction, the initial starting value is 0.
+        /// For multiplication, the initial starting value is 1.
+        /// For binary And, the initial starting value is -1.
+        /// For binary Or and Xor, the initial starting value is 0.
+        /// For boolean And, the initial starting value is true.
+        /// For boolean Or, the initial starting value is false.
+        /// For min, the initial starting value is int.MaxValue.
+        /// For max, the initial starting value is int.MinValue.
+        /// </summary>
+        /// <typeparam name="T">The type of the local variable.</typeparam>
+        /// <param name="local">The local variable to be set.</param>
+        internal static void SetLocal<T>(ref T local)
+        {
+            switch (ws.op)
+            {
+                case Operations.Add:
+                case Operations.Subtract:
+                    local = (T)Convert.ChangeType(0, typeof(T));
+                    break;
+                case Operations.Multiply:
+                    local = (T)Convert.ChangeType(1, typeof(T));
+                    break;
+                case Operations.BinaryAnd:
+                    local = (T)Convert.ChangeType(-1, typeof(T));
+                    break;
+                case Operations.BinaryOr:
+                    local = (T)Convert.ChangeType(0, typeof(T));
+                    break;
+                case Operations.BinaryXor:
+                    local = (T)Convert.ChangeType(0, typeof(T));
+                    break;
+                case Operations.BooleanAnd:
+                    local = (T)Convert.ChangeType(true, typeof(T));
+                    break;
+                case Operations.BooleanOr:
+                    local = (T)Convert.ChangeType(false, typeof(T));
+                    break;
+                case Operations.Min:
+                    local = (T)Convert.ChangeType(int.MaxValue, typeof(T));
+                    break;
+                case Operations.Max:
+                    local = (T)Convert.ChangeType(int.MinValue, typeof(T));
+                    break;
+                default:
+                    break;
+            }
+        }
     }
 }
