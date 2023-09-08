@@ -60,7 +60,7 @@ namespace DotMP
         /// </summary>
         private static volatile int start_pv;
         /// <summary>
-        /// Getter and setter for the singleton integer start_pv.
+        /// Getter and setter for the singleton integer WorkShare.start_pv.
         /// </summary>
         internal int start
         {
@@ -78,7 +78,7 @@ namespace DotMP
         /// </summary>
         private static object ws_lock_pv = new object();
         /// <summary>
-        /// Getter and setter for the singleton object ws_lock_pv.
+        /// Getter and setter for the singleton object WorkShare.ws_lock_pv.
         /// </summary>
         internal object ws_lock
         {
@@ -96,7 +96,7 @@ namespace DotMP
         /// </summary>
         private static uint chunk_size_pv;
         /// <summary>
-        /// Getter and setter for singleton uint chunk_size_pv.
+        /// Getter and setter for singleton uint WorkShare.chunk_size_pv.
         /// </summary>
         internal uint chunk_size
         {
@@ -118,7 +118,7 @@ namespace DotMP
         /// </summary>
         private static int threads_complete_pv = 0;
         /// <summary>
-        /// Getter and setter for singleton integer threads_complete_pv.
+        /// Getter and setter for singleton integer WorkShare.threads_complete_pv.
         /// </summary>
         internal int threads_complete
         {
@@ -140,7 +140,7 @@ namespace DotMP
         /// </summary>
         private static volatile List<dynamic> reduction_list;
         /// <summary>
-        /// Getter for reduction_list.
+        /// Getter for WorkShare.reduction_list.
         /// </summary>
         internal List<dynamic> reduction_values
         {
@@ -154,7 +154,7 @@ namespace DotMP
         /// </summary>
         private static Schedule? schedule_pv;
         /// <summary>
-        /// Getter and setter for singleton object schedule_pv.
+        /// Getter and setter for singleton object WorkShare.schedule_pv.
         /// </summary>
         internal Schedule? schedule
         {
@@ -172,7 +172,7 @@ namespace DotMP
         /// </summary>
         private static bool[] in_for_pv;
         /// <summary>
-        /// Getter and setter for this thread's value in in_for_pv.
+        /// Getter and setter for this thread's value in WorkShare.in_for_pv.
         /// </summary>
         internal bool in_for
         {
