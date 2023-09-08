@@ -136,7 +136,6 @@ namespace DotMP
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        /// <exception cref="CannotPerformNestedForException">Thrown if nested within another For or ForReduction<T>.</exception>
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
             if (!ForkedRegion.in_parallel)
@@ -144,41 +143,33 @@ namespace DotMP
                 throw new NotInParallelRegionException();
             }
 
-            if (Init.ws.in_for.Length > 0 && Init.ws.in_for[GetThreadNum()])
-            {
-                throw new CannotPerformNestedForException();
-            }
+            FixArgs(start, end, ref schedule, ref chunk_size, ForkedRegion.ws.num_threads);
 
-            FixArgs(start, end, ref schedule, ref chunk_size, Init.ws.num_threads);
-
-            Master(() =>
-            {
-                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, null, schedule);
-            });
+            WorkShare ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, null, schedule);
 
             Barrier();
 
-            Init.ws.in_for[GetThreadNum()] = true;
+            ws.in_for = true;
 
             switch (schedule)
             {
                 case Schedule.Static:
-                    Iter.StaticLoop<object>(GetThreadNum(), action, null, false);
+                    Iter.StaticLoop<object>(ws, GetThreadNum(), action, null, false);
                     break;
                 case Schedule.Dynamic:
-                    Iter.DynamicLoop<object>(GetThreadNum(), action, null, false);
+                    Iter.DynamicLoop<object>(ws, GetThreadNum(), action, null, false);
                     break;
                 case Schedule.Guided:
-                    Iter.GuidedLoop<object>(GetThreadNum(), action, null, false);
+                    Iter.GuidedLoop<object>(ws, GetThreadNum(), action, null, false);
                     break;
             }
 
+            ws.in_for = false;
             Barrier();
 
             Master(() =>
             {
                 ordered.Clear();
-                Init.ws.in_for = new bool[0];
             });
 
             Barrier();
@@ -201,7 +192,6 @@ namespace DotMP
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        /// <exception cref="CannotPerformNestedForException">Thrown if nested within another For or ForReduction<T>.</exception>
         public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
             if (!ForkedRegion.in_parallel)
@@ -209,33 +199,24 @@ namespace DotMP
                 throw new NotInParallelRegionException();
             }
 
-            if (Init.ws.in_for.Length > 0 && Init.ws.in_for[GetThreadNum()])
-            {
-                throw new CannotPerformNestedForException();
-            }
+            FixArgs(start, end, ref schedule, ref chunk_size, ForkedRegion.ws.num_threads);
 
-            FixArgs(start, end, ref schedule, ref chunk_size, Init.ws.num_threads);
-
-            if (GetThreadNum() == 0)
-            {
-                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, op, schedule);
-                Init.ws.reduction_list.Clear();
-            }
+            WorkShare ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, op, schedule);
 
             Barrier();
 
-            Init.ws.in_for[GetThreadNum()] = true;
+            ws.in_for = true;
 
             switch (schedule)
             {
                 case Schedule.Static:
-                    Iter.StaticLoop(GetThreadNum(), null, action, true);
+                    Iter.StaticLoop(ws, GetThreadNum(), null, action, true);
                     break;
                 case Schedule.Dynamic:
-                    Iter.DynamicLoop(GetThreadNum(), null, action, true);
+                    Iter.DynamicLoop(ws, GetThreadNum(), null, action, true);
                     break;
                 case Schedule.Guided:
-                    Iter.GuidedLoop(GetThreadNum(), null, action, true);
+                    Iter.GuidedLoop(ws, GetThreadNum(), null, action, true);
                     break;
             }
 
@@ -243,9 +224,9 @@ namespace DotMP
 
             if (GetThreadNum() == 0)
             {
-                foreach (T i in Init.ws.reduction_list)
+                foreach (T i in ws.reduction_values)
                 {
-                    switch (Init.ws.op)
+                    switch (ws.op)
                     {
                         case Operations.Add:
                         case Operations.Subtract:
@@ -281,9 +262,7 @@ namespace DotMP
                 ordered.Clear();
             }
 
-            Barrier();
-
-            Master(() => Init.ws.in_for = new bool[0]);
+            ws.in_for = false;
 
             Barrier();
         }
@@ -594,7 +573,9 @@ namespace DotMP
                 Thread.MemoryBarrier();
             }
 
-            while (ordered[id] != Init.ws.threads[tid].working_iter)
+            WorkShare ws = new WorkShare();
+
+            while (ordered[id] != ws.thread.working_iter)
             {
                 ForkedRegion.ws.spin[tid].SpinOnce();
             }
@@ -718,7 +699,7 @@ namespace DotMP
         /// <returns>The schedule being used in the For() or ForReduction<T>() loop, or null if a For() or ForReduction<T>() has not been encountered yet.</returns>
         public static Schedule? GetSchedule()
         {
-            return Init.ws.schedule;
+            return new WorkShare().schedule;
         }
 
         /// <summary>
@@ -727,7 +708,7 @@ namespace DotMP
         /// <returns>The chunk size being used in a For() or ForReduction<T>() loop. If 0, a For() or ForReduction<T>() has not been encountered yet.</returns>
         public static uint GetChunkSize()
         {
-            return Init.ws.chunk_size;
+            return new WorkShare().chunk_size;
         }
 
         /// <summary>
