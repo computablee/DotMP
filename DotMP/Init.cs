@@ -218,7 +218,7 @@ namespace DotMP
         /// <summary>
         /// Default constructor.
         /// </summary>
-        public WorkShare() { }
+        internal WorkShare() { }
 
         /// <summary>
         /// Mark current thread as finished with execution.

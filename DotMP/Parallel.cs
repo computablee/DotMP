@@ -138,14 +138,16 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
 
-            FixArgs(start, end, ref schedule, ref chunk_size, ForkedRegion.ws.num_threads);
+            FixArgs(start, end, ref schedule, ref chunk_size, freg.reg.num_threads);
 
-            WorkShare ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, null, schedule);
+            WorkShare ws = new WorkShare((uint)GetNumThreads(), freg.reg.threads, start, end, chunk_size.Value, null, schedule);
 
             Barrier();
 
@@ -194,14 +196,16 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
 
-            FixArgs(start, end, ref schedule, ref chunk_size, ForkedRegion.ws.num_threads);
+            FixArgs(start, end, ref schedule, ref chunk_size, freg.reg.num_threads);
 
-            WorkShare ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, op, schedule);
+            WorkShare ws = new WorkShare((uint)GetNumThreads(), freg.reg.threads, start, end, chunk_size.Value, op, schedule);
 
             Barrier();
 
@@ -286,10 +290,10 @@ namespace DotMP
             else
                 num_threads ??= Parallel.num_threads;
 
-            ForkedRegion.CreateThreadpool(num_threads.Value, action);
+            ForkedRegion freg = new ForkedRegion(num_threads.Value, action);
             barrier = new Barrier((int)num_threads.Value);
-            ForkedRegion.StartThreadpool();
-            ForkedRegion.ws.num_threads = 1;
+            freg.StartThreadpool();
+            freg.reg.num_threads = 1;
             barrier = new Barrier(1);
         }
 
@@ -359,7 +363,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Sections(Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -402,7 +408,9 @@ namespace DotMP
         /// <exception cref="NotInSectionsRegionException">Thrown when not in a sections region.</exception>
         public static void Section(Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -444,7 +452,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static int Critical(int id, Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -478,7 +488,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Barrier()
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -506,7 +518,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Master(Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -528,7 +542,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Single(int id, Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -557,7 +573,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Ordered(int id, Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -577,7 +595,7 @@ namespace DotMP
 
             while (ordered[id] != ws.thread.working_iter)
             {
-                ForkedRegion.ws.spin[tid].SpinOnce();
+                freg.reg.spin[tid].SpinOnce();
             }
 
             action();
@@ -595,11 +613,13 @@ namespace DotMP
         /// <returns>The number of threads.</returns>
         public static int GetNumThreads()
         {
-            int num_threads = (int)ForkedRegion.ws.num_threads;
+            var freg = new ForkedRegion();
+
+            int num_threads = (int)freg.reg.num_threads;
 
             if (num_threads == 0)
             {
-                ForkedRegion.ws.num_threads = 1;
+                freg.reg.num_threads = 1;
                 return 1;
             }
 
@@ -613,7 +633,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static int GetThreadNum()
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -645,7 +667,9 @@ namespace DotMP
         /// <returns>Whether or not the calling thread is in a parallel region.</returns>
         public static bool InParallel()
         {
-            return ForkedRegion.in_parallel;
+            var freg = new ForkedRegion();
+
+            return freg.in_parallel;
         }
 
         /// <summary>
