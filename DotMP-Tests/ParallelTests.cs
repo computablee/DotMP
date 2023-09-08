@@ -1,4 +1,5 @@
-﻿using FluentAssertions;
+﻿using DotMP;
+using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -52,7 +53,7 @@ namespace DotMPTests
                 y[i] = 1.0f;
             }
 
-            float[] z = saxpy_parallelregion_for(2.0f, x, y);
+            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Static, null);
             float[] z2 = saxpy_parallelfor(2.0f, x, y);
 
             for (int i = 0; i < z.Length; i++)
@@ -62,12 +63,12 @@ namespace DotMPTests
         }
 
         /// <summary>
-        /// Tests to make sure that DotMP.Parallel.Schedule.Static produces correct results.
+        /// Tests to make sure that DotMP.Schedule.Guided produces correct results.
         /// </summary>
         [Fact]
         public void Guided_should_produce_correct_results()
         {
-            int workload = 4096;
+            int workload = 1_000_000;
 
             float[] x = new float[workload];
             float[] y = new float[workload];
@@ -78,7 +79,57 @@ namespace DotMPTests
                 y[i] = 1.0f;
             }
 
-            float[] z = saxpy_parallelregion_for(2.0f, x, y);
+            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Guided, 3);
+
+            for (int i = 0; i < z.Length; i++)
+            {
+                z[i].Should().Be(3.0f);
+            }
+        }
+
+        /// <summary>
+        /// Tests to make sure that DotMP.Schedule.Static produces correct results.
+        /// </summary>
+        [Fact]
+        public void Static_should_produce_correct_results()
+        {
+            int workload = 1_000_000;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+            }
+
+            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Static, 1024);
+
+            for (int i = 0; i < z.Length; i++)
+            {
+                z[i].Should().Be(3.0f);
+            }
+        }
+
+        /// <summary>
+        /// Tests to make sure that DotMP.Schedule.Dynamic produces correct results.
+        /// </summary>
+        [Fact]
+        public void Dynamic_should_produce_correct_results()
+        {
+            int workload = 1_000_000;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+            }
+
+            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Dynamic, 16);
 
             for (int i = 0; i < z.Length; i++)
             {
@@ -536,14 +587,16 @@ namespace DotMPTests
         /// <param name="a">Scalar for saxpy.</param>
         /// <param name="x">Vector to multiply by the scalar.</param>
         /// <param name="y">Vector to add.</param>
+        /// <param name="schedule">Schedule to use.</param>
+        /// <param name="chunk_size">Chunk size to use.</param>
         /// <returns>Result of saxpy.</returns>
-        float[] saxpy_parallelregion_for(float a, float[] x, float[] y)
+        float[] saxpy_parallelregion_for(float a, float[] x, float[] y, Schedule schedule, uint? chunk_size)
         {
             float[] z = new float[x.Length];
 
             DotMP.Parallel.ParallelRegion(() =>
             {
-                DotMP.Parallel.For(0, x.Length, schedule: DotMP.Schedule.Guided, action: i =>
+                DotMP.Parallel.For(0, x.Length, schedule: schedule, chunk_size: chunk_size, action: i =>
                 {
                     z[i] += a * x[i] + y[i];
                 });
