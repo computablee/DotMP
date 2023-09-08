@@ -28,30 +28,28 @@ namespace DotMP
         /// Static scheduling is the default scheduling method for parallel for loops if none is specified.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="thread_id">The thread ID.</param>
         /// <param name="omp_fn">The function to be executed.</param>
         /// <param name="omp_fn_red">The function to be executed for reductions.</param>
         /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
-        internal static void StaticLoop<T>(object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
+        internal static void StaticLoop<T>(WorkShare ws, object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
         {
             int tid = (int)thread_id;
-            Thr thr = Init.ws.threads[tid];
+            Thr thr = ws.thread;
 
-            thr.curr_iter = (int)(Init.ws.start + tid * Init.ws.chunk_size);
-            int end = Init.ws.end;
+            thr.curr_iter = (int)(ws.start + tid * ws.chunk_size);
+            int end = ws.end;
 
             T local = default;
-            Init.SetLocal(ref local);
+            ws.SetLocal(ref local);
 
             while (thr.curr_iter < end)
-                StaticNext(thr, tid, Init.ws.chunk_size, omp_fn, omp_fn_red, is_reduction, ref local);
+                StaticNext(ws, thr, tid, ws.chunk_size, omp_fn, omp_fn_red, is_reduction, ref local);
 
-            Interlocked.Add(ref Init.ws.threads_complete, 1);
+            ws.Finished();
 
-            lock (Init.ws.reduction_list)
-            {
-                Init.ws.reduction_list.Add(local);
-            }
+            ws.AddReductionValue(local);
         }
 
         /// <summary>
@@ -59,6 +57,7 @@ namespace DotMP
         /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.StaticLoop<T> documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="thr">The Thr object for the current thread.</param>
         /// <param name="thread_id">The thread ID.</param>
         /// <param name="chunk_size">The chunk size.</param>
@@ -66,10 +65,10 @@ namespace DotMP
         /// <param name="omp_fn_red">The function to be executed for reductions.</param>
         /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
         /// <param name="local">The local variable for reductions.</param>
-        private static void StaticNext<T>(Thr thr, int thread_id, uint chunk_size, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, ref T local)
+        private static void StaticNext<T>(WorkShare ws, Thr thr, int thread_id, uint chunk_size, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, ref T local)
         {
             int start = thr.curr_iter;
-            int end = (int)Math.Min(thr.curr_iter + chunk_size, Init.ws.end);
+            int end = (int)Math.Min(thr.curr_iter + chunk_size, ws.end);
 
             ref int i = ref thr.working_iter;
 
@@ -82,7 +81,7 @@ namespace DotMP
                     omp_fn_red(ref local, i);
                 }
 
-            thr.curr_iter += (int)(Init.ws.num_threads * chunk_size);
+            thr.curr_iter += (int)(ws.num_threads * chunk_size);
         }
 
         /// <summary>
@@ -98,30 +97,28 @@ namespace DotMP
         /// A small chunk size will result in more overhead, but will result in better load balancing.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="thread_id">The thread ID.</param>
         /// <param name="omp_fn">The function to be executed.</param>
         /// <param name="omp_fn_red">The function to be executed for reductions.</param>
         /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
-        internal static void DynamicLoop<T>(object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
+        internal static void DynamicLoop<T>(WorkShare ws, object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
         {
             int tid = (int)thread_id;
-            Thr thr = Init.ws.threads[tid];
-            int end = Init.ws.end;
+            Thr thr = ws.thread;
+            int end = ws.end;
 
             T local = default;
-            Init.SetLocal(ref local);
+            ws.SetLocal(ref local);
 
-            while (Init.ws.start < end)
+            while (ws.start < end)
             {
-                DynamicNext(thr, omp_fn, omp_fn_red, is_reduction, ref local);
+                DynamicNext(ws, thr, omp_fn, omp_fn_red, is_reduction, ref local);
             }
 
-            Interlocked.Add(ref Init.ws.threads_complete, 1);
+            ws.Finished();
 
-            lock (Init.ws.reduction_list)
-            {
-                Init.ws.reduction_list.Add(local);
-            }
+            ws.AddReductionValue(local);
         }
 
         /// <summary>
@@ -129,22 +126,23 @@ namespace DotMP
         /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.DynamicLoop<T> documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="thr">The Thr object for the current thread.</param>
         /// <param name="omp_fn">The function to be executed.</param>
         /// <param name="omp_fn_red">The function to be executed for reductions.</param>
         /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
         /// <param name="local">The local variable for reductions.</param>
-        private static void DynamicNext<T>(Thr thr, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, ref T local)
+        private static void DynamicNext<T>(WorkShare ws, Thr thr, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, ref T local)
         {
             int chunk_start;
 
-            lock (Init.ws.ws_lock)
+            lock (ws.ws_lock)
             {
-                chunk_start = Init.ws.start;
-                Init.ws.start += (int)Init.ws.chunk_size;
+                chunk_start = ws.start;
+                ws.Advance((int)ws.chunk_size);
             }
 
-            int chunk_end = (int)Math.Min(chunk_start + Init.ws.chunk_size, Init.ws.end);
+            int chunk_end = (int)Math.Min(chunk_start + ws.chunk_size, ws.end);
 
             ref int i = ref thr.working_iter;
 
@@ -174,30 +172,28 @@ namespace DotMP
         /// but may not be adequate if a loop is irregular with heavy load imbalance biased towards the start of the loop.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="thread_id">The thread ID.</param>
         /// <param name="omp_fn">The function to be executed.</param>
         /// <param name="omp_fn_red">The function to be executed for reductions.</param>
         /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
-        internal static void GuidedLoop<T>(object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
+        internal static void GuidedLoop<T>(WorkShare ws, object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
         {
             int tid = (int)thread_id;
-            Thr thr = Init.ws.threads[tid];
-            int end = Init.ws.end;
+            Thr thr = ws.thread;
+            int end = ws.end;
 
             T local = default;
-            Init.SetLocal(ref local);
+            ws.SetLocal(ref local);
 
-            while (Init.ws.start < end)
+            while (ws.start < end)
             {
-                GuidedNext(thr, omp_fn, omp_fn_red, is_reduction, ref local);
+                GuidedNext(ws, thr, omp_fn, omp_fn_red, is_reduction, ref local);
             }
 
-            Interlocked.Add(ref Init.ws.threads_complete, 1);
+            ws.Finished();
 
-            lock (Init.ws.reduction_list)
-            {
-                Init.ws.reduction_list.Add(local);
-            }
+            ws.AddReductionValue(local);
         }
 
         /// <summary>
@@ -205,23 +201,25 @@ namespace DotMP
         /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.GuidedLoop<T> documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="thr">The Thr object for the current thread.</param>
         /// <param name="omp_fn">The function to be executed.</param>
         /// <param name="omp_fn_red">The function to be executed for reductions.</param>
         /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
         /// <param name="local">The local variable for reductions.</param>
-        private static void GuidedNext<T>(Thr thr, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, ref T local)
+        private static void GuidedNext<T>(WorkShare ws, Thr thr, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, ref T local)
         {
             int chunk_start, chunk_size;
 
-            lock (Init.ws.ws_lock)
+            lock (ws.ws_lock)
             {
-                chunk_start = Init.ws.start;
-                chunk_size = (int)Math.Max(Init.ws.chunk_size, (Init.ws.end - chunk_start) / Init.ws.num_threads);
-                Init.ws.start += chunk_size;
+                chunk_start = ws.start;
+                chunk_size = (int)Math.Max(ws.chunk_size, (ws.end - chunk_start) / ws.num_threads);
+
+                ws.Advance(chunk_size);
             }
 
-            int chunk_end = (int)Math.Min(chunk_start + chunk_size, Init.ws.end);
+            int chunk_end = Math.Min(chunk_start + chunk_size, ws.end);
 
             ref int i = ref thr.working_iter;
 

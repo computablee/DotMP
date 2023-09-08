@@ -65,7 +65,7 @@ namespace DotMPTests
         /// Tests to make sure that DotMP.Parallel.Schedule.Static produces correct results.
         /// </summary>
         [Fact]
-        public void Static_should_produce_correct_results()
+        public void Guided_should_produce_correct_results()
         {
             int workload = 4096;
 
@@ -545,7 +545,7 @@ namespace DotMPTests
             {
                 DotMP.Parallel.For(0, x.Length, schedule: DotMP.Schedule.Guided, action: i =>
                 {
-                    z[i] = a * x[i] + y[i];
+                    z[i] += a * x[i] + y[i];
                 });
             });
 

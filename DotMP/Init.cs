@@ -39,69 +39,151 @@ namespace DotMP
     /// Contains all relevant information about a parallel for loop.
     /// Contains a collection of Thr objects, the loop's start and end iterations, the chunk size, the number of threads, and the number of threads that have completed their work.
     /// </summary>
-    internal struct WorkShare
+    internal class WorkShare
     {
         /// <summary>
         /// The threads to be used in the parallel for loop.
         /// </summary>
-        internal Thr[] threads;
+        private static Thr[] threads;
+        /// <summary>
+        /// Get Thr object based on current thread ID.
+        /// </summary>
+        internal Thr thread
+        {
+            get
+            {
+                return threads[Parallel.GetThreadNum()];
+            }
+        }
         /// <summary>
         /// The starting iteration of the parallel for loop, inclusive.
         /// </summary>
-        internal int start;
+        private static volatile int start_pv;
+        /// <summary>
+        /// Getter and setter for the singleton integer WorkShare.start_pv.
+        /// </summary>
+        internal int start
+        {
+            get
+            {
+                return start_pv;
+            }
+            private set
+            {
+                start_pv = value;
+            }
+        }
         /// <summary>
         /// A generic lock to be used within the parallel for loop.
         /// </summary>
-        internal object ws_lock;
+        private static object ws_lock_pv = new object();
+        /// <summary>
+        /// Getter and setter for the singleton object WorkShare.ws_lock_pv.
+        /// </summary>
+        internal object ws_lock
+        {
+            get
+            {
+                return ws_lock_pv;
+            }
+        }
         /// <summary>
         /// The ending iteration of the parallel for loop, exclusive.
         /// </summary>
-        internal int end;
+        internal int end { get; private set; }
         /// <summary>
         /// The chunk size to be used with the selected scheduler.
         /// </summary>
-        internal uint chunk_size;
+        private static uint chunk_size_pv;
+        /// <summary>
+        /// Getter and setter for singleton uint WorkShare.chunk_size_pv.
+        /// </summary>
+        internal uint chunk_size
+        {
+            get
+            {
+                return chunk_size_pv;
+            }
+            private set
+            {
+                chunk_size_pv = value;
+            }
+        }
         /// <summary>
         /// The number of threads to be used in the parallel for loop.
         /// </summary>
-        internal uint num_threads;
+        internal uint num_threads { get; private set; }
         /// <summary>
         /// The number of threads that have completed their work.
         /// </summary>
-        volatile internal int threads_complete;
+        private static int threads_complete_pv = 0;
+        /// <summary>
+        /// Getter and setter for singleton integer WorkShare.threads_complete_pv.
+        /// </summary>
+        internal int threads_complete
+        {
+            get
+            {
+                return threads_complete_pv;
+            }
+            private set
+            {
+                threads_complete_pv = value;
+            }
+        }
         /// <summary>
         /// The operation to be performed if doing a reduction.
         /// </summary>
-        internal Operations? op;
+        internal Operations? op { get; private set; }
         /// <summary>
         /// The list of reduction variables from each thread.
         /// </summary>
-        internal List<dynamic> reduction_list;
+        private static volatile List<dynamic> reduction_list;
+        /// <summary>
+        /// Getter for WorkShare.reduction_list.
+        /// </summary>
+        internal List<dynamic> reduction_values
+        {
+            get
+            {
+                return reduction_list;
+            }
+        }
         /// <summary>
         /// The schedule to be used in the parallel for loop.
         /// </summary>
-        internal Schedule? schedule;
+        private static Schedule? schedule_pv;
+        /// <summary>
+        /// Getter and setter for singleton object WorkShare.schedule_pv.
+        /// </summary>
+        internal Schedule? schedule
+        {
+            get
+            {
+                return schedule_pv;
+            }
+            private set
+            {
+                schedule_pv = value;
+            }
+        }
         /// <summary>
         /// Booleans per-thread to check if we're currently in a Parallel.For or Parallel.ForReduction<T>.
         /// </summary>
-        volatile internal bool[] in_for;
-
+        private static bool[] in_for_pv;
         /// <summary>
-        /// Default constructor for WorkShare struct.
+        /// Getter and setter for this thread's value in WorkShare.in_for_pv.
         /// </summary>
-        public WorkShare()
+        internal bool in_for
         {
-            this.threads = null;
-            this.threads_complete = 0;
-            this.ws_lock = null;
-            this.start = 0;
-            this.end = 0;
-            this.chunk_size = 0;
-            this.op = null;
-            this.reduction_list = null;
-            this.schedule = null;
-            this.in_for = new bool[0];
-            this.num_threads = 0;
+            get
+            {
+                return in_for_pv[Parallel.GetThreadNum()];
+            }
+            set
+            {
+                in_for_pv[Parallel.GetThreadNum()] = value;
+            }
         }
 
         /// <summary>
@@ -116,34 +198,56 @@ namespace DotMP
         /// <param name="schedule">The Parallel.Schedule to use.</param>
         internal WorkShare(uint num_threads, Thread[] threads, int start, int end, uint chunk_size, Operations? op, Schedule schedule)
         {
-            this.threads = new Thr[num_threads];
-            for (int i = 0; i < num_threads; i++)
-                this.threads[i] = new Thr(threads[i]);
-            threads_complete = 0;
-            ws_lock = new object();
-            this.start = start;
             this.end = end;
-            this.chunk_size = chunk_size;
             this.num_threads = num_threads;
             this.op = op;
-            this.reduction_list = new List<dynamic>();
-            this.schedule = schedule;
-            this.in_for = new bool[num_threads];
-            for (int i = 0; i < num_threads; i++)
-                this.in_for[i] = false;
+            Parallel.Master(() =>
+            {
+                WorkShare.threads = new Thr[num_threads];
+                for (int i = 0; i < num_threads; i++)
+                    WorkShare.threads[i] = new Thr(threads[i]);
+                reduction_list = new List<dynamic>();
+                in_for_pv = new bool[num_threads];
+                threads_complete_pv = 0;
+                start_pv = start;
+                chunk_size_pv = chunk_size;
+                schedule_pv = schedule;
+            });
         }
-    }
 
-    /// <summary>
-    /// Contains the WorkShare struct.
-    /// Surely there's a better way to do this. What was I thinking?
-    /// </summary>
-    internal static class Init
-    {
         /// <summary>
-        /// The WorkShare struct being encapsulated by the Init static class.
+        /// Default constructor.
         /// </summary>
-        internal static WorkShare ws = new WorkShare();
+        internal WorkShare() { }
+
+        /// <summary>
+        /// Mark current thread as finished with execution.
+        /// </summary>
+        internal void Finished()
+        {
+            Interlocked.Increment(ref threads_complete_pv);
+        }
+
+        /// <summary>
+        /// Advance the start by some value.
+        /// </summary>
+        /// <param name="advance_by">The value to advance start by.</param>
+        internal void Advance(int advance_by)
+        {
+            start += advance_by;
+        }
+
+        /// <summary>
+        /// Add a value to reduction_list.
+        /// </summary>
+        /// <param name="value">The value to add to reduction_list.</param>
+        internal void AddReductionValue(dynamic value)
+        {
+            lock (reduction_list)
+            {
+                reduction_list.Add(value);
+            }
+        }
 
         /// <summary>
         /// Sets the local variable to the appropriate value based on the operation for parallel for reduction loops.
@@ -158,9 +262,10 @@ namespace DotMP
         /// </summary>
         /// <typeparam name="T">The type of the local variable.</typeparam>
         /// <param name="local">The local variable to be set.</param>
-        internal static void SetLocal<T>(ref T local)
+        /// <param name="ws">The WorkShare object.</param>
+        internal void SetLocal<T>(ref T local)
         {
-            switch (ws.op)
+            switch (op)
             {
                 case Operations.Add:
                 case Operations.Subtract:

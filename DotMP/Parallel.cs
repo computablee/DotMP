@@ -136,49 +136,42 @@ namespace DotMP
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        /// <exception cref="CannotPerformNestedForException">Thrown if nested within another For or ForReduction<T>.</exception>
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
 
-            if (Init.ws.in_for.Length > 0 && Init.ws.in_for[GetThreadNum()])
-            {
-                throw new CannotPerformNestedForException();
-            }
+            FixArgs(start, end, ref schedule, ref chunk_size, freg.reg.num_threads);
 
-            FixArgs(start, end, ref schedule, ref chunk_size, Init.ws.num_threads);
-
-            Master(() =>
-            {
-                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, null, schedule);
-            });
+            WorkShare ws = new WorkShare((uint)GetNumThreads(), freg.reg.threads, start, end, chunk_size.Value, null, schedule);
 
             Barrier();
 
-            Init.ws.in_for[GetThreadNum()] = true;
+            ws.in_for = true;
 
             switch (schedule)
             {
                 case Schedule.Static:
-                    Iter.StaticLoop<object>(GetThreadNum(), action, null, false);
+                    Iter.StaticLoop<object>(ws, GetThreadNum(), action, null, false);
                     break;
                 case Schedule.Dynamic:
-                    Iter.DynamicLoop<object>(GetThreadNum(), action, null, false);
+                    Iter.DynamicLoop<object>(ws, GetThreadNum(), action, null, false);
                     break;
                 case Schedule.Guided:
-                    Iter.GuidedLoop<object>(GetThreadNum(), action, null, false);
+                    Iter.GuidedLoop<object>(ws, GetThreadNum(), action, null, false);
                     break;
             }
 
+            ws.in_for = false;
             Barrier();
 
             Master(() =>
             {
                 ordered.Clear();
-                Init.ws.in_for = new bool[0];
             });
 
             Barrier();
@@ -201,41 +194,33 @@ namespace DotMP
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        /// <exception cref="CannotPerformNestedForException">Thrown if nested within another For or ForReduction<T>.</exception>
         public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
 
-            if (Init.ws.in_for.Length > 0 && Init.ws.in_for[GetThreadNum()])
-            {
-                throw new CannotPerformNestedForException();
-            }
+            FixArgs(start, end, ref schedule, ref chunk_size, freg.reg.num_threads);
 
-            FixArgs(start, end, ref schedule, ref chunk_size, Init.ws.num_threads);
-
-            if (GetThreadNum() == 0)
-            {
-                Init.ws = new WorkShare((uint)GetNumThreads(), ForkedRegion.ws.threads, start, end, chunk_size.Value, op, schedule);
-                Init.ws.reduction_list.Clear();
-            }
+            WorkShare ws = new WorkShare((uint)GetNumThreads(), freg.reg.threads, start, end, chunk_size.Value, op, schedule);
 
             Barrier();
 
-            Init.ws.in_for[GetThreadNum()] = true;
+            ws.in_for = true;
 
             switch (schedule)
             {
                 case Schedule.Static:
-                    Iter.StaticLoop(GetThreadNum(), null, action, true);
+                    Iter.StaticLoop(ws, GetThreadNum(), null, action, true);
                     break;
                 case Schedule.Dynamic:
-                    Iter.DynamicLoop(GetThreadNum(), null, action, true);
+                    Iter.DynamicLoop(ws, GetThreadNum(), null, action, true);
                     break;
                 case Schedule.Guided:
-                    Iter.GuidedLoop(GetThreadNum(), null, action, true);
+                    Iter.GuidedLoop(ws, GetThreadNum(), null, action, true);
                     break;
             }
 
@@ -243,9 +228,9 @@ namespace DotMP
 
             if (GetThreadNum() == 0)
             {
-                foreach (T i in Init.ws.reduction_list)
+                foreach (T i in ws.reduction_values)
                 {
-                    switch (Init.ws.op)
+                    switch (ws.op)
                     {
                         case Operations.Add:
                         case Operations.Subtract:
@@ -281,9 +266,7 @@ namespace DotMP
                 ordered.Clear();
             }
 
-            Barrier();
-
-            Master(() => Init.ws.in_for = new bool[0]);
+            ws.in_for = false;
 
             Barrier();
         }
@@ -307,10 +290,10 @@ namespace DotMP
             else
                 num_threads ??= Parallel.num_threads;
 
-            ForkedRegion.CreateThreadpool(num_threads.Value, action);
+            ForkedRegion freg = new ForkedRegion(num_threads.Value, action);
             barrier = new Barrier((int)num_threads.Value);
-            ForkedRegion.StartThreadpool();
-            ForkedRegion.ws.num_threads = 1;
+            freg.StartThreadpool();
+            freg.reg.num_threads = 1;
             barrier = new Barrier(1);
         }
 
@@ -380,7 +363,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Sections(Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -423,7 +408,9 @@ namespace DotMP
         /// <exception cref="NotInSectionsRegionException">Thrown when not in a sections region.</exception>
         public static void Section(Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -465,7 +452,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static int Critical(int id, Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -499,7 +488,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Barrier()
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -527,7 +518,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Master(Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -549,7 +542,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Single(int id, Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -578,7 +573,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Ordered(int id, Action action)
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -594,9 +591,11 @@ namespace DotMP
                 Thread.MemoryBarrier();
             }
 
-            while (ordered[id] != Init.ws.threads[tid].working_iter)
+            WorkShare ws = new WorkShare();
+
+            while (ordered[id] != ws.thread.working_iter)
             {
-                ForkedRegion.ws.spin[tid].SpinOnce();
+                freg.reg.spin[tid].SpinOnce();
             }
 
             action();
@@ -614,11 +613,13 @@ namespace DotMP
         /// <returns>The number of threads.</returns>
         public static int GetNumThreads()
         {
-            int num_threads = (int)ForkedRegion.ws.num_threads;
+            var freg = new ForkedRegion();
+
+            int num_threads = (int)freg.reg.num_threads;
 
             if (num_threads == 0)
             {
-                ForkedRegion.ws.num_threads = 1;
+                freg.reg.num_threads = 1;
                 return 1;
             }
 
@@ -632,7 +633,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static int GetThreadNum()
         {
-            if (!ForkedRegion.in_parallel)
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
             {
                 throw new NotInParallelRegionException();
             }
@@ -664,7 +667,9 @@ namespace DotMP
         /// <returns>Whether or not the calling thread is in a parallel region.</returns>
         public static bool InParallel()
         {
-            return ForkedRegion.in_parallel;
+            var freg = new ForkedRegion();
+
+            return freg.in_parallel;
         }
 
         /// <summary>
@@ -718,7 +723,7 @@ namespace DotMP
         /// <returns>The schedule being used in the For() or ForReduction<T>() loop, or null if a For() or ForReduction<T>() has not been encountered yet.</returns>
         public static Schedule? GetSchedule()
         {
-            return Init.ws.schedule;
+            return new WorkShare().schedule;
         }
 
         /// <summary>
@@ -727,7 +732,7 @@ namespace DotMP
         /// <returns>The chunk size being used in a For() or ForReduction<T>() loop. If 0, a For() or ForReduction<T>() has not been encountered yet.</returns>
         public static uint GetChunkSize()
         {
-            return Init.ws.chunk_size;
+            return new WorkShare().chunk_size;
         }
 
         /// <summary>
