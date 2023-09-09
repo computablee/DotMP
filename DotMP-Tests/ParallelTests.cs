@@ -591,6 +591,35 @@ namespace DotMPTests
             tasks_thread_executed.Sum().Should().Be(10_000_000);
         }
 
+        [Fact]
+        public void Nested_tasks_work()
+        {
+            uint threads = 6;
+            double start = DotMP.Parallel.GetWTime();
+
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                DotMP.Parallel.Single(0, () =>
+                {
+                    DotMP.Parallel.Task(() =>
+                    {
+                        Thread.Sleep(500);
+                        for (int i = 0; i < threads; i++)
+                        {
+                            DotMP.Parallel.Task(() =>
+                            {
+                                Thread.Sleep(500);
+                            });
+                        }
+                    });
+                });
+            });
+
+            double elapsed = DotMP.Parallel.GetWTime() - start;
+            elapsed.Should().BeGreaterThan(1.0);
+            elapsed.Should().BeLessThan(1.25);
+        }
+
         /// <summary>
         /// A sample workload for DotMP.Parallel.ParallelFor().
         /// </summary>
