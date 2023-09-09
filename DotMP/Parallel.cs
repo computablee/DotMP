@@ -294,6 +294,7 @@ namespace DotMP
             barrier = new Barrier((int)num_threads.Value);
             freg.StartThreadpool();
             freg.reg.num_threads = 1;
+            single_thread.Clear();
             barrier = new Barrier(1);
         }
 
@@ -533,9 +534,8 @@ namespace DotMP
 
         /// <summary>
         /// Creates a single region.
-        /// A single region is only executed by a single thread.
-        /// The thread which "owns" a single region is the first thread to encounter it.
-        /// From thereon, only that thread will execute the single region.
+        /// A single region is only executed per Parallel.ParallelRegion.
+        /// The first thread to encounter the single region marks the region as encountered, then executes it.
         /// </summary>
         /// <param name="id">The ID of the single region. Must be unique per region but consistent across all threads.</param>
         /// <param name="action">The action to be performed in the single region.</param>
