@@ -600,9 +600,10 @@ namespace DotMPTests
             uint threads = 2;
             int[] executed_on_thread = new int[2];
 
-            DotMP.Parallel.ParallelMasterTaskloop(0, (int)threads, num_threads: threads, only_if: true, action: i =>
+            DotMP.Parallel.ParallelMasterTaskloop(0, (int)threads, num_threads: threads, only_if: true, grainsize: 1, action: i =>
             {
                 executed_on_thread[DotMP.Parallel.GetThreadNum()]++;
+                Thread.Sleep(100);
             });
 
             for (uint i = 0; i < threads; i++)
@@ -611,9 +612,10 @@ namespace DotMPTests
                 executed_on_thread[i] = 0;
             }
 
-            DotMP.Parallel.ParallelMasterTaskloop(0, (int)threads, num_threads: threads, only_if: false, action: i =>
+            DotMP.Parallel.ParallelMasterTaskloop(0, (int)threads, num_threads: threads, only_if: false, grainsize: 1, action: i =>
             {
                 executed_on_thread[DotMP.Parallel.GetThreadNum()]++;
+                Thread.Sleep(100);
             });
 
             executed_on_thread[0].Should().Be((int)threads);
