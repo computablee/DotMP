@@ -436,10 +436,6 @@ namespace DotMP
                     Interlocked.Increment(ref tc.threads_complete);
                     thread_is_complete = true;
                 }
-                else
-                {
-                    fr.reg.spin[GetThreadNum()].SpinOnce();
-                }
             }
             while (tc.threads_complete < fr.reg.num_threads);
 
