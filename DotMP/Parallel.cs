@@ -412,17 +412,34 @@ namespace DotMP
         /// </summary>
         public static void Taskwait()
         {
+            ForkedRegion fr = new ForkedRegion();
             TaskingContainer tc = new TaskingContainer();
             bool tasks_remaining;
+            bool thread_is_complete = false;
+            Master(() => tc.threads_complete = 0);
 
             Barrier();
 
             do
             {
                 (Action do_action, tasks_remaining) = tc.GetNextTask();
-                if (tasks_remaining) do_action();
+                if (tasks_remaining)
+                {
+                    thread_is_complete = false;
+                    tc.threads_complete = 0;
+                    do_action();
+                }
+                else if (!thread_is_complete)
+                {
+                    Interlocked.Increment(ref tc.threads_complete);
+                    thread_is_complete = true;
+                }
+                else
+                {
+                    fr.reg.spin[GetThreadNum()].SpinOnce();
+                }
             }
-            while (tasks_remaining);
+            while (tc.threads_complete < fr.reg.num_threads);
 
             Barrier();
         }
