@@ -36,19 +36,15 @@ namespace DotMP
         /// <summary>
         /// Gets the next task from the queue.
         /// </summary>
-        /// <returns>
-        /// An (Action, bool) tuple.
-        /// The Action is the next task to execute if there are tasks remaining, otherwise null.
-        /// The bool represents whether or not there was a task remaining to return.
-        /// </returns>
-        internal (Action, bool) GetNextTask()
+        /// <returns>The next task to execute if there are tasks remaining, otherwise null.</returns>
+        internal Action GetNextTask()
         {
             lock (tasks_pv)
             {
                 if (tasks_pv.Count > 0)
-                    return (tasks_pv.Dequeue(), true);
+                    return tasks_pv.Dequeue();
                 else
-                    return (null, false);
+                    return null;
             }
         }
 

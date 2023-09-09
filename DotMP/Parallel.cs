@@ -414,7 +414,6 @@ namespace DotMP
         {
             ForkedRegion fr = new ForkedRegion();
             TaskingContainer tc = new TaskingContainer();
-            bool tasks_remaining;
             bool thread_is_complete = false;
             Master(() => tc.threads_complete = 0);
 
@@ -422,8 +421,8 @@ namespace DotMP
 
             do
             {
-                (Action do_action, tasks_remaining) = tc.GetNextTask();
-                if (tasks_remaining)
+                Action do_action = tc.GetNextTask();
+                if (do_action is not null)
                 {
                     if (thread_is_complete)
                     {
