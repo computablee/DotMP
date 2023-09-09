@@ -40,7 +40,12 @@ namespace DotMP
         {
             threads = new Thread[num_threads];
             for (int i = 0; i < num_threads; i++)
-                threads[i] = new Thread(() => omp_fn());
+                threads[i] = new Thread(() =>
+                {
+                    omp_fn();
+                    Parallel.Barrier();
+                    Parallel.Taskwait();
+                });
             ws_lock = new object();
             this.num_threads = num_threads;
             this.omp_fn = omp_fn;

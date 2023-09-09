@@ -509,6 +509,45 @@ namespace DotMPTests
         }
 
         /// <summary>
+        /// Tests to see if the basics of tasking work.
+        /// </summary>
+        [Fact]
+        public void Tasking_works()
+        {
+            uint threads = 6;
+            int sleep_duration = 100;
+            double start = DotMP.Parallel.GetWTime();
+            int[] tasks_thread_executed = new int[threads];
+            int total_tasks_executed = 0;
+
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                DotMP.Parallel.Single(0, () =>
+                {
+                    for (int i = 0; i < threads * 2; i++)
+                    {
+                        DotMP.Parallel.Task(() =>
+                        {
+                            Thread.Sleep(sleep_duration);
+                            total_tasks_executed++;
+                            tasks_thread_executed[DotMP.Parallel.GetThreadNum()]++;
+                        });
+                    }
+                });
+            });
+
+            double elapsed = DotMP.Parallel.GetWTime() - start;
+
+            total_tasks_executed.Should().Be((int)threads * 2);
+            foreach (int i in tasks_thread_executed)
+            {
+                i.Should().Be(2);
+            }
+            elapsed.Should().BeGreaterThan(2.0 * (sleep_duration / 1000.0));
+            elapsed.Should().BeLessThan(threads * 2.0 * (sleep_duration / 1000.0));
+        }
+
+        /// <summary>
         /// A sample workload for DotMP.Parallel.ParallelFor().
         /// </summary>
         /// <param name="inParallel">Whether or not to enable parallelism.</param>

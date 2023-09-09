@@ -353,10 +353,8 @@ namespace DotMP
         /// <summary>
         /// Creates a sections region.
         /// Sections allows for the user to submit multiple, individual tasks to be distributed among threads in parallel.
-        /// This allows the user to submit a callback using Section(). Each callback specified with Section() is thrown into a central queue.
-        /// In parallel, each thread will dequeue a callback and execute it.
+        /// In parallel, each thread active will dequeue a callback and execute it.
         /// This is useful if you have lots of individual tasks that need to be executed in parallel, and each task requires its own lambda.
-        /// Any code not specified in a Section() will be executed by the master thread only.
         /// Acts as an implicit Barrier().
         /// </summary>
         /// <param name="actions">The actions to be performed in the sections region.</param>
@@ -392,33 +390,42 @@ namespace DotMP
         }
 
         /// <summary>
-        /// Creates a section inside a sections region.
-        /// See the Sections() documentation for more information.
-        /// Each task submitted by Section() in a Sections() region will be executed by a single thread in parallel with all other Section() tasks submitted.
+        /// Enqueue a task into the task queue.
+        /// Is not thread-safe, should be called from within a Parallel.Single() or Parallel.Master() region.
         /// </summary>
-        /// <param name="action">The action to be performed in the section.</param>
-        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        /// <exception cref="NotInSectionsRegionException">Thrown when not in a sections region.</exception>
-        /*public static void Section(Action action)
+        /// <param name="action">The task to enqueue.</param>
+        public static void Task(Action action)
         {
-            var freg = new ForkedRegion();
+            TaskingContainer tc = new TaskingContainer();
+            tc.tasks.Enqueue(action);
+        }
 
-            if (!freg.in_parallel)
-            {
-                throw new NotInParallelRegionException();
-            }
+        /// <summary>
+        /// Wait for all tasks in the queue to complete.
+        /// Is injected into a Thread's work by the Region constructor, but can also be called manually.
+        /// The injection is done to ensure that Parallel.Taskwait() is called before a Parallel.ParallelRegion() terminates,
+        /// guaranteeing all tasks submitted complete.
+        /// </summary>
+        public static void Taskwait()
+        {
+            TaskingContainer tc = new TaskingContainer();
 
-            if (!SectionHandler.in_sections)
+            while (tc.tasks.Count > 0)
             {
-                throw new NotInSectionsRegionException();
-            }
+                Action do_action;
 
-            lock (SectionHandler.actions_list_lock)
-            {
-                SectionHandler.actions.Enqueue(action);
-                Interlocked.Increment(ref SectionHandler.num_actions);
+                lock (tc.tasks)
+                {
+                    if (tc.tasks.Count > 0)
+                    {
+                        do_action = tc.tasks.Dequeue();
+                    }
+                    else break;
+                }
+
+                do_action();
             }
-        }*/
+        }
 
         /// <summary>
         /// Creates a parallel sections region. Contains all of the parameters from ParallelRegion() and Sections().
