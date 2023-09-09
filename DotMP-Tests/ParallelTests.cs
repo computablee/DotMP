@@ -208,7 +208,22 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                DotMP.Parallel.Single(0, () => ++total);
+                for (int i = 0; i < 10; i++)
+                {
+                    DotMP.Parallel.Single(0, () => DotMP.Atomic.Inc(ref total));
+                }
+            });
+
+            total.Should().Be(1);
+
+            total = 0;
+
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                for (int i = 0; i < 10; i++)
+                {
+                    DotMP.Parallel.Single(0, () => DotMP.Atomic.Inc(ref total));
+                }
             });
 
             total.Should().Be(1);

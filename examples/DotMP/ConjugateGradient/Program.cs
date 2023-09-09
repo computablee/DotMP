@@ -217,7 +217,7 @@ static class ConjugateGradient
             }
 
             //store the number of iterations in the shared variable iters
-            DotMP.Parallel.Single(1, () => iters = k);
+            DotMP.Parallel.Master(() => iters = k);
         });
 
         return (x, iters);

@@ -26,7 +26,7 @@ namespace DotMP
         /// <summary>
         /// The dictionary for single regions.
         /// </summary>
-        private static volatile Dictionary<int, int> single_thread = new Dictionary<int, int>();
+        private static volatile HashSet<int> single_thread = new HashSet<int>();
         /// <summary>
         /// The dictionary for ordered regions.
         /// </summary>
@@ -294,6 +294,7 @@ namespace DotMP
             barrier = new Barrier((int)num_threads.Value);
             freg.StartThreadpool();
             freg.reg.num_threads = 1;
+            single_thread.Clear();
             barrier = new Barrier(1);
         }
 
@@ -533,9 +534,8 @@ namespace DotMP
 
         /// <summary>
         /// Creates a single region.
-        /// A single region is only executed by a single thread.
-        /// The thread which "owns" a single region is the first thread to encounter it.
-        /// From thereon, only that thread will execute the single region.
+        /// A single region is only executed once per Parallel.ParallelRegion.
+        /// The first thread to encounter the single region marks the region as encountered, then executes it.
         /// </summary>
         /// <param name="id">The ID of the single region. Must be unique per region but consistent across all threads.</param>
         /// <param name="action">The action to be performed in the single region.</param>
@@ -543,6 +543,7 @@ namespace DotMP
         public static void Single(int id, Action action)
         {
             var freg = new ForkedRegion();
+            bool new_single = false;
 
             if (!freg.in_parallel)
             {
@@ -551,13 +552,14 @@ namespace DotMP
 
             lock (single_thread)
             {
-                if (!single_thread.ContainsKey(id))
+                if (!single_thread.Contains(id))
                 {
-                    single_thread.Add(id, GetThreadNum());
+                    single_thread.Add(id);
+                    new_single = true;
                 }
             }
 
-            if (single_thread[id] == GetThreadNum())
+            if (new_single)
             {
                 action();
             }
