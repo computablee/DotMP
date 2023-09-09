@@ -425,6 +425,8 @@ namespace DotMP
 
                 do_action();
             }
+
+            Barrier();
         }
 
         /// <summary>
