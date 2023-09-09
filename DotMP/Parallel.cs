@@ -392,12 +392,14 @@ namespace DotMP
         /// <summary>
         /// Enqueue a task into the task queue.
         /// Is not thread-safe, should be called from within a Parallel.Single() or Parallel.Master() region.
+        /// Differing from OpenMP, there is no concept of parent or child tasks as of yet.
+        /// All tasks submitted are treated equally in a central task queue.
         /// </summary>
         /// <param name="action">The task to enqueue.</param>
         public static void Task(Action action)
         {
             TaskingContainer tc = new TaskingContainer();
-            tc.tasks.Enqueue(action);
+            tc.EnqueueTask(action);
         }
 
         /// <summary>
@@ -409,24 +411,49 @@ namespace DotMP
         public static void Taskwait()
         {
             TaskingContainer tc = new TaskingContainer();
+            bool tasks_remaining;
 
-            while (tc.tasks.Count > 0)
+            do
             {
-                Action do_action;
-
-                lock (tc.tasks)
-                {
-                    if (tc.tasks.Count > 0)
-                    {
-                        do_action = tc.tasks.Dequeue();
-                    }
-                    else break;
-                }
-
-                do_action();
+                (Action do_action, tasks_remaining) = tc.GetNextTask();
+                if (tasks_remaining) do_action();
             }
+            while (tasks_remaining);
 
             Barrier();
+        }
+
+        /// <summary>
+        /// Creates a number of tasks to complete a for loop in parallel.
+        /// Is not thread-safe, should be called from within a Parallel.Single() or Parallel.Master() region.
+        /// If neither grainsize nor num_tasks are specified, a grainsize is calculated on-the-fly.
+        /// If both grainsize and num_tasks are specified, the num_tasks parameter takes precedence over grainsize.
+        /// </summary>
+        /// <param name="start">The start of the taskloop, inclusive.</param>
+        /// <param name="end">The end of the taskloop, exclusive.</param>
+        /// <param name="action">The action to be executed as the body of the loop.</param>
+        /// <param name="grainsize">The number of iterations to be completed per task.</param>
+        /// <param name="num_tasks">The number of tasks to spawn to complete the loop.</param>
+        public static void Taskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null)
+        {
+            ForkedRegion fr = new ForkedRegion();
+            TaskingContainer tc = new TaskingContainer();
+
+            if (grainsize is null && num_tasks is null)
+            {
+                grainsize = (uint)((end - start) / fr.reg.num_threads) / 32;
+                if (grainsize < 1) grainsize = 1;
+            }
+            else if (num_tasks is not null)
+            {
+                grainsize = (uint)(end - start) / num_tasks;
+                if (grainsize < 1) grainsize = 1;
+            }
+
+            for (int i = start; i < end; i += (int)grainsize)
+            {
+                tc.EnqueueTaskloopTask(i, Math.Min(i + (int)grainsize, end), action);
+            }
         }
 
         /// <summary>
