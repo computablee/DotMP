@@ -14,16 +14,6 @@ namespace DotMP
         /// </summary>
         private static Queue<Action> tasks_pv = new Queue<Action>();
 
-        private static object task_lock_pv = new object();
-
-        internal object task_lock
-        {
-            get
-            {
-                return task_lock_pv;
-            }
-        }
-
         /// <summary>
         /// Default constructor.
         /// </summary>
@@ -39,7 +29,7 @@ namespace DotMP
         /// </returns>
         internal (Action, bool) GetNextTask()
         {
-            lock (task_lock)
+            lock (tasks_pv)
             {
                 if (tasks_pv.Count > 0)
                     return (tasks_pv.Dequeue(), true);

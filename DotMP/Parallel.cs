@@ -454,13 +454,10 @@ namespace DotMP
                 if (grainsize < 1) grainsize = 1;
             }
 
-            lock (tc.task_lock)
+            for (int i = start; i < end; i += (int)grainsize)
             {
-                for (int i = start; i < end; i += (int)grainsize)
-                {
-                    int t_end = i + (int)grainsize;
-                    tc.EnqueueTaskloopTask(i, t_end < end ? t_end : end, action);
-                }
+                int t_end = i + (int)grainsize;
+                tc.EnqueueTaskloopTask(i, t_end < end ? t_end : end, action);
             }
         }
 
