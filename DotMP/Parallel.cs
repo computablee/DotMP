@@ -415,6 +415,8 @@ namespace DotMP
             TaskingContainer tc = new TaskingContainer();
             bool tasks_remaining;
 
+            Barrier();
+
             do
             {
                 (Action do_action, tasks_remaining) = tc.GetNextTask();
@@ -452,9 +454,13 @@ namespace DotMP
                 if (grainsize < 1) grainsize = 1;
             }
 
-            for (int i = start; i < end; i += (int)grainsize)
+            lock (tc.task_lock)
             {
-                tc.EnqueueTaskloopTask(i, Math.Min(i + (int)grainsize, end), action);
+                for (int i = start; i < end; i += (int)grainsize)
+                {
+                    int t_end = i + (int)grainsize;
+                    tc.EnqueueTaskloopTask(i, t_end < end ? t_end : end, action);
+                }
             }
         }
 
