@@ -160,7 +160,7 @@ DotMP.Parallel.ParallelForReduction(a, b, op, ref local, (ref type local, int i)
 ```
 This function supports all of the optional parameters of `ParallelRegion` and `ForReduction`, and is merely a wrapper around those two functions for conciseness.
 
-### Sections/Section
+### Sections
 Given the OpenMP:
 ```c
 #pragma omp sections
@@ -178,12 +178,9 @@ Given the OpenMP:
 DotMP provides:
 ```cs
 DotMP.Parallel.Sections(() => {
-    DotMP.Parallel.Section(() => {
-        work();
-    });
-    DotMP.Parallel.Section(() => {
-        work();
-    });
+    work();
+}, () => {
+    work2();
 });
 ```
 
@@ -205,12 +202,9 @@ Given the OpenMP:
 DotMP provides:
 ```cs
 DotMP.Parallel.ParallelSections(() => {
-    DotMP.Parallel.Section(() => {
-        work();
-    });
-    DotMP.Parallel.Section(() => {
-        work();
-    });
+    work();
+}, () => {
+    work2();
 });
 ```
 This function supports the optional parameter `num_threads` from `DotMP.Parallel.ParallelRegion`.

@@ -359,9 +359,9 @@ namespace DotMP
         /// Any code not specified in a Section() will be executed by the master thread only.
         /// Acts as an implicit Barrier().
         /// </summary>
-        /// <param name="action">The action to be performed in the sections region.</param>
+        /// <param name="actions">The actions to be performed in the sections region.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        public static void Sections(Action action)
+        public static void Sections(params Action[] actions)
         {
             var freg = new ForkedRegion();
 
@@ -370,12 +370,12 @@ namespace DotMP
                 throw new NotInParallelRegionException();
             }
 
-            SectionHandler.in_sections = true;
-
-            if (GetThreadNum() == 0)
+            Master(() =>
             {
-                action();
-            }
+                SectionHandler.actions = new Queue<Action>(actions);
+                SectionHandler.in_sections = true;
+                SectionHandler.num_actions = actions.Length;
+            });
 
             Barrier();
 
@@ -406,7 +406,7 @@ namespace DotMP
         /// <param name="action">The action to be performed in the section.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="NotInSectionsRegionException">Thrown when not in a sections region.</exception>
-        public static void Section(Action action)
+        /*public static void Section(Action action)
         {
             var freg = new ForkedRegion();
 
@@ -425,19 +425,19 @@ namespace DotMP
                 SectionHandler.actions.Enqueue(action);
                 Interlocked.Increment(ref SectionHandler.num_actions);
             }
-        }
+        }*/
 
         /// <summary>
         /// Creates a parallel sections region. Contains all of the parameters from ParallelRegion() and Sections().
         /// This is simply a convenience method for creating a parallel region and a sections region inside of it.
         /// </summary>
-        /// <param name="action">The action to be performed in the parallel sections region.</param>
+        /// <param name="actions">The actions to be performed in the parallel sections region.</param>
         /// <param name="num_threads">The number of threads to be used in the parallel sections region, defaulting to null. If null, will be calculated on-the-fly.</param>
-        public static void ParallelSections(Action action, uint? num_threads = null)
+        public static void ParallelSections(uint? num_threads = null, params Action[] actions)
         {
             ParallelRegion(num_threads: num_threads, action: () =>
             {
-                Sections(action);
+                Sections(actions);
             });
         }
 

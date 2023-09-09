@@ -474,7 +474,7 @@ namespace DotMPTests
         [Fact]
         public void Sections_works()
         {
-            uint num_threads = 6;
+            uint num_threads = 4;
             bool[] threads_used = new bool[num_threads];
 
             for (int i = 0; i < num_threads; i++)
@@ -482,16 +482,22 @@ namespace DotMPTests
 
             double start = DotMP.Parallel.GetWTime();
 
-            DotMP.Parallel.ParallelSections(num_threads: num_threads, action: () =>
+            DotMP.Parallel.ParallelSections(num_threads: num_threads, () =>
             {
-                for (int i = 0; i < num_threads; i++)
-                {
-                    DotMP.Parallel.Section(() =>
-                    {
-                        threads_used[DotMP.Parallel.GetThreadNum()] = true;
-                        Thread.Sleep(100);
-                    });
-                }
+                threads_used[DotMP.Parallel.GetThreadNum()] = true;
+                Thread.Sleep(100);
+            }, () =>
+            {
+                threads_used[DotMP.Parallel.GetThreadNum()] = true;
+                Thread.Sleep(100);
+            }, () =>
+            {
+                threads_used[DotMP.Parallel.GetThreadNum()] = true;
+                Thread.Sleep(100);
+            }, () =>
+            {
+                threads_used[DotMP.Parallel.GetThreadNum()] = true;
+                Thread.Sleep(100);
             });
 
             double end = DotMP.Parallel.GetWTime() - start;
