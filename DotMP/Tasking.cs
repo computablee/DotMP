@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Generic;
+using System.Collections.Concurrent;
 
 namespace DotMP
 {
@@ -12,7 +12,7 @@ namespace DotMP
         /// <summary>
         /// Queue of tasks that must execute.
         /// </summary>
-        private static Queue<Action> tasks_pv = new Queue<Action>();
+        private static ConcurrentQueue<Action> tasks_pv = new ConcurrentQueue<Action>();
         /// <summary>
         /// Counter for coordinating Parallel.Taskwait(), ensures that all threads have agreed that no more work is to be done before progressing to the barrier.
         /// </summary>
@@ -39,13 +39,9 @@ namespace DotMP
         /// <returns>The next task to execute if there are tasks remaining, otherwise null.</returns>
         internal Action GetNextTask()
         {
-            lock (tasks_pv)
-            {
-                if (tasks_pv.Count > 0)
-                    return tasks_pv.Dequeue();
-                else
-                    return null;
-            }
+            Action action;
+            bool successful = tasks_pv.TryDequeue(out action);
+            return successful ? action : null;
         }
 
         /// <summary>
@@ -54,10 +50,7 @@ namespace DotMP
         /// <param name="action">The task to enqueue.</param>
         internal void EnqueueTask(Action action)
         {
-            lock (tasks_pv)
-            {
-                tasks_pv.Enqueue(action);
-            }
+            tasks_pv.Enqueue(action);
         }
 
         /// <summary>
