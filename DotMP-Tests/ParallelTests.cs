@@ -3,6 +3,7 @@ using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
 using System.Threading;
 using Xunit;
 
@@ -130,6 +131,31 @@ namespace DotMPTests
             }
 
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Dynamic, 16);
+
+            for (int i = 0; i < z.Length; i++)
+            {
+                z[i].Should().Be(3.0f);
+            }
+        }
+
+        /// <summary>
+        /// Tests to make sure that taskloops produce correct results.
+        /// </summary>
+        [Fact]
+        public void Taskloop_should_produce_correct_results()
+        {
+            int workload = 1_000_000;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+            }
+
+            float[] z = saxpy_parallelregion_for_taskloop(2.0f, x, y, 6);
 
             for (int i = 0; i < z.Length; i++)
             {
@@ -529,7 +555,7 @@ namespace DotMPTests
                         DotMP.Parallel.Task(() =>
                         {
                             Thread.Sleep(sleep_duration);
-                            total_tasks_executed++;
+                            DotMP.Atomic.Inc(ref total_tasks_executed);
                             tasks_thread_executed[DotMP.Parallel.GetThreadNum()]++;
                         });
                     }
@@ -545,6 +571,24 @@ namespace DotMPTests
             }
             elapsed.Should().BeGreaterThan(2.0 * (sleep_duration / 1000.0));
             elapsed.Should().BeLessThan(1.25 * 2.0 * (sleep_duration / 1000.0));
+
+            tasks_thread_executed = new int[threads];
+
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                DotMP.Parallel.Single(0, () =>
+                {
+                    for (int i = 0; i < 10_000_000; i++)
+                    {
+                        DotMP.Parallel.Task(() =>
+                        {
+                            tasks_thread_executed[DotMP.Parallel.GetThreadNum()]++;
+                        });
+                    }
+                });
+            });
+
+            tasks_thread_executed.Sum().Should().Be(10_000_000);
         }
 
         /// <summary>
@@ -567,8 +611,6 @@ namespace DotMPTests
                 b[i] = (float)r.NextDouble();
                 c[i] = (float)r.NextDouble();
             }
-
-            Console.WriteLine("Starting test.");
 
             Stopwatch s = new Stopwatch();
             s.Start();
@@ -644,6 +686,32 @@ namespace DotMPTests
                 DotMP.Parallel.For(0, x.Length, schedule: schedule, chunk_size: chunk_size, action: i =>
                 {
                     z[i] += a * x[i] + y[i];
+                });
+            });
+
+            return z;
+        }
+
+        /// <summary>
+        /// A sample workload for saxpy, using taskloops.
+        /// </summary>
+        /// <param name="a">Scalar for saxpy.</param>
+        /// <param name="x">Vector to multiply by the scalar.</param>
+        /// <param name="y">Vector to add.</param>
+        /// <param name="grainsize">Grainsize to use</param>
+        /// <returns>Result of saxpy.</returns>
+        float[] saxpy_parallelregion_for_taskloop(float a, float[] x, float[] y, uint? grainsize)
+        {
+            float[] z = new float[x.Length];
+
+            DotMP.Parallel.ParallelRegion(() =>
+            {
+                DotMP.Parallel.Master(() =>
+                {
+                    DotMP.Parallel.Taskloop(0, x.Length, grainsize: grainsize, action: i =>
+                    {
+                        z[i] += a * x[i] + y[i];
+                    });
                 });
             });
 
