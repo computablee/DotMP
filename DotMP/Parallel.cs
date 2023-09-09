@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.IO;
 using System.Threading;
 
 namespace DotMP
@@ -454,6 +456,55 @@ namespace DotMP
             {
                 tc.EnqueueTaskloopTask(i, Math.Min(i + (int)grainsize, end), action);
             }
+        }
+
+        /// <summary>
+        /// Wrapper around Parallel.ParallelRegion(), Parallel.Master(), and Parallel.Taskloop().
+        /// </summary>
+        /// <param name="start">The start of the taskloop, inclusive.</param>
+        /// <param name="end">The end of the taskloop, exclusive.</param>
+        /// <param name="action">The action to be executed as the body of the loop.</param>
+        /// <param name="grainsize">The number of iterations to be completed per task.</param>
+        /// <param name="num_tasks">The number of tasks to spawn to complete the loop.</param>
+        /// <param name="num_threads">The number of threads to be used in the parallel region, defaulting to null. If null, will be calculated on-the-fly.</param>
+        public static void ParallelMasterTaskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null, uint? num_threads = null)
+        {
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                Master(() =>
+                {
+                    Taskloop(start, end, action, grainsize, num_tasks);
+                });
+            });
+        }
+
+        /// <summary>
+        /// Wrapper around Parallel.ParallelRegion() and Parallel.Master().
+        /// </summary>
+        /// <param name="action">The action to be performed in the parallel region.</param>
+        /// <param name="num_threads">The number of threads to be used in the parallel region, defaulting to null. If null, will be calculated on-the-fly.</param>
+        public static void ParallelMaster(Action action, uint? num_threads = null)
+        {
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                Master(action);
+            });
+        }
+
+        /// <summary>
+        /// Wrapper around Parallel.Master() and Parallel.Taskloop().
+        /// </summary>
+        /// <param name="start">The start of the taskloop, inclusive.</param>
+        /// <param name="end">The end of the taskloop, exclusive.</param>
+        /// <param name="action">The action to be executed as the body of the loop.</param>
+        /// <param name="grainsize">The number of iterations to be completed per task.</param>
+        /// <param name="num_tasks">The number of tasks to spawn to complete the loop.</param>
+        public static void MasterTaskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null)
+        {
+            Master(() =>
+            {
+                Taskloop(start, end, action, grainsize, num_tasks);
+            });
         }
 
         /// <summary>
