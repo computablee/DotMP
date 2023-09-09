@@ -393,7 +393,6 @@ namespace DotMP
 
         /// <summary>
         /// Enqueue a task into the task queue.
-        /// Is not thread-safe, should be called from within a Parallel.Single() or Parallel.Master() region.
         /// Differing from OpenMP, there is no concept of parent or child tasks as of yet.
         /// All tasks submitted are treated equally in a central task queue.
         /// </summary>
@@ -430,7 +429,6 @@ namespace DotMP
 
         /// <summary>
         /// Creates a number of tasks to complete a for loop in parallel.
-        /// Is not thread-safe, should be called from within a Parallel.Single() or Parallel.Master() region.
         /// If neither grainsize nor num_tasks are specified, a grainsize is calculated on-the-fly.
         /// If both grainsize and num_tasks are specified, the num_tasks parameter takes precedence over grainsize.
         /// </summary>

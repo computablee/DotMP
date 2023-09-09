@@ -44,7 +44,10 @@ namespace DotMP
         /// <param name="action">The task to enqueue.</param>
         internal void EnqueueTask(Action action)
         {
-            tasks_pv.Enqueue(action);
+            lock (tasks_pv)
+            {
+                tasks_pv.Enqueue(action);
+            }
         }
 
         /// <summary>
