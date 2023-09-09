@@ -592,6 +592,38 @@ namespace DotMPTests
         }
 
         /// <summary>
+        /// Test if the only_if clause works on taskloops.
+        /// </summary>
+        [Fact]
+        public void Taskloop_only_if_works()
+        {
+            uint threads = 2;
+            int[] executed_on_thread = new int[2];
+
+            DotMP.Parallel.ParallelMasterTaskloop(0, (int)threads, num_threads: threads, only_if: true, action: i =>
+            {
+                executed_on_thread[DotMP.Parallel.GetThreadNum()]++;
+            });
+
+            for (uint i = 0; i < threads; i++)
+            {
+                executed_on_thread[i].Should().Be(1);
+                executed_on_thread[i] = 0;
+            }
+
+            DotMP.Parallel.ParallelMasterTaskloop(0, (int)threads, num_threads: threads, only_if: false, action: i =>
+            {
+                executed_on_thread[DotMP.Parallel.GetThreadNum()]++;
+            });
+
+            executed_on_thread[0].Should().Be((int)threads);
+            for (uint i = 1; i < threads; i++)
+            {
+                executed_on_thread[i].Should().Be(0);
+            }
+        }
+
+        /// <summary>
         /// Checks to see if nested tasks work.
         /// </summary>
         [Fact]

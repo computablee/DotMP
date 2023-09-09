@@ -452,26 +452,37 @@ namespace DotMP
         /// <param name="action">The action to be executed as the body of the loop.</param>
         /// <param name="grainsize">The number of iterations to be completed per task.</param>
         /// <param name="num_tasks">The number of tasks to spawn to complete the loop.</param>
-        public static void Taskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null)
+        /// <param name="only_if">Only generate tasks if true, otherwise execute loop sequentially.</param>
+        public static void Taskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null, bool only_if = true)
         {
-            ForkedRegion fr = new ForkedRegion();
-            TaskingContainer tc = new TaskingContainer();
+            if (only_if)
+            {
+                ForkedRegion fr = new ForkedRegion();
+                TaskingContainer tc = new TaskingContainer();
 
-            if (grainsize is null && num_tasks is null)
-            {
-                grainsize = (uint)((end - start) / fr.reg.num_threads) / 32;
-                if (grainsize < 1) grainsize = 1;
-            }
-            else if (num_tasks is not null)
-            {
-                grainsize = (uint)(end - start) / num_tasks;
-                if (grainsize < 1) grainsize = 1;
-            }
+                if (grainsize is null && num_tasks is null)
+                {
+                    grainsize = (uint)((end - start) / fr.reg.num_threads) / 32;
+                    if (grainsize < 1) grainsize = 1;
+                }
+                else if (num_tasks is not null)
+                {
+                    grainsize = (uint)(end - start) / num_tasks;
+                    if (grainsize < 1) grainsize = 1;
+                }
 
-            for (int i = start; i < end; i += (int)grainsize)
+                for (int i = start; i < end; i += (int)grainsize)
+                {
+                    int t_end = i + (int)grainsize;
+                    tc.EnqueueTaskloopTask(i, t_end < end ? t_end : end, action);
+                }
+            }
+            else
             {
-                int t_end = i + (int)grainsize;
-                tc.EnqueueTaskloopTask(i, t_end < end ? t_end : end, action);
+                for (int i = start; i < end; i++)
+                {
+                    action(i);
+                }
             }
         }
 
@@ -484,13 +495,14 @@ namespace DotMP
         /// <param name="grainsize">The number of iterations to be completed per task.</param>
         /// <param name="num_tasks">The number of tasks to spawn to complete the loop.</param>
         /// <param name="num_threads">The number of threads to be used in the parallel region, defaulting to null. If null, will be calculated on-the-fly.</param>
-        public static void ParallelMasterTaskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null, uint? num_threads = null)
+        /// <param name="only_if">Only generate tasks if true, otherwise execute loop sequentially.</param>
+        public static void ParallelMasterTaskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null, uint? num_threads = null, bool only_if = true)
         {
             ParallelRegion(num_threads: num_threads, action: () =>
             {
                 Master(() =>
                 {
-                    Taskloop(start, end, action, grainsize, num_tasks);
+                    Taskloop(start, end, action, grainsize, num_tasks, only_if);
                 });
             });
         }
@@ -516,11 +528,12 @@ namespace DotMP
         /// <param name="action">The action to be executed as the body of the loop.</param>
         /// <param name="grainsize">The number of iterations to be completed per task.</param>
         /// <param name="num_tasks">The number of tasks to spawn to complete the loop.</param>
-        public static void MasterTaskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null)
+        /// <param name="only_if">Only generate tasks if true, otherwise execute loop sequentially.</param>
+        public static void MasterTaskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null, bool only_if = true)
         {
             Master(() =>
             {
-                Taskloop(start, end, action, grainsize, num_tasks);
+                Taskloop(start, end, action, grainsize, num_tasks, only_if);
             });
         }
 

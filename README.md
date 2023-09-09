@@ -451,6 +451,10 @@ This function supports the `grainsize` optional parameter, which specifies how m
 
 If both `num_tasks` and `grainsize` are provided, the `num_tasks` parameter takes precedence over the `grainsize` parameter.
 
+This function supports the `only_if` optional parameter.
+`only_if` is an opportunity to provide a boolean expression to determine if the taskloop should generate tasks or execute sequentially.
+This is beneficial if the taskloop might be very small and wouldn't be worth the (albeit light) overhead of creating tasks and waiting on a tasking point.
+
 ### Parallel Master
 Given the OpenMP:
 ```c
