@@ -544,7 +544,7 @@ namespace DotMPTests
                 i.Should().Be(2);
             }
             elapsed.Should().BeGreaterThan(2.0 * (sleep_duration / 1000.0));
-            elapsed.Should().BeLessThan(threads * 2.0 * (sleep_duration / 1000.0));
+            elapsed.Should().BeLessThan(1.25 * 2.0 * (sleep_duration / 1000.0));
         }
 
         /// <summary>
