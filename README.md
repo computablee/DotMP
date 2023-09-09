@@ -275,8 +275,7 @@ DotMP.Parallel.Single(id, () => {
 ```
 The `id` parameter provided should follow the same guidelines as specified in `Critical`.
 
-The behavior of a `single` region is as follows: the first thread in a team to reach a given `Single` region will "own" the `Single` for the duration of the `ParallelRegion`.
-On all subsequent encounters, only that first thread will execute the region. All other threads will ignore it.
+A `Single` region is only executed once per `DotMP.Parallel.ParallelRegion`, and is executed by the first thread that encounters it.
 
 `Single`'s behavior is left undefined if used outside of a `For`.
 
