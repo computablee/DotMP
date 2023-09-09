@@ -425,8 +425,11 @@ namespace DotMP
                 (Action do_action, tasks_remaining) = tc.GetNextTask();
                 if (tasks_remaining)
                 {
-                    thread_is_complete = false;
-                    tc.threads_complete = 0;
+                    if (thread_is_complete)
+                    {
+                        thread_is_complete = false;
+                        Interlocked.Decrement(ref tc.threads_complete);
+                    }
                     do_action();
                 }
                 else if (!thread_is_complete)
