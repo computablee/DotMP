@@ -43,7 +43,6 @@ namespace DotMP
                 threads[i] = new Thread(() =>
                 {
                     omp_fn();
-                    Parallel.Barrier();
                     Parallel.Taskwait();
                 });
             ws_lock = new object();

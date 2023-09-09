@@ -409,6 +409,7 @@ namespace DotMP
         /// Is injected into a Thread's work by the Region constructor, but can also be called manually.
         /// The injection is done to ensure that Parallel.Taskwait() is called before a Parallel.ParallelRegion() terminates,
         /// guaranteeing all tasks submitted complete.
+        /// Acts as an implicit Barrier().
         /// </summary>
         public static void Taskwait()
         {
