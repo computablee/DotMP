@@ -534,7 +534,7 @@ namespace DotMP
 
         /// <summary>
         /// Creates a single region.
-        /// A single region is only executed per Parallel.ParallelRegion.
+        /// A single region is only executed once per Parallel.ParallelRegion.
         /// The first thread to encounter the single region marks the region as encountered, then executes it.
         /// </summary>
         /// <param name="id">The ID of the single region. Must be unique per region but consistent across all threads.</param>
