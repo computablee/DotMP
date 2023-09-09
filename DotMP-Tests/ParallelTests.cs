@@ -591,6 +591,9 @@ namespace DotMPTests
             tasks_thread_executed.Sum().Should().Be(10_000_000);
         }
 
+        /// <summary>
+        /// Checks to see if nested tasks work.
+        /// </summary>
         [Fact]
         public void Nested_tasks_work()
         {
