@@ -388,9 +388,122 @@ The `DotMP.Shared` constructor and `Clear()` methods serve as implicit barriers,
 `DotMP.Shared` provides a factory method for creating `DotMP.Shared` instances via the `DotMP.Shared.Create()` method.
 `DotMP.SharedEnumerable` provides factory methods for creating `DotMP.SharedEnumerable` instances containing either `T[]` or `List<T>` enumerables via the `DotMP.SharedEnumerable.Create()` methods.
 
+## Tasking System
+
+DotMP supports a rudimentary tasking system.
+Submitting a task adds the task to a global task queue.
+When a **tasking point** is hit, threads will begin working on tasks in the task queue.
+There are two tasking points currently in DotMP:
+
+- At the end of a `DotMP.Parallel.ParallelRegion`, all remaining tasks in the task queue are completed
+- Upon encountering `DotMP.Parallel.Taskwait`, all current tasks in the task queue are completed
+
+Tasks can be submitted throughout the execution of a parallel region, including from within other tasks, but currently do not support dependencies.
+Dependencies is an intended feature for a future update.
+
+The following analogues to OpenMP functions are provided:
+
+### Task
+Given the OpenMP:
+```c
+#pragma omp task
+{
+    work();
+}
+```
+DotMP provides:
+```cs
+DotMP.Parallel.Task(() => {
+    work();
+});
+```
+This function adds a task to the task queue and is deferred until a tasking point.
+
+### Taskwait
+Given the OpenMP:
+```c
+#pragma omp taskwait
+```
+DotMP provides:
+```cs
+DotMP.Parallel.Taskwait();
+```
+This function acts as a tasking point, as well as an implicit barrier.
+
+### Taskloop
+Given the OpenMP:
+```c
+#pragma omp taskloop
+for (int i = a, i < b; i++)
+{
+    work(i);
+}
+```
+DotMP provides:
+```cs
+DotMP.Parallel.Taskloop(a, b, i => {
+    work(i);
+});
+```
+This function supports the `num_tasks` optional parameter, which specifies how many tasks into which the loop is broken up.
+
+This function supports the `grainsize` optional parameter, which specifies how many iterations belong to each individual task.
+
+If both `num_tasks` and `grainsize` are provided, the `num_tasks` parameter takes precedence over the `grainsize` parameter.
+
+### Parallel Master
+Given the OpenMP:
+```c
+#pragma omp parallel master
+{
+    work();
+}
+```
+DotMP provides:
+```cs
+DotMP.Parallel.ParallelMaster(() => {
+    work();
+});
+```
+This function supports the `num_threads` optional parameter from `DotMP.Parallel.ParallelRegion`.
+
+### Master Taskloop
+Given the OpenMP:
+```c
+#pragma omp master taskloop
+for (int i = a, i < b; i++)
+{
+    work(i);
+}
+```
+DotMP provides:
+```cs
+DotMP.Parallel.MasterTaskloop(a, b, i => {
+    work(i);
+});
+```
+This function supports all of the optional parameters from `DotMP.Parallel.Taskloop`.
+
+### Parallel Master Taskloop
+Given the OpenMP:
+```c
+#pragma omp parallel master taskloop
+for (int i = a, i < b; i++)
+{
+    work(i);
+}
+```
+DotMP provides:
+```cs
+DotMP.Parallel.ParallelMasterTaskloop(a, b, i => {
+    work(i);
+});
+```
+This function supports all of the optional parameters from `DotMP.Parallel.ParallelRegion` and `DotMP.Parallel.Taskloop`.
+
 ## Supported Functions
 
-DotMP provides an analog of the following functions:
+DotMP provides an analogue of the following functions:
 
 | <omp.h> function         | DotMP function                | Comments
 ---------------------------|------------------------------------|---------
