@@ -370,27 +370,20 @@ namespace DotMP
                 throw new NotInParallelRegionException();
             }
 
-            Master(() =>
-            {
-                SectionHandler.actions = new Queue<Action>(actions);
-                SectionHandler.in_sections = true;
-                SectionHandler.num_actions = actions.Length;
-            });
+            Master(() => SectionHandler.actions = new Queue<Action>(actions));
 
             Barrier();
 
-            while (SectionHandler.num_actions > 0)
+            while (SectionHandler.actions.Count > 0)
             {
                 Action do_action;
 
-                lock (SectionHandler.actions_list_lock)
+                lock (SectionHandler.actions)
                 {
                     if (SectionHandler.actions.Count > 0)
                         do_action = SectionHandler.actions.Dequeue();
                     else break;
                 }
-
-                Interlocked.Decrement(ref SectionHandler.num_actions);
 
                 do_action();
             }
