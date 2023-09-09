@@ -26,7 +26,7 @@ namespace DotMP
         /// <summary>
         /// The dictionary for single regions.
         /// </summary>
-        private static volatile Dictionary<int, int> single_thread = new Dictionary<int, int>();
+        private static volatile HashSet<int> single_thread = new HashSet<int>();
         /// <summary>
         /// The dictionary for ordered regions.
         /// </summary>
@@ -543,6 +543,7 @@ namespace DotMP
         public static void Single(int id, Action action)
         {
             var freg = new ForkedRegion();
+            bool new_single = false;
 
             if (!freg.in_parallel)
             {
@@ -551,13 +552,14 @@ namespace DotMP
 
             lock (single_thread)
             {
-                if (!single_thread.ContainsKey(id))
+                if (!single_thread.Contains(id))
                 {
-                    single_thread.Add(id, GetThreadNum());
+                    single_thread.Add(id);
+                    new_single = true;
                 }
             }
 
-            if (single_thread[id] == GetThreadNum())
+            if (new_single)
             {
                 action();
             }
