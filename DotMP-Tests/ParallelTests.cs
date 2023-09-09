@@ -210,7 +210,7 @@ namespace DotMPTests
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    DotMP.Parallel.Single(0, () => ++total);
+                    DotMP.Parallel.Single(0, () => DotMP.Atomic.Inc(ref total));
                 }
             });
 
