@@ -8,7 +8,7 @@ static class HeatTransfer
     private static void DoStep(double[,] grid, double[,] scratch, int dim)
     {
         //iterate over all cells not on the border
-        DotMP.Parallel.For(1, dim - 1, schedule: DotMP.Schedule.Dynamic, action: i =>
+        DotMP.Parallel.MasterTaskloop(1, dim - 1, action: i =>
         {
             for (int j = 1; j < dim - 1; j++)
             {
@@ -17,14 +17,18 @@ static class HeatTransfer
             }
         });
 
+        DotMP.Parallel.Taskwait();
+
         //copy the scratch array to the grid array
-        DotMP.Parallel.For(1, dim - 1, schedule: DotMP.Schedule.Static, action: i =>
+        DotMP.Parallel.MasterTaskloop(1, dim - 1, action: i =>
         {
             for (int j = 1; j < dim - 1; j++)
             {
                 grid[i, j] = scratch[i, j];
             }
         });
+
+        DotMP.Parallel.Taskwait();
     }
 
     //run the simulation
