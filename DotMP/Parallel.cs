@@ -416,31 +416,23 @@ namespace DotMP
         {
             ForkedRegion fr = new ForkedRegion();
             TaskingContainer tc = new TaskingContainer();
-            bool thread_is_complete = false;
-            Master(() => tc.threads_complete = 0);
+            int tasks_remaining;
 
             Barrier();
 
             do
             {
-                bool successful = tc.GetNextTask(out Action do_action, out ulong uuid);
-                if (successful)
+                if (tc.GetNextTask(out Action do_action, out ulong uuid, out tasks_remaining))
                 {
-                    if (thread_is_complete)
-                    {
-                        thread_is_complete = false;
-                        Interlocked.Decrement(ref tc.threads_complete);
-                    }
                     do_action();
                     tc.CompleteTask(uuid);
                 }
-                else if (!thread_is_complete)
-                {
-                    Interlocked.Increment(ref tc.threads_complete);
-                    thread_is_complete = true;
-                }
             }
-            while (tc.threads_complete < fr.reg.num_threads);
+            while (tasks_remaining > 0);
+
+            //Barrier();
+
+            tc.ResetDAG();
 
             Barrier();
         }
@@ -467,7 +459,7 @@ namespace DotMP
 
                 if (grainsize is null && num_tasks is null)
                 {
-                    grainsize = (uint)((end - start) / fr.reg.num_threads) / 32;
+                    grainsize = (uint)((end - start) / fr.reg.num_threads) / 8;
                     if (grainsize < 1) grainsize = 1;
                 }
                 else if (num_tasks is not null)
