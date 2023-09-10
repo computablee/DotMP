@@ -398,8 +398,8 @@ There are two tasking points currently in DotMP:
 - At the end of a `DotMP.Parallel.ParallelRegion`, all remaining tasks in the task queue are completed
 - Upon encountering `DotMP.Parallel.Taskwait`, all current tasks in the task queue are completed
 
-Tasks can be submitted throughout the execution of a parallel region, including from within other tasks, but currently do not support dependencies.
-Dependencies is an intended feature for a future update.
+Tasks can be submitted throughout the execution of a parallel region, including from within other tasks, and support dependencies.
+Spawning tasks returns a `DotMP.TaskUUID` object which can be passed as a parameter to future tasks, marking those tasks as dependent on the originating task.
 
 The following analogues to OpenMP functions are provided:
 
@@ -417,7 +417,12 @@ DotMP.Parallel.Task(() => {
     work();
 });
 ```
+This function supports `depends` as a `params` parameter.
+`depends` accepts `DotMP.TaskUUID` objects, and marks the created task as dependent on the tasks passed through `depends`.
+
 This function adds a task to the task queue and is deferred until a tasking point.
+
+This function returns a `DotMP.TaskUUID` object, which can be passed to future `depends` clauses.
 
 ### Taskwait
 Given the OpenMP:
@@ -455,6 +460,14 @@ This function supports the `only_if` optional parameter.
 `only_if` is an opportunity to provide a boolean expression to determine if the taskloop should generate tasks or execute sequentially.
 This is beneficial if the taskloop might be very small and wouldn't be worth the (albeit light) overhead of creating tasks and waiting on a tasking point.
 
+This function supports `depends` as a `params` parameter.
+`depends` accepts `DotMP.TaskUUID` objects, and marks the created tasks as dependent on the tasks passed through `depends`.
+
+This function adds a series of tasks to the task queue and is deferred until a tasking point.
+
+This function returns a `DotMP.TaskUUID[]` array, where each element is a `DotMP.TaskUUID` representing one of the generated tasks.
+The `DotMP.TaskUUID[]` array can be passed to future `depends` clauses.
+
 ### Parallel Master
 Given the OpenMP:
 ```c
@@ -486,7 +499,9 @@ DotMP.Parallel.MasterTaskloop(a, b, i => {
     work(i);
 });
 ```
-This function supports all of the optional parameters from `DotMP.Parallel.Taskloop`.
+This function supports all of the optional parameters from `DotMP.Parallel.Taskloop`, except `depends`.
+
+This function does not return a `DotMP.TaskUUID[]` array.
 
 ### Parallel Master Taskloop
 Given the OpenMP:
@@ -503,7 +518,9 @@ DotMP.Parallel.ParallelMasterTaskloop(a, b, i => {
     work(i);
 });
 ```
-This function supports all of the optional parameters from `DotMP.Parallel.ParallelRegion` and `DotMP.Parallel.Taskloop`.
+This function supports all of the optional parameters from `DotMP.Parallel.ParallelRegion` and `DotMP.Parallel.Taskloop`, except `depends`.
+
+This function does not return a `DotMP.TaskUUID[]` array.
 
 ## Supported Functions
 

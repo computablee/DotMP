@@ -35,6 +35,10 @@ namespace DotMP
         /// </summary>
         internal TaskingContainer() { }
 
+        /// <summary>
+        /// Resets the DAG to a default state.
+        /// Allows the garbage collector to collect unused data.
+        /// </summary>
         internal void ResetDAG()
         {
             Parallel.Master(() => dag = new DAG<ulong, Action>());
