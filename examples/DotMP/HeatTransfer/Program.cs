@@ -7,25 +7,26 @@ static class HeatTransfer
     //do a step of the heat transfer simulation
     private static void DoStep(double[,] grid, double[,] scratch, int dim)
     {
-        //iterate over all cells not on the border
-        DotMP.Parallel.MasterTaskloop(1, dim - 1, action: i =>
+        DotMP.Parallel.Master(() =>
         {
-            for (int j = 1; j < dim - 1; j++)
+            //iterate over all cells not on the border
+            var dep = DotMP.Parallel.Taskloop(1, dim - 1, action: i =>
             {
-                //set the scratch array to the average of the surrounding cells
-                scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
-            }
-        });
+                for (int j = 1; j < dim - 1; j++)
+                {
+                    //set the scratch array to the average of the surrounding cells
+                    scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
+                }
+            });
 
-        DotMP.Parallel.Taskwait();
-
-        //copy the scratch array to the grid array
-        DotMP.Parallel.MasterTaskloop(1, dim - 1, action: i =>
-        {
-            for (int j = 1; j < dim - 1; j++)
+            //copy the scratch array to the grid array
+            DotMP.Parallel.Taskloop(1, dim - 1, depends: dep, action: i =>
             {
-                grid[i, j] = scratch[i, j];
-            }
+                for (int j = 1; j < dim - 1; j++)
+                {
+                    grid[i, j] = scratch[i, j];
+                }
+            });
         });
 
         DotMP.Parallel.Taskwait();
