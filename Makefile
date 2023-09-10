@@ -27,8 +27,7 @@ tests:
 	$(DN) build -c $(BUILD) DotMP-Tests
 
 test:
-	$(DN) test -c $(BUILD) DotMP-Tests
-
+	$(DN) test -c $(BUILD) -l "console;verbosity=detailed" DotMP-Tests
 build:
 	$(DN) build -c $(BUILD) DotMP
 

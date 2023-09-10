@@ -3,8 +3,11 @@ using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
+using System.Linq;
 using System.Threading;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DotMPTests
 {
@@ -13,6 +16,13 @@ namespace DotMPTests
     /// </summary>
     public class ParallelTests
     {
+        private readonly ITestOutputHelper writer;
+        public ParallelTests(ITestOutputHelper outputwriter)
+        {
+            writer = outputwriter;
+        }
+
+
         /// <summary>
         /// Tests to make sure that parallel performance is higher than sequential performance.
         /// </summary>
@@ -130,6 +140,31 @@ namespace DotMPTests
             }
 
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Dynamic, 16);
+
+            for (int i = 0; i < z.Length; i++)
+            {
+                z[i].Should().Be(3.0f);
+            }
+        }
+
+        /// <summary>
+        /// Tests to make sure that taskloops produce correct results.
+        /// </summary>
+        [Fact]
+        public void Taskloop_should_produce_correct_results()
+        {
+            int workload = 1_000_000;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+            }
+
+            float[] z = saxpy_parallelregion_for_taskloop(2.0f, x, y, 6);
 
             for (int i = 0; i < z.Length; i++)
             {
@@ -489,7 +524,7 @@ namespace DotMPTests
         [Fact]
         public void Sections_works()
         {
-            uint num_threads = 6;
+            uint num_threads = 4;
             bool[] threads_used = new bool[num_threads];
 
             for (int i = 0; i < num_threads; i++)
@@ -497,16 +532,22 @@ namespace DotMPTests
 
             double start = DotMP.Parallel.GetWTime();
 
-            DotMP.Parallel.ParallelSections(num_threads: num_threads, action: () =>
+            DotMP.Parallel.ParallelSections(num_threads: num_threads, () =>
             {
-                for (int i = 0; i < num_threads; i++)
-                {
-                    DotMP.Parallel.Section(() =>
-                    {
-                        threads_used[DotMP.Parallel.GetThreadNum()] = true;
-                        Thread.Sleep(100);
-                    });
-                }
+                threads_used[DotMP.Parallel.GetThreadNum()] = true;
+                Thread.Sleep(100);
+            }, () =>
+            {
+                threads_used[DotMP.Parallel.GetThreadNum()] = true;
+                Thread.Sleep(100);
+            }, () =>
+            {
+                threads_used[DotMP.Parallel.GetThreadNum()] = true;
+                Thread.Sleep(100);
+            }, () =>
+            {
+                threads_used[DotMP.Parallel.GetThreadNum()] = true;
+                Thread.Sleep(100);
             });
 
             double end = DotMP.Parallel.GetWTime() - start;
@@ -515,6 +556,208 @@ namespace DotMPTests
                 threads_used[i].Should().Be(true);
 
             end.Should().BeLessThan(0.15);
+        }
+
+        /// <summary>
+        /// Tests to see if the basics of tasking work.
+        /// </summary>
+        [Fact]
+        public void Tasking_works()
+        {
+            uint threads = 6;
+            int sleep_duration = 100;
+            double start = DotMP.Parallel.GetWTime();
+            int[] tasks_thread_executed = new int[threads];
+            int total_tasks_executed = 0;
+
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                DotMP.Parallel.Single(0, () =>
+                {
+                    for (int i = 0; i < threads * 2; i++)
+                    {
+                        DotMP.Parallel.Task(() =>
+                        {
+                            Thread.Sleep(sleep_duration);
+                            DotMP.Atomic.Inc(ref total_tasks_executed);
+                            tasks_thread_executed[DotMP.Parallel.GetThreadNum()]++;
+                        });
+                    }
+                });
+            });
+
+            double elapsed = DotMP.Parallel.GetWTime() - start;
+
+            total_tasks_executed.Should().Be((int)threads * 2);
+            foreach (int i in tasks_thread_executed)
+            {
+                i.Should().Be(2);
+            }
+            elapsed.Should().BeGreaterThan(2.0 * (sleep_duration / 1000.0));
+            elapsed.Should().BeLessThan(1.25 * 2.0 * (sleep_duration / 1000.0));
+
+            tasks_thread_executed = new int[threads];
+            int tasks_to_spawn = 100_000;
+
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                DotMP.Parallel.Single(0, () =>
+                {
+                    for (int i = 0; i < tasks_to_spawn; i++)
+                    {
+                        DotMP.Parallel.Task(() =>
+                        {
+                            tasks_thread_executed[DotMP.Parallel.GetThreadNum()]++;
+                        });
+                    }
+                });
+            });
+
+            tasks_thread_executed.Sum().Should().Be(tasks_to_spawn);
+        }
+
+        /// <summary>
+        /// Test if the only_if clause works on taskloops.
+        /// </summary>
+        [Fact]
+        public void Taskloop_only_if_works()
+        {
+            uint threads = 2;
+            int[] executed_on_thread = new int[2];
+
+            DotMP.Parallel.ParallelMasterTaskloop(0, (int)threads, num_threads: threads, only_if: true, grainsize: 1, action: i =>
+            {
+                executed_on_thread[DotMP.Parallel.GetThreadNum()]++;
+                Thread.Sleep(100);
+            });
+
+            for (uint i = 0; i < threads; i++)
+            {
+                executed_on_thread[i].Should().Be(1);
+                executed_on_thread[i] = 0;
+            }
+
+            DotMP.Parallel.ParallelMasterTaskloop(0, (int)threads, num_threads: threads, only_if: false, grainsize: 1, action: i =>
+            {
+                executed_on_thread[DotMP.Parallel.GetThreadNum()]++;
+                Thread.Sleep(100);
+            });
+
+            executed_on_thread[0].Should().Be((int)threads);
+            for (uint i = 1; i < threads; i++)
+            {
+                executed_on_thread[i].Should().Be(0);
+            }
+        }
+
+        /// <summary>
+        /// Checks to see if nested tasks work.
+        /// </summary>
+        [Fact]
+        public void Nested_tasks_work()
+        {
+            uint threads = 6;
+            double start = DotMP.Parallel.GetWTime();
+
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                DotMP.Parallel.Single(0, () =>
+                {
+                    DotMP.Parallel.Task(() =>
+                    {
+                        Thread.Sleep(500);
+                        for (int i = 0; i < threads; i++)
+                        {
+                            DotMP.Parallel.Task(() =>
+                            {
+                                Thread.Sleep(500);
+                            });
+                        }
+                    });
+                });
+            });
+
+            double elapsed = DotMP.Parallel.GetWTime() - start;
+            elapsed.Should().BeGreaterThan(1.0);
+            elapsed.Should().BeLessThan(1.25);
+        }
+
+        /// <summary>
+        /// Test if taskloop dependencies work.
+        /// </summary>
+        [Fact]
+        public void Task_dependencies_work()
+        {
+            List<int> order_completed;
+
+            for (int i = 0; i < 100; i++)
+            {
+                order_completed = new List<int>();
+
+                DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+                {
+                    DotMP.Parallel.Master(() =>
+                    {
+                        var t1 = DotMP.Parallel.Task(() =>
+                        {
+                            order_completed.Add(0);
+                        });
+
+                        var t2 = DotMP.Parallel.Task(() =>
+                        {
+                            lock (order_completed)
+                                order_completed.Add(1);
+                        }, t1);
+
+                        var t3 = DotMP.Parallel.Task(() =>
+                        {
+                            lock (order_completed)
+                                order_completed.Add(2);
+                        }, t1);
+
+                        var t4 = DotMP.Parallel.Task(() =>
+                        {
+                            order_completed.Add(3);
+                        }, t2, t3);
+
+                    });
+                });
+
+                order_completed.Count.Should().Be(4);
+                order_completed[0].Should().Be(0);
+                order_completed[1].Should().BeInRange(1, 2);
+                order_completed[2].Should().BeInRange(1, 2);
+                order_completed[3].Should().Be(3);
+            }
+
+            order_completed = new List<int>();
+
+            DotMP.Parallel.ParallelRegion(num_threads: 8, action: () =>
+            {
+                DotMP.Parallel.Master(() =>
+                {
+                    var t1 = DotMP.Parallel.Taskloop(0, 4, num_tasks: 4, action: i =>
+                    {
+                        Thread.Sleep(100);
+                        lock (order_completed)
+                            order_completed.Add(0);
+                    });
+
+                    DotMP.Parallel.Taskloop(0, 4, num_tasks: 4, depends: t1, action: i =>
+                    {
+                        lock (order_completed)
+                            order_completed.Add(1);
+                    });
+                });
+
+                DotMP.Parallel.Taskwait();
+            });
+
+            order_completed.Count.Should().Be(8);
+            for (int i = 0; i < 4; i++)
+                order_completed[i].Should().Be(0);
+            for (int i = 4; i < 8; i++)
+                order_completed[i].Should().Be(1);
         }
 
         /// <summary>
@@ -537,8 +780,6 @@ namespace DotMPTests
                 b[i] = (float)r.NextDouble();
                 c[i] = (float)r.NextDouble();
             }
-
-            Console.WriteLine("Starting test.");
 
             Stopwatch s = new Stopwatch();
             s.Start();
@@ -609,12 +850,32 @@ namespace DotMPTests
         {
             float[] z = new float[x.Length];
 
-            DotMP.Parallel.ParallelRegion(() =>
+            DotMP.Parallel.ParallelRegion(num_threads: 6, action: () =>
             {
                 DotMP.Parallel.For(0, x.Length, schedule: schedule, chunk_size: chunk_size, action: i =>
                 {
                     z[i] += a * x[i] + y[i];
                 });
+            });
+
+            return z;
+        }
+
+        /// <summary>
+        /// A sample workload for saxpy, using taskloops.
+        /// </summary>
+        /// <param name="a">Scalar for saxpy.</param>
+        /// <param name="x">Vector to multiply by the scalar.</param>
+        /// <param name="y">Vector to add.</param>
+        /// <param name="grainsize">Grainsize to use</param>
+        /// <returns>Result of saxpy.</returns>
+        float[] saxpy_parallelregion_for_taskloop(float a, float[] x, float[] y, uint? grainsize)
+        {
+            float[] z = new float[x.Length];
+
+            DotMP.Parallel.ParallelMasterTaskloop(0, x.Length, grainsize: grainsize, num_threads: 6, action: i =>
+            {
+                z[i] += a * x[i] + y[i];
             });
 
             return z;

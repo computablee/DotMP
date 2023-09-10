@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
+using System.IO;
 using System.Threading;
 
 namespace DotMP
@@ -354,15 +356,13 @@ namespace DotMP
         /// <summary>
         /// Creates a sections region.
         /// Sections allows for the user to submit multiple, individual tasks to be distributed among threads in parallel.
-        /// This allows the user to submit a callback using Section(). Each callback specified with Section() is thrown into a central queue.
-        /// In parallel, each thread will dequeue a callback and execute it.
+        /// In parallel, each thread active will dequeue a callback and execute it.
         /// This is useful if you have lots of individual tasks that need to be executed in parallel, and each task requires its own lambda.
-        /// Any code not specified in a Section() will be executed by the master thread only.
         /// Acts as an implicit Barrier().
         /// </summary>
-        /// <param name="action">The action to be performed in the sections region.</param>
+        /// <param name="actions">The actions to be performed in the sections region.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        public static void Sections(Action action)
+        public static void Sections(params Action[] actions)
         {
             var freg = new ForkedRegion();
 
@@ -371,27 +371,20 @@ namespace DotMP
                 throw new NotInParallelRegionException();
             }
 
-            SectionHandler.in_sections = true;
-
-            if (GetThreadNum() == 0)
-            {
-                action();
-            }
+            SectionsContainer sc = new SectionsContainer(actions);
 
             Barrier();
 
-            while (SectionHandler.num_actions > 0)
+            while (sc.actions.Count > 0)
             {
                 Action do_action;
 
-                lock (SectionHandler.actions_list_lock)
+                lock (sc.actions)
                 {
-                    if (SectionHandler.actions.Count > 0)
-                        do_action = SectionHandler.actions.Dequeue();
+                    if (sc.actions.Count > 0)
+                        do_action = sc.actions.Dequeue();
                     else break;
                 }
-
-                Interlocked.Decrement(ref SectionHandler.num_actions);
 
                 do_action();
             }
@@ -400,45 +393,162 @@ namespace DotMP
         }
 
         /// <summary>
-        /// Creates a section inside a sections region.
-        /// See the Sections() documentation for more information.
-        /// Each task submitted by Section() in a Sections() region will be executed by a single thread in parallel with all other Section() tasks submitted.
+        /// Enqueue a task into the task queue.
+        /// Differing from OpenMP, there is no concept of parent or child tasks as of yet.
+        /// All tasks submitted are treated equally in a central task queue.
         /// </summary>
-        /// <param name="action">The action to be performed in the section.</param>
-        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        /// <exception cref="NotInSectionsRegionException">Thrown when not in a sections region.</exception>
-        public static void Section(Action action)
+        /// <param name="action">The task to enqueue.</param>
+        /// <param name="depends">List of dependencies for the task.</param>
+        /// <returns>The task generated for use as a future dependency.</returns>
+        public static TaskUUID Task(Action action, params TaskUUID[] depends)
         {
-            var freg = new ForkedRegion();
+            TaskingContainer tc = new TaskingContainer();
+            return tc.EnqueueTask(action, depends);
+        }
 
-            if (!freg.in_parallel)
-            {
-                throw new NotInParallelRegionException();
-            }
+        /// <summary>
+        /// Wait for all tasks in the queue to complete.
+        /// Is injected into a Thread's work by the Region constructor, but can also be called manually.
+        /// The injection is done to ensure that Parallel.Taskwait() is called before a Parallel.ParallelRegion() terminates,
+        /// guaranteeing all tasks submitted complete.
+        /// Acts as an implicit Barrier().
+        /// </summary>
+        public static void Taskwait()
+        {
+            ForkedRegion fr = new ForkedRegion();
+            TaskingContainer tc = new TaskingContainer();
+            int tasks_remaining;
 
-            if (!SectionHandler.in_sections)
-            {
-                throw new NotInSectionsRegionException();
-            }
+            Barrier();
 
-            lock (SectionHandler.actions_list_lock)
+            do
             {
-                SectionHandler.actions.Enqueue(action);
-                Interlocked.Increment(ref SectionHandler.num_actions);
+                if (tc.GetNextTask(out Action do_action, out ulong uuid, out tasks_remaining))
+                {
+                    do_action();
+                    tc.CompleteTask(uuid);
+                }
             }
+            while (tasks_remaining > 0);
+
+            //Barrier();
+
+            tc.ResetDAG();
+
+            Barrier();
+        }
+
+        /// <summary>
+        /// Creates a number of tasks to complete a for loop in parallel.
+        /// If neither grainsize nor num_tasks are specified, a grainsize is calculated on-the-fly.
+        /// If both grainsize and num_tasks are specified, the num_tasks parameter takes precedence over grainsize.
+        /// </summary>
+        /// <param name="start">The start of the taskloop, inclusive.</param>
+        /// <param name="end">The end of the taskloop, exclusive.</param>
+        /// <param name="action">The action to be executed as the body of the loop.</param>
+        /// <param name="grainsize">The number of iterations to be completed per task.</param>
+        /// <param name="num_tasks">The number of tasks to spawn to complete the loop.</param>
+        /// <param name="only_if">Only generate tasks if true, otherwise execute loop sequentially.</param>
+        /// <param name="depends">List of task dependencies for taskloop.</param>
+        /// <returns>List of tasks generated by taskloop for use as future dependencies.</returns>
+        public static TaskUUID[] Taskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null, bool only_if = true, params TaskUUID[] depends)
+        {
+            if (only_if)
+            {
+                ForkedRegion fr = new ForkedRegion();
+                TaskingContainer tc = new TaskingContainer();
+
+                if (grainsize is null && num_tasks is null)
+                {
+                    grainsize = (uint)((end - start) / fr.reg.num_threads) / 8;
+                    if (grainsize < 1) grainsize = 1;
+                }
+                else if (num_tasks is not null)
+                {
+                    grainsize = (uint)(end - start) / num_tasks;
+                    if (grainsize < 1) grainsize = 1;
+                }
+
+                List<TaskUUID> uuids = new List<TaskUUID>();
+                for (int i = start; i < end; i += (int)grainsize)
+                {
+                    int t_end = i + (int)grainsize;
+                    uuids.Add(tc.EnqueueTaskloopTask(i, t_end < end ? t_end : end, action, depends));
+                }
+                return uuids.ToArray();
+            }
+            else
+            {
+                for (int i = start; i < end; i++)
+                {
+                    action(i);
+                }
+                return new TaskUUID[0];
+            }
+        }
+
+        /// <summary>
+        /// Wrapper around Parallel.ParallelRegion(), Parallel.Master(), and Parallel.Taskloop().
+        /// </summary>
+        /// <param name="start">The start of the taskloop, inclusive.</param>
+        /// <param name="end">The end of the taskloop, exclusive.</param>
+        /// <param name="action">The action to be executed as the body of the loop.</param>
+        /// <param name="grainsize">The number of iterations to be completed per task.</param>
+        /// <param name="num_tasks">The number of tasks to spawn to complete the loop.</param>
+        /// <param name="num_threads">The number of threads to be used in the parallel region, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <param name="only_if">Only generate tasks if true, otherwise execute loop sequentially.</param>
+        public static void ParallelMasterTaskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null, uint? num_threads = null, bool only_if = true)
+        {
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                Master(() =>
+                {
+                    Taskloop(start, end, action, grainsize, num_tasks, only_if);
+                });
+            });
+        }
+
+        /// <summary>
+        /// Wrapper around Parallel.ParallelRegion() and Parallel.Master().
+        /// </summary>
+        /// <param name="action">The action to be performed in the parallel region.</param>
+        /// <param name="num_threads">The number of threads to be used in the parallel region, defaulting to null. If null, will be calculated on-the-fly.</param>
+        public static void ParallelMaster(Action action, uint? num_threads = null)
+        {
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                Master(action);
+            });
+        }
+
+        /// <summary>
+        /// Wrapper around Parallel.Master() and Parallel.Taskloop().
+        /// </summary>
+        /// <param name="start">The start of the taskloop, inclusive.</param>
+        /// <param name="end">The end of the taskloop, exclusive.</param>
+        /// <param name="action">The action to be executed as the body of the loop.</param>
+        /// <param name="grainsize">The number of iterations to be completed per task.</param>
+        /// <param name="num_tasks">The number of tasks to spawn to complete the loop.</param>
+        /// <param name="only_if">Only generate tasks if true, otherwise execute loop sequentially.</param>
+        public static void MasterTaskloop(int start, int end, Action<int> action, uint? grainsize = null, uint? num_tasks = null, bool only_if = true)
+        {
+            Master(() =>
+            {
+                Taskloop(start, end, action, grainsize, num_tasks, only_if);
+            });
         }
 
         /// <summary>
         /// Creates a parallel sections region. Contains all of the parameters from ParallelRegion() and Sections().
         /// This is simply a convenience method for creating a parallel region and a sections region inside of it.
         /// </summary>
-        /// <param name="action">The action to be performed in the parallel sections region.</param>
+        /// <param name="actions">The actions to be performed in the parallel sections region.</param>
         /// <param name="num_threads">The number of threads to be used in the parallel sections region, defaulting to null. If null, will be calculated on-the-fly.</param>
-        public static void ParallelSections(Action action, uint? num_threads = null)
+        public static void ParallelSections(uint? num_threads = null, params Action[] actions)
         {
             ParallelRegion(num_threads: num_threads, action: () =>
             {
-                Sections(action);
+                Sections(actions);
             });
         }
 

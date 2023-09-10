@@ -160,7 +160,7 @@ DotMP.Parallel.ParallelForReduction(a, b, op, ref local, (ref type local, int i)
 ```
 This function supports all of the optional parameters of `ParallelRegion` and `ForReduction`, and is merely a wrapper around those two functions for conciseness.
 
-### Sections/Section
+### Sections
 Given the OpenMP:
 ```c
 #pragma omp sections
@@ -178,12 +178,9 @@ Given the OpenMP:
 DotMP provides:
 ```cs
 DotMP.Parallel.Sections(() => {
-    DotMP.Parallel.Section(() => {
-        work();
-    });
-    DotMP.Parallel.Section(() => {
-        work();
-    });
+    work();
+}, () => {
+    work2();
 });
 ```
 
@@ -205,12 +202,9 @@ Given the OpenMP:
 DotMP provides:
 ```cs
 DotMP.Parallel.ParallelSections(() => {
-    DotMP.Parallel.Section(() => {
-        work();
-    });
-    DotMP.Parallel.Section(() => {
-        work();
-    });
+    work();
+}, () => {
+    work2();
 });
 ```
 This function supports the optional parameter `num_threads` from `DotMP.Parallel.ParallelRegion`.
@@ -393,9 +387,143 @@ The `DotMP.Shared` constructor and `Clear()` methods serve as implicit barriers,
 `DotMP.Shared` provides a factory method for creating `DotMP.Shared` instances via the `DotMP.Shared.Create()` method.
 `DotMP.SharedEnumerable` provides factory methods for creating `DotMP.SharedEnumerable` instances containing either `T[]` or `List<T>` enumerables via the `DotMP.SharedEnumerable.Create()` methods.
 
+## Tasking System
+
+DotMP supports a rudimentary tasking system.
+Submitting a task adds the task to a global task queue.
+When a **tasking point** is hit, threads will begin working on tasks in the task queue.
+There are two tasking points currently in DotMP:
+
+- At the end of a `DotMP.Parallel.ParallelRegion`, all remaining tasks in the task queue are completed
+- Upon encountering `DotMP.Parallel.Taskwait`, all current tasks in the task queue are completed
+
+Tasks can be submitted throughout the execution of a parallel region, including from within other tasks, and support dependencies.
+Spawning tasks returns a `DotMP.TaskUUID` object which can be passed as a parameter to future tasks, marking those tasks as dependent on the originating task.
+
+The following analogues to OpenMP functions are provided:
+
+### Task
+Given the OpenMP:
+```c
+#pragma omp task
+{
+    work();
+}
+```
+DotMP provides:
+```cs
+DotMP.Parallel.Task(() => {
+    work();
+});
+```
+This function supports `depends` as a `params` parameter.
+`depends` accepts `DotMP.TaskUUID` objects, and marks the created task as dependent on the tasks passed through `depends`.
+
+This function adds a task to the task queue and is deferred until a tasking point.
+
+This function returns a `DotMP.TaskUUID` object, which can be passed to future `depends` clauses.
+
+### Taskwait
+Given the OpenMP:
+```c
+#pragma omp taskwait
+```
+DotMP provides:
+```cs
+DotMP.Parallel.Taskwait();
+```
+This function acts as a tasking point, as well as an implicit barrier.
+
+### Taskloop
+Given the OpenMP:
+```c
+#pragma omp taskloop
+for (int i = a, i < b; i++)
+{
+    work(i);
+}
+```
+DotMP provides:
+```cs
+DotMP.Parallel.Taskloop(a, b, i => {
+    work(i);
+});
+```
+This function supports the `num_tasks` optional parameter, which specifies how many tasks into which the loop is broken up.
+
+This function supports the `grainsize` optional parameter, which specifies how many iterations belong to each individual task.
+
+If both `num_tasks` and `grainsize` are provided, the `num_tasks` parameter takes precedence over the `grainsize` parameter.
+
+This function supports the `only_if` optional parameter.
+`only_if` is an opportunity to provide a boolean expression to determine if the taskloop should generate tasks or execute sequentially.
+This is beneficial if the taskloop might be very small and wouldn't be worth the (albeit light) overhead of creating tasks and waiting on a tasking point.
+
+This function supports `depends` as a `params` parameter.
+`depends` accepts `DotMP.TaskUUID` objects, and marks the created tasks as dependent on the tasks passed through `depends`.
+
+This function adds a series of tasks to the task queue and is deferred until a tasking point.
+
+This function returns a `DotMP.TaskUUID[]` array, where each element is a `DotMP.TaskUUID` representing one of the generated tasks.
+The `DotMP.TaskUUID[]` array can be passed to future `depends` clauses.
+
+### Parallel Master
+Given the OpenMP:
+```c
+#pragma omp parallel master
+{
+    work();
+}
+```
+DotMP provides:
+```cs
+DotMP.Parallel.ParallelMaster(() => {
+    work();
+});
+```
+This function supports the `num_threads` optional parameter from `DotMP.Parallel.ParallelRegion`.
+
+### Master Taskloop
+Given the OpenMP:
+```c
+#pragma omp master taskloop
+for (int i = a, i < b; i++)
+{
+    work(i);
+}
+```
+DotMP provides:
+```cs
+DotMP.Parallel.MasterTaskloop(a, b, i => {
+    work(i);
+});
+```
+This function supports all of the optional parameters from `DotMP.Parallel.Taskloop`, except `depends`.
+
+This function does not return a `DotMP.TaskUUID[]` array.
+
+### Parallel Master Taskloop
+Given the OpenMP:
+```c
+#pragma omp parallel master taskloop
+for (int i = a, i < b; i++)
+{
+    work(i);
+}
+```
+DotMP provides:
+```cs
+DotMP.Parallel.ParallelMasterTaskloop(a, b, i => {
+    work(i);
+});
+```
+This function supports all of the optional parameters from `DotMP.Parallel.ParallelRegion` and `DotMP.Parallel.Taskloop`, except `depends`.
+
+This function does not return a `DotMP.TaskUUID[]` array.
+
 ## Supported Functions
 
-DotMP provides an analog of the following functions:
+DotMP provides an analogue of the following functions:
 
 | <omp.h> function         | DotMP function                | Comments
 ---------------------------|------------------------------------|---------

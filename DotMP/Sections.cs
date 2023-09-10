@@ -9,26 +9,28 @@ namespace DotMP
     /// A sections region contains a collection of actions to be executed, specified as Parallel.Section directives.
     /// More information can be found in the Parallel.Sections documentation.
     /// </summary>
-    internal static class SectionHandler
+    internal class SectionsContainer
     {
-        /// <summary>
-        /// Whether or not the current thread is in a sections region.
-        /// </summary>
-        internal static bool in_sections = false;
-
         /// <summary>
         /// The actions submitted by the individual `section` directives.
         /// </summary>
-        internal static Queue<Action> actions = new Queue<Action>();
+        private static Queue<Action> actions_pv;
+        /// <summary>
+        /// Getter for singleton queue SectionsContainer.actions_pv.
+        /// </summary>
+        internal Queue<Action> actions
+        {
+            get
+            {
+                return actions_pv;
+            }
+        }
 
         /// <summary>
-        /// The number of actions submitted by the individual `section` directives.
+        /// Constructor which takes a list of actions and ensures the master thread assigns to SectionsContainer.actions_pv.
         /// </summary>
-        internal static int num_actions = 0;
-
-        /// <summary>
-        /// The lock to be used when accessing the actions queue.
-        /// </summary>
-        internal static object actions_list_lock = new object();
+        /// <param name="actions">The actions that the Parallel.Sections region will perform.</param>
+        internal SectionsContainer(IEnumerable<Action> actions) =>
+            Parallel.Master(() => actions_pv = new Queue<Action>(actions));
     }
 }
