@@ -1,16 +1,24 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Dynamic;
 using System.Threading;
-using DotMP;
 
 #nullable enable
 
+/// <summary>
+/// Wrapper around integers as a reference type.
+/// </summary>
 internal class IntWrapper
 {
+    /// <summary>
+    /// Integer to keep track of.
+    /// </summary>
     internal volatile int @int;
 
+    /// <summary>
+    /// Constructor.
+    /// </summary>
+    /// <param name="int">Value to initialize integer to.</param>
     internal IntWrapper(int @int)
     {
         this.@int = @int;
@@ -24,12 +32,21 @@ internal class DAG<T, U>
     where T : struct
     where U : class?
 {
+    /// <summary>
+    /// Counter for remaining tasks in queue.
+    /// </summary>
     private volatile int tasks_remaining;
     /// <summary>
     /// Associations from T->U.
     /// </summary>
     private ConcurrentDictionary<T, U> associations;
+    /// <summary>
+    /// Counts the number of yet-unmet dependencies of a task.
+    /// </summary>
     private ConcurrentDictionary<T, IntWrapper> unmet_dependencies;
+    /// <summary>
+    /// Keeps track of what task satisfies what dependencies.
+    /// </summary>
     private ConcurrentDictionary<T, List<T>> satisfies_dependency;
     /// <summary>
     /// Bag of items with no dependencies.
