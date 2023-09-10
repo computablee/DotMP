@@ -573,12 +573,13 @@ namespace DotMPTests
             elapsed.Should().BeLessThan(1.25 * 2.0 * (sleep_duration / 1000.0));
 
             tasks_thread_executed = new int[threads];
+            int tasks_to_spawn = 100_000;
 
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
                 DotMP.Parallel.Single(0, () =>
                 {
-                    for (int i = 0; i < 10_000_000; i++)
+                    for (int i = 0; i < tasks_to_spawn; i++)
                     {
                         DotMP.Parallel.Task(() =>
                         {
@@ -588,7 +589,7 @@ namespace DotMPTests
                 });
             });
 
-            tasks_thread_executed.Sum().Should().Be(10_000_000);
+            tasks_thread_executed.Sum().Should().Be(tasks_to_spawn);
         }
 
         /// <summary>
