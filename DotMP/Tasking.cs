@@ -1,5 +1,5 @@
 using System;
-using System.Collections.Concurrent;
+using System.Linq;
 using System.Threading;
 
 namespace DotMP
@@ -14,7 +14,7 @@ namespace DotMP
         /// DAG of tasks that must execute.
         /// We use a DAG in order to maintain dependency chains.
         /// </summary>
-        private static DAG dag = new DAG();
+        private static DAG<ulong, Action> dag = new DAG<ulong, Action>();
         /// <summary>
         /// Counter for coordinating Parallel.Taskwait(), ensures that all threads have agreed that no more work is to be done before progressing to the barrier.
         /// </summary>
@@ -35,15 +35,21 @@ namespace DotMP
         /// </summary>
         internal TaskingContainer() { }
 
+        internal void ResetDAG()
+        {
+            Parallel.Master(() => dag = new DAG<ulong, Action>());
+        }
+
         /// <summary>
         /// Gets the next task from the queue.
         /// </summary>
         /// <param name="action">The body of the task to be executed.</param>
         /// <param name="uuid">The UUID of the task to be executed.</param>
+        /// <param name="tasks_remaining">The number of tasks remaining in the queue.</param>
         /// <returns>Whether or not the action was successful.</returns>
-        internal bool GetNextTask(out Action action, out ulong uuid)
+        internal bool GetNextTask(out Action action, out ulong uuid, out int tasks_remaining)
         {
-            return dag.GetNextItem(out action, out uuid);
+            return dag.GetNextItem(out action, out uuid, out tasks_remaining);
         }
 
         /// <summary>
@@ -55,7 +61,8 @@ namespace DotMP
         internal TaskUUID EnqueueTask(Action action, TaskUUID[] depends)
         {
             TaskUUID taskUUID = new TaskUUID();
-            dag.AddItem(taskUUID.GetUUID(), action, depends);
+            ulong[] ids = (from d in depends select d.GetUUID()).ToArray();
+            dag.AddItem(taskUUID.GetUUID(), action, ids);
             return taskUUID;
         }
 
