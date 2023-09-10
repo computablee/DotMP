@@ -8,6 +8,10 @@ using DotMP;
 internal class DAG
 {
     /// <summary>
+    /// Object to lock.
+    /// </summary>
+    private object @lock;
+    /// <summary>
     /// Associations from ulong->Action.
     /// </summary>
     private ConcurrentDictionary<ulong, Action> associations;
@@ -33,6 +37,7 @@ internal class DAG
         depends_on = new ConcurrentDictionary<ulong, ConcurrentDictionary<ulong, ulong>>();
         precedes = new ConcurrentDictionary<ulong, ConcurrentBag<ulong>>();
         no_dependencies = new ConcurrentBag<ulong>();
+        @lock = new object();
     }
 
     /// <summary>
@@ -43,22 +48,25 @@ internal class DAG
     /// <param name="dependencies">A list of task dependencies.</param>
     internal void AddItem(ulong id, Action item, TaskUUID[] dependencies)
     {
-        ConcurrentDictionary<ulong, ulong> dependency_list = new ConcurrentDictionary<ulong, ulong>();
-
-        precedes.TryAdd(id, new ConcurrentBag<ulong>());
-
-        foreach (TaskUUID d in dependencies)
+        lock (@lock)
         {
-            dependency_list.TryAdd(d.GetUUID(), d.GetUUID());
-            precedes[d.GetUUID()].Add(id);
-        }
-        depends_on.TryAdd(id, dependency_list);
+            ConcurrentDictionary<ulong, ulong> dependency_list = new ConcurrentDictionary<ulong, ulong>();
 
-        associations.TryAdd(id, item);
+            precedes.TryAdd(id, new ConcurrentBag<ulong>());
 
-        if (dependencies.Length == 0)
-        {
-            no_dependencies.Add(id);
+            foreach (TaskUUID d in dependencies)
+            {
+                dependency_list.TryAdd(d.GetUUID(), d.GetUUID());
+                precedes[d.GetUUID()].Add(id);
+            }
+            depends_on.TryAdd(id, dependency_list);
+
+            associations.TryAdd(id, item);
+
+            if (dependencies.Length == 0)
+            {
+                no_dependencies.Add(id);
+            }
         }
     }
 
@@ -70,14 +78,17 @@ internal class DAG
     /// <returns>Whether or not there was an item to be returned.</returns>
     internal bool GetNextItem(out Action item, out ulong id)
     {
-        if (no_dependencies.TryTake(out id) && associations.TryGetValue(id, out item))
+        lock (@lock)
         {
-            return true;
-        }
-        else
-        {
-            item = null;
-            return false;
+            if (no_dependencies.TryTake(out id) && associations.TryGetValue(id, out item))
+            {
+                return true;
+            }
+            else
+            {
+                item = null;
+                return false;
+            }
         }
     }
 
@@ -87,17 +98,20 @@ internal class DAG
     /// <param name="id">The ID of the item to be marked completed.</param>
     internal void CompleteItem(ulong id)
     {
-        foreach (ulong i in precedes[id])
+        lock (@lock)
         {
-            depends_on[i].TryRemove(i, out _);
-            if (depends_on[i].Count == 0)
+            foreach (ulong i in precedes[id])
             {
-                no_dependencies.Add(i);
+                bool successful = depends_on[i].TryRemove(id, out _);
+                if (successful && depends_on[i].Count == 0)
+                {
+                    no_dependencies.Add(i);
+                }
             }
-        }
 
-        precedes.TryRemove(id, out _);
-        depends_on.TryRemove(id, out _);
-        associations.TryRemove(id, out _);
+            precedes.TryRemove(id, out _);
+            depends_on.TryRemove(id, out _);
+            associations.TryRemove(id, out _);
+        }
     }
 }

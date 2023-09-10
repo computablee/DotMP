@@ -3,9 +3,11 @@ using FluentAssertions;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DotMPTests
 {
@@ -14,6 +16,13 @@ namespace DotMPTests
     /// </summary>
     public class ParallelTests
     {
+        private readonly ITestOutputHelper writer;
+        public ParallelTests(ITestOutputHelper outputwriter)
+        {
+            writer = outputwriter;
+        }
+
+
         /// <summary>
         /// Tests to make sure that parallel performance is higher than sequential performance.
         /// </summary>
@@ -656,6 +665,84 @@ namespace DotMPTests
             double elapsed = DotMP.Parallel.GetWTime() - start;
             elapsed.Should().BeGreaterThan(1.0);
             elapsed.Should().BeLessThan(1.25);
+        }
+
+        /// <summary>
+        /// Test if taskloop dependencies work.
+        /// </summary>
+        [Fact]
+        public void Task_dependencies_work()
+        {
+            List<int> order_completed;
+
+            for (int i = 0; i < 100; i++)
+            {
+                order_completed = new List<int>();
+
+                DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+                {
+                    DotMP.Parallel.Master(() =>
+                    {
+                        var t1 = DotMP.Parallel.Task(() =>
+                        {
+                            order_completed.Add(0);
+                        });
+
+                        var t2 = DotMP.Parallel.Task(() =>
+                        {
+                            lock (order_completed)
+                                order_completed.Add(1);
+                        }, t1);
+
+                        var t3 = DotMP.Parallel.Task(() =>
+                        {
+                            lock (order_completed)
+                                order_completed.Add(2);
+                        }, t1);
+
+                        var t4 = DotMP.Parallel.Task(() =>
+                        {
+                            order_completed.Add(3);
+                        }, t2, t3);
+
+                    });
+                });
+
+                order_completed.Count.Should().Be(4);
+                order_completed[0].Should().Be(0);
+                order_completed[1].Should().BeInRange(1, 2);
+                order_completed[2].Should().BeInRange(1, 2);
+                order_completed[3].Should().Be(3);
+            }
+
+            order_completed = new List<int>();
+
+            DotMP.Parallel.ParallelRegion(num_threads: 8, action: () =>
+            {
+                DotMP.Parallel.Master(() =>
+                {
+                    var t1 = DotMP.Parallel.Taskloop(0, 4, num_tasks: 4, action: i =>
+                    {
+                        Thread.Sleep(100);
+                        lock (order_completed)
+                            order_completed.Add(0);
+                    });
+
+                    DotMP.Parallel.Taskloop(0, 4, num_tasks: 4, depends: t1, action: i =>
+                    {
+                        lock (order_completed)
+                            order_completed.Add(1);
+                    });
+                });
+
+                DotMP.Parallel.Taskwait();
+            });
+
+            order_completed.Count.Should().Be(8);
+            for (int i = 0; i < 4; i++)
+                order_completed[i].Should().Be(0);
+            for (int i = 4; i < 8; i++)
+                order_completed[i].Should().Be(1);
         }
 
         /// <summary>
