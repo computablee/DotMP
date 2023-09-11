@@ -41,7 +41,11 @@ namespace DotMP
         /// </summary>
         internal void ResetDAG()
         {
-            Parallel.Master(() => dag = new DAG<ulong, Action>());
+            Parallel.Master(() =>
+            {
+                dag.Dispose();
+                dag = new DAG<ulong, Action>();
+            });
         }
 
         /// <summary>

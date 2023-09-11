@@ -30,7 +30,7 @@ namespace DotMP
     /// <summary>
     /// DAG for maintaining task dependencies.
     /// </summary>
-    internal class DAG<T, U>
+    internal class DAG<T, U> : IDisposable
         where T : struct
         where U : class?
     {
@@ -45,15 +45,23 @@ namespace DotMP
         /// <summary>
         /// Counts the number of yet-unmet dependencies of a task.
         /// </summary>
-        private ConcurrentDictionary<T, IntWrapper> unmet_dependencies;
+        private Dictionary<T, IntWrapper> unmet_dependencies;
         /// <summary>
         /// Keeps track of what task satisfies what dependencies.
         /// </summary>
-        private ConcurrentDictionary<T, List<T>> satisfies_dependency;
+        private Dictionary<T, List<T>> satisfies_dependency;
         /// <summary>
         /// Bag of items with no dependencies.
         /// </summary>
         private ConcurrentBag<T> no_dependencies;
+        /// <summary>
+        /// RW lock for managing tasks.
+        /// </summary>
+        private volatile ReaderWriterLockSlim rw_lock;
+        /// <summary>
+        /// Keeps track of what items have been completed.
+        /// </summary>
+        private ConcurrentDictionary<T, T> completed;
 
         /// <summary>
         /// Default constructor.
@@ -61,9 +69,11 @@ namespace DotMP
         internal DAG()
         {
             associations = new ConcurrentDictionary<T, U>();
-            unmet_dependencies = new ConcurrentDictionary<T, IntWrapper>();
-            satisfies_dependency = new ConcurrentDictionary<T, List<T>>();
+            unmet_dependencies = new Dictionary<T, IntWrapper>();
+            satisfies_dependency = new Dictionary<T, List<T>>();
             no_dependencies = new ConcurrentBag<T>();
+            rw_lock = new ReaderWriterLockSlim();
+            completed = new ConcurrentDictionary<T, T>();
         }
 
         /// <summary>
@@ -74,18 +84,27 @@ namespace DotMP
         /// <param name="dependencies">A list of ID dependencies.</param>
         internal void AddItem(T id, U item, T[] dependencies)
         {
-            Interlocked.Increment(ref tasks_remaining);
+            rw_lock.EnterWriteLock();
+
+            int dependency_count = dependencies.Length;
+
+            tasks_remaining++;
             associations.TryAdd(id, item);
-            unmet_dependencies.TryAdd(id, new IntWrapper(dependencies.Length));
 
             foreach (T d in dependencies)
-                lock (satisfies_dependency[d])
+                if (completed.ContainsKey(d))
+                    dependency_count--;
+                else
                     satisfies_dependency[d].Add(id);
+
+            unmet_dependencies.TryAdd(id, new IntWrapper(dependency_count));
 
             satisfies_dependency.TryAdd(id, new List<T>());
 
-            if (dependencies.Length == 0)
+            if (dependency_count == 0)
                 no_dependencies.Add(id);
+
+            rw_lock.ExitWriteLock();
         }
 
         /// <summary>
@@ -116,12 +135,25 @@ namespace DotMP
         /// <param name="id">The ID of the item to be marked completed.</param>
         internal void CompleteItem(T id)
         {
+            rw_lock.EnterReadLock();
+
             Interlocked.Decrement(ref tasks_remaining);
             if (satisfies_dependency[id].Count > 0)
-                lock (satisfies_dependency[id])
-                    foreach (T d in satisfies_dependency[id])
-                        if (Interlocked.Decrement(ref unmet_dependencies[d].@int) == 0)
-                            no_dependencies.Add(d);
+                foreach (T d in satisfies_dependency[id])
+                    if (Interlocked.Decrement(ref unmet_dependencies[d].@int) == 0)
+                        no_dependencies.Add(d);
+
+            completed.TryAdd(id, id);
+
+            rw_lock.ExitReadLock();
+        }
+
+        /// <summary>
+        /// Override to implement IDisposable, disposes of the read-write lock.
+        /// </summary>
+        public void Dispose()
+        {
+            rw_lock.Dispose();
         }
     }
 }
