@@ -173,6 +173,66 @@ namespace DotMPTests
         }
 
         /// <summary>
+        /// Tests taskloop dependencies, and in turn, more complex dependency chaining.
+        /// </summary>
+        [Fact]
+        public void Taskloop_dependencies_work()
+        {
+            int size = 1_000_000;
+            uint grainsize = 128;
+
+            int[] a = new int[size];
+            int[] b = new int[size];
+
+            DotMP.Parallel.ParallelMaster(num_threads: 6, action: () =>
+            {
+                var t1 = DotMP.Parallel.Taskloop(0, size, grainsize: grainsize, action: i =>
+                {
+                    a[i] += 1;
+                });
+
+                var t2 = DotMP.Parallel.Taskloop(0, size, grainsize: grainsize, depends: t1, action: i =>
+                {
+                    a[i] += 2;
+                });
+
+                DotMP.Parallel.Taskloop(0, size, grainsize: grainsize, depends: t2, action: i =>
+                {
+                    b[i] = a[i];
+                });
+            });
+
+            for (int i = 0; i < size; i++)
+            {
+                b[i].Should().Be(3);
+            }
+        }
+
+        /// <summary>
+        /// Ensures that nested task dependencies work.
+        /// </summary>
+        [Fact]
+        public void Nested_task_dependencies_work()
+        {
+            bool task_triggered = false;
+
+            DotMP.Parallel.ParallelMaster(num_threads: 2, action: () =>
+            {
+                DotMP.Parallel.Task(() =>
+                {
+                    var t1 = DotMP.Parallel.Task(() => { });
+                    Thread.Sleep(100);
+                    DotMP.Parallel.Task(depends: t1, action: () =>
+                    {
+                        task_triggered = true;
+                    });
+                });
+            });
+
+            task_triggered.Should().BeTrue();
+        }
+
+        /// <summary>
         /// Tests to make sure that DotMP.Parallel.Schedule.Runtime properly reads values from the environment variable.
         /// </summary>
         [Fact]
