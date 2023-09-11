@@ -7,7 +7,7 @@ namespace DotMP
     /// Also contains static methods for locking.
     /// Available methods are Set, Unset, and Test.
     /// </summary>
-    public class Lock
+    public sealed class Lock
     {
         /// <summary>
         /// The int acting as the lock.

@@ -108,7 +108,7 @@ namespace DotMP
     /// <summary>
     /// Task UUID as returned from Parallel.Task.
     /// </summary>
-    public class TaskUUID
+    public sealed class TaskUUID
     {
         /// <summary>
         /// Global counter for next UUID to be generated.
