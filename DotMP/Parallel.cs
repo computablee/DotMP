@@ -431,8 +431,6 @@ namespace DotMP
             }
             while (tasks_remaining > 0);
 
-            //Barrier();
-
             tc.ResetDAG();
 
             Barrier();

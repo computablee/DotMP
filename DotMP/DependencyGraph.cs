@@ -30,7 +30,7 @@ namespace DotMP
     /// <summary>
     /// DAG for maintaining task dependencies.
     /// </summary>
-    internal class DAG<T, U>
+    internal class DAG<T, U> : IDisposable
         where T : struct
         where U : class?
     {
@@ -146,6 +146,14 @@ namespace DotMP
             completed.TryAdd(id, id);
 
             rw_lock.ExitReadLock();
+        }
+
+        /// <summary>
+        /// Override to implement IDisposable, disposes of the read-write lock.
+        /// </summary>
+        public void Dispose()
+        {
+            rw_lock.Dispose();
         }
     }
 }
