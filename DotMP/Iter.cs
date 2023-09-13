@@ -33,9 +33,9 @@ namespace DotMP
         /// <param name="omp_fn">The function to be executed.</param>
         /// <param name="omp_fn_red">The function to be executed for reductions.</param>
         /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
-        internal static void StaticLoop<T>(WorkShare ws, object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
+        internal static void StaticLoop<T>(WorkShare ws, int thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
         {
-            int tid = (int)thread_id;
+            int tid = thread_id;
             Thr thr = ws.thread;
 
             thr.curr_iter = (int)(ws.start + tid * ws.chunk_size);
@@ -45,7 +45,7 @@ namespace DotMP
             ws.SetLocal(ref local);
 
             while (thr.curr_iter < end)
-                StaticNext(ws, thr, tid, ws.chunk_size, omp_fn, omp_fn_red, is_reduction, ref local);
+                StaticNext(ws, thr, ws.chunk_size, omp_fn, omp_fn_red, is_reduction, ref local);
 
             ws.Finished();
 
@@ -59,13 +59,12 @@ namespace DotMP
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="thr">The Thr object for the current thread.</param>
-        /// <param name="thread_id">The thread ID.</param>
         /// <param name="chunk_size">The chunk size.</param>
         /// <param name="omp_fn">The function to be executed.</param>
         /// <param name="omp_fn_red">The function to be executed for reductions.</param>
         /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
         /// <param name="local">The local variable for reductions.</param>
-        private static void StaticNext<T>(WorkShare ws, Thr thr, int thread_id, uint chunk_size, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, ref T local)
+        private static void StaticNext<T>(WorkShare ws, Thr thr, uint chunk_size, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, ref T local)
         {
             int start = thr.curr_iter;
             int end = (int)Math.Min(thr.curr_iter + chunk_size, ws.end);
@@ -98,13 +97,11 @@ namespace DotMP
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
-        /// <param name="thread_id">The thread ID.</param>
         /// <param name="omp_fn">The function to be executed.</param>
         /// <param name="omp_fn_red">The function to be executed for reductions.</param>
         /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
-        internal static void DynamicLoop<T>(WorkShare ws, object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
+        internal static void DynamicLoop<T>(WorkShare ws, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
         {
-            int tid = (int)thread_id;
             Thr thr = ws.thread;
             int end = ws.end;
 
@@ -173,13 +170,11 @@ namespace DotMP
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
-        /// <param name="thread_id">The thread ID.</param>
         /// <param name="omp_fn">The function to be executed.</param>
         /// <param name="omp_fn_red">The function to be executed for reductions.</param>
         /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
-        internal static void GuidedLoop<T>(WorkShare ws, object thread_id, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
+        internal static void GuidedLoop<T>(WorkShare ws, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
         {
-            int tid = (int)thread_id;
             Thr thr = ws.thread;
             int end = ws.end;
 

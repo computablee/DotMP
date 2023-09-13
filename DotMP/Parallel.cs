@@ -161,10 +161,10 @@ namespace DotMP
                     Iter.StaticLoop<object>(ws, GetThreadNum(), action, null, false);
                     break;
                 case Schedule.Dynamic:
-                    Iter.DynamicLoop<object>(ws, GetThreadNum(), action, null, false);
+                    Iter.DynamicLoop<object>(ws, action, null, false);
                     break;
                 case Schedule.Guided:
-                    Iter.GuidedLoop<object>(ws, GetThreadNum(), action, null, false);
+                    Iter.GuidedLoop<object>(ws, action, null, false);
                     break;
             }
 
@@ -219,10 +219,10 @@ namespace DotMP
                     Iter.StaticLoop(ws, GetThreadNum(), null, action, true);
                     break;
                 case Schedule.Dynamic:
-                    Iter.DynamicLoop(ws, GetThreadNum(), null, action, true);
+                    Iter.DynamicLoop(ws, null, action, true);
                     break;
                 case Schedule.Guided:
-                    Iter.GuidedLoop(ws, GetThreadNum(), null, action, true);
+                    Iter.GuidedLoop(ws, null, action, true);
                     break;
             }
 
