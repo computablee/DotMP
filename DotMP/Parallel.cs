@@ -365,6 +365,7 @@ namespace DotMP
         public static void Sections(params Action[] actions)
         {
             var freg = new ForkedRegion();
+            bool successful;
 
             if (!freg.in_parallel)
             {
@@ -375,19 +376,13 @@ namespace DotMP
 
             Barrier();
 
-            while (sc.actions.Count > 0)
+            do
             {
-                Action do_action;
+                Action do_action = sc.GetNextItem(out successful);
 
-                lock (sc.actions)
-                {
-                    if (sc.actions.Count > 0)
-                        do_action = sc.actions.Dequeue();
-                    else break;
-                }
-
-                do_action();
+                if (successful) do_action();
             }
+            while (successful);
 
             Barrier();
         }

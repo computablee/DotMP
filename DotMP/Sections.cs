@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 
 namespace DotMP
@@ -14,16 +15,18 @@ namespace DotMP
         /// <summary>
         /// The actions submitted by the individual `section` directives.
         /// </summary>
-        private static Queue<Action> actions_pv;
+        private static ConcurrentBag<Action> actions_pv;
+
         /// <summary>
-        /// Getter for singleton queue SectionsContainer.actions_pv.
+        /// Gets the next item from the actions bag.
         /// </summary>
-        internal Queue<Action> actions
+        /// <param name="successful">Whether or not fetching from the bag was successful.</param>
+        /// <returns>The action pulled from the bag, if successful. If unsuccessful, undefined.</returns>
+        internal Action GetNextItem(out bool successful)
         {
-            get
-            {
-                return actions_pv;
-            }
+            Action action;
+            successful = actions_pv.TryTake(out action);
+            return action;
         }
 
         /// <summary>
@@ -31,6 +34,6 @@ namespace DotMP
         /// </summary>
         /// <param name="actions">The actions that the Parallel.Sections region will perform.</param>
         internal SectionsContainer(IEnumerable<Action> actions) =>
-            Parallel.Master(() => actions_pv = new Queue<Action>(actions));
+            Parallel.Master(() => actions_pv = new ConcurrentBag<Action>(actions));
     }
 }
