@@ -6,6 +6,12 @@ Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the Open
 
 [Link to repository](https://github.com/computablee/DotMP/tree/main).
 
+## Installing DotMP via NuGet
+The easiest way to install DotMP is from the NuGet package manager:
+```sh
+dotnet add package DotMP
+```
+
 ## Building DotMP from Source
 First, clone DotMP and navigate to the source directory:
 ```sh
@@ -372,6 +378,7 @@ static double[] InitVector()
 ```
 
 The `DotMP.Shared` and `DotMP.SharedEnumerable` classes supports the following methods:
+
 | Method                                       | Action 
 -----------------------------------------------|-------
 | DotMP.Shared.Shared(string name, T value)    | Initializes a shared variable with name `name` and starting value `value`

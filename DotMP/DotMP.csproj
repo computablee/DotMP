@@ -3,6 +3,20 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp6.0</TargetFramework>
     <RootNamespace>DotMP</RootNamespace>
+    <PackageId>DotMP</PackageId>
+    <Version>1.4.0</Version>
+    <Authors>Phillip Allen Lane,et al.</Authors>
+    <PackageDescription>A library for fork-join parallelism in .NET, with an OpenMP-like API.</PackageDescription>
+    <RepositoryUrl>https://github.com/computablee/DotMP</RepositoryUrl>
+    <PackageProjectUrl>https://computablee.github.io/DotMP/</PackageProjectUrl>
+    <Copyright>Copyright (c) Phillip Allen Lane 2023</Copyright>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageTags>hpc,parallel,openmp,parallelization,high performance computing,threading</PackageTags>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
   </PropertyGroup>
+
+  <ItemGroup>
+    <None Include="../README.md" Pack="true" PackagePath="."/>
+  </ItemGroup>
 
 </Project>
