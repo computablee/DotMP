@@ -372,6 +372,7 @@ static double[] InitVector()
 ```
 
 The `DotMP.Shared` and `DotMP.SharedEnumerable` classes supports the following methods:
+
 | Method                                       | Action 
 -----------------------------------------------|-------
 | DotMP.Shared.Shared(string name, T value)    | Initializes a shared variable with name `name` and starting value `value`
