@@ -6,6 +6,12 @@ Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the Open
 
 [Link to repository](https://github.com/computablee/DotMP/tree/main).
 
+## Installing DotMP via NuGet
+The easiest way to install DotMP is from the NuGet package manager:
+```sh
+dotnet add package DotMP
+```
+
 ## Building DotMP from Source
 First, clone DotMP and navigate to the source directory:
 ```sh
