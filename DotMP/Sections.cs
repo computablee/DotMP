@@ -17,6 +17,11 @@ namespace DotMP
         /// </summary>
         private static ConcurrentBag<Action> actions_pv;
 
+        /// <summary>
+        /// Gets the next item from the actions bag.
+        /// </summary>
+        /// <param name="successful">Whether or not fetching from the bag was successful.</param>
+        /// <returns>The action pulled from the bag, if successful. If unsuccessful, undefined.</returns>
         internal Action GetNextItem(out bool successful)
         {
             Action action;
