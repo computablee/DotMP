@@ -1,4 +1,7 @@
 # DotMP
+
+![Nuget](https://img.shields.io/nuget/v/DotMP.svg?style=flat-square) ![Release Tests](https://github.com/computablee/DotMP/actions/workflows/test_dotmp.yml/badge.svg)
+
 ![DotMP logo](./dotmp_logo.png)
 
 A library for writing OpenMP-style parallel code in .NET.
