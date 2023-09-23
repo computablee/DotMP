@@ -13,6 +13,7 @@
     <PackageReadmeFile>README.md</PackageReadmeFile>
     <PackageTags>hpc,parallel,openmp,parallelization,high performance computing,threading</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageReleaseNotes>Added support for .NET 7.0.</PackageReleaseNotes>
   </PropertyGroup>
 
   <ItemGroup>
