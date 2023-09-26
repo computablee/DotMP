@@ -260,7 +260,7 @@ DotMP.Parallel.Master(() => {
     work();
 });
 ```
-`Master`'s behavior is left undefined if used outside of a `For`.
+`Master`'s behavior is left undefined if used outside of a `ParallelRegion`.
 
 ### Single
 Given the OpenMP:
@@ -280,7 +280,7 @@ The `id` parameter provided should follow the same guidelines as specified in `C
 
 A `Single` region is only executed once per `DotMP.Parallel.ParallelRegion`, and is executed by the first thread that encounters it.
 
-`Single`'s behavior is left undefined if used outside of a `For`.
+`Single`'s behavior is left undefined if used outside of a `ParallelRegion`.
 
 ### Ordered
 Given the OpenMP:
