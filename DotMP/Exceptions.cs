@@ -7,10 +7,22 @@ namespace DotMP
     /// </summary>
     public class NotInParallelRegionException : Exception
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public NotInParallelRegionException() { }
 
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
         public NotInParallelRegionException(string msg) : base(msg) { }
 
+        /// <summary>
+        /// Constructor with a message and inner exception.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        /// <param name="ex">The inner exception.</param>
         public NotInParallelRegionException(string msg, Exception ex) : base(msg, ex) { }
     }
 
@@ -19,10 +31,22 @@ namespace DotMP
     /// </summary>
     public class CannotPerformNestedParallelismException : Exception
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public CannotPerformNestedParallelismException() { }
 
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
         public CannotPerformNestedParallelismException(string msg) : base(msg) { }
 
+        /// <summary>
+        /// Constructor with a message and inner exception.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        /// <param name="ex">The inner exception.</param>
         public CannotPerformNestedParallelismException(string msg, Exception ex) : base(msg, ex) { }
     }
 
@@ -31,10 +55,22 @@ namespace DotMP
     /// </summary>
     public class CannotPerformNestedForException : Exception
     {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
         public CannotPerformNestedForException() { }
 
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
         public CannotPerformNestedForException(string msg) : base(msg) { }
 
+        /// <summary>
+        /// Constructor with a message and inner exception.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        /// <param name="ex">The inner exception.</param>
         public CannotPerformNestedForException(string msg, Exception ex) : base(msg, ex) { }
     }
 }
