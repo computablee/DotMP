@@ -653,6 +653,12 @@ namespace DotMP
                 throw new NotInParallelRegionException();
             }
 
+            WorkShare ws = new WorkShare();
+            if(ws.in_for)
+            {
+                throw new Exception();
+            }
+
             lock (single_thread)
             {
                 if (!single_thread.Contains(id))
@@ -666,6 +672,8 @@ namespace DotMP
             {
                 action();
             }
+
+            Barrier();
         }
 
         /// <summary>
