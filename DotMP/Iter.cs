@@ -54,7 +54,7 @@ namespace DotMP
 
         /// <summary>
         /// Calculates the next chunk of iterations for a static scheduling parallel for loop and executes the appropriate function.
-        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.StaticLoop<T> documentation.
+        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.StaticLoop&lt;T&gt; documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
@@ -120,7 +120,7 @@ namespace DotMP
 
         /// <summary>
         /// Calculates the next chunk of iterations for a dynamic scheduling parallel for loop and executes the appropriate function.
-        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.DynamicLoop<T> documentation.
+        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.DynamicLoop&lt;T&gt; documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
@@ -193,7 +193,7 @@ namespace DotMP
 
         /// <summary>
         /// Calculates the next chunk of iterations for a guided scheduling parallel for loop and executes the appropriate function.
-        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.GuidedLoop<T> documentation.
+        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.GuidedLoop&lt;T&gt; documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>

@@ -5,7 +5,7 @@ using System.Threading;
 namespace DotMP
 {
     /// <summary>
-    /// A simple container for a Queue<Action> for managing tasks.
+    /// A simple container for a Queue&lt;Action&gt; for managing tasks.
     /// Will grow in complexity as dependencies are added and a dependency graph must be generated.
     /// </summary>
     internal class TaskingContainer

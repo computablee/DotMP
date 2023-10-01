@@ -27,7 +27,7 @@ namespace DotMP
     }
 
     /// <summary>
-    /// Exception thrown if a Parallel.For or Parallel.ForReduction<T> is created inside of another Parallel.For or Parallel.ForReduction<T>.
+    /// Exception thrown if a Parallel.For or Parallel.ForReduction&lt;T&gt; is created inside of another Parallel.For or Parallel.ForReduction&lt;T&gt;.
     /// </summary>
     public class CannotPerformNestedForException : Exception
     {

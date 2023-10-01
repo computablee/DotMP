@@ -104,7 +104,7 @@ namespace DotMP
     }
 
     /// <summary>
-    /// Factory class for Shared<T>
+    /// Factory class for Shared&lt;T&gt;
     /// </summary>
     public static class Shared
     {
@@ -167,9 +167,9 @@ namespace DotMP
         }
 
         /// <summary>
-        /// Gets the value of the shared variable as an IList<T>.
+        /// Gets the value of the shared variable as an IList&lt;T&gt;.
         /// </summary>
-        /// <returns>The value of the shared variable as an IList<T>.</returns>
+        /// <returns>The value of the shared variable as an IList&lt;T&gt;.</returns>
         public new U Get()
         {
             return base.Get();
@@ -177,7 +177,7 @@ namespace DotMP
     }
 
     /// <summary>
-    /// The factory class for SharedEnumerable<T, U>
+    /// The factory class for SharedEnumerable&lt;T, U&gt;
     /// </summary>
     public static class SharedEnumerable
     {
