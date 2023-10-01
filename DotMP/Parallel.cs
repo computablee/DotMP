@@ -839,16 +839,5 @@ namespace DotMP
         {
             return new WorkShare().chunk_size;
         }
-
-        /// <summary>
-        /// Clears the memory used by criticals, ordereds, and singles.
-        /// </summary>
-        public static void __reset_lambda_memory()
-        {
-            critical_lock.Clear();
-            single_thread.Clear();
-            ordered.Clear();
-            found_criticals = 0;
-        }
     }
 }
