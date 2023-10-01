@@ -24,7 +24,7 @@ namespace DotMP
         /// <summary>
         /// The dictionary for critical regions.
         /// </summary>
-        private static volatile Dictionary<int, (int, object)> critical_lock = new Dictionary<int, (int, object)>();
+        private static volatile Dictionary<int, object> critical_lock = new Dictionary<int, object>();
         /// <summary>
         /// The dictionary for single regions.
         /// </summary>
@@ -33,10 +33,6 @@ namespace DotMP
         /// The dictionary for ordered regions.
         /// </summary>
         private static volatile Dictionary<int, int> ordered = new Dictionary<int, int>();
-        /// <summary>
-        /// The number of critical regions found.
-        /// </summary>
-        private static volatile int found_criticals = 0;
         /// <summary>
         /// Barrier object for DotMP.Parallel.Barrier()
         /// </summary>
@@ -569,10 +565,10 @@ namespace DotMP
             {
                 if (!critical_lock.ContainsKey(id))
                 {
-                    critical_lock.Add(id, (++found_criticals, new object()));
+                    critical_lock.Add(id, new object());
                 }
 
-                (id, lock_obj) = critical_lock[id];
+                lock_obj = critical_lock[id];
             }
 
             lock (lock_obj)
