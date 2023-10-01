@@ -4,61 +4,63 @@ using System.Threading;
 namespace DotMP
 {
     /// <summary>
-    /// The different types of schedules for a parallel for loop.
-    /// The default schedule if none is specified is static.
-    /// Detailed explanations of each schedule can be found in the Iter class.
-    /// The Runtime schedule simply fetches the schedule from the OMP_SCHEDULE environment variable.
+    /// Represents the various scheduling strategies for parallel for loops.
+    /// Detailed explanations of each scheduling strategy are provided alongside each enumeration value.
+    /// If no schedule is specified, the default is <see cref="Schedule.Static"/>.
     /// </summary>
     public enum Schedule
     {
         /// <summary>
-        /// Specifies the static scheduler.
-        /// Static scheduling works as follows:
-        /// Iterations are submitted to threads via round-robin scheduling. Unless the chunk size is 1, each thread will receive a chunk of iterations to work on.
-        /// This chunk is specified by the chunk_size variable, found in Init.ws.chunk_size.
-        /// By default, if no chunk size is specified, the chunk size is the number of iterations divided by the number of threads.
-        /// There is a tradeoff with having a large vs. small chunk size.
-        /// A large chunk size will result in less overhead, but may result in load imbalance.
-        /// A small chunk size will result in more overhead, but will result in better load balancing.
-        /// Static scheduling is the default scheduling method for parallel for loops if none is specified.
+        /// The static scheduling strategy.
+        /// Iterations are divided amongst threads in round-robin fashion.
+        /// Each thread gets a 'chunk' of iterations, determined by the chunk size.
+        /// If no chunk size is specified, it's computed as total iterations divided by number of threads.
+        /// 
+        /// Pros:
+        /// - Reduced overhead.
+        /// 
+        /// Cons:
+        /// - Potential for load imbalance.
+        /// 
+        /// Note: This is the default strategy if none is chosen.
         /// </summary>
         Static,
+
         /// <summary>
-        /// Specifies the dynamic scheduler.
-        /// Dynamic scheduling works as follows:
-        /// Iterations are thrown into a central queue.
-        /// When a thread has no current assigned work, it will grab a chunk of iterations from the queue.
-        /// This chunk is specified by the chunk_size variable, found in Init.ws.chunk_size.
-        /// By default, if no chunk size is specified, the Parallel.FixArgs method will calulate a chunk size based on a simple heuristic.
-        /// When the central queue is empty, each thread will wait at a barrier until all other threads have completed their work.
-        /// There is a tradeoff with having a large vs. small chunk size.
-        /// A large chunk size will result in less overhead, but may result in load imbalance.
-        /// A small chunk size will result in more overhead, but will result in better load balancing.
+        /// The dynamic scheduling strategy.
+        /// Iterations are managed in a central queue.
+        /// Threads fetch chunks of iterations from this queue when they have no assigned work.
+        /// If no chunk size is defined, a basic heuristic is used to determine a chunk size.
+        /// 
+        /// Pros:
+        /// - Better load balancing.
+        /// 
+        /// Cons:
+        /// - Increased overhead.
         /// </summary>
         Dynamic,
+
         /// <summary>
-        /// Specifies the guided scheduler.
-        /// Guided scheduling works as follows:
-        /// Iterations are thrown into a central queue.
-        /// When a thread has no current assigned work, it will grab a chunk of iterations from the queue.
-        /// This chunk is starts large and decreases in size as the loop progresses.
-        /// The chunk size is equal to the number of remaining iterations divided by the number of threads.
-        /// The chunk_size variable, found in Init.ws.chunk_size, is used as a minimum chunk size.
-        /// When the central queue is empty, each thread will wait at a barrier until all other threads have completed their work.
-        /// There is a tradeoff with having a large vs. small chunk size.
-        /// A large chunk size will result in less overhead, but may result in load imbalance.
-        /// A small chunk size will result in more overhead, but will result in better load balancing.
-        /// Guided scheduling is usually a great default choice for parallel for loops,
-        /// but may not be adequate if a loop is irregular with heavy load imbalance biased towards the start of the loop.
+        /// The guided scheduling strategy.
+        /// Similar to dynamic, but the chunk size starts larger and shrinks as iterations are consumed.
+        /// The shrinking formula is based on the remaining iterations divided by the number of threads.
+        /// The chunk size parameter sets a minimum chunk size.
+        /// 
+        /// Pros:
+        /// - Adaptable to workloads.
+        /// 
+        /// Cons:
+        /// - Might not handle loops with early heavy load imbalance efficiently.
         /// </summary>
         Guided,
+
         /// <summary>
-        /// Specifies that the schedule can be decided at runtime via the 'OMP_SCHEDULE' environment variable.
-        /// The environment variable should take the form "schedule[,chunk_size]".
-        /// Examples of valid runtime schedules include, but are not limited to: "static,128" or "guided" or "dynamic,3".
+        /// Runtime-defined scheduling strategy.
+        /// Schedule is determined by the 'OMP_SCHEDULE' environment variable.
+        /// Expected format: "schedule[,chunk_size]", e.g., "static,128", "guided", or "dynamic,3".
         /// </summary>
         Runtime
-    };
+    }
 
     /// <summary>
     /// Contains all of the scheduling code for parallel for loops.
