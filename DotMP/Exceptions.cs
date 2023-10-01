@@ -15,18 +15,6 @@ namespace DotMP
     }
 
     /// <summary>
-    /// Exception thrown if a sections-only construct is used outside of a sections region.
-    /// </summary>
-    public class NotInSectionsRegionException : Exception
-    {
-        public NotInSectionsRegionException() { }
-
-        public NotInSectionsRegionException(string msg) : base(msg) { }
-
-        public NotInSectionsRegionException(string msg, Exception ex) : base(msg, ex) { }
-    }
-
-    /// <summary>
     /// Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel.ParallelRegion.
     /// </summary>
     public class CannotPerformNestedParallelismException : Exception

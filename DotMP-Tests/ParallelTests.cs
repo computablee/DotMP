@@ -260,19 +260,29 @@ namespace DotMPTests
         public void Critical_works()
         {
             uint threads = 1024;
+            int iters = 1024;
             int total = 0;
-            int one = critical_ids(false);
-            int two = critical_ids(true);
 
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                int id = DotMP.Parallel.Critical(5, () => ++total);
-                id.Should().Be(3);
+                for (int i = 0; i < iters; i++)
+                    DotMP.Parallel.Critical(0, () => ++total);
             });
 
-            one.Should().Be(1);
-            two.Should().Be(2);
-            threads.Should().Be((uint)total);
+            total.Should().Be((int)threads * iters);
+
+            double start = DotMP.Parallel.GetWTime();
+
+            DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+            {
+                if (DotMP.Parallel.GetThreadNum() == 0) DotMP.Parallel.Critical(0, () => Thread.Sleep(1000));
+                if (DotMP.Parallel.GetThreadNum() == 1) DotMP.Parallel.Critical(1, () => Thread.Sleep(1000));
+                if (DotMP.Parallel.GetThreadNum() == 2) DotMP.Parallel.Critical(0, () => Thread.Sleep(1000));
+                if (DotMP.Parallel.GetThreadNum() == 3) DotMP.Parallel.Critical(1, () => Thread.Sleep(1000));
+            });
+
+            double elapsed = DotMP.Parallel.GetWTime() - start;
+            elapsed.Should().BeLessThan(2200);
         }
 
         /// <summary>
@@ -958,45 +968,6 @@ namespace DotMPTests
             });
 
             return z;
-        }
-
-        /// <summary>
-        /// Convoluted test to calculate how many critical regions were found. Outdated, can probably be removed.
-        /// </summary>
-        /// <param name="two_regions">Whether or not to spawn 2 regions or 1.</param>
-        /// <returns>The number of encountered critical regions.</returns>
-        int critical_ids(bool two_regions)
-        {
-            object mylock = new object();
-            int found_critical_regions = 0;
-
-            int x, y;
-            x = y = 0;
-
-            for (int i = 0; i < 5; i++)
-            {
-                DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
-                {
-                    int id1 = DotMP.Parallel.Critical(0, () => ++x);
-                    int id2 = -1;
-
-                    DotMP.Parallel.For(0, 100, schedule: DotMP.Schedule.Static, action: j =>
-                    {
-                        if (two_regions)
-                        {
-                            id2 = DotMP.Parallel.Critical(1, () => ++y);
-                        }
-
-                        lock (mylock)
-                        {
-                            found_critical_regions = Math.Max(found_critical_regions, id1);
-                            found_critical_regions = Math.Max(found_critical_regions, id2);
-                        }
-                    });
-                });
-            }
-
-            return found_critical_regions;
         }
     }
 }
