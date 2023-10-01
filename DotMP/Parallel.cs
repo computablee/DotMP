@@ -178,7 +178,7 @@ namespace DotMP
         /// <summary>
         /// Creates a for loop inside a parallel region with a reduction.
         /// This is similar to For(), but the reduction allows multiple threads to reduce their work down to a single variable.
-        /// Using ForReduction<T> allows the runtime to perform this operation much more efficiently than a naive approach using the Locking or Atomic classes.
+        /// Using ForReduction&lt;T&gt; allows the runtime to perform this operation much more efficiently than a naive approach using the Locking or Atomic classes.
         /// Each thread gets a thread-local version of the reduction variable, and the runtime performs a global reduction at the end of the loop.
         /// Since the global reduction only involves as many variables as there are threads, it is much more efficient than a naive approach.
         /// Acts as an implicit Barrier().
@@ -320,7 +320,7 @@ namespace DotMP
         }
 
         /// <summary>
-        /// Creates a parallel for loop with a reduction. Contains all of the parameters from ParallelRegion() and ForReduction<T>().
+        /// Creates a parallel for loop with a reduction. Contains all of the parameters from ParallelRegion() and ForReduction&lt;T&gt;().
         /// This is simply a convenience method for creating a parallel region and a for loop with a reduction inside of it.
         /// </summary>
         /// <typeparam name="T">The type of the reduction.</typeparam>
@@ -666,7 +666,7 @@ namespace DotMP
 
         /// <summary>
         /// Creates an ordered region.
-        /// An ordered region is a region of code that is executed in order inside of a For() or ForReduction<T>() loop.
+        /// An ordered region is a region of code that is executed in order inside of a For() or ForReduction&lt;T&gt;() loop.
         /// This also acts as an implicit Critical() region.
         /// </summary>
         /// <param name="id">The ID of the ordered region. Must be unique per region but consistent across all threads.</param>
@@ -819,18 +819,18 @@ namespace DotMP
         }
 
         /// <summary>
-        /// Returns the current schedule being used in a For() or ForReduction<T>() loop.
+        /// Returns the current schedule being used in a For() or ForReduction&lt;T&gt;() loop.
         /// </summary>
-        /// <returns>The schedule being used in the For() or ForReduction<T>() loop, or null if a For() or ForReduction<T>() has not been encountered yet.</returns>
+        /// <returns>The schedule being used in the For() or ForReduction&lt;T&gt;() loop, or null if a For() or ForReduction&lt;T&gt;() has not been encountered yet.</returns>
         public static Schedule? GetSchedule()
         {
             return new WorkShare().schedule;
         }
 
         /// <summary>
-        /// Returns the current chunk size being used in a For() or ForReduction<T>() loop.
+        /// Returns the current chunk size being used in a For() or ForReduction&lt;T&gt;() loop.
         /// </summary>
-        /// <returns>The chunk size being used in a For() or ForReduction<T>() loop. If 0, a For() or ForReduction<T>() has not been encountered yet.</returns>
+        /// <returns>The chunk size being used in a For() or ForReduction&lt;T&gt;() loop. If 0, a For() or ForReduction&lt;T&gt;() has not been encountered yet.</returns>
         public static uint GetChunkSize()
         {
             return new WorkShare().chunk_size;

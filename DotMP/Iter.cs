@@ -9,15 +9,10 @@ namespace DotMP
     /// Detailed explanations of each schedule can be found in the Iter class.
     /// The Runtime schedule simply fetches the schedule from the OMP_SCHEDULE environment variable.
     /// </summary>
-    public enum Schedule { Static, Dynamic, Guided, Runtime };
-
-    /// <summary>
-    /// Contains all of the scheduling code for parallel for loops.
-    /// </summary>
-    internal static class Iter
+    public enum Schedule
     {
         /// <summary>
-        /// Starts and controls a parallel for loop with static scheduling.
+        /// Specifies the static scheduler.
         /// Static scheduling works as follows:
         /// Iterations are submitted to threads via round-robin scheduling. Unless the chunk size is 1, each thread will receive a chunk of iterations to work on.
         /// This chunk is specified by the chunk_size variable, found in Init.ws.chunk_size.
@@ -26,6 +21,52 @@ namespace DotMP
         /// A large chunk size will result in less overhead, but may result in load imbalance.
         /// A small chunk size will result in more overhead, but will result in better load balancing.
         /// Static scheduling is the default scheduling method for parallel for loops if none is specified.
+        /// </summary>
+        Static,
+        /// <summary>
+        /// Specifies the dynamic scheduler.
+        /// Dynamic scheduling works as follows:
+        /// Iterations are thrown into a central queue.
+        /// When a thread has no current assigned work, it will grab a chunk of iterations from the queue.
+        /// This chunk is specified by the chunk_size variable, found in Init.ws.chunk_size.
+        /// By default, if no chunk size is specified, the Parallel.FixArgs method will calulate a chunk size based on a simple heuristic.
+        /// When the central queue is empty, each thread will wait at a barrier until all other threads have completed their work.
+        /// There is a tradeoff with having a large vs. small chunk size.
+        /// A large chunk size will result in less overhead, but may result in load imbalance.
+        /// A small chunk size will result in more overhead, but will result in better load balancing.
+        /// </summary>
+        Dynamic,
+        /// <summary>
+        /// Specifies the guided scheduler.
+        /// Guided scheduling works as follows:
+        /// Iterations are thrown into a central queue.
+        /// When a thread has no current assigned work, it will grab a chunk of iterations from the queue.
+        /// This chunk is starts large and decreases in size as the loop progresses.
+        /// The chunk size is equal to the number of remaining iterations divided by the number of threads.
+        /// The chunk_size variable, found in Init.ws.chunk_size, is used as a minimum chunk size.
+        /// When the central queue is empty, each thread will wait at a barrier until all other threads have completed their work.
+        /// There is a tradeoff with having a large vs. small chunk size.
+        /// A large chunk size will result in less overhead, but may result in load imbalance.
+        /// A small chunk size will result in more overhead, but will result in better load balancing.
+        /// Guided scheduling is usually a great default choice for parallel for loops,
+        /// but may not be adequate if a loop is irregular with heavy load imbalance biased towards the start of the loop.
+        /// </summary>
+        Guided,
+        /// <summary>
+        /// Specifies that the schedule can be decided at runtime via the 'OMP_SCHEDULE' environment variable.
+        /// The environment variable should take the form "schedule[,chunk_size]".
+        /// Examples of valid runtime schedules include, but are not limited to: "static,128" or "guided" or "dynamic,3".
+        /// </summary>
+        Runtime
+    };
+
+    /// <summary>
+    /// Contains all of the scheduling code for parallel for loops.
+    /// </summary>
+    internal static class Iter
+    {
+        /// <summary>
+        /// Starts and controls a parallel for loop with static scheduling.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
@@ -54,7 +95,7 @@ namespace DotMP
 
         /// <summary>
         /// Calculates the next chunk of iterations for a static scheduling parallel for loop and executes the appropriate function.
-        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.StaticLoop<T> documentation.
+        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.StaticLoop&lt;T&gt; documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
@@ -85,15 +126,6 @@ namespace DotMP
 
         /// <summary>
         /// Starts and controls a parallel for loop with dynamic scheduling.
-        /// Dynamic scheduling works as follows:
-        /// Iterations are thrown into a central queue.
-        /// When a thread has no current assigned work, it will grab a chunk of iterations from the queue.
-        /// This chunk is specified by the chunk_size variable, found in Init.ws.chunk_size.
-        /// By default, if no chunk size is specified, the Parallel.FixArgs method will calulate a chunk size based on a simple heuristic.
-        /// When the central queue is empty, each thread will wait at a barrier until all other threads have completed their work.
-        /// There is a tradeoff with having a large vs. small chunk size.
-        /// A large chunk size will result in less overhead, but may result in load imbalance.
-        /// A small chunk size will result in more overhead, but will result in better load balancing.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
@@ -120,7 +152,7 @@ namespace DotMP
 
         /// <summary>
         /// Calculates the next chunk of iterations for a dynamic scheduling parallel for loop and executes the appropriate function.
-        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.DynamicLoop<T> documentation.
+        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.DynamicLoop&lt;T&gt; documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
@@ -155,18 +187,6 @@ namespace DotMP
 
         /// <summary>
         /// Starts and controls a parallel for loop with guided scheduling.
-        /// Guided scheduling works as follows:
-        /// Iterations are thrown into a central queue.
-        /// When a thread has no current assigned work, it will grab a chunk of iterations from the queue.
-        /// This chunk is starts large and decreases in size as the loop progresses.
-        /// The chunk size is equal to the number of remaining iterations divided by the number of threads.
-        /// The chunk_size variable, found in Init.ws.chunk_size, is used as a minimum chunk size.
-        /// When the central queue is empty, each thread will wait at a barrier until all other threads have completed their work.
-        /// There is a tradeoff with having a large vs. small chunk size.
-        /// A large chunk size will result in less overhead, but may result in load imbalance.
-        /// A small chunk size will result in more overhead, but will result in better load balancing.
-        /// Guided scheduling is usually a great default choice for parallel for loops,
-        /// but may not be adequate if a loop is irregular with heavy load imbalance biased towards the start of the loop.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
@@ -193,7 +213,7 @@ namespace DotMP
 
         /// <summary>
         /// Calculates the next chunk of iterations for a guided scheduling parallel for loop and executes the appropriate function.
-        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.GuidedLoop<T> documentation.
+        /// Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.GuidedLoop&lt;T&gt; documentation.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>

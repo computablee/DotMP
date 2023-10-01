@@ -168,7 +168,7 @@ namespace DotMP
             }
         }
         /// <summary>
-        /// Booleans per-thread to check if we're currently in a Parallel.For or Parallel.ForReduction<T>.
+        /// Booleans per-thread to check if we're currently in a Parallel.For or Parallel.ForReduction&lt;T&gt;.
         /// </summary>
         private static bool[] in_for_pv;
         /// <summary>
@@ -262,7 +262,6 @@ namespace DotMP
         /// </summary>
         /// <typeparam name="T">The type of the local variable.</typeparam>
         /// <param name="local">The local variable to be set.</param>
-        /// <param name="ws">The WorkShare object.</param>
         internal void SetLocal<T>(ref T local)
         {
             switch (op)

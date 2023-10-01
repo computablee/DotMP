@@ -28,11 +28,15 @@ tests:
 
 test:
 	$(DN) test -c $(BUILD) -l "console;verbosity=detailed" DotMP-Tests
+
 build:
 	$(DN) build -c $(BUILD) DotMP
 
 docs:
 	doxygen
+
+pack:
+	$(DN) pack -c $(BUILD) DotMP
 
 clean:
 	rm -rf docs
