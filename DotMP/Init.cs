@@ -178,6 +178,10 @@ namespace DotMP
         {
             get
             {
+                if (in_for_pv == null) {
+                    return false;
+                }
+
                 return in_for_pv[Parallel.GetThreadNum()];
             }
             set
