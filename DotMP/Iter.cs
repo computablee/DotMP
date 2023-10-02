@@ -85,7 +85,7 @@ namespace DotMP
             T local = default;
             ws.SetLocal(ref local);
 
-            while(thr.curr_iter < end)
+            while (thr.curr_iter < end)
                 StaticNext(ws, thr, ws.chunk_size, omp_fn, omp_fn_red, is_reduction, ref local);
 
             ws.Finished();
