@@ -1,6 +1,6 @@
 # DotMP
 
-![Nuget](https://img.shields.io/nuget/v/DotMP.svg?style=flat-square) ![Release Tests](https://github.com/computablee/DotMP/actions/workflows/test_dotmp.yml/badge.svg)
+![Nuget](https://img.shields.io/nuget/v/DotMP.svg?style=flat-square) ![Release Tests](https://github.com/computablee/DotMP/actions/workflows/test_dotmp.yml/badge.svg) [![Super Linter](https://github.com/computablee/DotMP/actions/workflows/lint.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
 ![DotMP logo](./dotmp_logo.png)
 
