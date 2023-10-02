@@ -643,6 +643,7 @@ namespace DotMP
         /// <param name="id">The ID of the single region. Must be unique per region but consistent across all threads.</param>
         /// <param name="action">The action to be performed in the single region.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        /// <exception cref="CannotPerformNestedWorksharingException">Thrown when in a parallel For or ForReduction region.</exception>
         public static void Single(int id, Action action)
         {
             var freg = new ForkedRegion();
@@ -656,7 +657,7 @@ namespace DotMP
             WorkShare ws = new WorkShare();
             if(ws.in_for)
             {
-                throw new Exception();
+                throw new CannotPerformNestedWorksharingException();
             }
 
             lock (single_thread)

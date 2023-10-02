@@ -49,4 +49,16 @@ namespace DotMP
 
         public CannotPerformNestedForException(string msg, Exception ex) : base(msg, ex) { }
     }
+
+    /// <summary>
+    /// Exception thrown if a Parallel.Single  is created inside of a Parallel.For or Parallel.ForReduction<T>.
+    /// </summary>
+    public class CannotPerformNestedWorksharingException : Exception
+    {
+        public CannotPerformNestedWorksharingException() { }
+
+        public CannotPerformNestedWorksharingException(string msg) : base(msg) { }
+
+        public CannotPerformNestedWorksharingException(string msg, Exception ex) : base(msg, ex) { }
+    }
 }
