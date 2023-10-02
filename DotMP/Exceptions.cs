@@ -51,7 +51,7 @@ namespace DotMP
     }
 
     /// <summary>
-    /// Exception thrown if a Parallel.Single  is created inside of a Parallel.For or Parallel.ForReduction<T>.
+    /// Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel.ForReduction<T>.
     /// </summary>
     public class CannotPerformNestedWorksharingException : Exception
     {
