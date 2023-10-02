@@ -178,7 +178,8 @@ namespace DotMP
         {
             get
             {
-                if (in_for_pv == null) {
+                if (in_for_pv == null)
+                {
                     return false;
                 }
 

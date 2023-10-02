@@ -650,7 +650,8 @@ namespace DotMP
                 throw new NotInParallelRegionException();
             }
 
-            WorkShare ws = new WorkShare(); 
+            WorkShare ws = new WorkShare();
+
             if (ws.in_for)
             {
                 throw new CannotPerformNestedWorksharingException();
