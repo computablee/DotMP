@@ -2,7 +2,7 @@
 
 ![Nuget](https://img.shields.io/nuget/v/DotMP.svg?style=flat-square) ![Release Tests](https://github.com/computablee/DotMP/actions/workflows/test_dotmp.yml/badge.svg) [![Super Linter](https://github.com/computablee/DotMP/actions/workflows/lint.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
 
-![DotMP logo](./dotmp_logo.png)
+![DotMP logo](https://raw.githubusercontent.com/computablee/DotMP/main/dotmp_logo.png)
 
 A library for writing OpenMP-style parallel code in .NET.
 Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the OpenMP programming style as faithfully as possible, though breaking spec at times.
