@@ -1,11 +1,11 @@
-﻿using DotMP;
-using FluentAssertions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using DotMP;
+using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
