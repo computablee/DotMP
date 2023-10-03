@@ -1,11 +1,10 @@
-﻿using DotMP;
-using FluentAssertions;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Threading;
+using DotMP;
+using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
 
@@ -502,22 +501,22 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                DotMP.Lock.Set(l);
+                l.Set();
                 Thread.Sleep(100);
-                DotMP.Lock.Unset(l);
+                l.Unset();
             });
 
             double elapsed = DotMP.Parallel.GetWTime() - time;
             elapsed.Should().BeGreaterThan(1.6);
 
-            DotMP.Lock.Test(l).Should().BeTrue();
-            DotMP.Lock.Test(l).Should().BeFalse();
-            DotMP.Lock.Test(l).Should().BeFalse();
-            DotMP.Lock.Unset(l);
-            DotMP.Lock.Test(l).Should().BeTrue();
-            DotMP.Lock.Test(l).Should().BeFalse();
-            DotMP.Lock.Test(l).Should().BeFalse();
-            DotMP.Lock.Unset(l);
+            l.Test().Should().BeTrue();
+            l.Test().Should().BeFalse();
+            l.Test().Should().BeFalse();
+            l.Unset();
+            l.Test().Should().BeTrue();
+            l.Test().Should().BeFalse();
+            l.Test().Should().BeFalse();
+            l.Unset();
         }
 
         /// <summary>
