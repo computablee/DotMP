@@ -7,6 +7,7 @@ docs/*
 *.mtx
 *.csr
 .vscode
+*.opencover.xml
 
 # User-specific files
 *.rsuser
