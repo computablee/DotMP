@@ -42,6 +42,6 @@ jobs:
     steps:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
-      files: ./DotMP-Tests/coverage.net6.0.opencover.xml
-      env:
-        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
+      with:
+        files: ./DotMP-Tests/coverage.net6.0.opencover.xml
+        token: ${{ secrets.CODECOV_TOKEN }}
