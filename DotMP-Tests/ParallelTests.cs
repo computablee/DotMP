@@ -340,17 +340,134 @@ namespace DotMPTests
         public void Atomic_works()
         {
             uint threads = 1024;
-            uint total = 0;
-            long total2 = 0;
+            int[] int_totals = new int[6];
+            long[] long_totals = new long[6];
+            uint[] uint_totals = new uint[5];
+            ulong[] ulong_totals = new ulong[5];
 
+            uint_totals[1] = 1024;
+            ulong_totals[1] = 1024;
+
+            int_totals[3] = int.MaxValue;
+            uint_totals[3] = uint.MaxValue;
+            long_totals[3] = long.MaxValue;
+            ulong_totals[3] = ulong.MaxValue;
+
+            //inc
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                DotMP.Atomic.Inc(ref total);
-                DotMP.Atomic.Sub(ref total2, 2);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Inc(ref int_totals[0]);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Inc(ref uint_totals[0]);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Inc(ref long_totals[0]);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Inc(ref ulong_totals[0]);
             });
 
-            total.Should().Be(threads);
-            total2.Should().Be(-threads * 2);
+            int_totals[0].Should().Be((int)threads);
+            uint_totals[0].Should().Be((uint)threads);
+            long_totals[0].Should().Be((long)threads);
+            ulong_totals[0].Should().Be((ulong)threads);
+
+            //dec
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Dec(ref int_totals[1]);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Dec(ref uint_totals[1]);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Dec(ref long_totals[1]);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Dec(ref ulong_totals[1]);
+            });
+
+            int_totals[1].Should().Be((int)-threads);
+            uint_totals[1].Should().Be(0);
+            long_totals[1].Should().Be((long)-threads);
+            ulong_totals[1].Should().Be(0);
+
+            //add
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Add(ref int_totals[2], 2);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Add(ref uint_totals[2], 2);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Add(ref long_totals[2], 2);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Add(ref ulong_totals[2], 2);
+            });
+
+            int_totals[2].Should().Be((int)threads * 2);
+            uint_totals[2].Should().Be((uint)threads * 2);
+            long_totals[2].Should().Be((long)threads * 2);
+            ulong_totals[2].Should().Be((ulong)threads * 2);
+
+            //and
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                int tid_int = (int)DotMP.Parallel.GetThreadNum();
+                uint tid_uint = (uint)DotMP.Parallel.GetThreadNum();
+                long tid_long = (long)DotMP.Parallel.GetThreadNum();
+                ulong tid_ulong = (ulong)DotMP.Parallel.GetThreadNum();
+
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.And(ref int_totals[3], tid_int);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.And(ref uint_totals[3], tid_uint);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.And(ref long_totals[3], tid_long);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.And(ref ulong_totals[3], tid_ulong);
+            });
+
+            int_totals[3].Should().Be(0);
+            uint_totals[3].Should().Be(0);
+            long_totals[3].Should().Be(0);
+            ulong_totals[3].Should().Be(0);
+
+            //or
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                int tid_int = (int)DotMP.Parallel.GetThreadNum();
+                uint tid_uint = (uint)DotMP.Parallel.GetThreadNum();
+                long tid_long = (long)DotMP.Parallel.GetThreadNum();
+                ulong tid_ulong = (ulong)DotMP.Parallel.GetThreadNum();
+
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Or(ref int_totals[4], tid_int);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Or(ref uint_totals[4], tid_uint);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Or(ref long_totals[4], tid_long);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Or(ref ulong_totals[4], tid_ulong);
+            });
+
+            uint res = 0;
+            for (uint i = 0; i < threads; i++)
+                res |= i;
+
+            int_totals[4].Should().Be((int)res);
+            uint_totals[4].Should().Be((uint)res);
+            long_totals[4].Should().Be((long)res);
+            ulong_totals[4].Should().Be((ulong)res);
+
+            //sub
+            DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
+            {
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Sub(ref int_totals[5], 2);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Sub(ref long_totals[5], 2);
+            });
+
+            int_totals[5].Should().Be((int)-threads * 2);
+            long_totals[5].Should().Be((long)-threads * 2);
         }
 
         /// <summary>
