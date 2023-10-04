@@ -412,15 +412,14 @@ namespace DotMP
 
             Barrier();
 
-            do
-            {
-                if (tc.GetNextTask(out Action do_action, out ulong uuid, out tasks_remaining))
+            do if (tc.GetNextTask(out Action do_action, out ulong uuid, out tasks_remaining))
                 {
                     do_action();
                     tc.CompleteTask(uuid);
                 }
-            }
             while (tasks_remaining > 0);
+
+            Barrier();
 
             tc.ResetDAG();
 
