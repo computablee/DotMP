@@ -18,7 +18,7 @@ dotnet add package DotMP
 ## Building DotMP from Source
 First, clone DotMP and navigate to the source directory:
 ```sh
-git clone git@github.com:computablee/DotMP.git
+git clone https://github.com/computablee/DotMP.git
 cd DotMP
 ```
 
