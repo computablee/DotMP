@@ -34,4 +34,4 @@ jobs:
       with:
         dotnet-version: 6.0.x
     - name: Run tests
-      run: dotnet test --verbosity normal DotMP-Tests
+      run: dotnet test --verbosity normal -p:CollectCoverage=true -p:CoverletOutputFormat=opencover DotMP-Tests
