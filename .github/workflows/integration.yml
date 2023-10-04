@@ -1,4 +1,4 @@
-name: Integration tests
+name: Integration Tests
 
 on:
   push:
@@ -7,22 +7,6 @@ on:
     branches: [ "main" ]
 
 jobs:
-  check-compile:
-    runs-on: ubuntu-latest
-
-    steps:
-    - uses: actions/checkout@v3
-    - name: Setup .NET
-      uses: actions/setup-dotnet@v3
-      with:
-        dotnet-version: 6.0.x
-    - name: Build main project
-      run: make build
-    - name: Build tests
-      run: make tests
-    - name: Build examples
-      run: make examples
-
   integration-tests:
     runs-on: ubuntu-latest
 

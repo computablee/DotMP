@@ -1,4 +1,4 @@
-name: Publish DotMP Site
+name: Documentation
 
 on:
   push:

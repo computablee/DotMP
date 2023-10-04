@@ -1,4 +1,4 @@
-name: Lint Codebase
+name: Code Quality
 
 on:
   push:
