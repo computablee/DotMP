@@ -34,14 +34,25 @@ jobs:
         dotnet-version: 6.0.x
     - name: Run integration tests
       run: dotnet test --verbosity normal -p:CollectCoverage=true -p:CoverletOutputFormat=opencover DotMP-Tests
+    - name: Upload codecov artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: codecov-xml
+        path: DotMP-Tests/coverage.net6.0.opencover.xml
+        retention-days: 1
 
   codecov:
     runs-on: ubuntu-latest
     needs: integration-tests
 
     steps:
+    - name: Download codecov artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: codecov-xml
+        path: coverage.net6.0.opencover.xml
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
-        files: ./DotMP-Tests/coverage.net6.0.opencover.xml
+        files: coverage.net6.0.opencover.xml
         token: ${{ secrets.CODECOV_TOKEN }}
