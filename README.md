@@ -339,11 +339,11 @@ Instead, users should instantiate the `DotMP.Lock` object using the `new` keywor
 
 DotMP provides the following functions:
 
-| <omp.h> function     | DotMP function        | Comments
------------------------|----------------------------|---------
-| omp_set_lock(lock)   | DotMP.Lock.Set(Lock)   | Halt the current thread until the lock is obtained
-| omp_unset_lock(lock) | DotMP.Lock.Unset(Lock) | Free the current lock, making it available for other threads
-| omp_test_lock(lock)  | DotMP.Lock.Test(Lock)  | Attempt to obtain a lock without blocking, returns true if locking is successful
+| <omp.h> function     | DotMP function | Comments
+-----------------------|----------------|---------
+| omp_set_lock(lock)   | lock.Set()     | Halt the current thread until the lock is obtained
+| omp_unset_lock(lock) | lock.Unset()   | Free the current lock, making it available for other threads
+| omp_test_lock(lock)  | lock.Test()    | Attempt to obtain a lock without blocking, returns true if locking is successful
 
 ## Shared Memory
 
