@@ -1,4 +1,4 @@
-name: Test DotMP
+name: Integration tests
 
 on:
   push:
@@ -7,7 +7,7 @@ on:
     branches: [ "main" ]
 
 jobs:
-  build:
+  check-compile:
     runs-on: ubuntu-latest
 
     steps:
@@ -23,9 +23,8 @@ jobs:
     - name: Build examples
       run: make examples
 
-  test:
+  integration-tests:
     runs-on: ubuntu-latest
-    needs: build
 
     steps:
     - uses: actions/checkout@v3
@@ -33,5 +32,16 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 6.0.x
-    - name: Run tests
+    - name: Run integration tests
       run: dotnet test --verbosity normal -p:CollectCoverage=true -p:CoverletOutputFormat=opencover DotMP-Tests
+
+  codecov:
+    runs-on: ubuntu-latest
+    needs: integration-tests
+
+    steps:
+    - name: Upload coverage reports to Codecov
+      uses: codecov/codecov-action@v3
+      files: ./DotMP-Tests/coverage.net6.0.opencover.xml
+      env:
+        CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
