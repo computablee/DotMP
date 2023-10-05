@@ -74,6 +74,18 @@ This will generate documentation in the root of the project under the `docs` dir
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
+<table>
+  <tbody>
+    <tr>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/MaurizioPz"><img src="https://avatars.githubusercontent.com/u/455216?v=4?s=100" width="100px;" alt="Maurizio"/><br /><sub><b>Maurizio</b></sub></a><br /><a href="https://github.com/computablee/DotMP/commits?author=MaurizioPz" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://janheres.eu"><img src="https://avatars.githubusercontent.com/u/74781187?v=4?s=100" width="100px;" alt="Jan Hereš"/><br /><sub><b>Jan Hereš</b></sub></a><br /><a href="https://github.com/computablee/DotMP/commits?author=HarryHeres" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/computablee"><img src="https://avatars.githubusercontent.com/u/20172521?v=4?s=100" width="100px;" alt="Phillip Allen Lane"/><br /><sub><b>Phillip Allen Lane</b></sub></a><br /><a href="https://github.com/computablee/DotMP/commits?author=computablee" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/exrol"><img src="https://avatars.githubusercontent.com/u/86170495?v=4?s=100" width="100px;" alt="exrol"/><br /><sub><b>exrol</b></sub></a><br /><a href="https://github.com/computablee/DotMP/commits?author=exrol" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/jestes15"><img src="https://avatars.githubusercontent.com/u/51448244?v=4?s=100" width="100px;" alt="Joshua Estes"/><br /><sub><b>Joshua Estes</b></sub></a><br /><a href="https://github.com/computablee/DotMP/commits?author=jestes15" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://www.bayoosoft.com/"><img src="https://avatars.githubusercontent.com/u/45914736?v=4?s=100" width="100px;" alt="blouflashdb"/><br /><sub><b>blouflashdb</b></sub></a><br /><a href="https://github.com/computablee/DotMP/commits?author=blouflashdb" title="Code">💻</a></td>
+    </tr>
+  </tbody>
+</table>
 
 <!-- markdownlint-restore -->
 <!-- prettier-ignore-end -->
