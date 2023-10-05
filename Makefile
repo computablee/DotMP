@@ -42,6 +42,7 @@ clean:
 	rm -rf docs
 	rm -rf DotMP/bin DotMP/obj
 	rm -rf DotMP-Tests/bin DotMP-Tests/obj
+	rm -rf DotMP-Tests/*.opencover.xml
 	rm -rf examples/CSParallel/ConjugateGradient/bin examples/CSParallel/ConjugateGradient/obj
 	rm -rf examples/CSParallel/HeatTransfer/bin examples/CSParallel/HeatTransfer/obj
 	rm -rf examples/CSParallel/GEMM/bin examples/CSParallel/GEMM/obj
