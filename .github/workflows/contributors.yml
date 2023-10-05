@@ -29,11 +29,12 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         BRANCH_AGAINST: main
       run: |
-        printf "GitHub Actor: ${GITHUB_ACTOR}\n"
-        export BRANCH_FROM="contributors/update-$(date '+%Y-%m-%d')"
+        printf "GitHub Actor: %s\n" "${GITHUB_ACTOR}"
+        local BRANCH_FROM
+        BRANCH_FROM="contributors/update-$(date '+%Y-%m-%d')"
         git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
 
-        BRANCH_EXISTS=$(git ls-remote --heads origin ${BRANCH_FROM})
+        BRANCH_EXISTS="$(git ls-remote --heads origin ${BRANCH_FROM})"
         if [[ -z ${BRANCH_EXISTS} ]]; then
             printf "Branch does not exist in remote.\n"
         else
@@ -58,10 +59,8 @@ jobs:
            git push origin "${BRANCH_FROM}"
         fi
 
-        echo "OPEN_PULL_REQUEST=${OPEN_PULL_REQUEST}" >> $GITHUB_ENV
-        echo "PULL_REQUEST_FROM_BRANCH=${BRANCH_FROM}" >> $GITHUB_ENV
-        echo "PULL_REQUEST_TITLE=[tributors] ${BRANCH_FROM}" >> $GITHUB_ENV
-        echo "PULL_REQUEST_BODY=Tributors update automated pull request." >> $GITHUB_ENV
+        { echo "OPEN_PULL_REQUEST=${OPEN_PULL_REQUEST}"; echo "PULL_REQUEST_FROM_BRANCH=${BRANCH_FROM}"; echo "PULL_REQUEST_TITLE=[tributors] ${BRANCH_FROM}"; echo "PULL_REQUEST_BODY=Tributors update automated pull request."; } >> $GITHUB_ENV
+
 
     - name: Open Pull Request
       uses: vsoch/pull-request-action@d703f40f3af5ae294f9816395ddf2e3d2d3feafa # 1.0.21
