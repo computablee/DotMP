@@ -71,6 +71,10 @@ This will generate documentation in the root of the project under the `docs` dir
 
 ## Contributors
 
+This repository uses [all-contributors](https://github.com/all-contributors/all-contributors) to thank all of the hard-working contributors to this project.
+
+Below is a list of all contributors to DotMP!
+
 <!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
 <!-- prettier-ignore-start -->
 <!-- markdownlint-disable -->
