@@ -1,6 +1,6 @@
 # DotMP
 
-![Nuget](https://img.shields.io/nuget/v/DotMP.svg?style=flat-square) ![Build](https://github.com/computablee/DotMP/actions/workflows/compile.yml/badge.svg) ![Tests](https://github.com/computablee/DotMP/actions/workflows/integration.yml/badge.svg) [![Quality](https://github.com/computablee/DotMP/actions/workflows/lint.yml/badge.svg)](https://github.com/marketplace/actions/super-linter) [![codecov](https://codecov.io/gh/computablee/DotMP/graph/badge.svg?token=MHAKXKRV1K)](https://codecov.io/gh/computablee/DotMP)
+![Nuget](https://img.shields.io/nuget/v/DotMP.svg?style=flat-square) ![Build](https://github.com/computablee/DotMP/actions/workflows/compile.yml/badge.svg) ![Tests](https://github.com/computablee/DotMP/actions/workflows/integration.yml/badge.svg) [![Quality](https://github.com/computablee/DotMP/actions/workflows/lint.yml/badge.svg)](https://github.com/marketplace/actions/super-linter) [![Codecov](https://codecov.io/gh/computablee/DotMP/graph/badge.svg?token=MHAKXKRV1K)](https://codecov.io/gh/computablee/DotMP) [![All Contributors](https://img.shields.io/github/all-contributors/computablee/DotMP?color=ee8449&style=flat-square)](#contributors)
 
 ![DotMP logo](https://raw.githubusercontent.com/computablee/DotMP/main/dotmp_logo.png)
 
@@ -63,6 +63,17 @@ To build the documentation, run the following command:
 make docs
 ```
 This will generate documentation in the root of the project under the `docs` directory in both LaTeX and HTML formats.
+
+## Contributors
+
+<!-- ALL-CONTRIBUTORS-LIST:START - Do not remove or modify this section -->
+<!-- prettier-ignore-start -->
+<!-- markdownlint-disable -->
+
+<!-- markdownlint-restore -->
+<!-- prettier-ignore-end -->
+
+<!-- ALL-CONTRIBUTORS-LIST:END -->
 
 ## Supported Constructs
 
