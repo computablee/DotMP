@@ -30,5 +30,5 @@ updates:
     commit-message:
       prefix: "nuget"
   
-  security-advisories:
+  - security-advisories:
     open-pull-requests-limit: 10
