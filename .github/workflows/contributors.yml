@@ -1,0 +1,25 @@
+name: All-Contributors Auto Detect
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  Update:
+    name: Generate
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+      - name: Tributors Update      
+        uses: con/tributors@main
+        env:
+          GITHUB_TOKEN: $
+        with:        
+          parsers: unset
+          update_lookup: github
+          log_level: DEBUG
+          force: true
+          threshold: 1
+          run_twice: false
