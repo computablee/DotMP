@@ -62,7 +62,7 @@ jobs:
         { echo "OPEN_PULL_REQUEST=${OPEN_PULL_REQUEST}"; echo "PULL_REQUEST_FROM_BRANCH=${BRANCH_FROM}"; echo "PULL_REQUEST_TITLE=[tributors] ${BRANCH_FROM}"; echo "PULL_REQUEST_BODY=Tributors update automated pull request."; } >> "$GITHUB_ENV"
 
     - name: Open Pull Request
-      uses: vsoch/pull-request-action@d703f40f3af5ae294f9816395ddf2e3d2d3feafa # 1.0.21
+      uses: vsoch/pull-request-action@f9e7f419d6b44935f6b0458fad17077269caaf71 # 1.0.24
       if: ${{ env.OPEN_PULL_REQUEST == '1' }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
