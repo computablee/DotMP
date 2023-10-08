@@ -15,20 +15,6 @@ namespace DotMP
         /// We use a DAG in order to maintain dependency chains.
         /// </summary>
         private static DAG<ulong, Action> dag = new DAG<ulong, Action>();
-        /// <summary>
-        /// Counter for coordinating Parallel.Taskwait(), ensures that all threads have agreed that no more work is to be done before progressing to the barrier.
-        /// </summary>
-        private static volatile int threads_complete_pv = 0;
-        /// <summary>
-        /// Ref getter for TaskingContainer.threads_complete_pv.
-        /// </summary>
-        internal ref int threads_complete
-        {
-            get
-            {
-                return ref threads_complete_pv;
-            }
-        }
 
         /// <summary>
         /// Default constructor.

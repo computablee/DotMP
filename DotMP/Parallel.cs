@@ -136,6 +136,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
+            /* jscpd:ignore-start */
             var freg = new ForkedRegion();
 
             if (!freg.in_parallel)
@@ -150,6 +151,7 @@ namespace DotMP
             Barrier();
 
             ws.in_for = true;
+            // jscpd:ignore-end
 
             switch (schedule)
             {
@@ -157,10 +159,8 @@ namespace DotMP
                     Iter.StaticLoop<object>(ws, GetThreadNum(), action, null, false);
                     break;
                 case Schedule.Dynamic:
-                    Iter.DynamicLoop<object>(ws, action, null, false);
-                    break;
                 case Schedule.Guided:
-                    Iter.GuidedLoop<object>(ws, action, null, false);
+                    Iter.LoadBalancingLoop<object>(ws, action, null, false, schedule);
                     break;
             }
 
@@ -194,6 +194,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
+            // jscpd:ignore-start
             var freg = new ForkedRegion();
 
             if (!freg.in_parallel)
@@ -208,6 +209,7 @@ namespace DotMP
             Barrier();
 
             ws.in_for = true;
+            // jscpd:ignore-end
 
             switch (schedule)
             {
@@ -215,10 +217,8 @@ namespace DotMP
                     Iter.StaticLoop(ws, GetThreadNum(), null, action, true);
                     break;
                 case Schedule.Dynamic:
-                    Iter.DynamicLoop(ws, null, action, true);
-                    break;
                 case Schedule.Guided:
-                    Iter.GuidedLoop(ws, null, action, true);
+                    Iter.LoadBalancingLoop(ws, null, action, true, schedule);
                     break;
             }
 
@@ -308,12 +308,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         public static void ParallelFor(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
         {
-            if (num_threads == null && Parallel.num_threads == 0)
-                num_threads = (uint)GetNumProcs();
-            else
-                num_threads ??= Parallel.num_threads;
-
-            ParallelRegion(num_threads: num_threads.Value, action: () =>
+            ParallelRegion(num_threads: num_threads, action: () =>
             {
                 For(start, end, action, schedule, chunk_size);
             });
@@ -334,14 +329,9 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         public static void ParallelForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
         {
-            if (num_threads == null && Parallel.num_threads == 0)
-                num_threads = (uint)GetNumProcs();
-            else
-                num_threads ??= Parallel.num_threads;
-
             T local = reduce_to;
 
-            ParallelRegion(num_threads: num_threads.Value, action: () =>
+            ParallelRegion(num_threads: num_threads, action: () =>
             {
                 ForReduction(start, end, op, ref local, action, schedule, chunk_size);
             });
