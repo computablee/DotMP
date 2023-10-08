@@ -136,7 +136,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
-            // jscpd:ignore-start
+            /* jscpd:ignore-start */
             var freg = new ForkedRegion();
 
             if (!freg.in_parallel)
@@ -151,7 +151,7 @@ namespace DotMP
             Barrier();
 
             ws.in_for = true;
-            // jscpd:ignore-start
+            // jscpd:ignore-end
 
             switch (schedule)
             {
@@ -209,7 +209,7 @@ namespace DotMP
             Barrier();
 
             ws.in_for = true;
-            // jscpd:ignore-start
+            // jscpd:ignore-end
 
             switch (schedule)
             {
