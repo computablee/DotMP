@@ -90,8 +90,6 @@ namespace DotMP
             while (thr.curr_iter < end)
                 StaticNext(ws, thr, ws.chunk_size, omp_fn, omp_fn_red, is_reduction, ref local);
 
-            ws.Finished();
-
             ws.AddReductionValue(local);
         }
 
@@ -146,8 +144,6 @@ namespace DotMP
             {
                 DynamicNext(ws, thr, omp_fn, omp_fn_red, is_reduction, ref local);
             }
-
-            ws.Finished();
 
             ws.AddReductionValue(local);
         }
@@ -207,8 +203,6 @@ namespace DotMP
             {
                 GuidedNext(ws, thr, omp_fn, omp_fn_red, is_reduction, ref local);
             }
-
-            ws.Finished();
 
             ws.AddReductionValue(local);
         }

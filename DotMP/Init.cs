@@ -114,24 +114,6 @@ namespace DotMP
         /// </summary>
         internal uint num_threads { get; private set; }
         /// <summary>
-        /// The number of threads that have completed their work.
-        /// </summary>
-        private static int threads_complete_pv = 0;
-        /// <summary>
-        /// Getter and setter for singleton integer WorkShare.threads_complete_pv.
-        /// </summary>
-        internal int threads_complete
-        {
-            get
-            {
-                return threads_complete_pv;
-            }
-            private set
-            {
-                threads_complete_pv = value;
-            }
-        }
-        /// <summary>
         /// The operation to be performed if doing a reduction.
         /// </summary>
         internal Operations? op { get; private set; }
@@ -213,10 +195,9 @@ namespace DotMP
                     WorkShare.threads[i] = new Thr(threads[i]);
                 reduction_list = new List<dynamic>();
                 in_for_pv = new bool[num_threads];
-                threads_complete_pv = 0;
                 start_pv = start;
-                chunk_size_pv = chunk_size;
-                schedule_pv = schedule;
+                this.chunk_size = chunk_size;
+                this.schedule = schedule;
             });
         }
 
@@ -224,14 +205,6 @@ namespace DotMP
         /// Default constructor.
         /// </summary>
         internal WorkShare() { }
-
-        /// <summary>
-        /// Mark current thread as finished with execution.
-        /// </summary>
-        internal void Finished()
-        {
-            Interlocked.Increment(ref threads_complete_pv);
-        }
 
         /// <summary>
         /// Advance the start by some value.
