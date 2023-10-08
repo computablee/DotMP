@@ -308,12 +308,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         public static void ParallelFor(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
         {
-            if (num_threads == null && Parallel.num_threads == 0)
-                num_threads = (uint)GetNumProcs();
-            else
-                num_threads ??= Parallel.num_threads;
-
-            ParallelRegion(num_threads: num_threads.Value, action: () =>
+            ParallelRegion(num_threads: num_threads, action: () =>
             {
                 For(start, end, action, schedule, chunk_size);
             });
@@ -334,14 +329,9 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         public static void ParallelForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
         {
-            if (num_threads == null && Parallel.num_threads == 0)
-                num_threads = (uint)GetNumProcs();
-            else
-                num_threads ??= Parallel.num_threads;
-
             T local = reduce_to;
 
-            ParallelRegion(num_threads: num_threads.Value, action: () =>
+            ParallelRegion(num_threads: num_threads, action: () =>
             {
                 ForReduction(start, end, op, ref local, action, schedule, chunk_size);
             });
