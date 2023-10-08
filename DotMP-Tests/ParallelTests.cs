@@ -499,17 +499,48 @@ namespace DotMPTests
         {
             int total = 0;
 
-            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
             {
                 total += i;
             });
 
-            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
+            total.Should().Be(1024 * 1023 / 2);
+
+            long total_long = 0;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Subtract, ref total_long, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref long total, int i) =>
             {
-                total += i;
+                total -= (long)i;
             });
 
-            total.Should().Be(1024 * 1023);
+            total_long.Should().Be((long)-(1024 * 1023 / 2));
+
+            float total_float = 1;
+
+            DotMP.Parallel.ParallelForReduction(0, 48, DotMP.Operations.Multiply, ref total_float, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref float total, int i) =>
+            {
+                total *= 2;
+            });
+
+            total_float.Should().Be(Convert.ToUInt64(Math.Pow(2, 48)));
+
+            ulong total_ulong = 1023;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.BinaryAnd, ref total_ulong, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref ulong total, int i) =>
+            {
+                total &= (ulong)i;
+            });
+
+            total_ulong.Should().Be(0);
+
+            uint total_uint = 0;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.BinaryOr, ref total_uint, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref uint total, int i) =>
+            {
+                total |= (uint)i;
+            });
+
+            total_uint.Should().Be(1023);
         }
 
         /// <summary>
