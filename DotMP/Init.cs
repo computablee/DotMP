@@ -78,7 +78,7 @@ namespace DotMP
         /// </summary>
         private static object ws_lock_pv = new object();
         /// <summary>
-        /// Getter and setter for the singleton object WorkShare.ws_lock_pv.
+        /// Getter for the singleton object WorkShare.ws_lock_pv.
         /// </summary>
         internal object ws_lock
         {
@@ -231,7 +231,7 @@ namespace DotMP
         /// Sets the local variable to the appropriate value based on the operation for parallel for reduction loops.
         /// For addition and subtraction, the initial starting value is 0.
         /// For multiplication, the initial starting value is 1.
-        /// For binary And, the initial starting value is -1.
+        /// For binary And, the initial starting value is the bitwise negation of 0.
         /// For binary Or and Xor, the initial starting value is 0.
         /// For boolean And, the initial starting value is true.
         /// For boolean Or, the initial starting value is false.
@@ -252,7 +252,7 @@ namespace DotMP
                     local = (T)Convert.ChangeType(1, typeof(T));
                     break;
                 case Operations.BinaryAnd:
-                    local = (T)Convert.ChangeType(-1, typeof(T));
+                    local = ~(dynamic)Convert.ChangeType(0, typeof(T));
                     break;
                 case Operations.BinaryOr:
                     local = (T)Convert.ChangeType(0, typeof(T));
