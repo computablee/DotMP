@@ -252,7 +252,7 @@ namespace DotMP
                     local = (T)Convert.ChangeType(1, typeof(T));
                     break;
                 case Operations.BinaryAnd:
-                    local = (T)Convert.ChangeType(-1, typeof(T));
+                    local = ~(dynamic)Convert.ChangeType(0, typeof(T));
                     break;
                 case Operations.BinaryOr:
                     local = (T)Convert.ChangeType(0, typeof(T));
