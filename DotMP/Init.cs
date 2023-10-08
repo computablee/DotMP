@@ -231,7 +231,7 @@ namespace DotMP
         /// Sets the local variable to the appropriate value based on the operation for parallel for reduction loops.
         /// For addition and subtraction, the initial starting value is 0.
         /// For multiplication, the initial starting value is 1.
-        /// For binary And, the initial starting value is -1.
+        /// For binary And, the initial starting value is the bitwise negation of 0.
         /// For binary Or and Xor, the initial starting value is 0.
         /// For boolean And, the initial starting value is true.
         /// For boolean Or, the initial starting value is false.
