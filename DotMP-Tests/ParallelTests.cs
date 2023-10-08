@@ -541,6 +541,57 @@ namespace DotMPTests
             });
 
             total_uint.Should().Be(1023);
+
+            byte total_byte = 0;
+            Console.WriteLine("here");
+
+            DotMP.Parallel.ParallelForReduction(0, 256, DotMP.Operations.BinaryXor, ref total_byte, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref byte total, int i) =>
+            {
+                total ^= (byte)i;
+            });
+
+            byte actual_byte = 0;
+
+            for (short i = 0; i < 256; i++)
+                actual_byte ^= (byte)i;
+
+            total_byte.Should().Be(actual_byte);
+
+            bool total_bool = true;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.BooleanAnd, ref total_bool, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref bool total, int i) =>
+            {
+                total = total && (i != 768);
+            });
+
+            total_bool.Should().BeFalse();
+
+            total_bool = false;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.BooleanOr, ref total_bool, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref bool total, int i) =>
+            {
+                total = total || (i == 768);
+            });
+
+            total_bool.Should().BeTrue();
+
+            double total_double = double.MaxValue;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Min, ref total_double, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref double total, int i) =>
+            {
+                total = Math.Min(total, (double)i);
+            });
+
+            total_double.Should().Be(0);
+
+            total_double = double.MinValue;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Max, ref total_double, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref double total, int i) =>
+            {
+                total = Math.Max(total, (double)i);
+            });
+
+            total_double.Should().Be(1023);
         }
 
         /// <summary>
