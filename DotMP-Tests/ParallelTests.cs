@@ -543,7 +543,6 @@ namespace DotMPTests
             total_uint.Should().Be(1023);
 
             byte total_byte = 0;
-            Console.WriteLine("here");
 
             DotMP.Parallel.ParallelForReduction(0, 256, DotMP.Operations.BinaryXor, ref total_byte, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref byte total, int i) =>
             {
