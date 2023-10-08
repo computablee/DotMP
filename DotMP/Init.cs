@@ -78,7 +78,7 @@ namespace DotMP
         /// </summary>
         private static object ws_lock_pv = new object();
         /// <summary>
-        /// Getter and setter for the singleton object WorkShare.ws_lock_pv.
+        /// Getter for the singleton object WorkShare.ws_lock_pv.
         /// </summary>
         internal object ws_lock
         {
