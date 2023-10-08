@@ -1141,9 +1141,12 @@ namespace DotMPTests
         {
             float[] z = new float[x.Length];
 
-            DotMP.Parallel.ParallelMasterTaskloop(0, x.Length, grainsize: grainsize, num_threads: 6, action: i =>
+            DotMP.Parallel.ParallelRegion(num_threads: 6, action: () =>
             {
-                z[i] += a * x[i] + y[i];
+                DotMP.Parallel.MasterTaskloop(0, x.Length, grainsize: grainsize, action: i =>
+                {
+                    z[i] += a * x[i] + y[i];
+                });
             });
 
             return z;
