@@ -11,6 +11,5 @@ var searchData=
   ['dotmptests_41',['DotMPTests',['../namespaceDotMPTests.html',1,'']]],
   ['dynamic_42',['Dynamic',['../namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a971fd8cc345d8bd9f92e9f7d88fdf20c',1,'DotMP']]],
   ['dynamic_5fshould_5fproduce_5fcorrect_5fresults_43',['Dynamic_should_produce_correct_results',['../classDotMPTests_1_1ParallelTests.html#a8188080c823e4e9584a50d32f68e5722',1,'DotMPTests::ParallelTests']]],
-  ['dynamicloop_3c_20t_20_3e_44',['DynamicLoop&lt; T &gt;',['../classDotMP_1_1Iter.html#a2b5201aba391a7999fee89654becd8d4',1,'DotMP::Iter']]],
-  ['dynamicnext_3c_20t_20_3e_45',['DynamicNext&lt; T &gt;',['../classDotMP_1_1Iter.html#aeae6256e729bb6bb0385f25eb25c77be',1,'DotMP::Iter']]]
+  ['dynamicnext_3c_20t_20_3e_44',['DynamicNext&lt; T &gt;',['../classDotMP_1_1Iter.html#aeae6256e729bb6bb0385f25eb25c77be',1,'DotMP::Iter']]]
 ];

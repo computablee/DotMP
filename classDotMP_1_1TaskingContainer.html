@@ -67,7 +67,6 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#pac-methods">Package Functions</a> &#124;
-<a href="#properties">Properties</a> &#124;
 <a href="#pri-static-attribs">Static Private Attributes</a> &#124;
 <a href="classDotMP_1_1TaskingContainer-members.html">List of all members</a>  </div>
   <div class="headertitle">
@@ -108,20 +107,11 @@ Package Functions</h2></td></tr>
 <tr class="memdesc:a2835596e671d06676f106a4beaee7aee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark task as completed to remove as a dependency in the <a class="el" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies.">DAG</a>.  <a href="classDotMP_1_1TaskingContainer.html#a2835596e671d06676f106a4beaee7aee">More...</a><br /></td></tr>
 <tr class="separator:a2835596e671d06676f106a4beaee7aee"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
-Properties</h2></td></tr>
-<tr class="memitem:abfb9eda91a170ad3e21fc7913dd74598"><td class="memItemLeft" align="right" valign="top">ref int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1TaskingContainer.html#abfb9eda91a170ad3e21fc7913dd74598">threads_complete</a><code> [get]</code></td></tr>
-<tr class="memdesc:abfb9eda91a170ad3e21fc7913dd74598"><td class="mdescLeft">&#160;</td><td class="mdescRight">Ref getter for <a class="el" href="classDotMP_1_1TaskingContainer.html#af1e36ec3e67d8a04b533a2739ed58c70" title="Counter for coordinating Parallel.Taskwait(), ensures that all threads have agreed that no more work ...">TaskingContainer.threads_complete_pv</a>.  <a href="classDotMP_1_1TaskingContainer.html#abfb9eda91a170ad3e21fc7913dd74598">More...</a><br /></td></tr>
-<tr class="separator:abfb9eda91a170ad3e21fc7913dd74598"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
 <tr class="memitem:acfd07b6500fa96b08525c5d0363af22f"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1DAG.html">DAG</a>&lt; ulong, Action &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1TaskingContainer.html#acfd07b6500fa96b08525c5d0363af22f">dag</a> = new <a class="el" href="classDotMP_1_1DAG.html">DAG</a>&lt;ulong, Action&gt;()</td></tr>
 <tr class="memdesc:acfd07b6500fa96b08525c5d0363af22f"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies.">DAG</a> of tasks that must execute. We use a <a class="el" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies.">DAG</a> in order to maintain dependency chains.  <a href="classDotMP_1_1TaskingContainer.html#acfd07b6500fa96b08525c5d0363af22f">More...</a><br /></td></tr>
 <tr class="separator:acfd07b6500fa96b08525c5d0363af22f"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1e36ec3e67d8a04b533a2739ed58c70"><td class="memItemLeft" align="right" valign="top">static volatile int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1TaskingContainer.html#af1e36ec3e67d8a04b533a2739ed58c70">threads_complete_pv</a> = 0</td></tr>
-<tr class="memdesc:af1e36ec3e67d8a04b533a2739ed58c70"><td class="mdescLeft">&#160;</td><td class="mdescRight">Counter for coordinating <a class="el" href="classDotMP_1_1Parallel.html#ac869fe1e889bc6b1db2963ad1f03e447" title="Wait for all tasks in the queue to complete. Is injected into a Thread&#39;s work by the Region construct...">Parallel.Taskwait()</a>, ensures that all threads have agreed that no more work is to be done before progressing to the barrier.  <a href="classDotMP_1_1TaskingContainer.html#af1e36ec3e67d8a04b533a2739ed58c70">More...</a><br /></td></tr>
-<tr class="separator:af1e36ec3e67d8a04b533a2739ed58c70"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>A simple container for a Queue&lt;Action&gt; for managing tasks. Will grow in complexity as dependencies are added and a dependency graph must be generated. </p>
@@ -396,55 +386,6 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p><a class="el" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies.">DAG</a> of tasks that must execute. We use a <a class="el" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies.">DAG</a> in order to maintain dependency chains. </p>
-
-</div>
-</div>
-<a id="af1e36ec3e67d8a04b533a2739ed58c70"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af1e36ec3e67d8a04b533a2739ed58c70">&#9670;&nbsp;</a></span>threads_complete_pv</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">volatile int DotMP.TaskingContainer.threads_complete_pv = 0</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Counter for coordinating <a class="el" href="classDotMP_1_1Parallel.html#ac869fe1e889bc6b1db2963ad1f03e447" title="Wait for all tasks in the queue to complete. Is injected into a Thread&#39;s work by the Region construct...">Parallel.Taskwait()</a>, ensures that all threads have agreed that no more work is to be done before progressing to the barrier. </p>
-
-</div>
-</div>
-<h2 class="groupheader">Property Documentation</h2>
-<a id="abfb9eda91a170ad3e21fc7913dd74598"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#abfb9eda91a170ad3e21fc7913dd74598">&#9670;&nbsp;</a></span>threads_complete</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">ref int DotMP.TaskingContainer.threads_complete</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">package</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Ref getter for <a class="el" href="classDotMP_1_1TaskingContainer.html#af1e36ec3e67d8a04b533a2739ed58c70" title="Counter for coordinating Parallel.Taskwait(), ensures that all threads have agreed that no more work ...">TaskingContainer.threads_complete_pv</a>. </p>
 
 </div>
 </div>
