@@ -102,7 +102,7 @@ Package Functions</h2></td></tr>
 <tr class="memdesc:a5e28fe402f9d717b3fe8ec5b63502137"><td class="mdescLeft">&#160;</td><td class="mdescRight">Add a value to reduction_list.  <a href="classDotMP_1_1WorkShare.html#a5e28fe402f9d717b3fe8ec5b63502137">More...</a><br /></td></tr>
 <tr class="separator:a5e28fe402f9d717b3fe8ec5b63502137"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a53d787c309c1fdaae4c4e8e7253763af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1WorkShare.html#a53d787c309c1fdaae4c4e8e7253763af">SetLocal&lt; T &gt;</a> (ref T local)</td></tr>
-<tr class="memdesc:a53d787c309c1fdaae4c4e8e7253763af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the local variable to the appropriate value based on the operation for parallel for reduction loops. For addition and subtraction, the initial starting value is 0. For multiplication, the initial starting value is 1. For binary And, the initial starting value is -1. For binary Or and Xor, the initial starting value is 0. For boolean And, the initial starting value is true. For boolean Or, the initial starting value is false. For min, the initial starting value is int.MaxValue. For max, the initial starting value is int.MinValue.  <a href="classDotMP_1_1WorkShare.html#a53d787c309c1fdaae4c4e8e7253763af">More...</a><br /></td></tr>
+<tr class="memdesc:a53d787c309c1fdaae4c4e8e7253763af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the local variable to the appropriate value based on the operation for parallel for reduction loops. For addition and subtraction, the initial starting value is 0. For multiplication, the initial starting value is 1. For binary And, the initial starting value is the bitwise negation of 0. For binary Or and Xor, the initial starting value is 0. For boolean And, the initial starting value is true. For boolean Or, the initial starting value is false. For min, the initial starting value is int.MaxValue. For max, the initial starting value is int.MinValue.  <a href="classDotMP_1_1WorkShare.html#a53d787c309c1fdaae4c4e8e7253763af">More...</a><br /></td></tr>
 <tr class="separator:a53d787c309c1fdaae4c4e8e7253763af"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
@@ -114,7 +114,7 @@ Properties</h2></td></tr>
 <tr class="memdesc:ad620a76ed27bcb81597ada069fcdfdc0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter and setter for the singleton integer <a class="el" href="classDotMP_1_1WorkShare.html#a72dcd0dfd5be8f9e1f0acb421e7cda4a" title="The starting iteration of the parallel for loop, inclusive.">WorkShare.start_pv</a>.  <a href="classDotMP_1_1WorkShare.html#ad620a76ed27bcb81597ada069fcdfdc0">More...</a><br /></td></tr>
 <tr class="separator:ad620a76ed27bcb81597ada069fcdfdc0"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33da082a65a7f54d3360fa40ef6cdb32"><td class="memItemLeft" align="right" valign="top">object&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1WorkShare.html#a33da082a65a7f54d3360fa40ef6cdb32">ws_lock</a><code> [get]</code></td></tr>
-<tr class="memdesc:a33da082a65a7f54d3360fa40ef6cdb32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter and setter for the singleton object <a class="el" href="classDotMP_1_1WorkShare.html#af3c3a63ca787a01b9502440dad329717" title="A generic lock to be used within the parallel for loop.">WorkShare.ws_lock_pv</a>.  <a href="classDotMP_1_1WorkShare.html#a33da082a65a7f54d3360fa40ef6cdb32">More...</a><br /></td></tr>
+<tr class="memdesc:a33da082a65a7f54d3360fa40ef6cdb32"><td class="mdescLeft">&#160;</td><td class="mdescRight">Getter for the singleton object <a class="el" href="classDotMP_1_1WorkShare.html#af3c3a63ca787a01b9502440dad329717" title="A generic lock to be used within the parallel for loop.">WorkShare.ws_lock_pv</a>.  <a href="classDotMP_1_1WorkShare.html#a33da082a65a7f54d3360fa40ef6cdb32">More...</a><br /></td></tr>
 <tr class="separator:a33da082a65a7f54d3360fa40ef6cdb32"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac6433a633203b9c8e23787ec3a596701"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1WorkShare.html#ac6433a633203b9c8e23787ec3a596701">end</a><code> [get, private set]</code></td></tr>
 <tr class="memdesc:ac6433a633203b9c8e23787ec3a596701"><td class="mdescLeft">&#160;</td><td class="mdescRight">The ending iteration of the parallel for loop, exclusive.  <a href="classDotMP_1_1WorkShare.html#ac6433a633203b9c8e23787ec3a596701">More...</a><br /></td></tr>
@@ -365,7 +365,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Sets the local variable to the appropriate value based on the operation for parallel for reduction loops. For addition and subtraction, the initial starting value is 0. For multiplication, the initial starting value is 1. For binary And, the initial starting value is -1. For binary Or and Xor, the initial starting value is 0. For boolean And, the initial starting value is true. For boolean Or, the initial starting value is false. For min, the initial starting value is int.MaxValue. For max, the initial starting value is int.MinValue. </p>
+<p>Sets the local variable to the appropriate value based on the operation for parallel for reduction loops. For addition and subtraction, the initial starting value is 0. For multiplication, the initial starting value is 1. For binary And, the initial starting value is the bitwise negation of 0. For binary Or and Xor, the initial starting value is 0. For boolean And, the initial starting value is true. For boolean Or, the initial starting value is false. For min, the initial starting value is int.MaxValue. For max, the initial starting value is int.MinValue. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>The type of the local variable.</td></tr>
@@ -787,7 +787,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Getter and setter for the singleton object <a class="el" href="classDotMP_1_1WorkShare.html#af3c3a63ca787a01b9502440dad329717" title="A generic lock to be used within the parallel for loop.">WorkShare.ws_lock_pv</a>. </p>
+<p>Getter for the singleton object <a class="el" href="classDotMP_1_1WorkShare.html#af3c3a63ca787a01b9502440dad329717" title="A generic lock to be used within the parallel for loop.">WorkShare.ws_lock_pv</a>. </p>
 
 </div>
 </div>
