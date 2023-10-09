@@ -854,6 +854,23 @@ namespace DotMP
         }
 
 
+
+        /// <summary>
+        /// Validates the input parameters for a specific operation.
+        /// </summary>
+        /// <param name="start">The starting index.</param>
+        /// <param name="end">The ending index.</param>
+        /// <param name="numThreads">Number of threads (optional, set to null if not applicable).</param>
+        /// <param name="chunkSize">Chunk size (optional, set to null if not applicable).</param>
+        /// <param name="numTasks">Number of tasks (optional, set to null if not applicable).</param>
+        /// <param name="grainSize">Grain size (optional, set to null if not applicable).</param>
+        /// <exception cref="ArgumentException">Thrown when input parameters are invalid:
+        /// <para>- <paramref name="end"/> is less than <paramref name="start"/>.</para>
+        /// <para>- <paramref name="start"/> or <paramref name="end"/> is less than 0.</para>
+        /// <para>- <paramref name="numThreads"/> is 0.</para>
+        /// <para>- <paramref name="chunkSize"/> is 0.</para>
+        /// <para>- Either <paramref name="numTasks"/> or <paramref name="grainSize"/> is 0.</para>
+        /// </exception>
         private static void ValidateParameters(
             int start,
             int end,
@@ -873,7 +890,6 @@ namespace DotMP
             if (num_tasks is not null
                 && grainsize is not null
                 && (num_tasks == 0 || grainsize == 0)) throw new ArgumentException("Number of tasks and grainsize cannot be 0.");
-
 
         }
     }
