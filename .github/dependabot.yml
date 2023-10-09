@@ -27,7 +27,7 @@ updates:
         patterns:
           - "FluentAssertions"
           - "FluentAssertions.*"
-      mocha-chai:
+      xunit:
         patterns:
           - "xunit"
           - "xunit.*"
