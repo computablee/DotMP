@@ -19,6 +19,18 @@ updates:
       - "nuget"
     commit-message:
       prefix: "nuget"
+    groups:
+      coverlet:
+        patterns:
+          - "coverlet.*"
+      fluent:
+        patterns:
+          - "FluentAssertions"
+          - "FluentAssertions.*"
+      mocha-chai:
+        patterns:
+          - "xunit"
+          - "xunit.*"
 
   - package-ecosystem: "nuget"
     directory: "./DotMP/"
