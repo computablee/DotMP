@@ -154,14 +154,14 @@ namespace DotMPTests
         {
             int[,] iters_hit = new int[1024, 1024];
 
-            DotMP.Parallel.ParallelForCollapse((256, 512), (512, 768), num_threads: 8, chunk_size: 7, schedule: Schedule.Static, action: (i, j) =>
+            DotMP.Parallel.ParallelForCollapse((256, 512), (512, 600), num_threads: 8, chunk_size: 7, schedule: Schedule.Static, action: (i, j) =>
             {
                 DotMP.Atomic.Inc(ref iters_hit[i, j]);
             });
 
             for (int i = 0; i < 1024; i++)
                 for (int j = 0; j < 1024; j++)
-                    if (i >= 256 && i < 512 && j >= 512 && j < 768)
+                    if (i >= 256 && i < 512 && j >= 512 && j < 600)
                         iters_hit[i, j].Should().Be(1);
                     else
                         iters_hit[i, j].Should().Be(0);
