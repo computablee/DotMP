@@ -369,6 +369,24 @@ namespace DotMP
         }
 
         /// <summary>
+        /// Creates a parallel collapsed for loop. Contains all of the parameters from ParallelRegion() and ForCollapse().
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// </summary>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        public static void ParallelForCollapse((int, int) firstRange, (int, int) secondRange, Action<int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        {
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                ForCollapse(firstRange, secondRange, action, schedule, chunk_size);
+            });
+        }
+
+        /// <summary>
         /// Creates a sections region.
         /// Sections allows for the user to submit multiple, individual tasks to be distributed among threads in parallel.
         /// In parallel, each thread active will dequeue a callback and execute it.
