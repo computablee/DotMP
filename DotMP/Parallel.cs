@@ -242,10 +242,10 @@ namespace DotMP
         /// <param name="forAction">The action to be performed in the loop.</param>
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <param name="op">The operation to be performed in the case of reduction loops.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        private static void For(int start, int end, ForAction<object> forAction, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        private static void For<T>(int start, int end, ForAction<T> forAction, Schedule schedule = Schedule.Static, uint? chunk_size = null, Operations? op = null)
         {
-            // jscpd:ignore-start
             var freg = new ForkedRegion();
 
             if (!freg.in_parallel)
@@ -255,31 +255,27 @@ namespace DotMP
 
             FixArgs(start, end, ref schedule, ref chunk_size, freg.reg.num_threads);
 
-            WorkShare ws = new WorkShare((uint)GetNumThreads(), freg.reg.threads, start, end, chunk_size.Value, null, schedule);
+            WorkShare ws = new WorkShare((uint)GetNumThreads(), freg.reg.threads, start, end, chunk_size.Value, op, schedule);
 
             Barrier();
 
             ws.in_for = true;
-            // jscpd:ignore-end
 
             switch (schedule)
             {
                 case Schedule.Static:
-                    Iter.StaticLoop(ws, GetThreadNum(), forAction, false);
+                    Iter.StaticLoop(ws, GetThreadNum(), forAction);
                     break;
                 case Schedule.Dynamic:
                 case Schedule.Guided:
-                    Iter.LoadBalancingLoop(ws, forAction, false, schedule);
+                    Iter.LoadBalancingLoop(ws, forAction, schedule);
                     break;
             }
 
             ws.in_for = false;
             Barrier();
 
-            Master(() =>
-            {
-                ordered.Clear();
-            });
+            Master(ordered.Clear);
 
             Barrier();
         }
@@ -303,43 +299,33 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
-            // jscpd:ignore-start
-            var freg = new ForkedRegion();
-
-            if (!freg.in_parallel)
-            {
-                throw new NotInParallelRegionException();
-            }
-
-            FixArgs(start, end, ref schedule, ref chunk_size, freg.reg.num_threads);
-
-            WorkShare ws = new WorkShare((uint)GetNumThreads(), freg.reg.threads, start, end, chunk_size.Value, op, schedule);
-
-            Barrier();
-
-            ws.in_for = true;
-
             ForAction<T> forAction = new ForAction<T>(action);
-            // jscpd:ignore-end
 
-            switch (schedule)
-            {
-                case Schedule.Static:
-                    Iter.StaticLoop(ws, GetThreadNum(), forAction, true);
-                    break;
-                case Schedule.Dynamic:
-                case Schedule.Guided:
-                    Iter.LoadBalancingLoop(ws, forAction, true, schedule);
-                    break;
-            }
+            ForReduction(start, end, op, ref reduce_to, forAction, schedule, chunk_size);
+        }
 
-            Barrier();
+        /// <summary>
+        /// Internal handler for ForReduction.
+        /// </summary>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <param name="op">The operation to be performed in the case of reduction loops.</param>
+        /// <param name="reduce_to">The variable to reduce to.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        private static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ForAction<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        {
+            For(start, end, action, schedule, chunk_size, op);
+
+            WorkShare ws = new WorkShare();
 
             if (GetThreadNum() == 0)
             {
                 foreach (T i in ws.reduction_values)
                 {
-                    switch (ws.op)
+                    switch (op)
                     {
                         case Operations.Add:
                         case Operations.Subtract:
@@ -371,11 +357,7 @@ namespace DotMP
                             break;
                     }
                 }
-
-                ordered.Clear();
             }
-
-            ws.in_for = false;
 
             Barrier();
         }
