@@ -300,10 +300,10 @@ namespace DotMP
                     }
                     break;
                 case ActionSelector.Collapse2:
-                    int diff1 = ranges[0].Item2 - ranges[0].Item1;
-                    int diff2 = ranges[1].Item2 - ranges[1].Item1;
                     int start1 = ranges[0].Item1;
                     int start2 = ranges[1].Item1;
+                    int diff1 = ranges[0].Item2 - start1;
+                    int diff2 = ranges[1].Item2 - start2;
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
