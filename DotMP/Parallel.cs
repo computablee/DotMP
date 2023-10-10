@@ -305,6 +305,129 @@ namespace DotMP
         }
 
         /// <summary>
+        /// Creates a collapsed reduction for loop inside a parallel region.
+        /// A collapsed for loop can be used when you want to parallelize two or more nested for loops.
+        /// Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling,
+        /// which has the effect of parallelizing across both loops.
+        /// This has the effect multiplying the number of iterations the scheduler can work with,
+        /// which can improve load balancing in irregular nested loops.
+        /// 
+        /// Unlike Parallel.ForCollapse, this method permits a reduction parameter.
+        /// </summary>
+        /// <typeparam name="T">The type of the reduction.</typeparam>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="op">The operation to be performed on the reduction.</param>
+        /// <param name="reduce_to">The variable to reduce to.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, Operations op, ref T reduce_to, ActionRef2<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        {
+            ForAction<T> forAction = new ForAction<T>(action, new (int, int)[] { firstRange, secondRange });
+
+            ForReduction(0,
+                (firstRange.Item2 - firstRange.Item1) *
+                (secondRange.Item2 - secondRange.Item1),
+                op, ref reduce_to, forAction, schedule, chunk_size);
+        }
+
+        /// <summary>
+        /// Creates a collapsed reduction for loop inside a parallel region.
+        /// A collapsed for loop can be used when you want to parallelize two or more nested for loops.
+        /// Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling,
+        /// which has the effect of parallelizing across both loops.
+        /// This has the effect multiplying the number of iterations the scheduler can work with,
+        /// which can improve load balancing in irregular nested loops.
+        /// 
+        /// Unlike Parallel.ForCollapse, this method permits a reduction parameter.
+        /// </summary>
+        /// <typeparam name="T">The type of the reduction.</typeparam>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="thirdRange">A tuple representing the start and end of the third for loop.</param>
+        /// <param name="op">The operation to be performed on the reduction.</param>
+        /// <param name="reduce_to">The variable to reduce to.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Operations op, ref T reduce_to, ActionRef3<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        {
+            ForAction<T> forAction = new ForAction<T>(action, new (int, int)[] { firstRange, secondRange, thirdRange });
+
+            ForReduction(0,
+                (firstRange.Item2 - firstRange.Item1) *
+                (secondRange.Item2 - secondRange.Item1) *
+                (thirdRange.Item2 - thirdRange.Item1),
+                op, ref reduce_to, forAction, schedule, chunk_size);
+        }
+
+        /// <summary>
+        /// Creates a collapsed reduction for loop inside a parallel region.
+        /// A collapsed for loop can be used when you want to parallelize two or more nested for loops.
+        /// Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling,
+        /// which has the effect of parallelizing across both loops.
+        /// This has the effect multiplying the number of iterations the scheduler can work with,
+        /// which can improve load balancing in irregular nested loops.
+        /// 
+        /// Unlike Parallel.ForCollapse, this method permits a reduction parameter.
+        /// </summary>
+        /// <typeparam name="T">The type of the reduction.</typeparam>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="thirdRange">A tuple representing the start and end of the third for loop.</param>
+        /// <param name="fourthRange">A tuple representing the start and end of the fourth for loop.</param>
+        /// <param name="op">The operation to be performed on the reduction.</param>
+        /// <param name="reduce_to">The variable to reduce to.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Operations op, ref T reduce_to, ActionRef4<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        {
+            ForAction<T> forAction = new ForAction<T>(action, new (int, int)[] { firstRange, secondRange, thirdRange, fourthRange });
+
+            ForReduction(0,
+                (firstRange.Item2 - firstRange.Item1) *
+                (secondRange.Item2 - secondRange.Item1) *
+                (thirdRange.Item2 - thirdRange.Item1) *
+                (fourthRange.Item2 - fourthRange.Item1),
+                op, ref reduce_to, forAction, schedule, chunk_size);
+        }
+
+        /// <summary>
+        /// Creates a collapsed reduction for loop inside a parallel region.
+        /// A collapsed for loop can be used when you want to parallelize two or more nested for loops.
+        /// Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling,
+        /// which has the effect of parallelizing across both loops.
+        /// This has the effect multiplying the number of iterations the scheduler can work with,
+        /// which can improve load balancing in irregular nested loops.
+        /// 
+        /// Unlike Parallel.ForCollapse, this method permits a reduction parameter.
+        /// </summary>
+        /// <typeparam name="T">The type of the reduction.</typeparam>
+        /// <param name="ranges">A tuple representing the start and end of each of the for loops.</param>
+        /// <param name="op">The operation to be performed on the reduction.</param>
+        /// <param name="reduce_to">The variable to reduce to.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        public static void ForReductionCollapse<T>((int, int)[] ranges, Operations op, ref T reduce_to, ActionRefN<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        {
+            ForAction<T> forAction = new ForAction<T>(action, ranges);
+
+            int total_iters = 1;
+
+            foreach ((int i, int j) in ranges)
+                total_iters *= j - i;
+
+            ForReduction(0, total_iters, op, ref reduce_to, forAction, schedule, chunk_size);
+        }
+
+        /// <summary>
         /// Internal handler for ForReduction.
         /// </summary>
         /// <param name="start">The start of the loop, inclusive.</param>
@@ -434,7 +557,7 @@ namespace DotMP
 
         /// <summary>
         /// Creates a parallel collapsed for loop. Contains all of the parameters from ParallelRegion() and ForCollapse().
-        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop.
         /// </summary>
         /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
         /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
@@ -452,7 +575,7 @@ namespace DotMP
 
         /// <summary>
         /// Creates a parallel collapsed for loop. Contains all of the parameters from ParallelRegion() and ForCollapse().
-        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop.
         /// </summary>
         /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
         /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
@@ -471,7 +594,7 @@ namespace DotMP
 
         /// <summary>
         /// Creates a parallel collapsed for loop. Contains all of the parameters from ParallelRegion() and ForCollapse().
-        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop.
         /// </summary>
         /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
         /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
@@ -491,7 +614,7 @@ namespace DotMP
 
         /// <summary>
         /// Creates a parallel collapsed for loop. Contains all of the parameters from ParallelRegion() and ForCollapse().
-        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop.
         /// </summary>
         /// <param name="ranges">A tuple representing the start and end of each of the for loops.</param>
         /// <param name="action">The action to be performed in the loop.</param>
@@ -504,6 +627,104 @@ namespace DotMP
             {
                 ForCollapse(ranges, action, schedule, chunk_size);
             });
+        }
+
+        /// <summary>
+        /// Creates a parallel collapsed reduction for loop. Contains all of the parameters from ParallelRegion() and ForReductionCollapse().
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// </summary>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="op">The operation to be performed on the reduction.</param>
+        /// <param name="reduce_to">The variable to reduce to.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        public static void ParallelForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, Operations op, ref T reduce_to, ActionRef2<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        {
+            T local = reduce_to;
+
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                ForReductionCollapse(firstRange, secondRange, op, ref local, action, schedule, chunk_size);
+            });
+
+            reduce_to = local;
+        }
+
+        /// <summary>
+        /// Creates a parallel collapsed reduction for loop. Contains all of the parameters from ParallelRegion() and ForReductionCollapse().
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// </summary>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="thirdRange">A tuple representing the start and end of the third for loop.</param>
+        /// <param name="op">The operation to be performed on the reduction.</param>
+        /// <param name="reduce_to">The variable to reduce to.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        public static void ParallelForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Operations op, ref T reduce_to, ActionRef3<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        {
+            T local = reduce_to;
+
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                ForReductionCollapse(firstRange, secondRange, thirdRange, op, ref local, action, schedule, chunk_size);
+            });
+
+            reduce_to = local;
+        }
+
+        /// <summary>
+        /// Creates a parallel collapsed reduction for loop. Contains all of the parameters from ParallelRegion() and ForReductionCollapse().
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// </summary>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="thirdRange">A tuple representing the start and end of the third for loop.</param>
+        /// <param name="fourthRange">A tuple representing the start and end of the third for loop.</param>
+        /// <param name="op">The operation to be performed on the reduction.</param>
+        /// <param name="reduce_to">The variable to reduce to.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        public static void ParallelForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Operations op, ref T reduce_to, ActionRef4<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        {
+            T local = reduce_to;
+
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                ForReductionCollapse(firstRange, secondRange, thirdRange, fourthRange, op, ref local, action, schedule, chunk_size);
+            });
+
+            reduce_to = local;
+        }
+
+        /// <summary>
+        /// Creates a parallel collapsed reduction for loop. Contains all of the parameters from ParallelRegion() and ForReductionCollapse().
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// </summary>
+        /// <param name="ranges">A tuple representing the start and end of each of the for loops.</param>
+        /// <param name="op">The operation to be performed on the reduction.</param>
+        /// <param name="reduce_to">The variable to reduce to.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        public static void ParallelForReductionCollapse<T>((int, int)[] ranges, Operations op, ref T reduce_to, ActionRefN<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        {
+            T local = reduce_to;
+
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                ForReductionCollapse(ranges, op, ref local, action, schedule, chunk_size);
+            });
+
+            reduce_to = local;
         }
 
         /// <summary>
