@@ -74,8 +74,7 @@ namespace DotMP
         /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="thread_id">The thread ID.</param>
         /// <param name="forAction">The function to be executed.</param>
-        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
-        internal static void StaticLoop<T>(WorkShare ws, int thread_id, ForAction<T> forAction, bool is_reduction)
+        internal static void StaticLoop<T>(WorkShare ws, int thread_id, ForAction<T> forAction)
         {
             int tid = thread_id;
             Thr thr = ws.thread;
@@ -87,7 +86,7 @@ namespace DotMP
             ws.SetLocal(ref local);
 
             while (thr.curr_iter < end)
-                StaticNext(ws, thr, ws.chunk_size, forAction, is_reduction, ref local);
+                StaticNext(ws, thr, ws.chunk_size, forAction, ref local);
 
             ws.AddReductionValue(local);
         }
@@ -101,9 +100,8 @@ namespace DotMP
         /// <param name="thr">The Thr object for the current thread.</param>
         /// <param name="chunk_size">The chunk size.</param>
         /// <param name="forAction">The function to be executed.</param>
-        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
         /// <param name="local">The local variable for reductions.</param>
-        private static void StaticNext<T>(WorkShare ws, Thr thr, uint chunk_size, ForAction<T> forAction, bool is_reduction, ref T local)
+        private static void StaticNext<T>(WorkShare ws, Thr thr, uint chunk_size, ForAction<T> forAction, ref T local)
         {
             int start = thr.curr_iter;
             int end = (int)Math.Min(thr.curr_iter + chunk_size, ws.end);
@@ -119,9 +117,8 @@ namespace DotMP
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="forAction">The function to be executed.</param>
-        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
         /// <param name="schedule">The schedule to use.</param>
-        internal static void LoadBalancingLoop<T>(WorkShare ws, ForAction<T> forAction, bool is_reduction, Schedule schedule)
+        internal static void LoadBalancingLoop<T>(WorkShare ws, ForAction<T> forAction, Schedule schedule)
         {
             Thr thr = ws.thread;
             int end = ws.end;
@@ -131,11 +128,11 @@ namespace DotMP
 
             if (schedule == Schedule.Guided) while (ws.start < end)
                 {
-                    GuidedNext(ws, thr, forAction, is_reduction, ref local);
+                    GuidedNext(ws, thr, forAction, ref local);
                 }
             else if (schedule == Schedule.Dynamic) while (ws.start < end)
                 {
-                    DynamicNext(ws, thr, forAction, is_reduction, ref local);
+                    DynamicNext(ws, thr, forAction, ref local);
                 }
 
             ws.AddReductionValue(local);
@@ -149,9 +146,8 @@ namespace DotMP
         /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="thr">The Thr object for the current thread.</param>
         /// <param name="forAction">The function to be executed.</param>
-        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
         /// <param name="local">The local variable for reductions.</param>
-        private static void DynamicNext<T>(WorkShare ws, Thr thr, ForAction<T> forAction, bool is_reduction, ref T local)
+        private static void DynamicNext<T>(WorkShare ws, Thr thr, ForAction<T> forAction, ref T local)
         {
             int chunk_start;
 
@@ -174,9 +170,8 @@ namespace DotMP
         /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="thr">The Thr object for the current thread.</param>
         /// <param name="forAction">The function to be executed.</param>
-        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
         /// <param name="local">The local variable for reductions.</param>
-        private static void GuidedNext<T>(WorkShare ws, Thr thr, ForAction<T> forAction, bool is_reduction, ref T local)
+        private static void GuidedNext<T>(WorkShare ws, Thr thr, ForAction<T> forAction, ref T local)
         {
             int chunk_start, chunk_size;
 
