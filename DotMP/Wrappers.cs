@@ -163,6 +163,16 @@ namespace DotMP
         private ValueTuple<int, int>[] ranges;
 
         /// <summary>
+        /// Tracks if the action represents a collapsed for loop.
+        /// </summary>
+        internal bool IsCollapse { get; private set; }
+
+        /// <summary>
+        /// Tracks if the action represents a reduction loop.
+        /// </summary>
+        internal bool IsReduction { get; private set; }
+
+        /// <summary>
         /// Constructor for regular for loops with 1 variable.
         /// </summary>
         /// <param name="action">The action to run.</param>
@@ -170,6 +180,8 @@ namespace DotMP
         {
             omp_fn = action;
             selector = ActionSelector.Regular;
+            IsCollapse = false;
+            IsReduction = false;
         }
 
         /// <summary>
@@ -180,6 +192,8 @@ namespace DotMP
         {
             omp_red = action;
             selector = ActionSelector.Reduction;
+            IsCollapse = false;
+            IsReduction = true;
         }
 
         /// <summary>
@@ -192,6 +206,8 @@ namespace DotMP
             omp_col_2 = action;
             selector = ActionSelector.Collapse2;
             this.ranges = ranges;
+            IsCollapse = true;
+            IsReduction = false;
         }
 
         /// <summary>
@@ -204,6 +220,8 @@ namespace DotMP
             omp_col_3 = action;
             selector = ActionSelector.Collapse3;
             this.ranges = ranges;
+            IsCollapse = true;
+            IsReduction = false;
         }
 
         /// <summary>
@@ -216,6 +234,8 @@ namespace DotMP
             omp_col_4 = action;
             selector = ActionSelector.Collapse4;
             this.ranges = ranges;
+            IsCollapse = true;
+            IsReduction = false;
         }
 
         /// <summary>
@@ -228,6 +248,8 @@ namespace DotMP
             omp_col_n = action;
             selector = ActionSelector.CollapseN;
             this.ranges = ranges;
+            IsCollapse = true;
+            IsReduction = false;
         }
 
         /// <summary>
@@ -240,6 +262,8 @@ namespace DotMP
             omp_red_col_2 = action;
             selector = ActionSelector.ReductionCollapse2;
             this.ranges = ranges;
+            IsCollapse = true;
+            IsReduction = true;
         }
 
         /// <summary>
@@ -252,6 +276,8 @@ namespace DotMP
             omp_red_col_3 = action;
             selector = ActionSelector.ReductionCollapse3;
             this.ranges = ranges;
+            IsCollapse = true;
+            IsReduction = true;
         }
 
         /// <summary>
@@ -264,6 +290,8 @@ namespace DotMP
             omp_red_col_4 = action;
             selector = ActionSelector.ReductionCollapse4;
             this.ranges = ranges;
+            IsCollapse = true;
+            IsReduction = true;
         }
 
         /// <summary>
@@ -276,6 +304,8 @@ namespace DotMP
             omp_red_col_n = action;
             selector = ActionSelector.ReductionCollapseN;
             this.ranges = ranges;
+            IsCollapse = true;
+            IsReduction = true;
         }
 
         /// <summary>
