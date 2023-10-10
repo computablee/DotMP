@@ -157,6 +157,8 @@ namespace DotMP
         /// </summary>
         private ActionSelector selector;
 
+        private (int, int)[] ranges;
+
         /// <summary>
         /// Constructor for regular for loops with 1 variable.
         /// </summary>
@@ -181,80 +183,96 @@ namespace DotMP
         /// Constructor for collapsed for loops with 2 variables.
         /// </summary>
         /// <param name="action">The action to run.</param>
-        internal ForAction(Action<int, int> action)
+        /// <param name="ranges">The ranges of the collapsed loop.</param>
+        internal ForAction(Action<int, int> action, (int, int)[] ranges)
         {
             omp_col_2 = action;
             selector = ActionSelector.Collapse2;
+            this.ranges = ranges;
         }
 
         /// <summary>
         /// Constructor for collapsed for loops with 3 variables.
         /// </summary>
         /// <param name="action">The action to run.</param>
-        internal ForAction(Action<int, int, int> action)
+        /// <param name="ranges">The ranges of the collapsed loop.</param>
+        internal ForAction(Action<int, int, int> action, (int, int)[] ranges)
         {
             omp_col_3 = action;
             selector = ActionSelector.Collapse3;
+            this.ranges = ranges;
         }
 
         /// <summary>
         /// Constructor for collapsed for loops with 4 variables.
         /// </summary>
         /// <param name="action">The action to run.</param>
-        internal ForAction(Action<int, int, int, int> action)
+        /// <param name="ranges">The ranges of the collapsed loop.</param>
+        internal ForAction(Action<int, int, int, int> action, (int, int)[] ranges)
         {
             omp_col_4 = action;
             selector = ActionSelector.Collapse4;
+            this.ranges = ranges;
         }
 
         /// <summary>
         /// Constructor for collapsed for loops with unbounded variables.
         /// </summary>
         /// <param name="action">The action to run.</param>
-        internal ForAction(Action<int[]> action)
+        /// <param name="ranges">The ranges of the collapsed loop.</param>
+        internal ForAction(Action<int[]> action, (int, int)[] ranges)
         {
             omp_col_n = action;
             selector = ActionSelector.CollapseN;
+            this.ranges = ranges;
         }
 
         /// <summary>
         /// Constructor for reduction collapsed for loops with 2 variables.
         /// </summary>
         /// <param name="action">The action to run.</param>
-        internal ForAction(ActionRef2<T> action)
+        /// <param name="ranges">The ranges of the collapsed loop.</param>
+        internal ForAction(ActionRef2<T> action, (int, int)[] ranges)
         {
             omp_red_col_2 = action;
             selector = ActionSelector.ReductionCollapse2;
+            this.ranges = ranges;
         }
 
         /// <summary>
         /// Constructor for reduction collapsed for loops with 3 variables.
         /// </summary>
         /// <param name="action">The action to run.</param>
-        internal ForAction(ActionRef3<T> action)
+        /// <param name="ranges">The ranges of the collapsed loop.</param>
+        internal ForAction(ActionRef3<T> action, (int, int)[] ranges)
         {
             omp_red_col_3 = action;
             selector = ActionSelector.ReductionCollapse3;
+            this.ranges = ranges;
         }
 
         /// <summary>
         /// Constructor for reduction collapsed for loops with 4 variables.
         /// </summary>
         /// <param name="action">The action to run.</param>
-        internal ForAction(ActionRef4<T> action)
+        /// <param name="ranges">The ranges of the collapsed loop.</param>
+        internal ForAction(ActionRef4<T> action, (int, int)[] ranges)
         {
             omp_red_col_4 = action;
             selector = ActionSelector.ReductionCollapse4;
+            this.ranges = ranges;
         }
 
         /// <summary>
         /// Constructor for reduction collapsed for loops with unbounded variables.
         /// </summary>
         /// <param name="action">The action to run.</param>
-        internal ForAction(ActionRefN<T> action)
+        /// <param name="ranges">The ranges of the collapsed loop.</param>
+        internal ForAction(ActionRefN<T> action, (int, int)[] ranges)
         {
             omp_red_col_n = action;
             selector = ActionSelector.ReductionCollapseN;
+            this.ranges = ranges;
         }
 
         /// <summary>

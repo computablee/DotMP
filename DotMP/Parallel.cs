@@ -126,6 +126,43 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
+            ForAction<object> forAction = new ForAction<object>(action);
+
+            For(start, end, forAction, schedule, chunk_size);
+        }
+
+        /// <summary>
+        /// Creates a collapsed for loop inside a parallel region.
+        /// A collapsed for loop can be used when you want to parallelize two nested for loops.
+        /// Instead of only parallelizing across the outermost loop, the two nested loops are flattened before scheduling,
+        /// which has the effect of parallelizing across both loops.
+        /// This has the effect multiplying the number of iterations the scheduler can work with,
+        /// which can improve load balancing in irregular nested loops.
+        /// </summary>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, Action<int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        {
+            ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange });
+
+            For(0, (firstRange.Item2 - firstRange.Item1) * (secondRange.Item2 - secondRange.Item1), forAction, schedule, chunk_size);
+        }
+
+        /// <summary>
+        /// Internal handler for For.
+        /// </summary>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="forAction">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        private static void For(int start, int end, ForAction<object> forAction, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        {
             // jscpd:ignore-start
             var freg = new ForkedRegion();
 
@@ -141,8 +178,6 @@ namespace DotMP
             Barrier();
 
             ws.in_for = true;
-
-            ForAction<object> forAction = new ForAction<object>(action);
             // jscpd:ignore-end
 
             switch (schedule)
