@@ -352,7 +352,7 @@ namespace DotMP
                     int start3 = ranges[2].Item1;
                     diff1 = ranges[0].Item2 - start1;
                     diff2 = ranges[1].Item2 - start2;
-                    int diff3 = ranges[1].Item2 - start3;
+                    int diff3 = ranges[2].Item2 - start3;
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
@@ -381,7 +381,7 @@ namespace DotMP
                     start3 = ranges[2].Item1;
                     diff1 = ranges[0].Item2 - start1;
                     diff2 = ranges[1].Item2 - start2;
-                    diff3 = ranges[1].Item2 - start3;
+                    diff3 = ranges[2].Item2 - start3;
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
