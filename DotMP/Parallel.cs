@@ -170,7 +170,7 @@ namespace DotMP
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Action<int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Action<int, int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange, thirdRange });
 
@@ -197,7 +197,7 @@ namespace DotMP
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Action<int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Action<int, int, int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange, thirdRange, fourthRange });
 
@@ -222,7 +222,7 @@ namespace DotMP
         /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        public static void ForCollapse((int, int)[] ranges, Action<int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForCollapse((int, int)[] ranges, Action<int[]> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action, ranges);
 
@@ -465,6 +465,62 @@ namespace DotMP
             ParallelRegion(num_threads: num_threads, action: () =>
             {
                 ForCollapse(firstRange, secondRange, action, schedule, chunk_size);
+            });
+        }
+
+        /// <summary>
+        /// Creates a parallel collapsed for loop. Contains all of the parameters from ParallelRegion() and ForCollapse().
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// </summary>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="thirdRange">A tuple representing the start and end of the third for loop.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        public static void ParallelForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Action<int, int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        {
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                ForCollapse(firstRange, secondRange, thirdRange, action, schedule, chunk_size);
+            });
+        }
+
+        /// <summary>
+        /// Creates a parallel collapsed for loop. Contains all of the parameters from ParallelRegion() and ForCollapse().
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// </summary>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="thirdRange">A tuple representing the start and end of the third for loop.</param>
+        /// <param name="fourthRange">A tuple representing the start and end of the fourth for loop.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        public static void ParallelForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Action<int, int, int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        {
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                ForCollapse(firstRange, secondRange, thirdRange, fourthRange, action, schedule, chunk_size);
+            });
+        }
+
+        /// <summary>
+        /// Creates a parallel collapsed for loop. Contains all of the parameters from ParallelRegion() and ForCollapse().
+        /// This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.
+        /// </summary>
+        /// <param name="ranges">A tuple representing the start and end of each of the for loops.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        public static void ParallelForCollapse((int, int)[] ranges, Action<int[]> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        {
+            ParallelRegion(num_threads: num_threads, action: () =>
+            {
+                ForCollapse(ranges, action, schedule, chunk_size);
             });
         }
 
