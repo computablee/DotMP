@@ -50,7 +50,7 @@ namespace DotMP
 
     /// <summary>
     /// Class encapsulating all of the possible callbacks in a Parallel.For-style loop.
-    /// This includes Parallel.For, Parallel.ForReduction, Parallel.ForCollapse, and Parallel.ForReductionCollapse.
+    /// This includes Parallel.For, Parallel.ForReduction&lt;T&gt;, Parallel.ForCollapse, and Parallel.ForReductionCollapse&lt;T&gt;.
     /// </summary>
     /// <typeparam name="T">The type of the reduction callback.</typeparam>
     internal class ForAction<T>
@@ -157,7 +157,10 @@ namespace DotMP
         /// </summary>
         private ActionSelector selector;
 
-        private (int, int)[] ranges;
+        /// <summary>
+        /// Represents the ranges of collapsed loops for future unflattening.
+        /// </summary>
+        private ValueTuple<int, int>[] ranges;
 
         /// <summary>
         /// Constructor for regular for loops with 1 variable.
