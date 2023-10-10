@@ -310,6 +310,7 @@ namespace DotMP
 
         /// <summary>
         /// Executes a chunk using the action selected by ForAction.selector
+        /// TODO: Optimize this whole function.
         /// </summary>
         /// <param name="curr_iter">A reference to the current iteration.</param>
         /// <param name="start">The start of the chunk, inclusive.</param>
@@ -343,6 +344,51 @@ namespace DotMP
                         int i = curr_iter / diff2 + start1;
                         int j = curr_iter % diff2 + start2;
                         omp_col_2(i, j);
+                    }
+                    break;
+                case ActionSelector.Collapse3:
+                    start1 = ranges[0].Item1;
+                    start2 = ranges[1].Item1;
+                    int start3 = ranges[2].Item1;
+                    diff1 = ranges[0].Item2 - start1;
+                    diff2 = ranges[1].Item2 - start2;
+                    int diff3 = ranges[1].Item2 - start3;
+
+                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    {
+                        int i = curr_iter / (diff2 * diff3) + start1;
+                        int j = curr_iter % (diff2 * diff3) / diff3 + start2;
+                        int k = curr_iter % diff3 + start3;
+                        omp_col_3(i, j, k);
+                    }
+                    break;
+                case ActionSelector.ReductionCollapse2:
+                    start1 = ranges[0].Item1;
+                    start2 = ranges[1].Item1;
+                    diff1 = ranges[0].Item2 - start1;
+                    diff2 = ranges[1].Item2 - start2;
+
+                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    {
+                        int i = curr_iter / diff2 + start1;
+                        int j = curr_iter % diff2 + start2;
+                        omp_red_col_2(ref local, i, j);
+                    }
+                    break;
+                case ActionSelector.ReductionCollapse3:
+                    start1 = ranges[0].Item1;
+                    start2 = ranges[1].Item1;
+                    start3 = ranges[2].Item1;
+                    diff1 = ranges[0].Item2 - start1;
+                    diff2 = ranges[1].Item2 - start2;
+                    diff3 = ranges[1].Item2 - start3;
+
+                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    {
+                        int i = curr_iter / (diff2 * diff3) + start1;
+                        int j = curr_iter % (diff2 * diff3) / diff3 + start2;
+                        int k = curr_iter % diff3 + start3;
+                        omp_red_col_3(ref local, i, j, k);
                     }
                     break;
                 default:
