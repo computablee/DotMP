@@ -685,7 +685,7 @@ namespace DotMP
         /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
         /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
         /// <param name="thirdRange">A tuple representing the start and end of the third for loop.</param>
-        /// <param name="fourthRange">A tuple representing the start and end of the third for loop.</param>
+        /// <param name="fourthRange">A tuple representing the start and end of the fourth for loop.</param>
         /// <param name="op">The operation to be performed on the reduction.</param>
         /// <param name="reduce_to">The variable to reduce to.</param>
         /// <param name="action">The action to be performed in the loop.</param>
