@@ -186,6 +186,58 @@ namespace DotMPTests
         }
 
         /// <summary>
+        /// Tests to make sure that DotMP.Parallel.ForReductionCollapse produces correct results.
+        /// </summary>
+        [Fact]
+        public void Reduction_collapse_works()
+        {
+            int total_iters_executed = 0;
+            int[,] iters_hit = new int[1024, 1024];
+
+            DotMP.Parallel.ParallelForReductionCollapse((256, 512), (512, 600),
+                                                        op: Operations.Add, reduce_to: ref total_iters_executed,
+                                                        num_threads: 8, chunk_size: 7, schedule: Schedule.Static,
+                                                        action: (ref int total_iters_executed, int i, int j) =>
+            {
+                DotMP.Atomic.Inc(ref iters_hit[i, j]);
+                total_iters_executed += 1;
+            });
+
+            for (int i = 0; i < 1024; i++)
+                for (int j = 0; j < 1024; j++)
+                    if (i >= 256 && i < 512 && j >= 512 && j < 600)
+                        iters_hit[i, j].Should().Be(1);
+                    else
+                        iters_hit[i, j].Should().Be(0);
+
+            total_iters_executed.Should().Be((512 - 256) * (600 - 512));
+
+            iters_hit = null;
+            total_iters_executed = 0;
+
+            int[,,] iters_hit_3 = new int[128, 128, 64];
+
+            DotMP.Parallel.ParallelForReductionCollapse((35, 64), (16, 100), (10, 62),
+                                                        op: Operations.Add, reduce_to: ref total_iters_executed,
+                                                        num_threads: 8, chunk_size: 3, schedule: Schedule.Dynamic,
+                                                        action: (ref int total_iters_executed, int i, int j, int k) =>
+            {
+                DotMP.Atomic.Inc(ref iters_hit_3[i, j, k]);
+                total_iters_executed += 1;
+            });
+
+            for (int i = 0; i < 128; i++)
+                for (int j = 0; j < 128; j++)
+                    for (int k = 0; k < 64; k++)
+                        if (i >= 35 && i < 64 && j >= 16 && j < 100 && k >= 10 && k < 62)
+                            iters_hit_3[i, j, k].Should().Be(1);
+                        else
+                            iters_hit_3[i, j, k].Should().Be(0);
+
+            total_iters_executed.Should().Be((64 - 35) * (100 - 16) * (62 - 10));
+        }
+
+        /// <summary>
         /// Tests to make sure that taskloops produce correct results.
         /// </summary>
         [Fact]
