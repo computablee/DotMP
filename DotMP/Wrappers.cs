@@ -299,6 +299,19 @@ namespace DotMP
                         omp_red(ref local, curr_iter);
                     }
                     break;
+                case ActionSelector.Collapse2:
+                    int diff1 = ranges[0].Item2 - ranges[0].Item1;
+                    int diff2 = ranges[1].Item2 - ranges[1].Item1;
+                    int start1 = ranges[0].Item1;
+                    int start2 = ranges[1].Item1;
+
+                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    {
+                        int i = curr_iter / diff2 + start1;
+                        int j = curr_iter % diff2 + start2;
+                        omp_col_2(i, j);
+                    }
+                    break;
                 default:
                     throw new NotImplementedException("This callback is not implemented with the scheduler.");
             }
