@@ -141,16 +141,18 @@ namespace DotMP
             Barrier();
 
             ws.in_for = true;
+
+            ForAction<object> forAction = new ForAction<object>(action);
             // jscpd:ignore-end
 
             switch (schedule)
             {
                 case Schedule.Static:
-                    Iter.StaticLoop<object>(ws, GetThreadNum(), action, null, false);
+                    Iter.StaticLoop(ws, GetThreadNum(), forAction, false);
                     break;
                 case Schedule.Dynamic:
                 case Schedule.Guided:
-                    Iter.LoadBalancingLoop<object>(ws, action, null, false, schedule);
+                    Iter.LoadBalancingLoop(ws, forAction, false, schedule);
                     break;
             }
 
@@ -199,16 +201,18 @@ namespace DotMP
             Barrier();
 
             ws.in_for = true;
+
+            ForAction<T> forAction = new ForAction<T>(action);
             // jscpd:ignore-end
 
             switch (schedule)
             {
                 case Schedule.Static:
-                    Iter.StaticLoop(ws, GetThreadNum(), null, action, true);
+                    Iter.StaticLoop(ws, GetThreadNum(), forAction, true);
                     break;
                 case Schedule.Dynamic:
                 case Schedule.Guided:
-                    Iter.LoadBalancingLoop(ws, null, action, true, schedule);
+                    Iter.LoadBalancingLoop(ws, forAction, true, schedule);
                     break;
             }
 
