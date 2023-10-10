@@ -133,8 +133,8 @@ namespace DotMP
 
         /// <summary>
         /// Creates a collapsed for loop inside a parallel region.
-        /// A collapsed for loop can be used when you want to parallelize two nested for loops.
-        /// Instead of only parallelizing across the outermost loop, the two nested loops are flattened before scheduling,
+        /// A collapsed for loop can be used when you want to parallelize two or more nested for loops.
+        /// Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling,
         /// which has the effect of parallelizing across both loops.
         /// This has the effect multiplying the number of iterations the scheduler can work with,
         /// which can improve load balancing in irregular nested loops.
@@ -149,7 +149,89 @@ namespace DotMP
         {
             ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange });
 
-            For(0, (firstRange.Item2 - firstRange.Item1) * (secondRange.Item2 - secondRange.Item1), forAction, schedule, chunk_size);
+            For(0,
+                (firstRange.Item2 - firstRange.Item1) *
+                (secondRange.Item2 - secondRange.Item1),
+                forAction, schedule, chunk_size);
+        }
+
+        /// <summary>
+        /// Creates a collapsed for loop inside a parallel region.
+        /// A collapsed for loop can be used when you want to parallelize two or more nested for loops.
+        /// Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling,
+        /// which has the effect of parallelizing across both loops.
+        /// This has the effect multiplying the number of iterations the scheduler can work with,
+        /// which can improve load balancing in irregular nested loops.
+        /// </summary>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="thirdRange">A tuple representing the start and end of the third for loop.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Action<int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        {
+            ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange, thirdRange });
+
+            For(0,
+                (firstRange.Item2 - firstRange.Item1) *
+                (secondRange.Item2 - secondRange.Item1) *
+                (thirdRange.Item2 - thirdRange.Item1),
+                forAction, schedule, chunk_size);
+        }
+
+        /// <summary>
+        /// Creates a collapsed for loop inside a parallel region.
+        /// A collapsed for loop can be used when you want to parallelize two or more nested for loops.
+        /// Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling,
+        /// which has the effect of parallelizing across both loops.
+        /// This has the effect multiplying the number of iterations the scheduler can work with,
+        /// which can improve load balancing in irregular nested loops.
+        /// </summary>
+        /// <param name="firstRange">A tuple representing the start and end of the first for loop.</param>
+        /// <param name="secondRange">A tuple representing the start and end of the second for loop.</param>
+        /// <param name="thirdRange">A tuple representing the start and end of the third for loop.</param>
+        /// <param name="fourthRange">A tuple representing the start and end of the fourth for loop.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Action<int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        {
+            ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange, thirdRange, fourthRange });
+
+            For(0,
+                (firstRange.Item2 - firstRange.Item1) *
+                (secondRange.Item2 - secondRange.Item1) *
+                (thirdRange.Item2 - thirdRange.Item1) *
+                (fourthRange.Item2 - fourthRange.Item1),
+                forAction, schedule, chunk_size);
+        }
+
+        /// <summary>
+        /// Creates a collapsed for loop inside a parallel region.
+        /// A collapsed for loop can be used when you want to parallelize two or more nested for loops.
+        /// Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling,
+        /// which has the effect of parallelizing across both loops.
+        /// This has the effect multiplying the number of iterations the scheduler can work with,
+        /// which can improve load balancing in irregular nested loops.
+        /// </summary>
+        /// <param name="ranges">A tuple representing the start and end of each of the for loops.</param>
+        /// <param name="action">The action to be performed in the loop.</param>
+        /// <param name="schedule">The schedule of the loop, defaulting to static.</param>
+        /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        public static void ForCollapse((int, int)[] ranges, Action<int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        {
+            ForAction<object> forAction = new ForAction<object>(action, ranges);
+
+            int total_iters = 1;
+
+            foreach ((int i, int j) in ranges)
+                total_iters *= j - i;
+
+            For(0, total_iters, forAction, schedule, chunk_size);
         }
 
         /// <summary>
