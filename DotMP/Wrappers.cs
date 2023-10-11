@@ -498,8 +498,6 @@ namespace DotMP
                         omp_red_col_n(ref local, indices);
                     }
                     break;
-                default:
-                    throw new NotImplementedException("This callback is not implemented with the scheduler.");
             }
         }
     }
