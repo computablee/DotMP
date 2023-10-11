@@ -101,6 +101,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:a8188080c823e4e9584a50d32f68e5722"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1ParallelTests.html#a8188080c823e4e9584a50d32f68e5722">Dynamic_should_produce_correct_results</a> ()</td></tr>
 <tr class="memdesc:a8188080c823e4e9584a50d32f68e5722"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests to make sure that <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a971fd8cc345d8bd9f92e9f7d88fdf20c" title="The dynamic scheduling strategy. Iterations are managed in a central queue. Threads fetch chunks of i...">DotMP.Schedule.Dynamic</a> produces correct results.  <a href="classDotMPTests_1_1ParallelTests.html#a8188080c823e4e9584a50d32f68e5722">More...</a><br /></td></tr>
 <tr class="separator:a8188080c823e4e9584a50d32f68e5722"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a19312206ad0b6d5fdeba7a90b4b2236d"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1ParallelTests.html#a19312206ad0b6d5fdeba7a90b4b2236d">Collapse_works</a> ()</td></tr>
+<tr class="memdesc:a19312206ad0b6d5fdeba7a90b4b2236d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests to make sure that <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">DotMP.Parallel.ForCollapse</a> produces correct results.  <a href="classDotMPTests_1_1ParallelTests.html#a19312206ad0b6d5fdeba7a90b4b2236d">More...</a><br /></td></tr>
+<tr class="separator:a19312206ad0b6d5fdeba7a90b4b2236d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2435385565d2b924828c8bf814997707"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1ParallelTests.html#a2435385565d2b924828c8bf814997707">Reduction_collapse_works</a> ()</td></tr>
+<tr class="memdesc:a2435385565d2b924828c8bf814997707"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests to make sure that DotMP.Parallel.ForReductionCollapse produces correct results.  <a href="classDotMPTests_1_1ParallelTests.html#a2435385565d2b924828c8bf814997707">More...</a><br /></td></tr>
+<tr class="separator:a2435385565d2b924828c8bf814997707"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ae70e13205c63fcae6a5bc1ba61482724"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1ParallelTests.html#ae70e13205c63fcae6a5bc1ba61482724">Taskloop_should_produce_correct_results</a> ()</td></tr>
 <tr class="memdesc:ae70e13205c63fcae6a5bc1ba61482724"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests to make sure that taskloops produce correct results.  <a href="classDotMPTests_1_1ParallelTests.html#ae70e13205c63fcae6a5bc1ba61482724">More...</a><br /></td></tr>
 <tr class="separator:ae70e13205c63fcae6a5bc1ba61482724"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -254,6 +260,33 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Tests to make sure that the <a class="el" href="classDotMP_1_1Atomic.html" title="Provides atomic operations for integral types as a wrapper around the Interlocked class....">DotMP.Atomic</a> class works. </p>
+
+</div>
+</div>
+<a id="a19312206ad0b6d5fdeba7a90b4b2236d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a19312206ad0b6d5fdeba7a90b4b2236d">&#9670;&nbsp;</a></span>Collapse_works()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DotMPTests.ParallelTests.Collapse_works </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tests to make sure that <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">DotMP.Parallel.ForCollapse</a> produces correct results. </p>
 
 </div>
 </div>
@@ -719,6 +752,33 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Tests the functionality of <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">DotMP.Parallel.For()</a>. </p>
+
+</div>
+</div>
+<a id="a2435385565d2b924828c8bf814997707"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2435385565d2b924828c8bf814997707">&#9670;&nbsp;</a></span>Reduction_collapse_works()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DotMPTests.ParallelTests.Reduction_collapse_works </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Tests to make sure that DotMP.Parallel.ForReductionCollapse produces correct results. </p>
 
 </div>
 </div>

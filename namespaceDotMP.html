@@ -129,6 +129,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1TaskUUID.html">TaskUUID</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Task UUID as returned from <a class="el" href="classDotMP_1_1Parallel.html#aa43faad819d15e9bade915de7aef5331" title="Enqueue a task into the task queue. Differing from OpenMP, there is no concept of parent or child tas...">Parallel.Task</a>.  <a href="classDotMP_1_1TaskUUID.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html">ForAction</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Class encapsulating all of the possible callbacks in a <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">Parallel.For</a>-style loop. This includes <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">Parallel.For</a>, Parallel.ForReduction&lt;T&gt;, <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">Parallel.ForCollapse</a>, and Parallel.ForReductionCollapse&lt;T&gt;.  <a href="classDotMP_1_1ForAction.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
 Enumerations</h2></td></tr>
@@ -162,6 +165,18 @@ Functions</h2></td></tr>
 <tr class="memitem:a600242288a8229f98e97b493fd7d7200"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDotMP.html#a600242288a8229f98e97b493fd7d7200">ActionRef&lt; T &gt;</a> (ref T a, int i)</td></tr>
 <tr class="memdesc:a600242288a8229f98e97b493fd7d7200"><td class="mdescLeft">&#160;</td><td class="mdescRight">Action delegate that takes an int and a ref T as parameters.  <a href="namespaceDotMP.html#a600242288a8229f98e97b493fd7d7200">More...</a><br /></td></tr>
 <tr class="separator:a600242288a8229f98e97b493fd7d7200"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac0165a3cc6fce186954b17d3fd4e4c7d"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDotMP.html#ac0165a3cc6fce186954b17d3fd4e4c7d">ActionRef2&lt; T &gt;</a> (ref T a, int i, int j)</td></tr>
+<tr class="memdesc:ac0165a3cc6fce186954b17d3fd4e4c7d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Action delegate that takes two ints and a ref T as parameters.  <a href="namespaceDotMP.html#ac0165a3cc6fce186954b17d3fd4e4c7d">More...</a><br /></td></tr>
+<tr class="separator:ac0165a3cc6fce186954b17d3fd4e4c7d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2409ed820613fcc0228397ff44d540e"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDotMP.html#ae2409ed820613fcc0228397ff44d540e">ActionRef3&lt; T &gt;</a> (ref T a, int i, int j, int k)</td></tr>
+<tr class="memdesc:ae2409ed820613fcc0228397ff44d540e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Action delegate that takes three ints and a ref T as parameters.  <a href="namespaceDotMP.html#ae2409ed820613fcc0228397ff44d540e">More...</a><br /></td></tr>
+<tr class="separator:ae2409ed820613fcc0228397ff44d540e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aab7f4b9f6a1613fad23eed4914c30227"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDotMP.html#aab7f4b9f6a1613fad23eed4914c30227">ActionRef4&lt; T &gt;</a> (ref T a, int i, int j, int k, int l)</td></tr>
+<tr class="memdesc:aab7f4b9f6a1613fad23eed4914c30227"><td class="mdescLeft">&#160;</td><td class="mdescRight">Action delegate that takes four ints and a ref T as parameters.  <a href="namespaceDotMP.html#aab7f4b9f6a1613fad23eed4914c30227">More...</a><br /></td></tr>
+<tr class="separator:aab7f4b9f6a1613fad23eed4914c30227"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a96a05f89610e7f878aa7556572d8b646"><td class="memItemLeft" align="right" valign="top">delegate void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDotMP.html#a96a05f89610e7f878aa7556572d8b646">ActionRefN&lt; T &gt;</a> (ref T a, int[] i)</td></tr>
+<tr class="memdesc:a96a05f89610e7f878aa7556572d8b646"><td class="mdescLeft">&#160;</td><td class="mdescRight">Action delegate that takes an int[] and a ref T as parameters.  <a href="namespaceDotMP.html#a96a05f89610e7f878aa7556572d8b646">More...</a><br /></td></tr>
+<tr class="separator:a96a05f89610e7f878aa7556572d8b646"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <h2 class="groupheader">Enumeration Type Documentation</h2>
 <a id="afb991877c15e09400ba2bd2029045346"></a>
@@ -264,6 +279,177 @@ Functions</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Function Documentation</h2>
+<a id="ac0165a3cc6fce186954b17d3fd4e4c7d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac0165a3cc6fce186954b17d3fd4e4c7d">&#9670;&nbsp;</a></span>ActionRef2&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">delegate void DotMP.ActionRef2&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">ref T&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>j</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Action delegate that takes two ints and a ref T as parameters. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of the ref parameter.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>The ref parameter.</td></tr>
+    <tr><td class="paramname">i</td><td>The first int parameter.</td></tr>
+    <tr><td class="paramname">j</td><td>The second int parameter.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="ae2409ed820613fcc0228397ff44d540e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2409ed820613fcc0228397ff44d540e">&#9670;&nbsp;</a></span>ActionRef3&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">delegate void DotMP.ActionRef3&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">ref T&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>j</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>k</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Action delegate that takes three ints and a ref T as parameters. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of the ref parameter.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>The ref parameter.</td></tr>
+    <tr><td class="paramname">i</td><td>The first int parameter.</td></tr>
+    <tr><td class="paramname">j</td><td>The second int parameter.</td></tr>
+    <tr><td class="paramname">k</td><td>The third int parameter.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="aab7f4b9f6a1613fad23eed4914c30227"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aab7f4b9f6a1613fad23eed4914c30227">&#9670;&nbsp;</a></span>ActionRef4&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">delegate void DotMP.ActionRef4&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">ref T&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>j</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>k</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>l</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Action delegate that takes four ints and a ref T as parameters. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of the ref parameter.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>The ref parameter.</td></tr>
+    <tr><td class="paramname">i</td><td>The first int parameter.</td></tr>
+    <tr><td class="paramname">j</td><td>The second int parameter.</td></tr>
+    <tr><td class="paramname">k</td><td>The third int parameter.</td></tr>
+    <tr><td class="paramname">l</td><td>The fourth int parameter.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a600242288a8229f98e97b493fd7d7200"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a600242288a8229f98e97b493fd7d7200">&#9670;&nbsp;</a></span>ActionRef&lt; T &gt;()</h2>
 
@@ -301,6 +487,49 @@ Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">a</td><td>The ref parameter.</td></tr>
     <tr><td class="paramname">i</td><td>The int parameter.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a96a05f89610e7f878aa7556572d8b646"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a96a05f89610e7f878aa7556572d8b646">&#9670;&nbsp;</a></span>ActionRefN&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">delegate void DotMP.ActionRefN&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype">ref T&#160;</td>
+          <td class="paramname"><em>a</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int[]&#160;</td>
+          <td class="paramname"><em>i</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+
+<p>Action delegate that takes an int[] and a ref T as parameters. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>Type of the ref parameter.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">a</td><td>The ref parameter.</td></tr>
+    <tr><td class="paramname">i</td><td>The int[] parameter.</td></tr>
   </table>
   </dd>
 </dl>

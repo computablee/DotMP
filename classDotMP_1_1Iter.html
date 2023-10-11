@@ -79,33 +79,30 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pac-static-methods"></a>
 Static Package Functions</h2></td></tr>
-<tr class="memitem:a01efd35cebd02c4d8682ce82d4b86e1c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html#a01efd35cebd02c4d8682ce82d4b86e1c">StaticLoop&lt; T &gt;</a> (<a class="el" href="classDotMP_1_1WorkShare.html">WorkShare</a> ws, int thread_id, Action&lt; int &gt; omp_fn, ActionRef&lt; T &gt; omp_fn_red, bool is_reduction)</td></tr>
-<tr class="memdesc:a01efd35cebd02c4d8682ce82d4b86e1c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts and controls a parallel for loop with static scheduling.  <a href="classDotMP_1_1Iter.html#a01efd35cebd02c4d8682ce82d4b86e1c">More...</a><br /></td></tr>
-<tr class="separator:a01efd35cebd02c4d8682ce82d4b86e1c"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aea793db2e9a3a6d63632af33abbc24f4"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html#aea793db2e9a3a6d63632af33abbc24f4">LoadBalancingLoop&lt; T &gt;</a> (<a class="el" href="classDotMP_1_1WorkShare.html">WorkShare</a> ws, Action&lt; int &gt; omp_fn, ActionRef&lt; T &gt; omp_fn_red, bool is_reduction, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule)</td></tr>
-<tr class="memdesc:aea793db2e9a3a6d63632af33abbc24f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies a load balancing loop, like dynamic or guided.  <a href="classDotMP_1_1Iter.html#aea793db2e9a3a6d63632af33abbc24f4">More...</a><br /></td></tr>
-<tr class="separator:aea793db2e9a3a6d63632af33abbc24f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a374a2fdf1935736399a94f2fb3348eba"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html#a374a2fdf1935736399a94f2fb3348eba">StaticLoop&lt; T &gt;</a> (<a class="el" href="classDotMP_1_1WorkShare.html">WorkShare</a> ws, int thread_id, <a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; forAction)</td></tr>
+<tr class="memdesc:a374a2fdf1935736399a94f2fb3348eba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Starts and controls a parallel for loop with static scheduling.  <a href="classDotMP_1_1Iter.html#a374a2fdf1935736399a94f2fb3348eba">More...</a><br /></td></tr>
+<tr class="separator:a374a2fdf1935736399a94f2fb3348eba"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a10f69d8149215551055fbe18938f558a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html#a10f69d8149215551055fbe18938f558a">LoadBalancingLoop&lt; T &gt;</a> (<a class="el" href="classDotMP_1_1WorkShare.html">WorkShare</a> ws, <a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; forAction, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule)</td></tr>
+<tr class="memdesc:a10f69d8149215551055fbe18938f558a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Specifies a load balancing loop, like dynamic or guided.  <a href="classDotMP_1_1Iter.html#a10f69d8149215551055fbe18938f558a">More...</a><br /></td></tr>
+<tr class="separator:a10f69d8149215551055fbe18938f558a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
-<tr class="memitem:a8a2075e27d91e3e9b17d4357a8ca45ec"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html#a8a2075e27d91e3e9b17d4357a8ca45ec">StaticNext&lt; T &gt;</a> (<a class="el" href="classDotMP_1_1WorkShare.html">WorkShare</a> ws, <a class="el" href="classDotMP_1_1Thr.html">Thr</a> thr, uint chunk_size, Action&lt; int &gt; omp_fn, ActionRef&lt; T &gt; omp_fn_red, bool is_reduction, ref T local)</td></tr>
-<tr class="memdesc:a8a2075e27d91e3e9b17d4357a8ca45ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the next chunk of iterations for a static scheduling parallel for loop and executes the appropriate function. Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.StaticLoop&lt;T&gt; documentation.  <a href="classDotMP_1_1Iter.html#a8a2075e27d91e3e9b17d4357a8ca45ec">More...</a><br /></td></tr>
-<tr class="separator:a8a2075e27d91e3e9b17d4357a8ca45ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeae6256e729bb6bb0385f25eb25c77be"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html#aeae6256e729bb6bb0385f25eb25c77be">DynamicNext&lt; T &gt;</a> (<a class="el" href="classDotMP_1_1WorkShare.html">WorkShare</a> ws, <a class="el" href="classDotMP_1_1Thr.html">Thr</a> thr, Action&lt; int &gt; omp_fn, ActionRef&lt; T &gt; omp_fn_red, bool is_reduction, ref T local)</td></tr>
-<tr class="memdesc:aeae6256e729bb6bb0385f25eb25c77be"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the next chunk of iterations for a dynamic scheduling parallel for loop and executes the appropriate function. Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.DynamicLoop&lt;T&gt; documentation.  <a href="classDotMP_1_1Iter.html#aeae6256e729bb6bb0385f25eb25c77be">More...</a><br /></td></tr>
-<tr class="separator:aeae6256e729bb6bb0385f25eb25c77be"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ad6e8efba1ea06d24eb4ae0ff1773222b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html#ad6e8efba1ea06d24eb4ae0ff1773222b">GuidedNext&lt; T &gt;</a> (<a class="el" href="classDotMP_1_1WorkShare.html">WorkShare</a> ws, <a class="el" href="classDotMP_1_1Thr.html">Thr</a> thr, Action&lt; int &gt; omp_fn, ActionRef&lt; T &gt; omp_fn_red, bool is_reduction, ref T local)</td></tr>
-<tr class="memdesc:ad6e8efba1ea06d24eb4ae0ff1773222b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the next chunk of iterations for a guided scheduling parallel for loop and executes the appropriate function. Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.GuidedLoop&lt;T&gt; documentation.  <a href="classDotMP_1_1Iter.html#ad6e8efba1ea06d24eb4ae0ff1773222b">More...</a><br /></td></tr>
-<tr class="separator:ad6e8efba1ea06d24eb4ae0ff1773222b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8e2061371a9f16ab9bbfd79afb02f7c1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html#a8e2061371a9f16ab9bbfd79afb02f7c1">InnerLoop&lt; T &gt;</a> (ref int curr_iter, ref T local, Action&lt; int &gt; omp_fn, ActionRef&lt; T &gt; omp_fn_red, int start, int end, bool is_reduction)</td></tr>
-<tr class="memdesc:a8e2061371a9f16ab9bbfd79afb02f7c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs the innermost loop to execute a chunk.  <a href="classDotMP_1_1Iter.html#a8e2061371a9f16ab9bbfd79afb02f7c1">More...</a><br /></td></tr>
-<tr class="separator:a8e2061371a9f16ab9bbfd79afb02f7c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34d6ce1daa5dcc4ab0cc3d3b201686ce"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html#a34d6ce1daa5dcc4ab0cc3d3b201686ce">StaticNext&lt; T &gt;</a> (<a class="el" href="classDotMP_1_1WorkShare.html">WorkShare</a> ws, <a class="el" href="classDotMP_1_1Thr.html">Thr</a> thr, uint chunk_size, <a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; forAction, ref T local)</td></tr>
+<tr class="memdesc:a34d6ce1daa5dcc4ab0cc3d3b201686ce"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the next chunk of iterations for a static scheduling parallel for loop and executes the appropriate function. Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.StaticLoop&lt;T&gt; documentation.  <a href="classDotMP_1_1Iter.html#a34d6ce1daa5dcc4ab0cc3d3b201686ce">More...</a><br /></td></tr>
+<tr class="separator:a34d6ce1daa5dcc4ab0cc3d3b201686ce"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac912c41612731a5345c53a6165fa08c1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html#ac912c41612731a5345c53a6165fa08c1">DynamicNext&lt; T &gt;</a> (<a class="el" href="classDotMP_1_1WorkShare.html">WorkShare</a> ws, <a class="el" href="classDotMP_1_1Thr.html">Thr</a> thr, <a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; forAction, ref T local)</td></tr>
+<tr class="memdesc:ac912c41612731a5345c53a6165fa08c1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the next chunk of iterations for a dynamic scheduling parallel for loop and executes the appropriate function. Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.DynamicLoop&lt;T&gt; documentation.  <a href="classDotMP_1_1Iter.html#ac912c41612731a5345c53a6165fa08c1">More...</a><br /></td></tr>
+<tr class="separator:ac912c41612731a5345c53a6165fa08c1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad8bed91dcd8756db2007b79d8fc4778b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html#ad8bed91dcd8756db2007b79d8fc4778b">GuidedNext&lt; T &gt;</a> (<a class="el" href="classDotMP_1_1WorkShare.html">WorkShare</a> ws, <a class="el" href="classDotMP_1_1Thr.html">Thr</a> thr, <a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; forAction, ref T local)</td></tr>
+<tr class="memdesc:ad8bed91dcd8756db2007b79d8fc4778b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Calculates the next chunk of iterations for a guided scheduling parallel for loop and executes the appropriate function. Each time this function is called, the calling thread receives a chunk of iterations to work on, as specified in the Iter.GuidedLoop&lt;T&gt; documentation.  <a href="classDotMP_1_1Iter.html#ad8bed91dcd8756db2007b79d8fc4778b">More...</a><br /></td></tr>
+<tr class="separator:ad8bed91dcd8756db2007b79d8fc4778b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains all of the scheduling code for parallel for loops. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="aeae6256e729bb6bb0385f25eb25c77be"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeae6256e729bb6bb0385f25eb25c77be">&#9670;&nbsp;</a></span>DynamicNext&lt; T &gt;()</h2>
+<a id="ac912c41612731a5345c53a6165fa08c1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac912c41612731a5345c53a6165fa08c1">&#9670;&nbsp;</a></span>DynamicNext&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -128,20 +125,8 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Action&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ActionRef&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn_red</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>is_reduction</em>, </td>
+          <td class="paramtype"><a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>forAction</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -173,9 +158,7 @@ Static Private Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">ws</td><td>The <a class="el" href="classDotMP_1_1WorkShare.html" title="Contains all relevant information about a parallel for loop. Contains a collection of Thr objects,...">WorkShare</a> object for state.</td></tr>
     <tr><td class="paramname">thr</td><td>The <a class="el" href="classDotMP_1_1Thr.html" title="Encapsulates a Thread object with information about its progress through a parallel for loop....">Thr</a> object for the current thread.</td></tr>
-    <tr><td class="paramname">omp_fn</td><td>The function to be executed.</td></tr>
-    <tr><td class="paramname">omp_fn_red</td><td>The function to be executed for reductions.</td></tr>
-    <tr><td class="paramname">is_reduction</td><td>Whether or not the loop is a reduction loop.</td></tr>
+    <tr><td class="paramname">forAction</td><td>The function to be executed.</td></tr>
     <tr><td class="paramname">local</td><td>The local variable for reductions.</td></tr>
   </table>
   </dd>
@@ -183,8 +166,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="ad6e8efba1ea06d24eb4ae0ff1773222b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ad6e8efba1ea06d24eb4ae0ff1773222b">&#9670;&nbsp;</a></span>GuidedNext&lt; T &gt;()</h2>
+<a id="ad8bed91dcd8756db2007b79d8fc4778b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad8bed91dcd8756db2007b79d8fc4778b">&#9670;&nbsp;</a></span>GuidedNext&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -207,20 +190,8 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Action&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ActionRef&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn_red</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>is_reduction</em>, </td>
+          <td class="paramtype"><a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>forAction</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -252,9 +223,7 @@ Static Private Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">ws</td><td>The <a class="el" href="classDotMP_1_1WorkShare.html" title="Contains all relevant information about a parallel for loop. Contains a collection of Thr objects,...">WorkShare</a> object for state.</td></tr>
     <tr><td class="paramname">thr</td><td>The <a class="el" href="classDotMP_1_1Thr.html" title="Encapsulates a Thread object with information about its progress through a parallel for loop....">Thr</a> object for the current thread.</td></tr>
-    <tr><td class="paramname">omp_fn</td><td>The function to be executed.</td></tr>
-    <tr><td class="paramname">omp_fn_red</td><td>The function to be executed for reductions.</td></tr>
-    <tr><td class="paramname">is_reduction</td><td>Whether or not the loop is a reduction loop.</td></tr>
+    <tr><td class="paramname">forAction</td><td>The function to be executed.</td></tr>
     <tr><td class="paramname">local</td><td>The local variable for reductions.</td></tr>
   </table>
   </dd>
@@ -262,94 +231,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a8e2061371a9f16ab9bbfd79afb02f7c1"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8e2061371a9f16ab9bbfd79afb02f7c1">&#9670;&nbsp;</a></span>InnerLoop&lt; T &gt;()</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">static void DotMP.Iter.InnerLoop&lt; T &gt; </td>
-          <td>(</td>
-          <td class="paramtype">ref int&#160;</td>
-          <td class="paramname"><em>curr_iter</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ref T&#160;</td>
-          <td class="paramname"><em>local</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">Action&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ActionRef&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn_red</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>start</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>end</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>is_reduction</em>&#160;</td>
-        </tr>
-        <tr>
-          <td></td>
-          <td>)</td>
-          <td></td><td></td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Performs the innermost loop to execute a chunk. </p>
-<dl class="tparams"><dt>Template Parameters</dt><dd>
-  <table class="tparams">
-    <tr><td class="paramname">T</td><td>The type of the local variable for reductions.</td></tr>
-  </table>
-  </dd>
-</dl>
-<dl class="params"><dt>Parameters</dt><dd>
-  <table class="params">
-    <tr><td class="paramname">curr_iter</td><td>A reference to the thread's current working iteration.</td></tr>
-    <tr><td class="paramname">local</td><td>The local variable used for reductions.</td></tr>
-    <tr><td class="paramname">omp_fn</td><td>The function to be executed.</td></tr>
-    <tr><td class="paramname">omp_fn_red</td><td>The function to be executed for reductions.</td></tr>
-    <tr><td class="paramname">start</td><td>The start of the current chunk, inclusive.</td></tr>
-    <tr><td class="paramname">end</td><td>The end of the current chunk, exclusive.</td></tr>
-    <tr><td class="paramname">is_reduction</td><td>Whether or not the loop is a reduction loop.</td></tr>
-  </table>
-  </dd>
-</dl>
-
-</div>
-</div>
-<a id="aea793db2e9a3a6d63632af33abbc24f4"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aea793db2e9a3a6d63632af33abbc24f4">&#9670;&nbsp;</a></span>LoadBalancingLoop&lt; T &gt;()</h2>
+<a id="a10f69d8149215551055fbe18938f558a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a10f69d8149215551055fbe18938f558a">&#9670;&nbsp;</a></span>LoadBalancingLoop&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -366,20 +249,8 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Action&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ActionRef&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn_red</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>is_reduction</em>, </td>
+          <td class="paramtype"><a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>forAction</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -410,9 +281,7 @@ Static Private Member Functions</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ws</td><td>The <a class="el" href="classDotMP_1_1WorkShare.html" title="Contains all relevant information about a parallel for loop. Contains a collection of Thr objects,...">WorkShare</a> object for state.</td></tr>
-    <tr><td class="paramname">omp_fn</td><td>The function to be executed.</td></tr>
-    <tr><td class="paramname">omp_fn_red</td><td>The function to be executed for reductions.</td></tr>
-    <tr><td class="paramname">is_reduction</td><td>Whether or not the loop is a reduction loop.</td></tr>
+    <tr><td class="paramname">forAction</td><td>The function to be executed.</td></tr>
     <tr><td class="paramname">schedule</td><td>The schedule to use.</td></tr>
   </table>
   </dd>
@@ -420,8 +289,8 @@ Static Private Member Functions</h2></td></tr>
 
 </div>
 </div>
-<a id="a01efd35cebd02c4d8682ce82d4b86e1c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a01efd35cebd02c4d8682ce82d4b86e1c">&#9670;&nbsp;</a></span>StaticLoop&lt; T &gt;()</h2>
+<a id="a374a2fdf1935736399a94f2fb3348eba"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a374a2fdf1935736399a94f2fb3348eba">&#9670;&nbsp;</a></span>StaticLoop&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -444,20 +313,8 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Action&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ActionRef&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn_red</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>is_reduction</em>&#160;</td>
+          <td class="paramtype"><a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>forAction</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -483,17 +340,15 @@ Static Private Member Functions</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">ws</td><td>The <a class="el" href="classDotMP_1_1WorkShare.html" title="Contains all relevant information about a parallel for loop. Contains a collection of Thr objects,...">WorkShare</a> object for state.</td></tr>
     <tr><td class="paramname">thread_id</td><td>The thread ID.</td></tr>
-    <tr><td class="paramname">omp_fn</td><td>The function to be executed.</td></tr>
-    <tr><td class="paramname">omp_fn_red</td><td>The function to be executed for reductions.</td></tr>
-    <tr><td class="paramname">is_reduction</td><td>Whether or not the loop is a reduction loop.</td></tr>
+    <tr><td class="paramname">forAction</td><td>The function to be executed.</td></tr>
   </table>
   </dd>
 </dl>
 
 </div>
 </div>
-<a id="a8a2075e27d91e3e9b17d4357a8ca45ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a2075e27d91e3e9b17d4357a8ca45ec">&#9670;&nbsp;</a></span>StaticNext&lt; T &gt;()</h2>
+<a id="a34d6ce1daa5dcc4ab0cc3d3b201686ce"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34d6ce1daa5dcc4ab0cc3d3b201686ce">&#9670;&nbsp;</a></span>StaticNext&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -522,20 +377,8 @@ Static Private Member Functions</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">Action&lt; int &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">ActionRef&lt; T &gt;&#160;</td>
-          <td class="paramname"><em>omp_fn_red</em>, </td>
-        </tr>
-        <tr>
-          <td class="paramkey"></td>
-          <td></td>
-          <td class="paramtype">bool&#160;</td>
-          <td class="paramname"><em>is_reduction</em>, </td>
+          <td class="paramtype"><a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>forAction</em>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -568,9 +411,7 @@ Static Private Member Functions</h2></td></tr>
     <tr><td class="paramname">ws</td><td>The <a class="el" href="classDotMP_1_1WorkShare.html" title="Contains all relevant information about a parallel for loop. Contains a collection of Thr objects,...">WorkShare</a> object for state.</td></tr>
     <tr><td class="paramname">thr</td><td>The <a class="el" href="classDotMP_1_1Thr.html" title="Encapsulates a Thread object with information about its progress through a parallel for loop....">Thr</a> object for the current thread.</td></tr>
     <tr><td class="paramname">chunk_size</td><td>The chunk size.</td></tr>
-    <tr><td class="paramname">omp_fn</td><td>The function to be executed.</td></tr>
-    <tr><td class="paramname">omp_fn_red</td><td>The function to be executed for reductions.</td></tr>
-    <tr><td class="paramname">is_reduction</td><td>Whether or not the loop is a reduction loop.</td></tr>
+    <tr><td class="paramname">forAction</td><td>The function to be executed.</td></tr>
     <tr><td class="paramname">local</td><td>The local variable for reductions.</td></tr>
   </table>
   </dd>
