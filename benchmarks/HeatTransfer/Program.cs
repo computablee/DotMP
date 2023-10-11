@@ -3,6 +3,8 @@ using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Diagnosers;
 
+/* jscpd:ignore-start */
+
 [SimpleJob(RuntimeMoniker.Net60)]
 [SimpleJob(RuntimeMoniker.Net70)]
 [ThreadingDiagnoser]
@@ -220,6 +222,8 @@ public class HeatTransferForCollapse
         });
     }
 }
+
+/* jscpd:ignore-end */
 
 // driver
 public class Program
