@@ -401,11 +401,11 @@ namespace DotMP
         /// <param name="start">The start of the chunk, inclusive.</param>
         /// <param name="end">The end of the chunk, exclusive.</param>
         /// <param name="local">The local variable to reduce to.</param>
-        /// <exception cref="NotImplementedException">Thrown if the current action is not implemented.</exception>
         internal void PerformLoop(ref int curr_iter, int start, int end, ref T local)
         {
             switch (selector)
             {
+                /* jscpd:ignore-start */
                 case ActionSelector.Regular:
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
@@ -498,6 +498,7 @@ namespace DotMP
                         omp_red_col_n(ref local, indices);
                     }
                     break;
+                    /* jscpd:ignore-end */
             }
         }
     }
