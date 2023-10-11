@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 
 namespace DotMP
 {
@@ -162,6 +163,10 @@ namespace DotMP
         /// </summary>
         private ValueTuple<int, int>[] ranges;
 
+        private int[] indices;
+
+        private int[] diffs;
+
         /// <summary>
         /// Tracks if the action represents a collapsed for loop.
         /// </summary>
@@ -236,6 +241,8 @@ namespace DotMP
             this.ranges = ranges;
             IsCollapse = true;
             IsReduction = false;
+            indices = new int[4];
+            diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
         }
 
         /// <summary>
@@ -250,6 +257,8 @@ namespace DotMP
             this.ranges = ranges;
             IsCollapse = true;
             IsReduction = false;
+            indices = new int[ranges.Length];
+            diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
         }
 
         /// <summary>
@@ -292,6 +301,8 @@ namespace DotMP
             this.ranges = ranges;
             IsCollapse = true;
             IsReduction = true;
+            indices = new int[4];
+            diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
         }
 
         /// <summary>
@@ -306,6 +317,34 @@ namespace DotMP
             this.ranges = ranges;
             IsCollapse = true;
             IsReduction = true;
+            indices = new int[ranges.Length];
+            diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
+        }
+
+        /// <summary>
+        /// Computes the indices for collapsed loops with 4 or more indices.
+        /// </summary>
+        /// <param name="i">The current iteration to unflatten.</param>
+        private void ComputeIndices(int i)
+        {
+            int mod = i;
+            for (int r = 0; r < ranges.Length - 1; r++)
+            {
+                int prod = 1;
+                int div, rem;
+
+                for (int m = r + 1; m < diffs.Length; m++)
+                {
+                    prod *= diffs[m];
+                }
+
+                div = Math.DivRem(mod, prod, out rem);
+
+                indices[r] = div + ranges[r].Item1;
+                mod = rem;
+            }
+
+            indices[indices.Length - 1] = mod + ranges[ranges.Length - 1].Item1;
         }
 
         /// <summary>
@@ -341,8 +380,11 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        int i = curr_iter / diff2 + start1;
-                        int j = curr_iter % diff2 + start2;
+                        int i, j;
+                        i = Math.DivRem(curr_iter, diff2, out j);
+                        i += start1;
+                        j += start2;
+
                         omp_col_2(i, j);
                     }
                     break;
@@ -356,10 +398,28 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        int i = curr_iter / (diff2 * diff3) + start1;
-                        int j = curr_iter % (diff2 * diff3) / diff3 + start2;
-                        int k = curr_iter % diff3 + start3;
+                        int i, j, k;
+                        i = Math.DivRem(curr_iter, diff2 * diff3, out j);
+                        j = Math.DivRem(j, diff3, out k);
+                        i += start1;
+                        j += start2;
+                        k += start3;
+
                         omp_col_3(i, j, k);
+                    }
+                    break;
+                case ActionSelector.Collapse4:
+                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    {
+                        ComputeIndices(curr_iter);
+                        omp_col_4(indices[0], indices[1], indices[2], indices[3]);
+                    }
+                    break;
+                case ActionSelector.CollapseN:
+                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    {
+                        ComputeIndices(curr_iter);
+                        omp_col_n(indices);
                     }
                     break;
                 case ActionSelector.ReductionCollapse2:
@@ -370,8 +430,11 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        int i = curr_iter / diff2 + start1;
-                        int j = curr_iter % diff2 + start2;
+                        int i, j;
+                        i = Math.DivRem(curr_iter, diff2, out j);
+                        i += start1;
+                        j += start2;
+
                         omp_red_col_2(ref local, i, j);
                     }
                     break;
@@ -385,10 +448,28 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        int i = curr_iter / (diff2 * diff3) + start1;
-                        int j = curr_iter % (diff2 * diff3) / diff3 + start2;
-                        int k = curr_iter % diff3 + start3;
+                        int i, j, k;
+                        i = Math.DivRem(curr_iter, diff2 * diff3, out j);
+                        j = Math.DivRem(j, diff3, out k);
+                        i += start1;
+                        j += start2;
+                        k += start3;
+
                         omp_red_col_3(ref local, i, j, k);
+                    }
+                    break;
+                case ActionSelector.ReductionCollapse4:
+                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    {
+                        ComputeIndices(curr_iter);
+                        omp_red_col_4(ref local, indices[0], indices[1], indices[2], indices[3]);
+                    }
+                    break;
+                case ActionSelector.ReductionCollapseN:
+                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    {
+                        ComputeIndices(curr_iter);
+                        omp_red_col_n(ref local, indices);
                     }
                     break;
                 default:
