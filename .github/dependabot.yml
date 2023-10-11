@@ -1,0 +1,43 @@
+version: 2
+updates:
+  - package-ecosystem: "github-actions"
+    directory: "./"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependency"
+      - "github-actions"
+    commit-message:
+      prefix: "actions"
+
+  - package-ecosystem: "nuget"
+    directory: "./DotMP-Tests/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependency"
+      - "nuget"
+    commit-message:
+      prefix: "nuget"
+    groups:
+      coverlet:
+        patterns:
+          - "coverlet.*"
+      fluent:
+        patterns:
+          - "FluentAssertions"
+          - "FluentAssertions.*"
+      xunit:
+        patterns:
+          - "xunit"
+          - "xunit.*"
+
+  - package-ecosystem: "nuget"
+    directory: "./DotMP/"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependency"
+      - "nuget"
+    commit-message:
+      prefix: "nuget"

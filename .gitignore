@@ -8,6 +8,7 @@ docs/*
 *.csr
 .vscode
 *.opencover.xml
+*.sln
 
 # User-specific files
 *.rsuser

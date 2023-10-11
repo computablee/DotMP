@@ -97,4 +97,29 @@ namespace DotMP
         /// <param name="ex">The inner exception.</param>
         public CannotPerformNestedWorksharingException(string msg, Exception ex) : base(msg, ex) { }
     }
+
+
+    /// <summary>
+    /// Exception thrown if a Parallel.Ordered is called outside of Parallel.For or Parallel.ForReduction.
+    /// </summary>
+    public class NotInForException: Exception
+    {
+        /// <summary>
+        /// Default constructor.
+        /// </summary>
+        public NotInForException() { }
+
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        public NotInForException(string msg): base(msg) { }
+
+        /// <summary>
+        /// Constructor with a message and inner exception.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        /// <param name="ex">The inner exception.</param>
+        public NotInForException(string msg, Exception ex): base(msg, ex) { }
+    }
 }

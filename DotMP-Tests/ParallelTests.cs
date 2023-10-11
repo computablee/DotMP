@@ -499,17 +499,98 @@ namespace DotMPTests
         {
             int total = 0;
 
-            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
             {
                 total += i;
             });
 
-            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
+            total.Should().Be(1024 * 1023 / 2);
+
+            long total_long = 0;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Subtract, ref total_long, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref long total, int i) =>
             {
-                total += i;
+                total -= (long)i;
             });
 
-            total.Should().Be(1024 * 1023);
+            total_long.Should().Be((long)-(1024 * 1023 / 2));
+
+            float total_float = 1;
+
+            DotMP.Parallel.ParallelForReduction(0, 48, DotMP.Operations.Multiply, ref total_float, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref float total, int i) =>
+            {
+                total *= 2;
+            });
+
+            total_float.Should().Be(Convert.ToUInt64(Math.Pow(2, 48)));
+
+            ulong total_ulong = 1023;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.BinaryAnd, ref total_ulong, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref ulong total, int i) =>
+            {
+                total &= (ulong)i;
+            });
+
+            total_ulong.Should().Be(0);
+
+            uint total_uint = 0;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.BinaryOr, ref total_uint, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref uint total, int i) =>
+            {
+                total |= (uint)i;
+            });
+
+            total_uint.Should().Be(1023);
+
+            byte total_byte = 0;
+
+            DotMP.Parallel.ParallelForReduction(0, 256, DotMP.Operations.BinaryXor, ref total_byte, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref byte total, int i) =>
+            {
+                total ^= (byte)i;
+            });
+
+            byte actual_byte = 0;
+
+            for (short i = 0; i < 256; i++)
+                actual_byte ^= (byte)i;
+
+            total_byte.Should().Be(actual_byte);
+
+            bool total_bool = true;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.BooleanAnd, ref total_bool, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref bool total, int i) =>
+            {
+                total = total && (i != 768);
+            });
+
+            total_bool.Should().BeFalse();
+
+            total_bool = false;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.BooleanOr, ref total_bool, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref bool total, int i) =>
+            {
+                total = total || (i == 768);
+            });
+
+            total_bool.Should().BeTrue();
+
+            double total_double = double.MaxValue;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Min, ref total_double, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref double total, int i) =>
+            {
+                total = Math.Min(total, (double)i);
+            });
+
+            total_double.Should().Be(0);
+
+            total_double = double.MinValue;
+
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Max, ref total_double, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref double total, int i) =>
+            {
+                total = Math.Max(total, (double)i);
+            });
+
+            total_double.Should().Be(1023);
         }
 
         /// <summary>
@@ -1059,9 +1140,12 @@ namespace DotMPTests
         {
             float[] z = new float[x.Length];
 
-            DotMP.Parallel.ParallelMasterTaskloop(0, x.Length, grainsize: grainsize, num_threads: 6, action: i =>
+            DotMP.Parallel.ParallelRegion(num_threads: 6, action: () =>
             {
-                z[i] += a * x[i] + y[i];
+                DotMP.Parallel.MasterTaskloop(0, x.Length, grainsize: grainsize, action: i =>
+                {
+                    z[i] += a * x[i] + y[i];
+                });
             });
 
             return z;

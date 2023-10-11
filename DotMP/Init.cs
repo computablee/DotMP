@@ -78,7 +78,7 @@ namespace DotMP
         /// </summary>
         private static object ws_lock_pv = new object();
         /// <summary>
-        /// Getter and setter for the singleton object WorkShare.ws_lock_pv.
+        /// Getter for the singleton object WorkShare.ws_lock_pv.
         /// </summary>
         internal object ws_lock
         {
@@ -113,24 +113,6 @@ namespace DotMP
         /// The number of threads to be used in the parallel for loop.
         /// </summary>
         internal uint num_threads { get; private set; }
-        /// <summary>
-        /// The number of threads that have completed their work.
-        /// </summary>
-        private static int threads_complete_pv = 0;
-        /// <summary>
-        /// Getter and setter for singleton integer WorkShare.threads_complete_pv.
-        /// </summary>
-        internal int threads_complete
-        {
-            get
-            {
-                return threads_complete_pv;
-            }
-            private set
-            {
-                threads_complete_pv = value;
-            }
-        }
         /// <summary>
         /// The operation to be performed if doing a reduction.
         /// </summary>
@@ -213,10 +195,9 @@ namespace DotMP
                     WorkShare.threads[i] = new Thr(threads[i]);
                 reduction_list = new List<dynamic>();
                 in_for_pv = new bool[num_threads];
-                threads_complete_pv = 0;
                 start_pv = start;
-                chunk_size_pv = chunk_size;
-                schedule_pv = schedule;
+                this.chunk_size = chunk_size;
+                this.schedule = schedule;
             });
         }
 
@@ -224,14 +205,6 @@ namespace DotMP
         /// Default constructor.
         /// </summary>
         internal WorkShare() { }
-
-        /// <summary>
-        /// Mark current thread as finished with execution.
-        /// </summary>
-        internal void Finished()
-        {
-            Interlocked.Increment(ref threads_complete_pv);
-        }
 
         /// <summary>
         /// Advance the start by some value.
@@ -258,7 +231,7 @@ namespace DotMP
         /// Sets the local variable to the appropriate value based on the operation for parallel for reduction loops.
         /// For addition and subtraction, the initial starting value is 0.
         /// For multiplication, the initial starting value is 1.
-        /// For binary And, the initial starting value is -1.
+        /// For binary And, the initial starting value is the bitwise negation of 0.
         /// For binary Or and Xor, the initial starting value is 0.
         /// For boolean And, the initial starting value is true.
         /// For boolean Or, the initial starting value is false.
@@ -279,7 +252,7 @@ namespace DotMP
                     local = (T)Convert.ChangeType(1, typeof(T));
                     break;
                 case Operations.BinaryAnd:
-                    local = (T)Convert.ChangeType(-1, typeof(T));
+                    local = ~(dynamic)Convert.ChangeType(0, typeof(T));
                     break;
                 case Operations.BinaryOr:
                     local = (T)Convert.ChangeType(0, typeof(T));

@@ -90,8 +90,6 @@ namespace DotMP
             while (thr.curr_iter < end)
                 StaticNext(ws, thr, ws.chunk_size, omp_fn, omp_fn_red, is_reduction, ref local);
 
-            ws.Finished();
-
             ws.AddReductionValue(local);
         }
 
@@ -112,29 +110,21 @@ namespace DotMP
             int start = thr.curr_iter;
             int end = (int)Math.Min(thr.curr_iter + chunk_size, ws.end);
 
-            ref int i = ref thr.working_iter;
-
-            if (!is_reduction) for (i = start; i < end; i++)
-                {
-                    omp_fn(i);
-                }
-            else for (i = start; i < end; i++)
-                {
-                    omp_fn_red(ref local, i);
-                }
+            InnerLoop(ref thr.working_iter, ref local, omp_fn, omp_fn_red, start, end, is_reduction);
 
             thr.curr_iter += (int)(ws.num_threads * chunk_size);
         }
 
         /// <summary>
-        /// Starts and controls a parallel for loop with dynamic scheduling.
+        /// Specifies a load balancing loop, like dynamic or guided.
         /// </summary>
         /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
         /// <param name="ws">The WorkShare object for state.</param>
         /// <param name="omp_fn">The function to be executed.</param>
         /// <param name="omp_fn_red">The function to be executed for reductions.</param>
         /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
-        internal static void DynamicLoop<T>(WorkShare ws, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
+        /// <param name="schedule">The schedule to use.</param>
+        internal static void LoadBalancingLoop<T>(WorkShare ws, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction, Schedule schedule)
         {
             Thr thr = ws.thread;
             int end = ws.end;
@@ -142,12 +132,14 @@ namespace DotMP
             T local = default;
             ws.SetLocal(ref local);
 
-            while (ws.start < end)
-            {
-                DynamicNext(ws, thr, omp_fn, omp_fn_red, is_reduction, ref local);
-            }
-
-            ws.Finished();
+            if (schedule == Schedule.Guided) while (ws.start < end)
+                {
+                    GuidedNext(ws, thr, omp_fn, omp_fn_red, is_reduction, ref local);
+                }
+            else if (schedule == Schedule.Dynamic) while (ws.start < end)
+                {
+                    DynamicNext(ws, thr, omp_fn, omp_fn_red, is_reduction, ref local);
+                }
 
             ws.AddReductionValue(local);
         }
@@ -175,42 +167,7 @@ namespace DotMP
 
             int chunk_end = (int)Math.Min(chunk_start + ws.chunk_size, ws.end);
 
-            ref int i = ref thr.working_iter;
-
-            if (!is_reduction) for (i = chunk_start; i < chunk_end; i++)
-                {
-                    omp_fn(i);
-                }
-            else for (i = chunk_start; i < chunk_end; i++)
-                {
-                    omp_fn_red(ref local, i);
-                }
-        }
-
-        /// <summary>
-        /// Starts and controls a parallel for loop with guided scheduling.
-        /// </summary>
-        /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
-        /// <param name="ws">The WorkShare object for state.</param>
-        /// <param name="omp_fn">The function to be executed.</param>
-        /// <param name="omp_fn_red">The function to be executed for reductions.</param>
-        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
-        internal static void GuidedLoop<T>(WorkShare ws, Action<int> omp_fn, ActionRef<T> omp_fn_red, bool is_reduction)
-        {
-            Thr thr = ws.thread;
-            int end = ws.end;
-
-            T local = default;
-            ws.SetLocal(ref local);
-
-            while (ws.start < end)
-            {
-                GuidedNext(ws, thr, omp_fn, omp_fn_red, is_reduction, ref local);
-            }
-
-            ws.Finished();
-
-            ws.AddReductionValue(local);
+            InnerLoop(ref thr.working_iter, ref local, omp_fn, omp_fn_red, chunk_start, chunk_end, is_reduction);
         }
 
         /// <summary>
@@ -238,15 +195,29 @@ namespace DotMP
 
             int chunk_end = Math.Min(chunk_start + chunk_size, ws.end);
 
-            ref int i = ref thr.working_iter;
+            InnerLoop(ref thr.working_iter, ref local, omp_fn, omp_fn_red, chunk_start, chunk_end, is_reduction);
+        }
 
-            if (!is_reduction) for (i = chunk_start; i < chunk_end; i++)
+        /// <summary>
+        /// Performs the innermost loop to execute a chunk.
+        /// </summary>
+        /// <typeparam name="T">The type of the local variable for reductions.</typeparam>
+        /// <param name="curr_iter">A reference to the thread's current working iteration.</param>
+        /// <param name="local">The local variable used for reductions.</param>
+        /// <param name="omp_fn">The function to be executed.</param>
+        /// <param name="omp_fn_red">The function to be executed for reductions.</param>
+        /// <param name="start">The start of the current chunk, inclusive.</param>
+        /// <param name="end">The end of the current chunk, exclusive.</param>
+        /// <param name="is_reduction">Whether or not the loop is a reduction loop.</param>
+        private static void InnerLoop<T>(ref int curr_iter, ref T local, Action<int> omp_fn, ActionRef<T> omp_fn_red, int start, int end, bool is_reduction)
+        {
+            if (!is_reduction) for (curr_iter = start; curr_iter < end; curr_iter++)
                 {
-                    omp_fn(i);
+                    omp_fn(curr_iter);
                 }
-            else for (i = chunk_start; i < chunk_end; i++)
+            else for (curr_iter = start; curr_iter < end; curr_iter++)
                 {
-                    omp_fn_red(ref local, i);
+                    omp_fn_red(ref local, curr_iter);
                 }
         }
     }

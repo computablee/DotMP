@@ -87,6 +87,7 @@ Below is a list of all contributors to DotMP!
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/exrol"><img src="https://avatars.githubusercontent.com/u/86170495?v=4?s=100" width="100px;" alt="exrol"/><br /><sub><b>exrol</b></sub></a><br /><a href="https://github.com/computablee/DotMP/commits?author=exrol" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://github.com/jestes15"><img src="https://avatars.githubusercontent.com/u/51448244?v=4?s=100" width="100px;" alt="Joshua Estes"/><br /><sub><b>Joshua Estes</b></sub></a><br /><a href="https://github.com/computablee/DotMP/commits?author=jestes15" title="Code">💻</a></td>
       <td align="center" valign="top" width="14.28%"><a href="https://www.bayoosoft.com/"><img src="https://avatars.githubusercontent.com/u/45914736?v=4?s=100" width="100px;" alt="blouflashdb"/><br /><sub><b>blouflashdb</b></sub></a><br /><a href="https://github.com/computablee/DotMP/commits?author=blouflashdb" title="Code">💻</a></td>
+      <td align="center" valign="top" width="14.28%"><a href="https://github.com/Skenvy"><img src="https://avatars.githubusercontent.com/u/17214791?v=4?s=100" width="100px;" alt="Nathan Levett"/><br /><sub><b>Nathan Levett</b></sub></a><br /><a href="https://github.com/computablee/DotMP/commits?author=Skenvy" title="Code">💻</a></td>
     </tr>
   </tbody>
 </table>
