@@ -163,8 +163,14 @@ namespace DotMP
         /// </summary>
         private ValueTuple<int, int>[] ranges;
 
+        /// <summary>
+        /// Array of indices to pass to actions.
+        /// </summary>
         private int[] indices;
 
+        /// <summary>
+        /// Array which represents the length of collapsed loops in each dimension.
+        /// </summary>
         private int[] diffs;
 
         /// <summary>
@@ -322,12 +328,52 @@ namespace DotMP
         }
 
         /// <summary>
+        /// Computes the indices for collapsed loops with 2 indices.
+        /// </summary>
+        /// <param name="curr_iter">The current iteration to unflatten.</param>
+        /// <param name="diff2">The difference in the second pair of indices.</param>
+        /// <param name="start1">The start of the first pair of indices.</param>
+        /// <param name="start2">The start of the second pair of indices.</param>
+        /// <returns>The two indices.</returns>
+        private ValueTuple<int, int> ComputeIndices2(int curr_iter, int diff2, int start1, int start2)
+        {
+            int i, j;
+            i = Math.DivRem(curr_iter, diff2, out j);
+            i += start1;
+            j += start2;
+
+            return (i, j);
+        }
+
+        /// <summary>
+        /// Computes the indices for collapsed loops with 3 indices.
+        /// </summary>
+        /// <param name="curr_iter">The current iteration to unflatten.</param>
+        /// <param name="diff2">The difference in the second pair of indices.</param>
+        /// <param name="diff3">The difference in the third pair of indices.</param>
+        /// <param name="start1">The start of the first pair of indices.</param>
+        /// <param name="start2">The start of the second pair of indices.</param>
+        /// <param name="start3">The start of the third pair of indices.</param>
+        /// <returns>The three indices.</returns>
+        private ValueTuple<int, int, int> ComputeIndices3(int curr_iter, int diff2, int diff3, int start1, int start2, int start3)
+        {
+            int i, j, k;
+            i = Math.DivRem(curr_iter, diff2 * diff3, out j);
+            j = Math.DivRem(j, diff3, out k);
+            i += start1;
+            j += start2;
+            k += start3;
+
+            return (i, j, k);
+        }
+
+        /// <summary>
         /// Computes the indices for collapsed loops with 4 or more indices.
         /// </summary>
-        /// <param name="i">The current iteration to unflatten.</param>
-        private void ComputeIndices(int i)
+        /// <param name="curr_iter">The current iteration to unflatten.</param>
+        private void ComputeIndicesN(int curr_iter)
         {
-            int mod = i;
+            int mod = curr_iter;
             for (int r = 0; r < ranges.Length - 1; r++)
             {
                 int prod = 1;
@@ -380,11 +426,7 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        int i, j;
-                        i = Math.DivRem(curr_iter, diff2, out j);
-                        i += start1;
-                        j += start2;
-
+                        (int i, int j) = ComputeIndices2(curr_iter, diff2, start1, start2);
                         omp_col_2(i, j);
                     }
                     break;
@@ -398,27 +440,21 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        int i, j, k;
-                        i = Math.DivRem(curr_iter, diff2 * diff3, out j);
-                        j = Math.DivRem(j, diff3, out k);
-                        i += start1;
-                        j += start2;
-                        k += start3;
-
+                        (int i, int j, int k) = ComputeIndices3(curr_iter, diff2, diff3, start1, start2, start3);
                         omp_col_3(i, j, k);
                     }
                     break;
                 case ActionSelector.Collapse4:
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        ComputeIndices(curr_iter);
+                        ComputeIndicesN(curr_iter);
                         omp_col_4(indices[0], indices[1], indices[2], indices[3]);
                     }
                     break;
                 case ActionSelector.CollapseN:
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        ComputeIndices(curr_iter);
+                        ComputeIndicesN(curr_iter);
                         omp_col_n(indices);
                     }
                     break;
@@ -430,11 +466,7 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        int i, j;
-                        i = Math.DivRem(curr_iter, diff2, out j);
-                        i += start1;
-                        j += start2;
-
+                        (int i, int j) = ComputeIndices2(curr_iter, diff2, start1, start2);
                         omp_red_col_2(ref local, i, j);
                     }
                     break;
@@ -448,27 +480,21 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        int i, j, k;
-                        i = Math.DivRem(curr_iter, diff2 * diff3, out j);
-                        j = Math.DivRem(j, diff3, out k);
-                        i += start1;
-                        j += start2;
-                        k += start3;
-
+                        (int i, int j, int k) = ComputeIndices3(curr_iter, diff2, diff3, start1, start2, start3);
                         omp_red_col_3(ref local, i, j, k);
                     }
                     break;
                 case ActionSelector.ReductionCollapse4:
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        ComputeIndices(curr_iter);
+                        ComputeIndicesN(curr_iter);
                         omp_red_col_4(ref local, indices[0], indices[1], indices[2], indices[3]);
                     }
                     break;
                 case ActionSelector.ReductionCollapseN:
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        ComputeIndices(curr_iter);
+                        ComputeIndicesN(curr_iter);
                         omp_red_col_n(ref local, indices);
                     }
                     break;
