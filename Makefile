@@ -1,9 +1,12 @@
 DN=dotnet
 BUILD=Release
 
-all: docs build tests examples
+all: docs build tests examples benches
 
 examples: examples-cs examples-dmp examples-seq
+
+benches:
+	$(DN) build -c Release benchmarks/HeatTransfer
 
 examples-cs:
 	$(DN) build -c $(BUILD) examples/CSParallel/ConjugateGradient
@@ -52,3 +55,4 @@ clean:
 	rm -rf examples/Serial/ConjugateGradient/bin examples/Serial/ConjugateGradient/obj
 	rm -rf examples/Serial/HeatTransfer/bin examples/Serial/HeatTransfer/obj
 	rm -rf examples/Serial/GEMM/bin examples/Serial/GEMM/obj
+	rm -rf benchmarks/HeatTransfer/bin benchmarks/HeatTransfer/obj benchmarks/HeatTransfer/BenchmarkDotNet.Artifacts

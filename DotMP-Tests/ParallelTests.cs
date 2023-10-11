@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Text.Json.Serialization;
 using System.Threading;
 using DotMP;
 using FluentAssertions;
@@ -144,6 +145,155 @@ namespace DotMPTests
             {
                 z[i].Should().Be(3.0f);
             }
+        }
+
+        /// <summary>
+        /// Tests to make sure that DotMP.Parallel.ForCollapse produces correct results.
+        /// </summary>
+        [Fact]
+        public void Collapse_works()
+        {
+            int[,] iters_hit = new int[1024, 1024];
+
+            DotMP.Parallel.ParallelForCollapse((256, 512), (512, 600), num_threads: 8, chunk_size: 7, schedule: Schedule.Static, action: (i, j) =>
+            {
+                DotMP.Atomic.Inc(ref iters_hit[i, j]);
+            });
+
+            for (int i = 0; i < 1024; i++)
+                for (int j = 0; j < 1024; j++)
+                    if (i >= 256 && i < 512 && j >= 512 && j < 600)
+                        iters_hit[i, j].Should().Be(1);
+                    else
+                        iters_hit[i, j].Should().Be(0);
+
+            iters_hit = null;
+
+            int[,,] iters_hit_3 = new int[128, 128, 64];
+
+            DotMP.Parallel.ParallelForCollapse((35, 64), (16, 100), (10, 62), num_threads: 8, chunk_size: 3, schedule: Schedule.Dynamic, action: (i, j, k) =>
+            {
+                DotMP.Atomic.Inc(ref iters_hit_3[i, j, k]);
+            });
+
+            for (int i = 0; i < 128; i++)
+                for (int j = 0; j < 128; j++)
+                    for (int k = 0; k < 64; k++)
+                        if (i >= 35 && i < 64 && j >= 16 && j < 100 && k >= 10 && k < 62)
+                            iters_hit_3[i, j, k].Should().Be(1);
+                        else
+                            iters_hit_3[i, j, k].Should().Be(0);
+
+            iters_hit_3 = null;
+
+            int[,,,] iters_hit_4 = new int[32, 32, 32, 32];
+
+            DotMP.Parallel.ParallelForCollapse((1, 31), (10, 16), (5, 20), (21, 30), num_threads: 8, chunk_size: 11, schedule: Schedule.Static, action: (i, j, k, l) =>
+            {
+                DotMP.Atomic.Inc(ref iters_hit_4[i, j, k, l]);
+            });
+
+            DotMP.Parallel.ParallelForCollapse(new (int, int)[] { (1, 31), (10, 16), (5, 20), (21, 30) }, num_threads: 8, chunk_size: 11, schedule: Schedule.Static, action: (int[] indices) =>
+            {
+                DotMP.Atomic.Inc(ref iters_hit_4[indices[0], indices[1], indices[2], indices[3]]);
+            });
+
+            for (int i = 0; i < 32; i++)
+                for (int j = 0; j < 32; j++)
+                    for (int k = 0; k < 32; k++)
+                        for (int l = 0; l < 32; l++)
+                            if (i >= 1 && i < 31 && j >= 10 && j < 16 && k >= 5 && k < 20 && l >= 21 && l < 30)
+                                iters_hit_4[i, j, k, l].Should().Be(2);
+                            else
+                                iters_hit_4[i, j, k, l].Should().Be(0);
+        }
+
+        /// <summary>
+        /// Tests to make sure that DotMP.Parallel.ForReductionCollapse produces correct results.
+        /// </summary>
+        [Fact]
+        public void Reduction_collapse_works()
+        {
+            int total_iters_executed = 0;
+            int[,] iters_hit = new int[1024, 1024];
+
+            DotMP.Parallel.ParallelForReductionCollapse((256, 512), (512, 600),
+                                                        op: Operations.Add, reduce_to: ref total_iters_executed,
+                                                        num_threads: 8, chunk_size: 7, schedule: Schedule.Static,
+                                                        action: (ref int total_iters_executed, int i, int j) =>
+            {
+                DotMP.Atomic.Inc(ref iters_hit[i, j]);
+                total_iters_executed += 1;
+            });
+
+            for (int i = 0; i < 1024; i++)
+                for (int j = 0; j < 1024; j++)
+                    if (i >= 256 && i < 512 && j >= 512 && j < 600)
+                        iters_hit[i, j].Should().Be(1);
+                    else
+                        iters_hit[i, j].Should().Be(0);
+
+            total_iters_executed.Should().Be((512 - 256) * (600 - 512));
+
+            iters_hit = null;
+            total_iters_executed = 0;
+
+            int[,,] iters_hit_3 = new int[128, 128, 64];
+
+            DotMP.Parallel.ParallelForReductionCollapse((35, 64), (16, 100), (10, 62),
+                                                        op: Operations.Add, reduce_to: ref total_iters_executed,
+                                                        num_threads: 8, chunk_size: 3, schedule: Schedule.Dynamic,
+                                                        action: (ref int total_iters_executed, int i, int j, int k) =>
+            {
+                DotMP.Atomic.Inc(ref iters_hit_3[i, j, k]);
+                total_iters_executed += 1;
+            });
+
+            for (int i = 0; i < 128; i++)
+                for (int j = 0; j < 128; j++)
+                    for (int k = 0; k < 64; k++)
+                        if (i >= 35 && i < 64 && j >= 16 && j < 100 && k >= 10 && k < 62)
+                            iters_hit_3[i, j, k].Should().Be(1);
+                        else
+                            iters_hit_3[i, j, k].Should().Be(0);
+
+            total_iters_executed.Should().Be((64 - 35) * (100 - 16) * (62 - 10));
+
+            iters_hit_3 = null;
+            total_iters_executed = 0;
+
+            int[,,,] iters_hit_4 = new int[32, 32, 32, 32];
+
+            DotMP.Parallel.ParallelForReductionCollapse((1, 31), (10, 16), (5, 20), (21, 30),
+                                                        op: Operations.Add, reduce_to: ref total_iters_executed,
+                                                        num_threads: 8, chunk_size: 11, schedule: Schedule.Static,
+                                                        action: (ref int total_iters_executed, int i, int j, int k, int l) =>
+            {
+                DotMP.Atomic.Inc(ref iters_hit_4[i, j, k, l]);
+                total_iters_executed += 1;
+            });
+
+            total_iters_executed.Should().Be((31 - 1) * (16 - 10) * (20 - 5) * (30 - 21));
+            total_iters_executed = 0;
+
+            DotMP.Parallel.ParallelForReductionCollapse(new (int, int)[] { (1, 31), (10, 16), (5, 20), (21, 30) },
+                                                        op: Operations.Add, reduce_to: ref total_iters_executed,
+                                                        num_threads: 8, chunk_size: 11, schedule: Schedule.Static,
+                                                        action: (ref int total_iters_executed, int[] indices) =>
+            {
+                DotMP.Atomic.Inc(ref iters_hit_4[indices[0], indices[1], indices[2], indices[3]]);
+                total_iters_executed += 1;
+            });
+
+            total_iters_executed.Should().Be((31 - 1) * (16 - 10) * (20 - 5) * (30 - 21));
+            for (int i = 0; i < 32; i++)
+                for (int j = 0; j < 32; j++)
+                    for (int k = 0; k < 32; k++)
+                        for (int l = 0; l < 32; l++)
+                            if (i >= 1 && i < 31 && j >= 10 && j < 16 && k >= 5 && k < 20 && l >= 21 && l < 30)
+                                iters_hit_4[i, j, k, l].Should().Be(2);
+                            else
+                                iters_hit_4[i, j, k, l].Should().Be(0);
         }
 
         /// <summary>
