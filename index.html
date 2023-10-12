@@ -77,7 +77,7 @@ Building DotMP from Source</h1>
 <p>First, clone <a class="el" href="namespaceDotMP.html">DotMP</a> and navigate to the source directory: </p><div class="fragment"><div class="line">git clone https://github.com/computablee/DotMP.git</div>
 <div class="line">cd DotMP</div>
 </div><!-- fragment --><p><a class="el" href="namespaceDotMP.html">DotMP</a> can be built using the <code>make</code> command. To build the entire project, including all tests, examples, and documentation, run the following command: </p><div class="fragment"><div class="line">make</div>
-</div><!-- fragment --><p> This command will build the main library, all tests, all examples, and the documentation into their respective directories, but will not run any tests.</p>
+</div><!-- fragment --><p> This command will build the main library, all tests, examples, benchmarks, and the documentation into their respective directories, but will not run any tests.</p>
 <p>To build only the main library, run the following command: </p><div class="fragment"><div class="line">make build</div>
 </div><!-- fragment --><p>To build only the tests, run the following command: </p><div class="fragment"><div class="line">make tests</div>
 </div><!-- fragment --><p> To run the tests, run the following command: </p><div class="fragment"><div class="line">make test</div>
@@ -85,10 +85,11 @@ Building DotMP from Source</h1>
 </div><!-- fragment --><p> This will build all of the examples, including the native C# parallelized, the <a class="el" href="namespaceDotMP.html">DotMP</a> parallelized, and the sequential examples. You can also individually build each of these classes of examples by running one or all of the following commands: </p><div class="fragment"><div class="line">make examples-cs</div>
 <div class="line">make examples-dmp</div>
 <div class="line">make examples-seq</div>
+</div><!-- fragment --><p>To build only the benchmarks, ruin the following command: </p><div class="fragment"><div class="line">make benches</div>
 </div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
 Documentation</h1>
 <p>You can use <a href="https://github.com/doxygen/doxygen">Doxygen</a> to build the documentation for this project. A Doxyfile is located in the root of the project directory. To build the documentation, run the following command: </p><div class="fragment"><div class="line">make docs</div>
-</div><!-- fragment --><p> This will generate documentation in the root of the project under the <code>docs</code> directory in both LaTeX and HTML formats.</p>
+</div><!-- fragment --><p> This will generate documentation in the root of the project under the <code>docs</code> directory in both LaTeX and HTML formats. A copy of the most up-to-date documentation is <a href="https://computablee.github.io/DotMP/">hosted on GitHub</a>.</p>
 <h1><a class="anchor" id="autotoc_md4"></a>
 Supported Constructs</h1>
 <h2><a class="anchor" id="autotoc_md5"></a>
