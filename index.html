@@ -189,7 +189,8 @@ For with Collapse</h2>
 <div class="line">        <span class="comment">// ...</span></div>
 <div class="line">            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = e; k &lt; f; k++)</div>
 <div class="line">                work(i, j, <span class="comment">/* ... */</span>, k);</div>
-</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845">ForCollapse</a>((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f), (i, j, <span class="comment">/* ... */</span>, k) =&gt; {</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845">ForCollapse</a>((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f),</div>
+<div class="line">                           (i, j, <span class="comment">/* ... */</span>, k) =&gt; {</div>
 <div class="line">    work(i, j, <span class="comment">/* ... */</span>, k);</div>
 <div class="line">});</div>
 <div class="ttc" id="aclassDotMP_1_1Parallel_html_a6b4dcfa3d0ee6363c873d1b84988f845"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845">DotMP.Parallel.ForCollapse</a></div><div class="ttdeci">static void ForCollapse((int, int) firstRange,(int, int) secondRange, Action&lt; int, int &gt; action, Schedule schedule=Schedule.Static, uint? chunk_size=null)</div><div class="ttdoc">Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:148</div></div>
@@ -207,7 +208,8 @@ For with Reduction and Collapse</h2>
 <div class="line">                local `op` f(i, j, <span class="comment">/* ... */</span>, k);</div>
 </div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line">type local = c;</div>
 <div class="line"> </div>
-<div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.ForReductionCollapse((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f), op, ref local, (ref type local, <span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="comment">/* ... */</span>, <span class="keywordtype">int</span> k) =&gt; {</div>
+<div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.ForReductionCollapse((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f), op, ref local,</div>
+<div class="line">                                    (ref type local, <span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="comment">/* ... */</span>, <span class="keywordtype">int</span> k) =&gt; {</div>
 <div class="line">    local `op` f(i, j, <span class="comment">/* ... */</span>, k);</div>
 <div class="line">});</div>
 </div><!-- fragment --><p> This function is a combination of <code>ForCollapse</code> and <code>ForReduction</code>, and supports all of the optional parameters thereof.</p>
@@ -219,7 +221,8 @@ Parallel For with Collapse</h2>
 <div class="line">        <span class="comment">// ...</span></div>
 <div class="line">            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = e; k &lt; f; k++)</div>
 <div class="line">                work(i, j, <span class="comment">/* ... */</span>, k);</div>
-</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#adfa05ff90de7aca0d538b6618bce967e">ParallelForCollapse</a>((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f), (i, j, <span class="comment">/* ... */</span>, k) =&gt; {</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#adfa05ff90de7aca0d538b6618bce967e">ParallelForCollapse</a>((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f),</div>
+<div class="line">                                   (i, j, <span class="comment">/* ... */</span>, k) =&gt; {</div>
 <div class="line">    work(i, j, <span class="comment">/* ... */</span>, k);</div>
 <div class="line">});</div>
 <div class="ttc" id="aclassDotMP_1_1Parallel_html_adfa05ff90de7aca0d538b6618bce967e"><div class="ttname"><a href="classDotMP_1_1Parallel.html#adfa05ff90de7aca0d538b6618bce967e">DotMP.Parallel.ParallelForCollapse</a></div><div class="ttdeci">static void ParallelForCollapse((int, int) firstRange,(int, int) secondRange, Action&lt; int, int &gt; action, Schedule schedule=Schedule.Static, uint? chunk_size=null, uint? num_threads=null)</div><div class="ttdoc">Creates a parallel collapsed for loop. Contains all of the parameters from ParallelRegion() and ForCo...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:568</div></div>
@@ -236,7 +239,8 @@ Parallel For with Reduction and Collapse</h2>
 <div class="line">                local `op` f(i, j, <span class="comment">/* ... */</span>, k);</div>
 </div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line">type local = c;</div>
 <div class="line"> </div>
-<div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.ParallelForReductionCollapse((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f), op, ref local, (ref type local, <span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="comment">/* ... */</span>, <span class="keywordtype">int</span> k) =&gt; {</div>
+<div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.ParallelForReductionCollapse((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f), op, ref local,</div>
+<div class="line">                                            (ref type local, <span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="comment">/* ... */</span>, <span class="keywordtype">int</span> k) =&gt; {</div>
 <div class="line">    local `op` f(i, j, <span class="comment">/* ... */</span>, k);</div>
 <div class="line">});</div>
 </div><!-- fragment --><p> This function supports all of the optional parameters of <code>ParallelRegion</code> and <code>ForReductionCollapse</code>, and is merely a wrapper around those two functions for conciseness.</p>
