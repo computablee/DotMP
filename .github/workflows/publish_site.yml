@@ -6,8 +6,12 @@ on:
 
 jobs:
   deploy:
+    name: Update GitHub Pages
     runs-on: ubuntu-latest
     steps:
-      - uses: DenverCoder1/doxygen-github-pages-action@v1.3.0
+      - name: Generate Patched README
+        run: make ProcessedREADME.md
+      - name: Deploy GitHub Pages
+        uses: DenverCoder1/doxygen-github-pages-action@v1.3.0
         with:
           github_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
