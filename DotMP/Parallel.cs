@@ -44,11 +44,6 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop.</param>
         private static void FixArgs(int start, int end, ref Schedule sched, ref uint? chunk_size, uint num_threads)
         {
-            if (num_threads == 0)
-            {
-                num_threads = (uint)GetNumProcs();
-            }
-
             if (sched == Schedule.Runtime)
             {
                 string schedule = Environment.GetEnvironmentVariable("OMP_SCHEDULE");
