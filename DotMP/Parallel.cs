@@ -1103,14 +1103,14 @@ namespace DotMP
         {
             var freg = new ForkedRegion();
 
+            int ret_val;
+
             if (freg.reg is not null)
-            {
-                return (int)freg.reg.num_threads;
-            }
+                ret_val = (int)freg.reg.num_threads;
             else
-            {
-                return 1;
-            }
+                ret_val = 1;
+
+            return ret_val;
         }
 
         /// <summary>
