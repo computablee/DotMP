@@ -214,7 +214,8 @@ for (int i = a, i < b; i++)
 ```
 DotMP provides:
 ```cs
-DotMP.Parallel.ForCollapse((a, b), (c, d), /* ... */, (e, f), (i, j, /* ... */, k) => {
+DotMP.Parallel.ForCollapse((a, b), (c, d), /* ... */, (e, f),
+                           (i, j, /* ... */, k) => {
     work(i, j, /* ... */, k);
 });
 ```
@@ -239,7 +240,8 @@ DotMP provides:
 ```cs
 type local = c;
 
-DotMP.Parallel.ForReductionCollapse((a, b), (c, d), /* ... */, (e, f), op, ref local, (ref type local, int i, int j, /* ... */, int k) => {
+DotMP.Parallel.ForReductionCollapse((a, b), (c, d), /* ... */, (e, f), op, ref local,
+                                    (ref type local, int i, int j, /* ... */, int k) => {
     local `op` f(i, j, /* ... */, k);
 });
 ```
@@ -257,7 +259,8 @@ for (int i = a, i < b; i++)
 ```
 DotMP provides:
 ```cs
-DotMP.Parallel.ParallelForCollapse((a, b), (c, d), /* ... */, (e, f), (i, j, /* ... */, k) => {
+DotMP.Parallel.ParallelForCollapse((a, b), (c, d), /* ... */, (e, f),
+                                   (i, j, /* ... */, k) => {
     work(i, j, /* ... */, k);
 });
 ```
@@ -279,7 +282,8 @@ DotMP provides:
 ```cs
 type local = c;
 
-DotMP.Parallel.ParallelForReductionCollapse((a, b), (c, d), /* ... */, (e, f), op, ref local, (ref type local, int i, int j, /* ... */, int k) => {
+DotMP.Parallel.ParallelForReductionCollapse((a, b), (c, d), /* ... */, (e, f), op, ref local,
+                                            (ref type local, int i, int j, /* ... */, int k) => {
     local `op` f(i, j, /* ... */, k);
 });
 ```
