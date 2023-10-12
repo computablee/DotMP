@@ -335,7 +335,7 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelMaster(num_threads: 6, action: () =>
             {
-                var t1 = DotMP.Parallel.Taskloop(0, size, grainsize: grainsize, action: i =>
+                var t1 = DotMP.Parallel.Taskloop(0, size, i =>
                 {
                     a[i] += 1;
                 });
@@ -387,6 +387,13 @@ namespace DotMPTests
         [Fact]
         public void Schedule_runtime_works()
         {
+            Environment.SetEnvironmentVariable("OMP_SCHEDULE", "adaptive");
+            DotMP.Parallel.ParallelFor(0, 1024, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
+            {
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Static);
+                DotMP.Parallel.GetChunkSize().Should().Be(256);
+            });
+
             Environment.SetEnvironmentVariable("OMP_SCHEDULE", "guided,2");
             DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Runtime, action: i =>
             {
@@ -394,11 +401,25 @@ namespace DotMPTests
                 DotMP.Parallel.GetChunkSize().Should().Be(2);
             });
 
-            Environment.SetEnvironmentVariable("OMP_SCHEDULE", "dynamic,4");
-            DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Runtime, action: i =>
+            Environment.SetEnvironmentVariable("OMP_SCHEDULE", "static,10");
+            DotMP.Parallel.ParallelFor(0, 1024, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
+            {
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Static);
+                DotMP.Parallel.GetChunkSize().Should().Be(10);
+            });
+
+            Environment.SetEnvironmentVariable("OMP_SCHEDULE", "dynamic,garbage");
+            DotMP.Parallel.ParallelFor(0, 1024, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
             {
                 DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Dynamic);
-                DotMP.Parallel.GetChunkSize().Should().Be(4);
+                DotMP.Parallel.GetChunkSize().Should().Be(8);
+            });
+
+            Environment.SetEnvironmentVariable("OMP_SCHEDULE", null);
+            DotMP.Parallel.ParallelFor(0, 1024, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
+            {
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Static);
+                DotMP.Parallel.GetChunkSize().Should().Be(256);
             });
         }
 
@@ -747,8 +768,9 @@ namespace DotMPTests
         /// Tests to make sure that DotMP.Parallel.SetNumThreads() works.
         /// </summary>
         [Fact]
-        public void SetNumThreads_works()
+        public void Get_and_Set_NumThreads_work()
         {
+            DotMP.Parallel.GetNumThreads().Should().Be(1);
             DotMP.Parallel.GetMaxThreads().Should().Be(DotMP.Parallel.GetNumProcs());
 
             DotMP.Parallel.ParallelRegion(() =>

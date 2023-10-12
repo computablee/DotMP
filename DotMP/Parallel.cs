@@ -73,7 +73,7 @@ namespace DotMP
                             sched = Schedule.Static;
                             break;
                         default:
-                            Console.WriteLine("Invalid schedule specified by OMP_SCHEDULE, defaulting to static.");
+                            Master(() => Console.WriteLine("Invalid schedule specified by OMP_SCHEDULE, defaulting to static."));
                             sched = Schedule.Static;
                             break;
                     }
@@ -1103,15 +1103,9 @@ namespace DotMP
         {
             var freg = new ForkedRegion();
 
-            int num_threads = (int)freg.reg.num_threads;
-
-            if (num_threads == 0)
-            {
-                freg.reg.num_threads = 1;
-                return 1;
-            }
-
-            return num_threads;
+            return (freg.reg is not null)
+                    ? (int)freg.reg.num_threads
+                    : 1;
         }
 
         /// <summary>
