@@ -202,6 +202,89 @@ DotMP.Parallel.ParallelForReduction(a, b, op, ref local, (ref type local, int i)
 ```
 This function supports all of the optional parameters of `ParallelRegion` and `ForReduction`, and is merely a wrapper around those two functions for conciseness.
 
+### For with Collapse
+Given the OpenMP:
+```c
+#pragma omp for collapse(n)
+for (int i = a, i < b; i++)
+    for (int j = c, j < d; j++)
+        // ...
+            for (int k = e; k < f; k++)
+                work(i, j, /* ... */, k);
+```
+DotMP provides:
+```cs
+DotMP.Parallel.ForCollapse((a, b), (c, d), /* ... */, (e, f), (i, j, /* ... */, k) => {
+    work(i, j, /* ... */, k);
+});
+```
+If four or fewer loops are being collapsed, overloads of `ForCollapse` exist to easily collapse said loops.
+If greater than four loops are being collapsed, then the user should pass an array of tuples as the first argument, and accept an array of indices in the lambda.
+
+This function supports all of the optional parameters of `For`.
+
+### For with Reduction and Collapse
+Given the OpenMP:
+```c
+type local = c;
+
+#pragma omp for reduction(op:local) collapse(n)
+for (int i = a, i < b; i++)
+    for (int j = c, j < d; j++)
+        // ...
+            for (int k = e; k < f; k++)
+                local `op` f(i, j, /* ... */, k);
+```
+DotMP provides:
+```cs
+type local = c;
+
+DotMP.Parallel.ForReductionCollapse((a, b), (c, d), /* ... */, (e, f), op, ref local, (ref type local, int i, int j, /* ... */, int k) => {
+    local `op` f(i, j, /* ... */, k);
+});
+```
+This function is a combination of `ForCollapse` and `ForReduction`, and supports all of the optional parameters thereof.
+
+### Parallel For with Collapse
+Given the OpenMP:
+```c
+#pragma omp parallel for collapse(n)
+for (int i = a, i < b; i++)
+    for (int j = c, j < d; j++)
+        // ...
+            for (int k = e; k < f; k++)
+                work(i, j, /* ... */, k);
+```
+DotMP provides:
+```cs
+DotMP.Parallel.ParallelForCollapse((a, b), (c, d), /* ... */, (e, f), (i, j, /* ... */, k) => {
+    work(i, j, /* ... */, k);
+});
+```
+This function supports all of the optional parameters of `ParallelRegion` and `ForCollapse`, and is merely a wrapper around those two functions for conciseness.
+
+### Parallel For with Reduction and Collapse
+Given the OpenMP:
+```c
+type local = c;
+
+#pragma omp parallel for reduction(op:local) collapse(n)
+for (int i = a, i < b; i++)
+    for (int j = c, j < d; j++)
+        // ...
+            for (int k = e; k < f; k++)
+                local `op` f(i, j, /* ... */, k);
+```
+DotMP provides:
+```cs
+type local = c;
+
+DotMP.Parallel.ParallelForReductionCollapse((a, b), (c, d), /* ... */, (e, f), op, ref local, (ref type local, int i, int j, /* ... */, int k) => {
+    local `op` f(i, j, /* ... */, k);
+});
+```
+This function supports all of the optional parameters of `ParallelRegion` and `ForReductionCollapse`, and is merely a wrapper around those two functions for conciseness.
+
 ### Sections
 Given the OpenMP:
 ```c

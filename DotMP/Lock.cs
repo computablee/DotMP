@@ -12,7 +12,7 @@ namespace DotMP
         /// <summary>
         /// The int acting as the lock.
         /// </summary>
-        volatile internal int _lock;
+        volatile private int _lock;
 
         /// <summary>
         /// Constructs a new lock.
