@@ -32,7 +32,7 @@ To build the entire project, including all tests, examples, and documentation, r
 ```sh
 make
 ```
-This command will build the main library, all tests, all examples, and the documentation into their respective directories, but will not run any tests.
+This command will build the main library, all tests, examples, benchmarks, and the documentation into their respective directories, but will not run any tests.
 
 To build only the main library, run the following command:
 ```sh
@@ -60,6 +60,11 @@ make examples-dmp
 make examples-seq
 ```
 
+To build only the benchmarks, ruin the following command:
+```sh
+make benches
+```
+
 ## Documentation
 You can use [Doxygen](https://github.com/doxygen/doxygen) to build the documentation for this project.
 A Doxyfile is located in the root of the project directory.
@@ -68,6 +73,7 @@ To build the documentation, run the following command:
 make docs
 ```
 This will generate documentation in the root of the project under the `docs` directory in both LaTeX and HTML formats.
+A copy of the most up-to-date documentation is [hosted on GitHub](https://computablee.github.io/DotMP/).
 
 ## Contributors
 
