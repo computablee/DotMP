@@ -11,9 +11,21 @@ jobs:
     
     steps:
     - uses: actions/checkout@v4
-    - name: Generate Patched README
-      run: make ProcessedREADME.md
-    - name: Deploy GitHub Pages
-      uses: DenverCoder1/doxygen-github-pages-action@v1.3.0
+
+    - name: Install Doxygen
+      run: sudo apt-get install doxygen graphviz -y
+      shell: bash
+
+    - name: Generate Doxygen Documentation
+      run: make docs
+      shell: bash
+      
+    - name: Create .nojekyll (ensures pages with underscores work on gh pages)
+      run: touch docs/html/.nojekyll
+      shell: bash
+
+    - name: Deploy to GitHub Pages
+      uses: JamesIves/github-pages-deploy-action@v4
       with:
-        github_token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+        token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
+        folder: docs/html
