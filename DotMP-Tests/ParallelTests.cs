@@ -329,19 +329,18 @@ namespace DotMPTests
         {
             int size = 1_000_000;
             uint grainsize = 128;
-            uint num_tasks = (uint)size / grainsize;
 
             int[] a = new int[size];
             int[] b = new int[size];
 
             DotMP.Parallel.ParallelMaster(num_threads: 6, action: () =>
             {
-                var t1 = DotMP.Parallel.Taskloop(0, size, grainsize: grainsize, action: i =>
+                var t1 = DotMP.Parallel.Taskloop(0, size, i =>
                 {
                     a[i] += 1;
                 });
 
-                var t2 = DotMP.Parallel.Taskloop(0, size, num_tasks: num_tasks, depends: t1, action: i =>
+                var t2 = DotMP.Parallel.Taskloop(0, size, grainsize: grainsize, depends: t1, action: i =>
                 {
                     a[i] += 2;
                 });
