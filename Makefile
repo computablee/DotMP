@@ -5,6 +5,9 @@ all: docs build tests examples benches
 
 examples: examples-cs examples-dmp examples-seq
 
+ProcessedREADME.md: README.md
+	python3 patch_readme.py
+
 benches:
 	$(DN) build -c Release benchmarks/HeatTransfer
 
@@ -35,13 +38,14 @@ test:
 build:
 	$(DN) build -c $(BUILD) DotMP
 
-docs:
+docs: ProcessedREADME.md
 	doxygen
 
-pack:
+pack: ProcessedREADME.md
 	$(DN) pack -c $(BUILD) DotMP
 
 clean:
+	rm -f ProcessedREADME.md
 	rm -rf docs
 	rm -rf DotMP/bin DotMP/obj
 	rm -rf DotMP-Tests/bin DotMP-Tests/obj

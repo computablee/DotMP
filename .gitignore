@@ -9,6 +9,7 @@ docs/*
 .vscode
 *.opencover.xml
 *.sln
+ProcessedREADME.md
 
 # User-specific files
 *.rsuser

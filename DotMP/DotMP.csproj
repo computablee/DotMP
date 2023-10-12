@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/computablee/DotMP</RepositoryUrl>
     <PackageProjectUrl>https://computablee.github.io/DotMP/</PackageProjectUrl>
     <Copyright>Copyright (c) Phillip Allen Lane 2023</Copyright>
-    <PackageReadmeFile>README.md</PackageReadmeFile>
+    <PackageReadmeFile>ProcessedREADME.md</PackageReadmeFile>
     <PackageTags>hpc,parallel,openmp,parallelization,high performance computing,threading</PackageTags>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageReleaseNotes>Added support for .NET 7.0.</PackageReleaseNotes>
@@ -18,7 +18,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../README.md" Pack="true" PackagePath="."/>
+    <None Include="../ProcessedREADME.md" Pack="true" PackagePath="."/>
   </ItemGroup>
 
 </Project>
