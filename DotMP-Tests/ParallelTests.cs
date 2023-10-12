@@ -1332,6 +1332,9 @@ namespace DotMPTests
             });
         }
 
+        /// <summary>
+        /// Verifies that GetThreadNum used outside of a parallel region throws an exception.
+        /// </summary>
         [Fact]
         public void Non_parallel_GetThreadNum_should_except()
         {
