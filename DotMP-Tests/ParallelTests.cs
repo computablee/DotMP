@@ -1200,6 +1200,151 @@ namespace DotMPTests
         }
 
         /// <summary>
+        /// Verifies that a Parallel.For used outside of a parallel region throws an exception.
+        /// </summary>
+        [Fact]
+        public void Non_parallel_for_should_except()
+        {
+            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            {
+                DotMP.Parallel.For(0, 10, action: i => { });
+            });
+        }
+
+        /// <summary>
+        /// Verifies that nested parallelism throws an exception.
+        /// </summary>
+        [Fact]
+        public void Nested_parallelism_should_except()
+        {
+            DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+            {
+                Assert.Throws<DotMP.CannotPerformNestedParallelismException>(() =>
+                {
+                    DotMP.Parallel.ParallelRegion(num_threads: 8, action: () => { });
+                });
+            });
+        }
+
+        /// <summary>
+        /// Verifies that a sections region used outside of a parallel region throws an exception.
+        /// </summary>
+        [Fact]
+        public void Non_parallel_sections_should_except()
+        {
+            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            {
+                DotMP.Parallel.Sections(() => { }, () => { });
+            });
+        }
+
+        /// <summary>
+        /// Verifies that a barrier used outside of a parallel region throws an exception.
+        /// </summary>
+        [Fact]
+        public void Non_parallel_barrier_should_except()
+        {
+            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            {
+                DotMP.Parallel.Barrier();
+            });
+        }
+
+        /// <summary>
+        /// Verifies that a master region used outside of a parallel region throws an exception.
+        /// </summary>
+        [Fact]
+        public void Non_parallel_master_should_except()
+        {
+            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            {
+                DotMP.Parallel.Master(() => { });
+            });
+        }
+
+        /// <summary>
+        /// Verifies that a single region used outside of a parallel region throws an exception.
+        /// </summary>
+        [Fact]
+        public void Non_parallel_single_should_except()
+        {
+            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            {
+                DotMP.Parallel.Single(0, () => { });
+            });
+        }
+
+        /// <summary>
+        /// Verifies that a critical region used outside of a parallel region throws an exception.
+        /// </summary>
+        [Fact]
+        public void Non_parallel_critical_should_except()
+        {
+            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            {
+                DotMP.Parallel.Critical(0, () => { });
+            });
+        }
+
+        /// <summary>
+        /// Verifies that nested worksharing throws an exception.
+        /// </summary>
+        [Fact]
+        public void Nested_worksharing_should_except()
+        {
+            DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
+            {
+                Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+                {
+                    DotMP.Parallel.Single(0, () => { });
+                });
+            });
+
+            DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+            {
+                DotMP.Parallel.Single(0, () =>
+                {
+                    Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+                    {
+                        DotMP.Parallel.For(0, 10, action: i => { });
+                    });
+                });
+            });
+
+            DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
+            {
+                Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+                {
+                    DotMP.Parallel.For(0, 10, j => { });
+                });
+            });
+        }
+
+        /// <summary>
+        /// Verifies that an ordered region used outside of a for region throws an exception.
+        /// </summary>
+        [Fact]
+        public void Non_for_ordered_should_except()
+        {
+            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            {
+                DotMP.Parallel.Ordered(0, () => { });
+            });
+        }
+
+        /// <summary>
+        /// Verifies that GetThreadNum used outside of a parallel region throws an exception.
+        /// </summary>
+        [Fact]
+        public void Non_parallel_GetThreadNum_should_except()
+        {
+            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            {
+                int tid = DotMP.Parallel.GetThreadNum();
+            });
+        }
+
+        /// <summary>
         /// A sample workload for DotMP.Parallel.ParallelFor().
         /// </summary>
         /// <param name="inParallel">Whether or not to enable parallelism.</param>

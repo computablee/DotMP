@@ -91,6 +91,20 @@ namespace DotMP
                 in_parallel_prv = value;
             }
         }
+        /// <summary>
+        /// Whether or not the program is currently in a worksharing region (>0 meaning the program is in said region).
+        /// </summary>
+        private static uint in_workshare_prv = 0;
+        /// <summary>
+        /// Getter and setter for singleton bool ForkedRegion.in_workshare_prv.
+        /// </summary>
+        internal ref uint in_workshare
+        {
+            get
+            {
+                return ref in_workshare_prv;
+            }
+        }
 
         /// <summary>
         /// Default constructor.
