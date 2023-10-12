@@ -9,7 +9,7 @@ var searchData=
   ['diffs_47',['diffs',['../classDotMP_1_1ForAction.html#a42b50fd772c89bc6d9ba9c600db5c4c0',1,'DotMP::ForAction']]],
   ['dispose_48',['Dispose',['../classDotMP_1_1DAG.html#ad473d5d452cf99653a2fb22b70a8ff6d',1,'DotMP.DAG.Dispose()'],['../classDotMP_1_1Shared.html#a8b20445b00cdfaaf49822daf30360259',1,'DotMP.Shared.Dispose()'],['../classDotMP_1_1Shared.html#ad2c4c9d5280a387477ef91b6034736ac',1,'DotMP.Shared.Dispose(bool disposing)'],['../classDotMP_1_1SharedEnumerable.html#a16f983a5bde3f28a8ec04f8a47b33256',1,'DotMP.SharedEnumerable.Dispose()']]],
   ['disposed_49',['Disposed',['../classDotMP_1_1Shared.html#a88c992400c47d50abced80296ebc6a41',1,'DotMP::Shared']]],
-  ['dotmp_50',['DotMP',['../namespaceDotMP.html',1,'']]],
+  ['dotmp_50',['DotMP',['../namespaceDotMP.html',1,'DotMP'],['../index.html',1,'(Global Namespace)']]],
   ['dotmptests_51',['DotMPTests',['../namespaceDotMPTests.html',1,'']]],
   ['dynamic_52',['Dynamic',['../namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a971fd8cc345d8bd9f92e9f7d88fdf20c',1,'DotMP']]],
   ['dynamic_5fshould_5fproduce_5fcorrect_5fresults_53',['Dynamic_should_produce_correct_results',['../classDotMPTests_1_1ParallelTests.html#a8188080c823e4e9584a50d32f68e5722',1,'DotMPTests::ParallelTests']]],

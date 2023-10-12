@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DotMP: Main Page</title>
+<title>DotMP: DotMP</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -60,11 +60,462 @@ $(function() {
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">DotMP Documentation</div>  </div>
+<div class="title"><a class="el" href="namespaceDotMP.html">DotMP</a> </div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><p><a class="anchor" id="md_ProcessedREADME"></a> <img src="https://img.shields.io/nuget/v/DotMP.svg?style=flat-square" alt="Nuget" style="pointer-events: none;" class="inline"/> <img src="https://github.com/computablee/DotMP/actions/workflows/compile.yml/badge.svg" alt="Build" style="pointer-events: none;" class="inline"/> <img src="https://github.com/computablee/DotMP/actions/workflows/integration.yml/badge.svg" alt="Tests" style="pointer-events: none;" class="inline"/> <a href="https://github.com/marketplace/actions/super-linter"><img src="https://github.com/computablee/DotMP/actions/workflows/lint.yml/badge.svg" alt="Quality" style="pointer-events: none;" class="inline"/></a> <a href="https://codecov.io/gh/computablee/DotMP"><img src="https://codecov.io/gh/computablee/DotMP/graph/badge.svg?token=MHAKXKRV1K" alt="Codecov" style="pointer-events: none;" class="inline"/></a> <a href="#contributors"><img src="https://img.shields.io/github/all-contributors/computablee/DotMP?color=ee8449&amp;style=flat-square" alt="All Contributors" class="inline"/></a></p>
+<p><img src="https://raw.githubusercontent.com/computablee/DotMP/main/dotmp_logo.png" alt="DotMP logo" class="inline"/></p>
+<p>A library for writing OpenMP-style parallel code in .NET. Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the OpenMP programming style as faithfully as possible, though breaking spec at times.</p>
+<p><a href="https://github.com/computablee/DotMP/tree/main">Link to repository</a>.</p>
+<h1><a class="anchor" id="autotoc_md1"></a>
+Installing DotMP via NuGet</h1>
+<p>The easiest way to install <a class="el" href="namespaceDotMP.html">DotMP</a> is from the NuGet package manager: </p><div class="fragment"><div class="line">dotnet add package DotMP</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md2"></a>
+Building DotMP from Source</h1>
+<p>First, clone <a class="el" href="namespaceDotMP.html">DotMP</a> and navigate to the source directory: </p><div class="fragment"><div class="line">git clone https://github.com/computablee/DotMP.git</div>
+<div class="line">cd DotMP</div>
+</div><!-- fragment --><p><a class="el" href="namespaceDotMP.html">DotMP</a> can be built using the <code>make</code> command. To build the entire project, including all tests, examples, and documentation, run the following command: </p><div class="fragment"><div class="line">make</div>
+</div><!-- fragment --><p> This command will build the main library, all tests, all examples, and the documentation into their respective directories, but will not run any tests.</p>
+<p>To build only the main library, run the following command: </p><div class="fragment"><div class="line">make build</div>
+</div><!-- fragment --><p>To build only the tests, run the following command: </p><div class="fragment"><div class="line">make tests</div>
+</div><!-- fragment --><p> To run the tests, run the following command: </p><div class="fragment"><div class="line">make test</div>
+</div><!-- fragment --><p>To build only the examples, run the following command: </p><div class="fragment"><div class="line">make examples</div>
+</div><!-- fragment --><p> This will build all of the examples, including the native C# parallelized, the <a class="el" href="namespaceDotMP.html">DotMP</a> parallelized, and the sequential examples. You can also individually build each of these classes of examples by running one or all of the following commands: </p><div class="fragment"><div class="line">make examples-cs</div>
+<div class="line">make examples-dmp</div>
+<div class="line">make examples-seq</div>
+</div><!-- fragment --><h1><a class="anchor" id="autotoc_md3"></a>
+Documentation</h1>
+<p>You can use <a href="https://github.com/doxygen/doxygen">Doxygen</a> to build the documentation for this project. A Doxyfile is located in the root of the project directory. To build the documentation, run the following command: </p><div class="fragment"><div class="line">make docs</div>
+</div><!-- fragment --><p> This will generate documentation in the root of the project under the <code>docs</code> directory in both LaTeX and HTML formats.</p>
+<h1><a class="anchor" id="autotoc_md4"></a>
+Supported Constructs</h1>
+<h2><a class="anchor" id="autotoc_md5"></a>
+Parallel</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp parallel</span></div>
+<div class="line">{</div>
+<div class="line">    work();</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11">ParallelRegion</a>(() =&gt; {</div>
+<div class="line">    work();</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html"><div class="ttname"><a href="classDotMP_1_1Parallel.html">DotMP.Parallel</a></div><div class="ttdoc">The main class of DotMP. Contains all the main methods for parallelism. For users,...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:13</div></div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a46b434b01754e4a98bed3b2372241f11"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11">DotMP.Parallel.ParallelRegion</a></div><div class="ttdeci">static void ParallelRegion(Action action, uint? num_threads=null)</div><div class="ttdoc">Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:516</div></div>
+<div class="ttc" id="anamespaceDotMP_html"><div class="ttname"><a href="namespaceDotMP.html">DotMP</a></div><div class="ttdef"><b>Definition:</b> Atomic.cs:4</div></div>
+</div><!-- fragment --><p> This function supports the <code>num_threads</code> optional parameter, which sets the number of threads to spawn. The default value is the number of logical threads on the system.</p>
+<h2><a class="anchor" id="autotoc_md6"></a>
+For</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp for</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = a, i &lt; b; i++)</div>
+<div class="line">{</div>
+<div class="line">    work(i);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba">For</a>(a, b, i =&gt; {</div>
+<div class="line">    work(i);</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a350cbe182378ea27bff6f728e935a0ba"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba">DotMP.Parallel.For</a></div><div class="ttdeci">static void For(int start, int end, Action&lt; int &gt; action, Schedule schedule=Schedule.Static, uint? chunk_size=null)</div><div class="ttdoc">Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:128</div></div>
+</div><!-- fragment --><p> This function supports the <code>schedule</code> optional parameter, which sets the parallel scheduler to use. Permissible values are <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16" title="The static scheduling strategy. Iterations are divided amongst threads in round-robin fashion....">DotMP.Schedule.Static</a></code>, <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a971fd8cc345d8bd9f92e9f7d88fdf20c" title="The dynamic scheduling strategy. Iterations are managed in a central queue. Threads fetch chunks of i...">DotMP.Schedule.Dynamic</a></code>, <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a5e6a52241e27d2424cb006aea0869702" title="The guided scheduling strategy. Similar to dynamic, but the chunk size starts larger and shrinks as i...">DotMP.Schedule.Guided</a></code>, and <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5abc366f2d0ba3d681e7a3899917c5d3de" title="Runtime-defined scheduling strategy. Schedule is determined by the &#39;OMP_SCHEDULE&#39; environment variabl...">DotMP.Schedule.Runtime</a></code>. The default value is <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16" title="The static scheduling strategy. Iterations are divided amongst threads in round-robin fashion....">DotMP.Schedule.Static</a></code>.</p>
+<p>This function supports the <code>chunk_size</code> optional parameter, which sets the chunk size for the scheduler to use. The default value is dependent on the scheduler and is not documented, as it may change from version to version.</p>
+<p>The behavior of <code><a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">DotMP.Parallel.For</a></code> is undefined if not used within a <code>ParallelRegion</code>.</p>
+<h2><a class="anchor" id="autotoc_md7"></a>
+Parallel For</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp parallel for</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = a, i &lt; b; i++)</div>
+<div class="line">{</div>
+<div class="line">    work(i);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#aed54bae2fe0c20dde6b625d2fc54e76b">ParallelFor</a>(a, b, i =&gt; {</div>
+<div class="line">    work(i);</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_aed54bae2fe0c20dde6b625d2fc54e76b"><div class="ttname"><a href="classDotMP_1_1Parallel.html#aed54bae2fe0c20dde6b625d2fc54e76b">DotMP.Parallel.ParallelFor</a></div><div class="ttdeci">static void ParallelFor(int start, int end, Action&lt; int &gt; action, Schedule schedule=Schedule.Static, uint? chunk_size=null, uint? num_threads=null)</div><div class="ttdoc">Creates a parallel for loop. Contains all of the parameters from ParallelRegion() and For()....</div><div class="ttdef"><b>Definition:</b> Parallel.cs:547</div></div>
+</div><!-- fragment --><p> This function supports all of the optional parameters of <code>ParallelRegion</code> and <code>For</code>, and is merely a wrapper around those two functions for conciseness.</p>
+<h2><a class="anchor" id="autotoc_md8"></a>
+For with Reduction</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line">type local = c;</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#pragma omp for reduction(op:local)</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = a; i &lt; b; i++)</div>
+<div class="line">{</div>
+<div class="line">    local `op` f(i);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line">type local = c;</div>
+<div class="line"> </div>
+<div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.ForReduction(a, b, op, ref local, (ref type local, <span class="keywordtype">int</span> i) =&gt; {</div>
+<div class="line">    local `op` f(i);</div>
+<div class="line">});</div>
+</div><!-- fragment --><p> <code>op</code> is a value provided by the <code><a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346" title="Enum that represents the different operations that can be used in a for-reduction....">DotMP.Operations</a></code> enum, which supports the values <code>Add</code>, <code>Subtract</code>, <code>Multiply</code>, <code>BinaryAnd</code>, <code>BinaryOr</code>, <code>BinaryXor</code>, <code>BooleanAnd</code>, <code>BooleanOr</code>, <code>Min</code>, and <code>Max</code>. The operation on <code>local</code> is an operator corresponding to the operator specified by <code><a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346" title="Enum that represents the different operations that can be used in a for-reduction....">DotMP.Operations</a></code>, including <code>+</code>, <code>-</code>, <code>*</code>, <code>&amp;</code>, <code>|</code>, <code>^</code>, and so on.</p>
+<p>This function supports all of the optional parameters of <code>For</code>.</p>
+<h2><a class="anchor" id="autotoc_md9"></a>
+Parallel For with Reduction</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line">type local = c;</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#pragma omp parallel for reduction(op:local)</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = a; i &lt; b; i++)</div>
+<div class="line">{</div>
+<div class="line">    local `op` f(i);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line">type local = c;</div>
+<div class="line"> </div>
+<div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.ParallelForReduction(a, b, op, ref local, (ref type local, <span class="keywordtype">int</span> i) =&gt; {</div>
+<div class="line">    local `op` f(i);</div>
+<div class="line">});</div>
+</div><!-- fragment --><p> This function supports all of the optional parameters of <code>ParallelRegion</code> and <code>ForReduction</code>, and is merely a wrapper around those two functions for conciseness.</p>
+<h2><a class="anchor" id="autotoc_md10"></a>
+For with Collapse</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp for collapse(n)</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = a, i &lt; b; i++)</div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = c, j &lt; d; j++)</div>
+<div class="line">        <span class="comment">// ...</span></div>
+<div class="line">            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = e; k &lt; f; k++)</div>
+<div class="line">                work(i, j, <span class="comment">/* ... */</span>, k);</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845">ForCollapse</a>((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f),</div>
+<div class="line">                           (i, j, <span class="comment">/* ... */</span>, k) =&gt; {</div>
+<div class="line">    work(i, j, <span class="comment">/* ... */</span>, k);</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a6b4dcfa3d0ee6363c873d1b84988f845"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845">DotMP.Parallel.ForCollapse</a></div><div class="ttdeci">static void ForCollapse((int, int) firstRange,(int, int) secondRange, Action&lt; int, int &gt; action, Schedule schedule=Schedule.Static, uint? chunk_size=null)</div><div class="ttdoc">Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:150</div></div>
+</div><!-- fragment --><p> If four or fewer loops are being collapsed, overloads of <code>ForCollapse</code> exist to easily collapse said loops. If greater than four loops are being collapsed, then the user should pass an array of tuples as the first argument, and accept an array of indices in the lambda.</p>
+<p>This function supports all of the optional parameters of <code>For</code>.</p>
+<h2><a class="anchor" id="autotoc_md11"></a>
+For with Reduction and Collapse</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line">type local = c;</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#pragma omp for reduction(op:local) collapse(n)</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = a, i &lt; b; i++)</div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = c, j &lt; d; j++)</div>
+<div class="line">        <span class="comment">// ...</span></div>
+<div class="line">            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = e; k &lt; f; k++)</div>
+<div class="line">                local `op` f(i, j, <span class="comment">/* ... */</span>, k);</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line">type local = c;</div>
+<div class="line"> </div>
+<div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.ForReductionCollapse((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f), op, ref local,</div>
+<div class="line">                                    (ref type local, <span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="comment">/* ... */</span>, <span class="keywordtype">int</span> k) =&gt; {</div>
+<div class="line">    local `op` f(i, j, <span class="comment">/* ... */</span>, k);</div>
+<div class="line">});</div>
+</div><!-- fragment --><p> This function is a combination of <code>ForCollapse</code> and <code>ForReduction</code>, and supports all of the optional parameters thereof.</p>
+<h2><a class="anchor" id="autotoc_md12"></a>
+Parallel For with Collapse</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp parallel for collapse(n)</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = a, i &lt; b; i++)</div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = c, j &lt; d; j++)</div>
+<div class="line">        <span class="comment">// ...</span></div>
+<div class="line">            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = e; k &lt; f; k++)</div>
+<div class="line">                work(i, j, <span class="comment">/* ... */</span>, k);</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#adfa05ff90de7aca0d538b6618bce967e">ParallelForCollapse</a>((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f),</div>
+<div class="line">                                   (i, j, <span class="comment">/* ... */</span>, k) =&gt; {</div>
+<div class="line">    work(i, j, <span class="comment">/* ... */</span>, k);</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_adfa05ff90de7aca0d538b6618bce967e"><div class="ttname"><a href="classDotMP_1_1Parallel.html#adfa05ff90de7aca0d538b6618bce967e">DotMP.Parallel.ParallelForCollapse</a></div><div class="ttdeci">static void ParallelForCollapse((int, int) firstRange,(int, int) secondRange, Action&lt; int, int &gt; action, Schedule schedule=Schedule.Static, uint? chunk_size=null, uint? num_threads=null)</div><div class="ttdoc">Creates a parallel collapsed for loop. Contains all of the parameters from ParallelRegion() and ForCo...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:592</div></div>
+</div><!-- fragment --><p> This function supports all of the optional parameters of <code>ParallelRegion</code> and <code>ForCollapse</code>, and is merely a wrapper around those two functions for conciseness.</p>
+<h2><a class="anchor" id="autotoc_md13"></a>
+Parallel For with Reduction and Collapse</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line">type local = c;</div>
+<div class="line"> </div>
+<div class="line"><span class="preprocessor">#pragma omp parallel for reduction(op:local) collapse(n)</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = a, i &lt; b; i++)</div>
+<div class="line">    <span class="keywordflow">for</span> (<span class="keywordtype">int</span> j = c, j &lt; d; j++)</div>
+<div class="line">        <span class="comment">// ...</span></div>
+<div class="line">            <span class="keywordflow">for</span> (<span class="keywordtype">int</span> k = e; k &lt; f; k++)</div>
+<div class="line">                local `op` f(i, j, <span class="comment">/* ... */</span>, k);</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line">type local = c;</div>
+<div class="line"> </div>
+<div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.ParallelForReductionCollapse((a, b), (c, d), <span class="comment">/* ... */</span>, (e, f), op, ref local,</div>
+<div class="line">                                            (ref type local, <span class="keywordtype">int</span> i, <span class="keywordtype">int</span> j, <span class="comment">/* ... */</span>, <span class="keywordtype">int</span> k) =&gt; {</div>
+<div class="line">    local `op` f(i, j, <span class="comment">/* ... */</span>, k);</div>
+<div class="line">});</div>
+</div><!-- fragment --><p> This function supports all of the optional parameters of <code>ParallelRegion</code> and <code>ForReductionCollapse</code>, and is merely a wrapper around those two functions for conciseness.</p>
+<h2><a class="anchor" id="autotoc_md14"></a>
+Sections</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp sections</span></div>
+<div class="line">{</div>
+<div class="line"><span class="preprocessor">    #pragma omp section</span></div>
+<div class="line">    {</div>
+<div class="line">        work();</div>
+<div class="line">    }</div>
+<div class="line"><span class="preprocessor">    #pragma omp section</span></div>
+<div class="line">    {</div>
+<div class="line">        work2();</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a33e20aede41a6e4ac4e2ed95dbd2e43d">Sections</a>(() =&gt; {</div>
+<div class="line">    work();</div>
+<div class="line">}, () =&gt; {</div>
+<div class="line">    work2();</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a33e20aede41a6e4ac4e2ed95dbd2e43d"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a33e20aede41a6e4ac4e2ed95dbd2e43d">DotMP.Parallel.Sections</a></div><div class="ttdeci">static void Sections(params Action[] actions)</div><div class="ttdoc">Creates a sections region. Sections allows for the user to submit multiple, individual tasks to be di...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:770</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md15"></a>
+Parallel Sections</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp parallel sections</span></div>
+<div class="line">{</div>
+<div class="line"><span class="preprocessor">    #pragma omp section</span></div>
+<div class="line">    {</div>
+<div class="line">        work();</div>
+<div class="line">    }</div>
+<div class="line"><span class="preprocessor">    #pragma omp section</span></div>
+<div class="line">    {</div>
+<div class="line">        work2();</div>
+<div class="line">    }</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a22697ab90d86ba8613669de169e5f66c">ParallelSections</a>(() =&gt; {</div>
+<div class="line">    work();</div>
+<div class="line">}, () =&gt; {</div>
+<div class="line">    work2();</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a22697ab90d86ba8613669de169e5f66c"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a22697ab90d86ba8613669de169e5f66c">DotMP.Parallel.ParallelSections</a></div><div class="ttdeci">static void ParallelSections(uint? num_threads=null, params Action[] actions)</div><div class="ttdoc">Creates a parallel sections region. Contains all of the parameters from ParallelRegion() and Sections...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:946</div></div>
+</div><!-- fragment --><p> This function supports the optional parameter <code>num_threads</code> from <code><a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">DotMP.Parallel.ParallelRegion</a></code>.</p>
+<h2><a class="anchor" id="autotoc_md16"></a>
+Critical</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp critical</span></div>
+<div class="line">{</div>
+<div class="line">    work();</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654">Critical</a>(<span class="keywordtype">id</span>, () =&gt; {</div>
+<div class="line">    work();</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a79148a921477136e2e534760b9486654"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654">DotMP.Parallel.Critical</a></div><div class="ttdeci">static int Critical(int id, Action action)</div><div class="ttdoc">Creates a critical region. A critical region is a region of code that can only be executed by one thr...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:963</div></div>
+</div><!-- fragment --><p> This function requires an <code>id</code> parameter, which is used as a unique identifier for a particular critical region. If multiple critical regions are present in the code, they should each have a unique <code>id</code>. The <code>id</code> should likely be a <code>const int</code> or an integer literal.</p>
+<h2><a class="anchor" id="autotoc_md17"></a>
+Barrier</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp barrier</span></div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee">Barrier</a>();</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a6f0d650ed727baeee5ad8b5b8f18bbee"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee">DotMP.Parallel.Barrier</a></div><div class="ttdeci">static void Barrier()</div><div class="ttdoc">Creates a barrier. All threads must reach the barrier before any thread can continue....</div><div class="ttdef"><b>Definition:</b> Parallel.cs:997</div></div>
+</div><!-- fragment --><h2><a class="anchor" id="autotoc_md18"></a>
+Master</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp master</span></div>
+<div class="line">{</div>
+<div class="line">    work();</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a8016d1ecfa5f6cb5ac1d5704bf516b23">Master</a>(() =&gt; {</div>
+<div class="line">    work();</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a8016d1ecfa5f6cb5ac1d5704bf516b23"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a8016d1ecfa5f6cb5ac1d5704bf516b23">DotMP.Parallel.Master</a></div><div class="ttdeci">static void Master(Action action)</div><div class="ttdoc">Creates a master region. The master region is a region of code that is only executed by the master th...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:1025</div></div>
+</div><!-- fragment --><p> <code>Master</code>'s behavior is left undefined if used outside of a <code>ParallelRegion</code>.</p>
+<h2><a class="anchor" id="autotoc_md19"></a>
+Single</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp single</span></div>
+<div class="line">{</div>
+<div class="line">    work();</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a325c61e793664f5c30233a8db2ef951b">Single</a>(<span class="keywordtype">id</span>, () =&gt; {</div>
+<div class="line">    work();</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a325c61e793664f5c30233a8db2ef951b"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a325c61e793664f5c30233a8db2ef951b">DotMP.Parallel.Single</a></div><div class="ttdeci">static void Single(int id, Action action)</div><div class="ttdoc">Creates a single region. A single region is only executed once per Parallel.ParallelRegion....</div><div class="ttdef"><b>Definition:</b> Parallel.cs:1047</div></div>
+</div><!-- fragment --><p> The <code>id</code> parameter provided should follow the same guidelines as specified in <code>Critical</code>.</p>
+<p>A <code>Single</code> region is only executed once per <code><a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">DotMP.Parallel.ParallelRegion</a></code>, and is executed by the first thread that encounters it.</p>
+<p><code>Single</code>'s behavior is left undefined if used outside of a <code>ParallelRegion</code>.</p>
+<h2><a class="anchor" id="autotoc_md20"></a>
+Ordered</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp ordered</span></div>
+<div class="line">{</div>
+<div class="line">    work();</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a8aaf51a7e2f0be6f3541257764ab982e">Ordered</a>(<span class="keywordtype">id</span>, () =&gt; {</div>
+<div class="line">    work();</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a8aaf51a7e2f0be6f3541257764ab982e"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a8aaf51a7e2f0be6f3541257764ab982e">DotMP.Parallel.Ordered</a></div><div class="ttdeci">static void Ordered(int id, Action action)</div><div class="ttdoc">Creates an ordered region. An ordered region is a region of code that is executed in order inside of ...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:1093</div></div>
+</div><!-- fragment --><p> The <code>id</code> parameter provided should follow the same guidelines as specified in <code>Critical</code>.</p>
+<p><code>Ordered</code>'s behavior is left undefined if used outside of a <code>For</code>.</p>
+<h1><a class="anchor" id="autotoc_md21"></a>
+Atomics</h1>
+<p>OpenMP atomics are implemented as follows: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp atomic</span></div>
+<div class="line"><span class="preprocessor">a op b;</span></div>
+</div><!-- fragment --><p> where <code>op</code> is some supported operator.</p>
+<p><a class="el" href="namespaceDotMP.html">DotMP</a> supports a subset of this for the <code>int</code>, <code>uint</code>, <code>long</code>, and <code>ulong</code> types. The only implemented atomic operations are <code>a += b</code>, <code>a &amp;= b</code>, <code>a |= b</code>, <code>++a</code>, and <code>--a</code>. <code>a -= b</code> is implemented, but for signed types only, due to restrictions interfacting with C#'s <code>Interlocked</code> class.</p>
+<p>The following table documents the supported atomics:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Operation   </th><th class="markdownTableHeadNone"><a class="el" href="namespaceDotMP.html">DotMP</a> function    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>a += b</code>   </td><td class="markdownTableBodyNone"><code>DotMP.Atomic.Add(ref a, b)</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>a -= b</code>   </td><td class="markdownTableBodyNone"><code>DotMP.Atomic.Sub(ref a, b)</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>a &amp;= b</code>   </td><td class="markdownTableBodyNone"><code>DotMP.Atomic.And(ref a, b)</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>a \|= b</code>   </td><td class="markdownTableBodyNone"><code>DotMP.Atomic.Or(ref a, b)</code>    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><code>++a</code>   </td><td class="markdownTableBodyNone"><code>DotMP.Atomic.Inc(ref a)</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><code>--a</code>   </td><td class="markdownTableBodyNone"><code>DotMP.Atomic.Dec(ref a)</code>   </td></tr>
+</table>
+<p>For atomic operations like compare-exchange, we recommend interfacting directly with <code>System.Threading.Interlocked</code>. For non-supported atomic operations or types, we recommend using <code><a class="el" href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654" title="Creates a critical region. A critical region is a region of code that can only be executed by one thr...">DotMP.Parallel.Critical</a></code>. This is more of a limitation of the underlying hardware than anything.</p>
+<h1><a class="anchor" id="autotoc_md22"></a>
+Locks</h1>
+<p><a class="el" href="namespaceDotMP.html">DotMP</a> supports OpenMP-style locks. It is recommended to use C#'s native <code>lock</code> keyword where possible for performance. However, this API is provided to those who want the familiarity of OpenMP locks.</p>
+<p><a class="el" href="namespaceDotMP.html">DotMP</a> supports the <code><a class="el" href="classDotMP_1_1Lock.html" title="A lock that can be used in a parallel region. Also contains instance methods for locking....">DotMP.Lock</a></code> object, which is the replacement for <code>omp_lock_t</code>. <code>omp_init_lock</code> and <code>omp_destroy_lock</code> are not implemented. Instead, users should instantiate the <code><a class="el" href="classDotMP_1_1Lock.html" title="A lock that can be used in a parallel region. Also contains instance methods for locking....">DotMP.Lock</a></code> object using the <code>new</code> keyword.</p>
+<p><a class="el" href="namespaceDotMP.html">DotMP</a> provides the following functions:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">&lt;omp.h&gt; function   </th><th class="markdownTableHeadNone"><a class="el" href="namespaceDotMP.html">DotMP</a> function   </th><th class="markdownTableHeadNone">Comments    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">omp_set_lock(lock)   </td><td class="markdownTableBodyNone">lock.Set()   </td><td class="markdownTableBodyNone">Halt the current thread until the lock is obtained    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">omp_unset_lock(lock)   </td><td class="markdownTableBodyNone">lock.Unset()   </td><td class="markdownTableBodyNone">Free the current lock, making it available for other threads    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">omp_test_lock(lock)   </td><td class="markdownTableBodyNone">lock.Test()   </td><td class="markdownTableBodyNone">Attempt to obtain a lock without blocking, returns true if locking is successful   </td></tr>
+</table>
+<h1><a class="anchor" id="autotoc_md23"></a>
+Shared Memory</h1>
+<p><a class="el" href="namespaceDotMP.html">DotMP</a> supports an API for declaring thread-shared memory within a parallel region. Shared memory is provided through the <code><a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">DotMP.Shared</a>&lt;T&gt;</code> class, which implements the <code>IDisposable</code> interface. <code><a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">DotMP.Shared</a>&lt;T&gt;</code> objects support implicit casting to type <code>T</code>, and can be used as such. They also allow an explicit <code><a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">DotMP.Shared</a>&lt;T&gt;.Get()</code> method to be used to retrieve the value of the shared variable. For setting, the <code><a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">DotMP.Shared</a>&lt;T&gt;.Set(T value)</code> method must be used.</p>
+<p>For indexable types, such as arrays, the <code><a class="el" href="classDotMP_1_1SharedEnumerable.html" title="A specialization of Shared for items that can be indexed with square brackets. The DotMP-parallelized...">DotMP.SharedEnumerable</a>&lt;T&gt;</code> class is provided. This class implements the <code>IDisposable</code> interface, and supports implicit casting to the containing type. This class also overloads the <code>[]</code> operator to allow for indexing.</p>
+<p>The following provides an example of a parallel vector initialization using <code><a class="el" href="classDotMP_1_1SharedEnumerable.html" title="A specialization of Shared for items that can be indexed with square brackets. The DotMP-parallelized...">DotMP.SharedEnumerable</a>&lt;T&gt;</code>: </p><div class="fragment"><div class="line"><span class="keyword">static</span> <span class="keywordtype">double</span>[] InitVector()</div>
+<div class="line">{</div>
+<div class="line">    <span class="keywordtype">double</span>[] returnVector;</div>
+<div class="line">    </div>
+<div class="line">    <a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11">ParallelRegion</a>(() =&gt;</div>
+<div class="line">    {</div>
+<div class="line">        <span class="keyword">using</span> (var vec = <a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1SharedEnumerable.html">SharedEnumerable</a>.Create(<span class="stringliteral">&quot;vec&quot;</span>, <span class="keyword">new</span> <span class="keywordtype">double</span>[1024]))</div>
+<div class="line">        {</div>
+<div class="line">            <a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba">For</a>(0, 1024, i =&gt;</div>
+<div class="line">            {</div>
+<div class="line">                vec[i] = 1.0;</div>
+<div class="line">            });</div>
+<div class="line"> </div>
+<div class="line">            returnVector = vec;</div>
+<div class="line">        }</div>
+<div class="line">    });</div>
+<div class="line">    </div>
+<div class="line">    <span class="keywordflow">return</span> returnVector;</div>
+<div class="line">}</div>
+<div class="ttc" id="aclassDotMP_1_1SharedEnumerable_html"><div class="ttname"><a href="classDotMP_1_1SharedEnumerable.html">DotMP.SharedEnumerable</a></div><div class="ttdoc">A specialization of Shared for items that can be indexed with square brackets. The DotMP-parallelized...</div><div class="ttdef"><b>Definition:</b> Shared.cs:131</div></div>
+</div><!-- fragment --><p>The <code><a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">DotMP.Shared</a></code> and <code><a class="el" href="classDotMP_1_1SharedEnumerable.html" title="A specialization of Shared for items that can be indexed with square brackets. The DotMP-parallelized...">DotMP.SharedEnumerable</a></code> classes supports the following methods:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">Method   </th><th class="markdownTableHeadNone">Action    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Shared.html#acf3873bced29c33933136ac4b4ba455e" title="Creates a new shared variable with the given name and value. Must be called from all threads in the p...">DotMP.Shared.Shared(string name, T value)</a>   </td><td class="markdownTableBodyNone">Initializes a shared variable with name <code>name</code> and starting value <code>value</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Shared.html#a8b20445b00cdfaaf49822daf30360259" title="Clears the shared variable from memory. Must be called from all threads in the parallel region....">DotMP.Shared.Dispose()</a>   </td><td class="markdownTableBodyNone">Disposes of a shared variable    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Shared.html#ab68b0d8bab8e0504a04c54bc3ab8dd96" title="Sets the value of the shared variable. Is not thread-safe, so user must ensure thread safety.">DotMP.Shared.Set(T value)</a>   </td><td class="markdownTableBodyNone">Sets a shared variable to value <code>value</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Shared.html#a73e10c100a06ac9f5a3d3f188b36536a" title="Gets the value of the shared variable.">DotMP.Shared.Get()</a>   </td><td class="markdownTableBodyNone">Gets a shared variable    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1SharedEnumerable.html#a2792da7f37a67cdbc3e333e4a63e2703" title="Constructs a new shared variable with the given name and value.">DotMP.SharedEnumerable.SharedEnumerable(string name, U value)</a>   </td><td class="markdownTableBodyNone">Initializes a shared array with name <code>name</code> and starting value <code>value</code>    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1SharedEnumerable.html#a16f983a5bde3f28a8ec04f8a47b33256" title="Clears the shared variable from memory. Must be called from all threads in the parallel region....">DotMP.SharedEnumerable.Dispose()</a>   </td><td class="markdownTableBodyNone">Disposes of a shared array    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1SharedEnumerable.html#a8cdae4212086d9972f60c83135530227" title="Gets the value of the shared variable as an IList&lt;T&gt;.">DotMP.SharedEnumerable.Get()</a>   </td><td class="markdownTableBodyNone">Gets a shared enumerable as its containing type.   </td></tr>
+</table>
+<p>The <code><a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">DotMP.Shared</a></code> constructor and <code>Clear()</code> methods serve as implicit barriers, ensuring that all threads can access the memory before proceeding.</p>
+<p><code><a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">DotMP.Shared</a></code> provides a factory method for creating <code><a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">DotMP.Shared</a></code> instances via the <code>DotMP.Shared.Create()</code> method. <code><a class="el" href="classDotMP_1_1SharedEnumerable.html" title="A specialization of Shared for items that can be indexed with square brackets. The DotMP-parallelized...">DotMP.SharedEnumerable</a></code> provides factory methods for creating <code><a class="el" href="classDotMP_1_1SharedEnumerable.html" title="A specialization of Shared for items that can be indexed with square brackets. The DotMP-parallelized...">DotMP.SharedEnumerable</a></code> instances containing either <code>T[]</code> or <code>List&lt;T&gt;</code> enumerables via the <code>DotMP.SharedEnumerable.Create()</code> methods.</p>
+<h1><a class="anchor" id="autotoc_md24"></a>
+Tasking System</h1>
+<p><a class="el" href="namespaceDotMP.html">DotMP</a> supports a rudimentary tasking system. Submitting a task adds the task to a global task queue. When a <b>tasking point</b> is hit, threads will begin working on tasks in the task queue. There are two tasking points currently in <a class="el" href="namespaceDotMP.html">DotMP</a>:</p>
+<ul>
+<li>At the end of a <code><a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">DotMP.Parallel.ParallelRegion</a></code>, all remaining tasks in the task queue are completed</li>
+<li>Upon encountering <code><a class="el" href="classDotMP_1_1Parallel.html#ac869fe1e889bc6b1db2963ad1f03e447" title="Wait for all tasks in the queue to complete. Is injected into a Thread&#39;s work by the Region construct...">DotMP.Parallel.Taskwait</a></code>, all current tasks in the task queue are completed</li>
+</ul>
+<p>Tasks can be submitted throughout the execution of a parallel region, including from within other tasks, and support dependencies. Spawning tasks returns a <code><a class="el" href="classDotMP_1_1TaskUUID.html" title="Task UUID as returned from Parallel.Task.">DotMP.TaskUUID</a></code> object which can be passed as a parameter to future tasks, marking those tasks as dependent on the originating task.</p>
+<p>The following analogues to OpenMP functions are provided:</p>
+<h2><a class="anchor" id="autotoc_md25"></a>
+Task</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp task</span></div>
+<div class="line">{</div>
+<div class="line">    work();</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#aa43faad819d15e9bade915de7aef5331">Task</a>(() =&gt; {</div>
+<div class="line">    work();</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_aa43faad819d15e9bade915de7aef5331"><div class="ttname"><a href="classDotMP_1_1Parallel.html#aa43faad819d15e9bade915de7aef5331">DotMP.Parallel.Task</a></div><div class="ttdeci">static TaskUUID Task(Action action, params TaskUUID[] depends)</div><div class="ttdoc">Enqueue a task into the task queue. Differing from OpenMP, there is no concept of parent or child tas...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:802</div></div>
+</div><!-- fragment --><p> This function supports <code>depends</code> as a <code>params</code> parameter. <code>depends</code> accepts <code><a class="el" href="classDotMP_1_1TaskUUID.html" title="Task UUID as returned from Parallel.Task.">DotMP.TaskUUID</a></code> objects, and marks the created task as dependent on the tasks passed through <code>depends</code>.</p>
+<p>This function adds a task to the task queue and is deferred until a tasking point.</p>
+<p>This function returns a <code><a class="el" href="classDotMP_1_1TaskUUID.html" title="Task UUID as returned from Parallel.Task.">DotMP.TaskUUID</a></code> object, which can be passed to future <code>depends</code> clauses.</p>
+<h2><a class="anchor" id="autotoc_md26"></a>
+Taskwait</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp taskwait</span></div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#ac869fe1e889bc6b1db2963ad1f03e447">Taskwait</a>();</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_ac869fe1e889bc6b1db2963ad1f03e447"><div class="ttname"><a href="classDotMP_1_1Parallel.html#ac869fe1e889bc6b1db2963ad1f03e447">DotMP.Parallel.Taskwait</a></div><div class="ttdeci">static void Taskwait()</div><div class="ttdoc">Wait for all tasks in the queue to complete. Is injected into a Thread's work by the Region construct...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:815</div></div>
+</div><!-- fragment --><p> This function acts as a tasking point, as well as an implicit barrier.</p>
+<h2><a class="anchor" id="autotoc_md27"></a>
+Taskloop</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp taskloop</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = a, i &lt; b; i++)</div>
+<div class="line">{</div>
+<div class="line">    work(i);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#af0ea63592e944f3d9a0ccdb68e279bd4">Taskloop</a>(a, b, i =&gt; {</div>
+<div class="line">    work(i);</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_af0ea63592e944f3d9a0ccdb68e279bd4"><div class="ttname"><a href="classDotMP_1_1Parallel.html#af0ea63592e944f3d9a0ccdb68e279bd4">DotMP.Parallel.Taskloop</a></div><div class="ttdeci">static TaskUUID[] Taskloop(int start, int end, Action&lt; int &gt; action, uint? grainsize=null, uint? num_tasks=null, bool only_if=true, params TaskUUID[] depends)</div><div class="ttdoc">Creates a number of tasks to complete a for loop in parallel. If neither grainsize nor num_tasks are ...</div><div class="ttdef"><b>Definition:</b> Parallel.cs:850</div></div>
+</div><!-- fragment --><p> This function supports the <code>num_tasks</code> optional parameter, which specifies how many tasks into which the loop is broken up.</p>
+<p>This function supports the <code>grainsize</code> optional parameter, which specifies how many iterations belong to each individual task.</p>
+<p>If both <code>num_tasks</code> and <code>grainsize</code> are provided, the <code>num_tasks</code> parameter takes precedence over the <code>grainsize</code> parameter.</p>
+<p>This function supports the <code>only_if</code> optional parameter. <code>only_if</code> is an opportunity to provide a boolean expression to determine if the taskloop should generate tasks or execute sequentially. This is beneficial if the taskloop might be very small and wouldn't be worth the (albeit light) overhead of creating tasks and waiting on a tasking point.</p>
+<p>This function supports <code>depends</code> as a <code>params</code> parameter. <code>depends</code> accepts <code><a class="el" href="classDotMP_1_1TaskUUID.html" title="Task UUID as returned from Parallel.Task.">DotMP.TaskUUID</a></code> objects, and marks the created tasks as dependent on the tasks passed through <code>depends</code>.</p>
+<p>This function adds a series of tasks to the task queue and is deferred until a tasking point.</p>
+<p>This function returns a <code><a class="el" href="classDotMP_1_1TaskUUID.html" title="Task UUID as returned from Parallel.Task.">DotMP.TaskUUID</a>[]</code> array, where each element is a <code><a class="el" href="classDotMP_1_1TaskUUID.html" title="Task UUID as returned from Parallel.Task.">DotMP.TaskUUID</a></code> representing one of the generated tasks. The <code><a class="el" href="classDotMP_1_1TaskUUID.html" title="Task UUID as returned from Parallel.Task.">DotMP.TaskUUID</a>[]</code> array can be passed to future <code>depends</code> clauses.</p>
+<h2><a class="anchor" id="autotoc_md28"></a>
+Parallel Master</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp parallel master</span></div>
+<div class="line">{</div>
+<div class="line">    work();</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#ac4d1d82d485af3799afb6698c53065a5">ParallelMaster</a>(() =&gt; {</div>
+<div class="line">    work();</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_ac4d1d82d485af3799afb6698c53065a5"><div class="ttname"><a href="classDotMP_1_1Parallel.html#ac4d1d82d485af3799afb6698c53065a5">DotMP.Parallel.ParallelMaster</a></div><div class="ttdeci">static void ParallelMaster(Action action, uint? num_threads=null)</div><div class="ttdoc">Wrapper around Parallel.ParallelRegion() and Parallel.Master().</div><div class="ttdef"><b>Definition:</b> Parallel.cs:914</div></div>
+</div><!-- fragment --><p> This function supports the <code>num_threads</code> optional parameter from <code><a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">DotMP.Parallel.ParallelRegion</a></code>.</p>
+<h2><a class="anchor" id="autotoc_md29"></a>
+Master Taskloop</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp master taskloop</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = a, i &lt; b; i++)</div>
+<div class="line">{</div>
+<div class="line">    work(i);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a8b735bb983d828fdb8d30ece175e7c1f">MasterTaskloop</a>(a, b, i =&gt; {</div>
+<div class="line">    work(i);</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a8b735bb983d828fdb8d30ece175e7c1f"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a8b735bb983d828fdb8d30ece175e7c1f">DotMP.Parallel.MasterTaskloop</a></div><div class="ttdeci">static void MasterTaskloop(int start, int end, Action&lt; int &gt; action, uint? grainsize=null, uint? num_tasks=null, bool only_if=true)</div><div class="ttdoc">Wrapper around Parallel.Master() and Parallel.Taskloop().</div><div class="ttdef"><b>Definition:</b> Parallel.cs:931</div></div>
+</div><!-- fragment --><p> This function supports all of the optional parameters from <code><a class="el" href="classDotMP_1_1Parallel.html#af0ea63592e944f3d9a0ccdb68e279bd4" title="Creates a number of tasks to complete a for loop in parallel. If neither grainsize nor num_tasks are ...">DotMP.Parallel.Taskloop</a></code>, except <code>depends</code>.</p>
+<p>This function does not return a <code><a class="el" href="classDotMP_1_1TaskUUID.html" title="Task UUID as returned from Parallel.Task.">DotMP.TaskUUID</a>[]</code> array.</p>
+<h2><a class="anchor" id="autotoc_md30"></a>
+Parallel Master Taskloop</h2>
+<p>Given the OpenMP: </p><div class="fragment"><div class="line"><span class="preprocessor">#pragma omp parallel master taskloop</span></div>
+<div class="line"><span class="keywordflow">for</span> (<span class="keywordtype">int</span> i = a, i &lt; b; i++)</div>
+<div class="line">{</div>
+<div class="line">    work(i);</div>
+<div class="line">}</div>
+</div><!-- fragment --><p> <a class="el" href="namespaceDotMP.html">DotMP</a> provides: </p><div class="fragment"><div class="line"><a class="code" href="namespaceDotMP.html">DotMP</a>.<a class="code" href="classDotMP_1_1Parallel.html">Parallel</a>.<a class="code" href="classDotMP_1_1Parallel.html#a77a3aa9302a0b3c4fea7c38d360bad21">ParallelMasterTaskloop</a>(a, b, i =&gt; {</div>
+<div class="line">    work(i);</div>
+<div class="line">});</div>
+<div class="ttc" id="aclassDotMP_1_1Parallel_html_a77a3aa9302a0b3c4fea7c38d360bad21"><div class="ttname"><a href="classDotMP_1_1Parallel.html#a77a3aa9302a0b3c4fea7c38d360bad21">DotMP.Parallel.ParallelMasterTaskloop</a></div><div class="ttdeci">static void ParallelMasterTaskloop(int start, int end, Action&lt; int &gt; action, uint? grainsize=null, uint? num_tasks=null, uint? num_threads=null, bool only_if=true)</div><div class="ttdoc">Wrapper around Parallel.ParallelRegion(), Parallel.Master(), and Parallel.Taskloop().</div><div class="ttdef"><b>Definition:</b> Parallel.cs:897</div></div>
+</div><!-- fragment --><p> This function supports all of the optional parameters from <code><a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">DotMP.Parallel.ParallelRegion</a></code> and <code><a class="el" href="classDotMP_1_1Parallel.html#af0ea63592e944f3d9a0ccdb68e279bd4" title="Creates a number of tasks to complete a for loop in parallel. If neither grainsize nor num_tasks are ...">DotMP.Parallel.Taskloop</a></code>, except <code>depends</code>.</p>
+<p>This function does not return a <code><a class="el" href="classDotMP_1_1TaskUUID.html" title="Task UUID as returned from Parallel.Task.">DotMP.TaskUUID</a>[]</code> array.</p>
+<h1><a class="anchor" id="autotoc_md31"></a>
+Supported Functions</h1>
+<p><a class="el" href="namespaceDotMP.html">DotMP</a> provides an analogue of the following functions:</p>
+<table class="markdownTable">
+<tr class="markdownTableHead">
+<th class="markdownTableHeadNone">&lt;omp.h&gt; function   </th><th class="markdownTableHeadNone"><a class="el" href="namespaceDotMP.html">DotMP</a> function   </th><th class="markdownTableHeadNone">Comments    </th></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">omp_get_num_procs()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#a0dba596bdf865df23581df2292959344" title="Gets the number of available processors on the host system.">DotMP.Parallel.GetNumProcs()</a>   </td><td class="markdownTableBodyNone">Returns the number of logical threads on the system    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">omp_get_num_threads()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#ac4c9ac665dff246a2e16929b5e1ca3f2" title="Gets the number of active threads. If not inside of a ParallelRegion(), returns 1.">DotMP.Parallel.GetNumThreads()</a>   </td><td class="markdownTableBodyNone">Returns the number of active threads in the current region    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">omp_set_num_threads()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#a812a070c86fa492fbc6b0e4ab3ca7737" title="Sets the number of threads that will be used in the next parallel region.">DotMP.Parallel.SetNumThreads()</a>   </td><td class="markdownTableBodyNone">Sets the number of threads for the next parallel region to use    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">omp_get_thread_num()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#a46eed72d53176fe6f47567b8d47e0daa" title="Gets the ID of the calling thread.">DotMP.Parallel.GetThreadNum()</a>   </td><td class="markdownTableBodyNone">Gets the ID of the current thread    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">omp_get_max_threads()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#a99f62664453c8e2109866eaafca5ae7a" title="Gets the maximum number of threads that will be used in the next parallel region.">DotMP.Parallel.GetMaxThreads()</a>   </td><td class="markdownTableBodyNone">Gets the maximum number of threads the runtime may use in the next region    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">omp_in_parallel()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#af80cd4a76a5f23b19e71ab34d7f6b83a" title="Gets whether or not the calling thread is in a parallel region.">DotMP.Parallel.InParallel()</a>   </td><td class="markdownTableBodyNone">Returns true if called from within a parallel region    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">omp_set_dynamic()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#a50e3502c52584b4dddb6a337450f3d00" title="Tells the runtime to dynamically adjust the number of threads.">DotMP.Parallel.SetDynamic()</a>   </td><td class="markdownTableBodyNone">Tells the runtime to dynamically adjust the number of threads, can disable by calling SetNumThreads    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">omp_get_dynamic()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#ab689def9b1bf522070a5d6a4458445a1" title="Gets whether or not the runtime is dynamically adjusting the number of threads.">DotMP.Parallel.GetDynamic()</a>   </td><td class="markdownTableBodyNone">Returns true if the runtime can dynamically adjust the number of threads    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">omp_set_nested()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#a894a8372339648cb9dd6c26b37030ccd" title="Enables nested parallelism. This function is not implemented, as nested parallelism does not exist in...">DotMP.Parallel.SetNested()</a>   </td><td class="markdownTableBodyNone">Returns a NotImplementedException    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">omp_get_nested()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#a31d69abdb5c049e9fd703b816f629daa" title="Gets whether or not nested parallelism is enabled. There are no plans to implement nested parallelism...">DotMP.Parallel.GetNested()</a>   </td><td class="markdownTableBodyNone">Returns false    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">omp_get_wtime()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#a029c19f86a28d82e6e0324265d437c82" title="Gets the wall time as a double, representing the number of seconds since the epoch.">DotMP.Parallel.GetWTime()</a>   </td><td class="markdownTableBodyNone">Returns the number of seconds since the Unix Epoch as a double    </td></tr>
+<tr class="markdownTableRowEven">
+<td class="markdownTableBodyNone">omp_get_schedule()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#a592f6ced6e2132380e3d4cfd83e1d260" title="Returns the current schedule being used in a For() or ForReduction&lt;T&gt;() loop.">DotMP.Parallel.GetSchedule()</a>   </td><td class="markdownTableBodyNone">Gets the current schedule of the parallel for loop    </td></tr>
+<tr class="markdownTableRowOdd">
+<td class="markdownTableBodyNone">omp_get_schedule()   </td><td class="markdownTableBodyNone"><a class="el" href="classDotMP_1_1Parallel.html#a88a0580da911ed8956357fb4701fb9fc" title="Returns the current chunk size being used in a For() or ForReduction&lt;T&gt;() loop.">DotMP.Parallel.GetChunkSize()</a>   </td><td class="markdownTableBodyNone">Gets the current chunk size of the parallel for loop   </td></tr>
+</table>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 <!-- start footer part -->
 <hr class="footer"/><address class="footer"><small>
