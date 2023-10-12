@@ -244,13 +244,19 @@ namespace DotMP
         /// <param name="chunk_size">The chunk size of the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <param name="op">The operation to be performed in the case of reduction loops.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         private static void For<T>(int start, int end, ForAction<T> forAction, Schedule schedule = Schedule.Static, uint? chunk_size = null, Operations? op = null)
         {
             var freg = new ForkedRegion();
 
             if (!freg.in_parallel)
             {
-                throw new NotInParallelRegionException();
+                throw new NotInParallelRegionException("Cannot use DotMP For-like loops outside of a parallel region.");
+            }
+
+            if (freg.in_workshare > 0)
+            {
+                throw new CannotPerformNestedWorksharingException("Cannot use DotMP For-like loops nested within other worksharing constructs.");
             }
 
             FixArgs(start, end, ref schedule, ref chunk_size, freg.reg.num_threads);
@@ -260,6 +266,7 @@ namespace DotMP
             Barrier();
 
             ws.in_for = true;
+            Interlocked.Increment(ref freg.in_workshare);
 
             switch (schedule)
             {
@@ -273,6 +280,7 @@ namespace DotMP
             }
 
             ws.in_for = false;
+            Interlocked.Decrement(ref freg.in_workshare);
             Barrier();
 
             Master(ordered.Clear);
@@ -497,7 +505,9 @@ namespace DotMP
         public static void ParallelRegion(Action action, uint? num_threads = null)
         {
             if (InParallel())
-                throw new CannotPerformNestedParallelismException();
+            {
+                throw new CannotPerformNestedParallelismException("Cannot spawn a parallel region within another parallel region.");
+            }
 
             if (num_threads == null && Parallel.num_threads == 0)
                 num_threads = (uint)GetNumProcs();
@@ -738,12 +748,11 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Sections(params Action[] actions)
         {
-            var freg = new ForkedRegion();
             bool successful;
 
-            if (!freg.in_parallel)
+            if (!InParallel())
             {
-                throw new NotInParallelRegionException();
+                throw new NotInParallelRegionException("Cannot use DotMP Sections outside of a parallel region.");
             }
 
             SectionsContainer sc = new SectionsContainer(actions);
@@ -929,11 +938,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static int Critical(int id, Action action)
         {
-            var freg = new ForkedRegion();
-
-            if (!freg.in_parallel)
+            if (!InParallel())
             {
-                throw new NotInParallelRegionException();
+                throw new NotInParallelRegionException("Cannot use DotMP Critical outside of a parallel region.");
             }
 
             object lock_obj;
@@ -965,11 +972,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Barrier()
         {
-            var freg = new ForkedRegion();
-
-            if (!freg.in_parallel)
+            if (!InParallel())
             {
-                throw new NotInParallelRegionException();
+                throw new NotInParallelRegionException("Cannot use DotMP Barrier outside of a parallel region.");
             }
 
             Thread.MemoryBarrier();
@@ -995,11 +1000,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static void Master(Action action)
         {
-            var freg = new ForkedRegion();
-
-            if (!freg.in_parallel)
+            if (!InParallel())
             {
-                throw new NotInParallelRegionException();
+                throw new NotInParallelRegionException("Cannot use DotMP Master outside of a parallel region.");
             }
 
             if (GetThreadNum() == 0)
@@ -1016,7 +1019,7 @@ namespace DotMP
         /// <param name="id">The ID of the single region. Must be unique per region but consistent across all threads.</param>
         /// <param name="action">The action to be performed in the single region.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
-        /// <exception cref="CannotPerformNestedWorksharingException">Thrown when in a parallel For or ForReduction region.</exception>
+        /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         public static void Single(int id, Action action)
         {
             var freg = new ForkedRegion();
@@ -1024,15 +1027,17 @@ namespace DotMP
 
             if (!freg.in_parallel)
             {
-                throw new NotInParallelRegionException();
+                throw new NotInParallelRegionException("Cannot use DotMP Single outside of a parallel region.");
             }
 
-            WorkShare ws = new WorkShare();
+            var ws = new WorkShare();
 
             if (ws.in_for)
             {
-                throw new CannotPerformNestedWorksharingException();
+                throw new CannotPerformNestedWorksharingException("Cannot use DotMP Single nested within other worksharing constructs.");
             }
+
+            Interlocked.Increment(ref freg.in_workshare);
 
             lock (single_thread)
             {
@@ -1047,6 +1052,8 @@ namespace DotMP
             {
                 action();
             }
+
+            Interlocked.Decrement(ref freg.in_workshare);
 
             Barrier();
         }
@@ -1065,7 +1072,7 @@ namespace DotMP
 
             if (!freg.in_parallel)
             {
-                throw new NotInParallelRegionException();
+                throw new NotInParallelRegionException("Cannot use DotMP Ordered outside of a parallel region.");
             }
 
             int tid = GetThreadNum();
@@ -1115,11 +1122,9 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         public static int GetThreadNum()
         {
-            var freg = new ForkedRegion();
-
-            if (!freg.in_parallel)
+            if (!InParallel())
             {
-                throw new NotInParallelRegionException();
+                throw new NotInParallelRegionException("Cannot get current thread number outside of a parallel region.");
             }
 
             return Convert.ToInt32(Thread.CurrentThread.Name);
