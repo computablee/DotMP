@@ -4,7 +4,7 @@
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <RootNamespace>DotMP</RootNamespace>
     <PackageId>DotMP</PackageId>
-    <Version>1.4.2</Version>
+    <Version>2.0.0</Version>
     <Authors>Phillip Allen Lane,et al.</Authors>
     <PackageDescription>A library for fork-join parallelism in .NET, with an OpenMP-like API.</PackageDescription>
     <RepositoryUrl>https://github.com/computablee/DotMP</RepositoryUrl>
@@ -18,7 +18,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../ProcessedREADME.md" Pack="true" PackagePath="."/>
+    <None Include="../ProcessedREADME.md" Pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="ILGPU" Version="1.5.1" />
   </ItemGroup>
 
 </Project>
