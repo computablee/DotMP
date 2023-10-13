@@ -25,8 +25,8 @@ namespace DotMPTests
             double[] a = new double[65536];
             double[] x = new double[65536];
             double[] y = new double[65536];
-            double[] res = new double[65536];
-            double[] res_cpu = new double[65536];
+            float[] res = new float[65536];
+            float[] res_cpu = new float[65536];
 
             random_init(a);
             random_init(x);
@@ -34,18 +34,14 @@ namespace DotMPTests
 
             DotMP.GPU.DataTo(a, x, y);
             DotMP.GPU.DataFrom(res);
-
-            DotMP.GPU.Kernel<double, double, double, double>((h, a, x, y, res) =>
+            DotMP.GPU.ParallelFor<double, double, double, float>(0, a.Length, (i, a, x, y, res) =>
             {
-                DotMP.GPU.For(h, 0, a.Length, i =>
-                {
-                    res[i] = a[i] * x[i] + y[i];
-                });
+                res[i] = (float)(a[i] * x[i] + y[i]);
             });
 
             for (int i = 0; i < a.Length; i++)
             {
-                res_cpu[i] = a[i] * x[i] + y[i];
+                res_cpu[i] = (float)(a[i] * x[i] + y[i]);
             }
 
             Assert.Equal(res_cpu, res);
