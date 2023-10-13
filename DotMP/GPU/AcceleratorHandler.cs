@@ -1,7 +1,11 @@
 using System;
 using System.Linq;
+using System.Reflection.Emit;
+using Mono.Cecil;
+using Mono.Cecil.Cil;
 using ILGPU;
 using ILGPU.Runtime;
+using ILGPU.IR;
 
 namespace DotMP
 {
@@ -23,17 +27,29 @@ namespace DotMP
         /// </summary>
         private static Accelerator accelerator;
         /// <summary>
-        /// The arrays going to the GPU.
+        /// The GPU pointers for arrays going to the GPU.
         /// </summary>
         private static dynamic[] tos;
         /// <summary>
-        /// The arrays coming back from the GPU.
+        /// The GPU pointers for arrays coming back from the GPU.
         /// </summary>
         private static dynamic[] froms;
         /// <summary>
-        /// The arrays going both to and from the GPU.
+        /// The CPU pointers for arrays coming back from the GPU.
+        /// </summary>
+        private static dynamic[] froms_cpu;
+        /// <summary>
+        /// The GPU pointers for arrays going both to and from the GPU.
         /// </summary>
         private static dynamic[] tofroms;
+        /// <summary>
+        /// The CPU pointers for arrays going both to and from the GPU.
+        /// </summary>
+        private static dynamic[] tofroms_cpu;
+        /// <summary>
+        /// Counts how many arrays have been copied back to the CPU for bookkeeping.
+        /// </summary>
+        private static int copied_back;
 
         /// <summary>
         /// Default constructor. If this is the first time it's called, it initializes all relevant singleton data.
@@ -45,45 +61,27 @@ namespace DotMP
             context = Context.CreateDefault();
             accelerator = context.Devices[0].CreateAccelerator(context);
             initialized = true;
+            copied_back = 0;
 
             tos = new dynamic[0];
             froms = new dynamic[0];
             tofroms = new dynamic[0];
+            froms_cpu = new dynamic[0][];
+            tofroms_cpu = new dynamic[0][];
         }
 
         /// <summary>
         /// Aggregates the parameters into a single array.
         /// </summary>
         /// <returns>A dynamic array of all parameters.</returns>
-        private dynamic[] AggregateParams()
+        private dynamic[] AggregateParams(int count)
         {
-            object[] parameters = new object[0];
-            parameters.Append(tos).Append(froms).Append(tofroms);
+            dynamic[] ret = tos.Concat(froms).Concat(tofroms).ToArray();
 
-            return parameters;
-        }
+            if (ret.Length != count)
+                throw new WrongNumberOfDataMovementsSpecifiedException(string.Format("Specified {0} data movement(s), expected {1}.", ret.Length, count));
 
-        /// <summary>
-        /// Calculates the longest parameter to determine the number of GPU threads.
-        /// </summary>
-        /// <returns>The length of the longest parameter.</returns>
-        private int LongestParam()
-        {
-            int max = int.MinValue;
-
-            foreach (var t in tos)
-                if (t.IntExtent > max)
-                    max = t.IntExtent;
-
-            foreach (var t in froms)
-                if (t.IntExtent > max)
-                    max = t.IntExtent;
-
-            foreach (var t in tofroms)
-                if (t.IntExtent > max)
-                    max = t.IntExtent;
-
-            return max;
+            return ret;
         }
 
         /// <summary>
@@ -95,8 +93,11 @@ namespace DotMP
         internal void AllocateTo<T>(T[][] values)
             where T : unmanaged
         {
+            if (froms.Length > 0 || tofroms.Length > 0)
+                throw new ImproperDataMovementOrderingException("DataTo should be called before DataFrom and DataToFrom.");
+
             var tos = values.Select(v => accelerator.Allocate1D(v)).ToArray();
-            AcceleratorHandler.tos.Append(tos);
+            AcceleratorHandler.tos = AcceleratorHandler.tos.Concat(tos).ToArray();
 
             for (int i = 0; i < tos.Length; i++)
                 tos[i].CopyFromCPU(values[i]);
@@ -111,8 +112,12 @@ namespace DotMP
         internal void AllocateFrom<T>(T[][] values)
             where T : unmanaged
         {
+            if (tofroms.Length > 0)
+                throw new ImproperDataMovementOrderingException("DataFrom should be called before DataToFrom.");
+
             var froms = values.Select(v => accelerator.Allocate1D<T>(v.Length)).ToArray();
-            AcceleratorHandler.froms.Append(froms);
+            AcceleratorHandler.froms = AcceleratorHandler.froms.Concat(froms).ToArray();
+            AcceleratorHandler.froms_cpu = AcceleratorHandler.froms_cpu.Concat(values).ToArray();
         }
 
         /// <summary>
@@ -125,30 +130,84 @@ namespace DotMP
             where T : unmanaged
         {
             var tofroms = values.Select(v => accelerator.Allocate1D(v)).ToArray();
-            AcceleratorHandler.tofroms.Append(tofroms);
+            AcceleratorHandler.tofroms = AcceleratorHandler.tofroms.Concat(tofroms).ToArray();
+            AcceleratorHandler.tofroms_cpu = AcceleratorHandler.tofroms_cpu.Concat(values).ToArray();
 
             for (int i = 0; i < tos.Length; i++)
                 tofroms[i].CopyFromCPU(values[i]);
         }
 
         /// <summary>
+        /// Synchronizes the GPU stream.
+        /// </summary>
+        internal void Synchronize() =>
+            accelerator.DefaultStream.Synchronize();
+
+        /// <summary>
+        /// Copies a piece of GPU memory back to the CPU.
+        /// </summary>
+        /// <typeparam name="T">The type of the data to transfer.</typeparam>
+        /// <param name="item">A MemoryBuffer1D object to transfer.</param>
+        internal void CopyBack<T>(dynamic item)
+            where T : unmanaged
+        {
+            MemoryBuffer1D<T, Stride1D.Dense> castedItem = item;
+
+            if (copied_back < froms.Length)
+                castedItem.GetAsArray1D().CopyTo(froms_cpu[copied_back], 0);
+            else
+                castedItem.GetAsArray1D().CopyTo(tofroms_cpu[copied_back - froms.Length], 0);
+
+            copied_back++;
+        }
+
+        /// <summary>
+        /// Called to finalize kernel execution.
+        /// Clears all of the arrays used in the kernel.
+        /// </summary>
+        internal void FinalizeKernel()
+        {
+            foreach (var i in tos)
+                i.Dispose();
+            tos = new dynamic[0];
+
+            foreach (var i in froms)
+                i.Dispose();
+            froms = new dynamic[0];
+            froms_cpu = new dynamic[0][];
+
+            foreach (var i in tofroms)
+                i.Dispose();
+            tofroms = new dynamic[0];
+            tofroms_cpu = new dynamic[0][];
+
+            copied_back = 0;
+        }
+
+        /// <summary>
         /// Dispatches a kernel with one data parameter.
         /// </summary>
         /// <typeparam name="T">The type of the data parameter.</typeparam>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T>(ActionGPU<T> action)
+        internal void DispatchKernel<T>(int start, int end, ActionGPU<T> action)
             where T : unmanaged
         {
             Action<Index1D, ArrayView<T>> disp_action = (index, i) =>
             {
-                DeviceHandle deviceHandle = new DeviceHandle(index);
-                action(deviceHandle, i);
+                int idx = index.X + start;
+                action(idx, i);
             };
 
+            dynamic[] parameters = AggregateParams(1);
             var kernel = accelerator.LoadAutoGroupedStreamKernel(disp_action);
-            dynamic[] parameters = AggregateParams();
 
-            kernel(LongestParam(), parameters[0]);
+            kernel(end - start, parameters[0]);
+
+            Synchronize();
+            CopyBack<T>(parameters[0]);
+            FinalizeKernel();
         }
 
         /// <summary>
@@ -156,21 +215,28 @@ namespace DotMP
         /// </summary>
         /// <typeparam name="T">The type of the first data parameter.</typeparam>
         /// <typeparam name="U">The type of the second data parameter.</typeparam>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T, U>(ActionGPU<T, U> action)
+        internal void DispatchKernel<T, U>(int start, int end, ActionGPU<T, U> action)
             where T : unmanaged
             where U : unmanaged
         {
             Action<Index1D, ArrayView<T>, ArrayView<U>> disp_action = (index, i, j) =>
             {
-                DeviceHandle deviceHandle = new DeviceHandle(index);
-                action(deviceHandle, i, j);
+                int idx = index.X + start;
+                action(idx, i, j);
             };
 
+            dynamic[] parameters = AggregateParams(2);
             var kernel = accelerator.LoadAutoGroupedStreamKernel(disp_action);
-            dynamic[] parameters = AggregateParams();
 
-            kernel(LongestParam(), parameters[0], parameters[1]);
+            kernel(end - start, parameters[0], parameters[1]);
+
+            Synchronize();
+            CopyBack<T>(parameters[0]);
+            CopyBack<U>(parameters[1]);
+            FinalizeKernel();
         }
 
         /// <summary>
@@ -179,22 +245,30 @@ namespace DotMP
         /// <typeparam name="T">The type of the first data parameter.</typeparam>
         /// <typeparam name="U">The type of the second data parameter.</typeparam>
         /// <typeparam name="V">The type of the third data parameter.</typeparam>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T, U, V>(ActionGPU<T, U, V> action)
+        internal void DispatchKernel<T, U, V>(int start, int end, ActionGPU<T, U, V> action)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
         {
             Action<Index1D, ArrayView<T>, ArrayView<U>, ArrayView<V>> disp_action = (index, i, j, k) =>
             {
-                DeviceHandle deviceHandle = new DeviceHandle(index);
-                action(deviceHandle, i, j, k);
+                int idx = index.X + start;
+                action(idx, i, j, k);
             };
 
+            dynamic[] parameters = AggregateParams(3);
             var kernel = accelerator.LoadAutoGroupedStreamKernel(disp_action);
-            dynamic[] parameters = AggregateParams();
 
-            kernel(LongestParam(), parameters[0], parameters[1], parameters[2]);
+            kernel(end - start, parameters[0], parameters[1], parameters[2]);
+
+            Synchronize();
+            CopyBack<T>(parameters[0]);
+            CopyBack<U>(parameters[1]);
+            CopyBack<V>(parameters[2]);
+            FinalizeKernel();
         }
 
         /// <summary>
@@ -204,23 +278,76 @@ namespace DotMP
         /// <typeparam name="U">The type of the second data parameter.</typeparam>
         /// <typeparam name="V">The type of the third data parameter.</typeparam>
         /// <typeparam name="W">The type of the fourth data parameter.</typeparam>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T, U, V, W>(ActionGPU<T, U, V, W> action)
+        internal void DispatchKernel<T, U, V, W>(int start, int end, ActionGPU<T, U, V, W> action)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
             where W : unmanaged
         {
-            Action<Index1D, ArrayView<T>, ArrayView<U>, ArrayView<V>, ArrayView<W>> disp_action = (index, i, j, k, l) =>
+            dynamic[] parameters = AggregateParams(4);
+
+            var method = GenerateKernel4(action);
+            var kernel = accelerator.LoadAutoGroupedStreamKernel(method);
+
+            kernel(end - start, parameters[0], parameters[1], parameters[2], parameters[3], start);
+
+            Synchronize();
+            CopyBack<T>(parameters[0]);
+            CopyBack<U>(parameters[1]);
+            CopyBack<V>(parameters[2]);
+            CopyBack<W>(parameters[3]);
+            FinalizeKernel();
+        }
+
+        internal Action<Index1D, ArrayView<T>, ArrayView<U>, ArrayView<V>, ArrayView<W>, int> GenerateKernel4<T, U, V, W>(ActionGPU<T, U, V, W> action)
+            where T : unmanaged
+            where U : unmanaged
+            where V : unmanaged
+            where W : unmanaged
+        {
+            DynamicMethod dynamicMethod = new DynamicMethod("GPUKernel4", typeof(void), new Type[] { typeof(Index1D), typeof(ArrayView<T>), typeof(ArrayView<U>), typeof(ArrayView<V>), typeof(ArrayView<W>) });
+            ILGenerator ilGenerator = dynamicMethod.GetILGenerator();
+
+            var assembly = AssemblyDefinition.ReadAssembly(action.Method.DeclaringType.Assembly.Location);
+            var maintypes = assembly.MainModule.Types.First(t => t.FullName == action.Method.DeclaringType.FullName.Split("+")[0]);
+            var type = maintypes.NestedTypes.First(t => t.FullName.Split("/")[1] == action.Method.DeclaringType.FullName.Split("+")[1]);
+            var method = type.Methods.First(nt => nt.FullName.Contains(action.Method.Name));
+
+            var instructions = method.Body.Instructions;
+
+            var intType = assembly.MainModule.ImportReference(typeof(int));
+            var idxVar = new VariableDefinition(intType);
+
+            method.Body.Variables.Add(idxVar);
+
+            var il = method.Body.GetILProcessor();
+
+            for (int i = 0; i < instructions.Count; i++)
             {
-                DeviceHandle deviceHandle = new DeviceHandle(index);
-                action(deviceHandle, i, j, k, l);
-            };
+                if (instructions[i].OpCode == Mono.Cecil.Cil.OpCodes.Ldarg_1)
+                {
+                    instructions[i] = il.Create(Mono.Cecil.Cil.OpCodes.Ldloc, idxVar);
+                }
+            }
 
-            var kernel = accelerator.LoadAutoGroupedStreamKernel(disp_action);
-            dynamic[] parameters = AggregateParams();
+            var firstInstruction = method.Body.Instructions[0];
 
-            kernel(LongestParam(), parameters[0], parameters[1], parameters[2], parameters[3]);
+            var structType = assembly.MainModule.Types.First(t => t.FullName == typeof(Index1D).Name);
+            var propertyGetter = structType.Properties.First(p => p.Name == "X").GetMethod;
+
+            il.InsertBefore(firstInstruction, il.Create(Mono.Cecil.Cil.OpCodes.Ldarg_1));
+            il.InsertBefore(firstInstruction, il.Create(Mono.Cecil.Cil.OpCodes.Call, propertyGetter));
+            il.InsertBefore(firstInstruction, il.Create(Mono.Cecil.Cil.OpCodes.Stloc, idxVar));
+
+            var parameter = method.Parameters[1];
+            parameter.ParameterType = assembly.MainModule.ImportReference(typeof(Index1D));
+
+            var newAction = (Action<Index1D, ArrayView<T>, ArrayView<U>, ArrayView<V>, ArrayView<W>, int>)dynamicMethod.CreateDelegate(typeof(Action<Index1D, ArrayView<T>, ArrayView<U>, ArrayView<V>, ArrayView<W>, int>));
+
+            return newAction;
         }
     }
 }
