@@ -178,7 +178,7 @@ namespace DotMP
         /// <param name="action">The action to be performed in the loop.</param>
         public static void For(DeviceHandle d, int start, int end, Action<int> action)
         {
-            for (int idx = d.GetIndex().X + start; idx < end; idx += d.GetIndex().Size)
+            for (int idx = d.Index.X + start; idx < end; idx += d.Index.Size)
                 action(idx);
         }
     }

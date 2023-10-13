@@ -10,7 +10,7 @@ namespace DotMP
         /// <summary>
         /// Index1D struct.
         /// </summary>
-        Index1D index;
+        internal Index1D Index { get; private set; }
 
         /// <summary>
         /// Constructor.
@@ -18,16 +18,7 @@ namespace DotMP
         /// <param name="index">The Index1D object to store.</param>
         internal DeviceHandle(Index1D index)
         {
-            this.index = index;
-        }
-
-        /// <summary>
-        /// Gets the index.
-        /// </summary>
-        /// <returns>The Index1D object.</returns>
-        internal Index1D GetIndex()
-        {
-            return index;
+            Index = index;
         }
     }
 }
