@@ -1,6 +1,6 @@
 using ILGPU;
 
-namespace DotMP
+namespace DotMP.GPU
 {
     /// <summary>
     /// Wrapper object for representing arrays on the GPU.
