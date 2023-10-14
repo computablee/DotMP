@@ -8,6 +8,7 @@ using DotMP;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
+using DotMP.GPU;
 
 namespace DotMPTests
 {
@@ -32,11 +33,13 @@ namespace DotMPTests
             random_init(x);
             random_init(y);
 
-            DotMP.GPU.DataTo(a, x, y);
-            DotMP.GPU.DataFrom(res);
-            DotMP.GPU.ParallelFor<double, double, double, float>(0, a.Length, (i, a, x, y, res) =>
+            DotMP.GPU.Parallel.DataTo(a, x, y);
+            DotMP.GPU.Parallel.DataFrom(res);
+            DotMP.GPU.Parallel.ParallelFor<double, double, double, float>(0, a.Length, (i, h) =>
             {
-                res[i] = (float)(a[i] * x[i] + y[i]);
+                (int idx, GPUArray<double> a, GPUArray<double> x, GPUArray<double> y, GPUArray<float> res) = h.GetData(i);
+
+                res[idx] = (float)(a[idx] * x[idx] + y[idx]);
             });
 
             for (int i = 0; i < a.Length; i++)
@@ -45,6 +48,23 @@ namespace DotMPTests
             }
 
             Assert.Equal(res_cpu, res);
+
+            double[] a_old = a.Select(a => a).ToArray();
+
+            DotMP.GPU.Parallel.DataToFrom(a);
+            DotMP.GPU.Parallel.ParallelFor<double>(0, a.Length, (i, h) =>
+            {
+                (int idx, GPUArray<double> a) = h.GetData(i);
+
+                a[idx]++;
+            });
+
+            for (int i = 0; i < a.Length; i++)
+            {
+                a_old[i]++;
+            }
+
+            Assert.Equal(a, a_old);
         }
 
         private void random_init<T>(T[] arr)
