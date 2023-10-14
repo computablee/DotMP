@@ -8,7 +8,7 @@ using DotMP;
 using FluentAssertions;
 using Xunit;
 using Xunit.Abstractions;
-using DotMP.GPU;
+
 
 namespace DotMPTests
 {
@@ -35,9 +35,14 @@ namespace DotMPTests
 
             DotMP.GPU.Parallel.DataTo(a, x, y);
             DotMP.GPU.Parallel.DataFrom(res);
-            DotMP.GPU.Parallel.ParallelFor<double, double, double, float>(0, a.Length, (i, h) =>
+            DotMP.GPU.Parallel.ParallelFor<double, double, double, float>
+                (0, a.Length, (i, h) =>
             {
-                (int idx, GPUArray<double> a, GPUArray<double> x, GPUArray<double> y, GPUArray<float> res) = h.GetData(i);
+                (int idx,
+                DotMP.GPU.GPUArray<double> a,
+                DotMP.GPU.GPUArray<double> x,
+                DotMP.GPU.GPUArray<double> y,
+                DotMP.GPU.GPUArray<float> res) = h.GetData(i);
 
                 res[idx] = (float)(a[idx] * x[idx] + y[idx]);
             });
@@ -54,7 +59,7 @@ namespace DotMPTests
             DotMP.GPU.Parallel.DataToFrom(a);
             DotMP.GPU.Parallel.ParallelFor<double>(0, a.Length, (i, h) =>
             {
-                (int idx, GPUArray<double> a) = h.GetData(i);
+                (int idx, DotMP.GPU.GPUArray<double> a) = h.GetData(i);
 
                 a[idx]++;
             });
