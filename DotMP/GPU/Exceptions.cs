@@ -1,6 +1,6 @@
 using System;
 
-namespace DotMP
+namespace DotMP.GPU
 {
     /// <summary>
     /// Exception thrown if too many or too few data movements were specified before a GPU kernel.
