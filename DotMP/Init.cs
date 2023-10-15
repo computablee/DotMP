@@ -210,9 +210,10 @@ namespace DotMP
         /// Advance the start by some value.
         /// </summary>
         /// <param name="advance_by">The value to advance start by.</param>
-        internal void Advance(int advance_by)
+        /// <returns>The start of the current chunk to execute.</returns>
+        internal int Advance(int advance_by)
         {
-            start += advance_by;
+            return Interlocked.Add(ref start_pv, advance_by) - advance_by;
         }
 
         /// <summary>

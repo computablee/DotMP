@@ -124,7 +124,8 @@ namespace DotMP
             int end = ws.end;
 
             T local = default;
-            ws.SetLocal(ref local);
+            if (forAction.IsReduction)
+                ws.SetLocal(ref local);
 
             if (schedule == Schedule.Guided) while (ws.start < end)
                 {
@@ -149,14 +150,7 @@ namespace DotMP
         /// <param name="local">The local variable for reductions.</param>
         private static void DynamicNext<T>(WorkShare ws, Thr thr, ForAction<T> forAction, ref T local)
         {
-            int chunk_start;
-
-            lock (ws.ws_lock)
-            {
-                chunk_start = ws.start;
-                ws.Advance((int)ws.chunk_size);
-            }
-
+            int chunk_start = ws.Advance((int)ws.chunk_size);
             int chunk_end = (int)Math.Min(chunk_start + ws.chunk_size, ws.end);
 
             forAction.PerformLoop(ref thr.working_iter, chunk_start, chunk_end, ref local);
