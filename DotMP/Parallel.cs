@@ -122,6 +122,8 @@ namespace DotMP
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
         {
+            ValidateParameters(start, end, chunkSize:chunk_size);
+
             ForAction<object> forAction = new ForAction<object>(action);
 
             For(start, end, forAction, schedule, chunk_size);
@@ -1107,6 +1109,11 @@ namespace DotMP
 
             WorkShare ws = new WorkShare();
 
+            if (!ws.in_for)
+            {
+                throw new NotInForException("Cannot use DotMP Ordered outside of a For or ForReduction.");
+            }
+
             while (ordered[id] != ws.thread.working_iter)
             {
                 freg.reg.spin[tid].SpinOnce();
@@ -1239,6 +1246,55 @@ namespace DotMP
         public static uint GetChunkSize()
         {
             return new WorkShare().chunk_size;
+        }
+
+
+
+        /// <summary>
+        /// Validates the parameters passed to the method.
+        /// </summary>
+        /// <param name="start">The start index.</param>
+        /// <param name="end">The end index.</param>
+        /// <param name="numThreads">The number of threads to use (optional).</param>
+        /// <param name="chunkSize">The chunk size to use (optional).</param>
+        /// <param name="numTasks">The number of tasks to use (optional).</param>
+        /// <param name="grainSize">The grainsize to use (optional).</param>
+        /// <exception cref="ArgumentException">If any of the parameters are invalid.</exception>
+        private static void ValidateParameters(
+            int start,
+            int end,
+            uint? numThreads = null,
+            uint? chunkSize = null,
+            uint? numTasks = null,
+            uint? grainSize = null)
+        {
+            if (end < start)
+            {
+                throw new ArgumentException("End index cannot be less than start index.");
+            }   
+
+            if (start < 0 || end < 0)
+            {
+                throw new ArgumentException("Start and end indices cannot be less than 0.");
+            }    
+
+            if (num_threads is not null && num_threads == 0)
+            {
+                throw new ArgumentException("Number of threads cannot be 0.");
+            }       
+
+            if (chunkSize is not null && chunk_size == 0)
+            {
+                throw new ArgumentException("Chunk size cannot be 0.");
+            }
+                
+            if (num_tasks is not null
+                && grainsize is not null
+                && (num_tasks == 0 || grainsize == 0))
+            {
+                throw new ArgumentException("Number of tasks and grainsize cannot be 0.");
+            }
+
         }
     }
 }
