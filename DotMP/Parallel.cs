@@ -1269,31 +1269,21 @@ namespace DotMP
             uint? grainSize = null)
         {
             if (end < start)
-            {
-                throw new ArgumentException("End index cannot be less than start index.");
-            }   
+                throw new ArgumentException("End index cannot be less than start index.");  
 
             if (start < 0 || end < 0)
-            {
-                throw new ArgumentException("Start and end indices cannot be less than 0.");
-            }    
+                throw new ArgumentException("Start and end indices cannot be less than 0.");  
 
             if (num_threads is not null && num_threads == 0)
-            {
-                throw new ArgumentException("Number of threads cannot be 0.");
-            }       
+                throw new ArgumentException("Number of threads cannot be 0.");     
 
             if (chunkSize is not null && chunk_size == 0)
-            {
                 throw new ArgumentException("Chunk size cannot be 0.");
-            }
                 
             if (num_tasks is not null
                 && grainsize is not null
                 && (num_tasks == 0 || grainsize == 0))
-            {
                 throw new ArgumentException("Number of tasks and grainsize cannot be 0.");
-            }
 
         }
     }
