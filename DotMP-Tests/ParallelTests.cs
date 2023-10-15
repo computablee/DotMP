@@ -139,7 +139,7 @@ namespace DotMPTests
                 y[i] = 1.0f;
             }
 
-            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Dynamic, 16);
+            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Dynamic, 1);
 
             for (int i = 0; i < z.Length; i++)
             {
