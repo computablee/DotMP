@@ -36,15 +36,9 @@ namespace DotMPTests
             DotMP.GPU.Parallel.DataTo(a, x, y);
             DotMP.GPU.Parallel.DataFrom(res);
             DotMP.GPU.Parallel.ParallelFor<double, double, double, float>
-                (0, a.Length, (i, h) =>
+                (0, a.Length, (i, a, x, y, res) =>
             {
-                (int idx,
-                DotMP.GPU.GPUArray<double> a,
-                DotMP.GPU.GPUArray<double> x,
-                DotMP.GPU.GPUArray<double> y,
-                DotMP.GPU.GPUArray<float> res) = h.GetData(i);
-
-                res[idx] = (float)(a[idx] * x[idx] + y[idx]);
+                res[i] = (float)(a[i] * x[i] + y[i]);
             });
 
             for (int i = 0; i < a.Length; i++)
@@ -57,11 +51,9 @@ namespace DotMPTests
             double[] a_old = a.Select(a => a).ToArray();
 
             DotMP.GPU.Parallel.DataToFrom(a);
-            DotMP.GPU.Parallel.ParallelFor<double>(0, a.Length, (i, h) =>
+            DotMP.GPU.Parallel.ParallelFor<double>(0, a.Length, (i, a) =>
             {
-                (int idx, DotMP.GPU.GPUArray<double> a) = h.GetData(i);
-
-                a[idx]++;
+                a[i]++;
             });
 
             for (int i = 0; i < a.Length; i++)
