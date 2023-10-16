@@ -46,6 +46,7 @@ namespace DotMP.GPU
         /// Counts how many arrays have been copied back to the CPU for bookkeeping.
         /// </summary>
         private static int copied_back;
+        private static int block_size;
 
         /// <summary>
         /// Default constructor. If this is the first time it's called, it initializes all relevant singleton data.
@@ -56,8 +57,10 @@ namespace DotMP.GPU
 
             context = Context.CreateDefault();
             accelerator = context.Devices[0].CreateAccelerator(context);
+            Console.WriteLine("Using {0} accelerator.", accelerator.AcceleratorType.ToString());
             initialized = true;
             copied_back = 0;
+            block_size = accelerator.AcceleratorType == AcceleratorType.CPU ? 16 : 256;
 
             tos = new dynamic[0];
             froms = new dynamic[0];
@@ -187,15 +190,16 @@ namespace DotMP.GPU
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T>(int start, int end, Action<Index1D, Handle<T>> action)
+        internal void DispatchKernel<T>(int start, int end, Action<Index, GPUArray<T>> action)
             where T : unmanaged
         {
             dynamic[] parameters = AggregateParams(1);
-            var handle = new Handle<T>(parameters[0].View);
+            var idx = new Index();
 
-            var kernel = accelerator.LoadAutoGroupedStreamKernel(action);
+            var kernel = accelerator.LoadStreamKernel(action);
 
-            kernel(end - start, handle);
+            kernel(((end - start) / block_size, block_size), idx,
+                new GPUArray<T>(parameters[0].View));
 
             Synchronize();
             CopyBack<T>(parameters[0]);
@@ -210,16 +214,18 @@ namespace DotMP.GPU
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T, U>(int start, int end, Action<Index1D, Handle<T, U>> action)
+        internal void DispatchKernel<T, U>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>> action)
             where T : unmanaged
             where U : unmanaged
         {
             dynamic[] parameters = AggregateParams(2);
-            var handle = new Handle<T, U>(parameters[0].View, parameters[1].View);
+            var idx = new Index();
 
-            var kernel = accelerator.LoadAutoGroupedStreamKernel(action);
+            var kernel = accelerator.LoadStreamKernel(action);
 
-            kernel(end - start, handle);
+            kernel(((end - start) / block_size, block_size), idx,
+                new GPUArray<T>(parameters[0].View),
+                new GPUArray<U>(parameters[1].View));
 
             Synchronize();
             CopyBack<T>(parameters[0]);
@@ -236,17 +242,20 @@ namespace DotMP.GPU
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T, U, V>(int start, int end, Action<Index1D, Handle<T, U, V>> action)
+        internal void DispatchKernel<T, U, V>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>> action)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
         {
             dynamic[] parameters = AggregateParams(3);
-            var handle = new Handle<T, U, V>(parameters[0].View, parameters[1].View, parameters[2].View);
+            var idx = new Index();
 
-            var kernel = accelerator.LoadAutoGroupedStreamKernel(action);
+            var kernel = accelerator.LoadStreamKernel(action);
 
-            kernel(end - start, handle);
+            kernel(((end - start) / block_size, block_size), idx,
+                new GPUArray<T>(parameters[0].View),
+                new GPUArray<U>(parameters[1].View),
+                new GPUArray<V>(parameters[2].View));
 
             Synchronize();
             CopyBack<T>(parameters[0]);
@@ -265,18 +274,22 @@ namespace DotMP.GPU
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T, U, V, W>(int start, int end, Action<Index1D, Handle<T, U, V, W>> action)
+        internal void DispatchKernel<T, U, V, W>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>> action)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
             where W : unmanaged
         {
             dynamic[] parameters = AggregateParams(4);
-            var handle = new Handle<T, U, V, W>(parameters[0].View, parameters[1].View, parameters[2].View, parameters[3].View);
+            var idx = new Index();
 
-            var kernel = accelerator.LoadAutoGroupedStreamKernel(action);
+            var kernel = accelerator.LoadStreamKernel(action);
 
-            kernel(end - start, handle);
+            kernel(((end - start) / block_size, block_size), idx,
+                new GPUArray<T>(parameters[0].View),
+                new GPUArray<U>(parameters[1].View),
+                new GPUArray<V>(parameters[2].View),
+                new GPUArray<W>(parameters[3].View));
 
             Synchronize();
             CopyBack<T>(parameters[0]);

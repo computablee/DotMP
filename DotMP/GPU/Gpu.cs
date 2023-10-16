@@ -19,7 +19,7 @@ namespace DotMP.GPU
         /// <param name="end">The end of the loop, exclusive.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
-        public static void ParallelFor<T>(int start, int end, Action<Index1D, Handle<T>> action)
+        public static void ParallelFor<T>(int start, int end, Action<Index, GPUArray<T>> action)
             where T : unmanaged
         {
             var handler = new AcceleratorHandler();
@@ -36,7 +36,7 @@ namespace DotMP.GPU
         /// <param name="action">The kernel to run on the GPU.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
-        public static void ParallelFor<T, U>(int start, int end, Action<Index1D, Handle<T, U>> action)
+        public static void ParallelFor<T, U>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>> action)
             where T : unmanaged
             where U : unmanaged
         {
@@ -55,7 +55,7 @@ namespace DotMP.GPU
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
-        public static void ParallelFor<T, U, V>(int start, int end, Action<Index1D, Handle<T, U, V>> action)
+        public static void ParallelFor<T, U, V>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>> action)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
@@ -76,7 +76,7 @@ namespace DotMP.GPU
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="W">The base type of the fourth argument. Must be an unmanaged type.</typeparam>
-        public static void ParallelFor<T, U, V, W>(int start, int end, Action<Index1D, Handle<T, U, V, W>> action)
+        public static void ParallelFor<T, U, V, W>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>> action)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
