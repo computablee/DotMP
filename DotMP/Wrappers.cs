@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace DotMP
 {
@@ -334,15 +335,14 @@ namespace DotMP
         /// <param name="diff2">The difference in the second pair of indices.</param>
         /// <param name="start1">The start of the first pair of indices.</param>
         /// <param name="start2">The start of the second pair of indices.</param>
-        /// <returns>The two indices.</returns>
-        private ValueTuple<int, int> ComputeIndices2(int curr_iter, int diff2, int start1, int start2)
+        /// <param name="i">The first computed index.</param>
+        /// <param name="j">The second computed index.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ComputeIndices2(int curr_iter, int diff2, int start1, int start2, out int i, out int j)
         {
-            int i, j;
             i = Math.DivRem(curr_iter, diff2, out j);
             i += start1;
             j += start2;
-
-            return (i, j);
         }
 
         /// <summary>
@@ -354,17 +354,17 @@ namespace DotMP
         /// <param name="start1">The start of the first pair of indices.</param>
         /// <param name="start2">The start of the second pair of indices.</param>
         /// <param name="start3">The start of the third pair of indices.</param>
-        /// <returns>The three indices.</returns>
-        private ValueTuple<int, int, int> ComputeIndices3(int curr_iter, int diff2, int diff3, int start1, int start2, int start3)
+        /// <param name="i">The first computed index.</param>
+        /// <param name="j">The second computed index.</param>
+        /// <param name="k">The third computed index.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ComputeIndices3(int curr_iter, int diff2, int diff3, int start1, int start2, int start3, out int i, out int j, out int k)
         {
-            int i, j, k;
             i = Math.DivRem(curr_iter, diff2 * diff3, out j);
             j = Math.DivRem(j, diff3, out k);
             i += start1;
             j += start2;
             k += start3;
-
-            return (i, j, k);
         }
 
         /// <summary>
@@ -426,7 +426,8 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        (int i, int j) = ComputeIndices2(curr_iter, diff2, start1, start2);
+                        int i, j;
+                        ComputeIndices2(curr_iter, diff2, start1, start2, out i, out j);
                         omp_col_2(i, j);
                     }
                     break;
@@ -440,7 +441,8 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        (int i, int j, int k) = ComputeIndices3(curr_iter, diff2, diff3, start1, start2, start3);
+                        int i, j, k;
+                        ComputeIndices3(curr_iter, diff2, diff3, start1, start2, start3, out i, out j, out k);
                         omp_col_3(i, j, k);
                     }
                     break;
@@ -466,7 +468,8 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        (int i, int j) = ComputeIndices2(curr_iter, diff2, start1, start2);
+                        int i, j;
+                        ComputeIndices2(curr_iter, diff2, start1, start2, out i, out j);
                         omp_red_col_2(ref local, i, j);
                     }
                     break;
@@ -480,7 +483,8 @@ namespace DotMP
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
-                        (int i, int j, int k) = ComputeIndices3(curr_iter, diff2, diff3, start1, start2, start3);
+                        int i, j, k;
+                        ComputeIndices3(curr_iter, diff2, diff3, start1, start2, start3, out i, out j, out k);
                         omp_red_col_3(ref local, i, j, k);
                     }
                     break;

@@ -94,6 +94,8 @@ namespace DotMP
                 {
                     case Schedule.Static:
                         chunk_size = (uint)((end - start) / num_threads);
+                        if ((end - start) % num_threads > 0)
+                            chunk_size++;
                         break;
                     case Schedule.Dynamic:
                         chunk_size = (uint)((end - start) / num_threads) / 32;
@@ -1096,6 +1098,13 @@ namespace DotMP
                 throw new NotInParallelRegionException("Cannot use DotMP Ordered outside of a parallel region.");
             }
 
+            WorkShare ws = new WorkShare();
+
+            if (!ws.in_for)
+            {
+                throw new NotInForException("Cannot use DotMP Ordered outside of a For or ForReduction.");
+            }
+
             int tid = GetThreadNum();
 
             lock (ordered)
@@ -1106,18 +1115,8 @@ namespace DotMP
                 }
                 Thread.MemoryBarrier();
             }
-
-            WorkShare ws = new WorkShare();
-
-            if (!ws.in_for)
-            {
-                throw new NotInForException("Cannot use DotMP Ordered outside of a For or ForReduction.");
-            }
-
-            while (ordered[id] != ws.thread.working_iter)
-            {
-                freg.reg.spin[tid].SpinOnce();
-            }
+          
+            while (ordered[id] != ws.thread.working_iter) ;
 
             action();
 

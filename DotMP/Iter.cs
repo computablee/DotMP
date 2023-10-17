@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace DotMP
@@ -101,6 +102,7 @@ namespace DotMP
         /// <param name="chunk_size">The chunk size.</param>
         /// <param name="forAction">The function to be executed.</param>
         /// <param name="local">The local variable for reductions.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void StaticNext<T>(WorkShare ws, Thr thr, uint chunk_size, ForAction<T> forAction, ref T local)
         {
             int start = thr.curr_iter;
@@ -124,7 +126,8 @@ namespace DotMP
             int end = ws.end;
 
             T local = default;
-            ws.SetLocal(ref local);
+            if (forAction.IsReduction)
+                ws.SetLocal(ref local);
 
             if (schedule == Schedule.Guided) while (ws.start < end)
                 {
@@ -147,16 +150,10 @@ namespace DotMP
         /// <param name="thr">The Thr object for the current thread.</param>
         /// <param name="forAction">The function to be executed.</param>
         /// <param name="local">The local variable for reductions.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void DynamicNext<T>(WorkShare ws, Thr thr, ForAction<T> forAction, ref T local)
         {
-            int chunk_start;
-
-            lock (ws.ws_lock)
-            {
-                chunk_start = ws.start;
-                ws.Advance((int)ws.chunk_size);
-            }
-
+            int chunk_start = ws.Advance((int)ws.chunk_size);
             int chunk_end = (int)Math.Min(chunk_start + ws.chunk_size, ws.end);
 
             forAction.PerformLoop(ref thr.working_iter, chunk_start, chunk_end, ref local);
@@ -171,6 +168,7 @@ namespace DotMP
         /// <param name="thr">The Thr object for the current thread.</param>
         /// <param name="forAction">The function to be executed.</param>
         /// <param name="local">The local variable for reductions.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void GuidedNext<T>(WorkShare ws, Thr thr, ForAction<T> forAction, ref T local)
         {
             int chunk_start, chunk_size;
@@ -178,7 +176,7 @@ namespace DotMP
             lock (ws.ws_lock)
             {
                 chunk_start = ws.start;
-                chunk_size = (int)Math.Max(ws.chunk_size, (ws.end - chunk_start) / ws.num_threads);
+                chunk_size = (int)Math.Max(ws.chunk_size, (ws.end - chunk_start) / (ws.num_threads * 2));
 
                 ws.Advance(chunk_size);
             }
