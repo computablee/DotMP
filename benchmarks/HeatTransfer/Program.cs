@@ -87,6 +87,7 @@ public class HeatTransferTaskloop
 [SimpleJob(RuntimeMoniker.Net70)]
 [ThreadingDiagnoser]
 [HardwareCounters]
+[EventPipeProfiler(EventPipeProfile.CpuSampling)]
 // test heat transfer using Parallel.For
 public class HeatTransferFor
 {
@@ -96,11 +97,11 @@ public class HeatTransferFor
     private double[,] grid = new double[0, 0];
 
     // test dims of 100x100, 1000x1000, and 5000x5000
-    [Params(100, 1000, 5000)]
+    [Params(1000)]
     public int dim;
 
     // test with 10 steps and 100 steps
-    [Params(10, 100)]
+    [Params(100)]
     public int steps;
 
     // change this to configure the number of threads to use
@@ -136,7 +137,7 @@ public class HeatTransferFor
     public void DoStep()
     {
         //iterate over all cells not on the border
-        DotMP.Parallel.For(1, dim - 1, action: i =>
+        DotMP.Parallel.For(1, dim - 1, schedule: DotMP.Schedule.Dynamic, chunk_size: 1, action: i =>
         {
             for (int j = 1; j < dim - 1; j++)
             {
@@ -146,7 +147,7 @@ public class HeatTransferFor
         });
 
         //copy the scratch array to the grid array
-        DotMP.Parallel.For(1, dim - 1, action: i =>
+        DotMP.Parallel.For(1, dim - 1, schedule: DotMP.Schedule.Dynamic, chunk_size: 1, action: i =>
         {
             for (int j = 1; j < dim - 1; j++)
             {
@@ -157,9 +158,9 @@ public class HeatTransferFor
 }
 
 [SimpleJob(RuntimeMoniker.Net60)]
-[SimpleJob(RuntimeMoniker.Net70)]
 [ThreadingDiagnoser]
 [HardwareCounters]
+[EventPipeProfiler(EventPipeProfile.CpuSampling)]
 // test heat transfer using Parallel.ForCollapse
 public class HeatTransferForCollapse
 {
@@ -169,11 +170,11 @@ public class HeatTransferForCollapse
     private double[,] grid = new double[0, 0];
 
     // test dims of 100x100, 1000x1000, and 5000x5000
-    [Params(100, 1000, 5000)]
+    [Params(500)]
     public int dim;
 
     // test with 10 steps and 100 steps
-    [Params(10, 100)]
+    [Params(100)]
     public int steps;
 
     // change this to configure the number of threads to use
@@ -209,14 +210,14 @@ public class HeatTransferForCollapse
     public void DoStep()
     {
         //iterate over all cells not on the border
-        DotMP.Parallel.ForCollapse((1, dim - 1), (1, dim - 1), action: (i, j) =>
+        DotMP.Parallel.ForCollapse((1, dim - 1), (1, dim - 1), schedule: DotMP.Schedule.Dynamic, chunk_size: 1, action: (i, j) =>
         {
             //set the scratch array to the average of the surrounding cells
             scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
         });
 
         //copy the scratch array to the grid array
-        DotMP.Parallel.ForCollapse((1, dim - 1), (1, dim - 1), action: (i, j) =>
+        DotMP.Parallel.ForCollapse((1, dim - 1), (1, dim - 1), schedule: DotMP.Schedule.Dynamic, chunk_size: 1, action: (i, j) =>
         {
             grid[i, j] = scratch[i, j];
         });
