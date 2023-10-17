@@ -394,6 +394,13 @@ namespace DotMPTests
                 DotMP.Parallel.GetChunkSize().Should().Be(256);
             });
 
+            Environment.SetEnvironmentVariable("OMP_SCHEDULE", "static");
+            DotMP.Parallel.ParallelFor(0, 1025, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
+            {
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Static);
+                DotMP.Parallel.GetChunkSize().Should().Be(257);
+            });
+
             Environment.SetEnvironmentVariable("OMP_SCHEDULE", "guided,2");
             DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Runtime, action: i =>
             {
@@ -649,11 +656,15 @@ namespace DotMPTests
         {
             uint threads = 8;
             int[] incrementing = new int[1024];
+            int ctr = 0;
 
             DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Static,
                                         num_threads: threads, action: i =>
             {
-                DotMP.Parallel.Ordered(0, () => incrementing[i] = i);
+                DotMP.Parallel.Ordered(0, () =>
+                {
+                    incrementing[i] = ctr++;
+                });
             });
 
             for (int i = 0; i < incrementing.Length; i++)
