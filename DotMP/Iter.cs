@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace DotMP
@@ -101,6 +102,7 @@ namespace DotMP
         /// <param name="chunk_size">The chunk size.</param>
         /// <param name="forAction">The function to be executed.</param>
         /// <param name="local">The local variable for reductions.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void StaticNext<T>(WorkShare ws, Thr thr, uint chunk_size, ForAction<T> forAction, ref T local)
         {
             int start = thr.curr_iter;
@@ -148,6 +150,7 @@ namespace DotMP
         /// <param name="thr">The Thr object for the current thread.</param>
         /// <param name="forAction">The function to be executed.</param>
         /// <param name="local">The local variable for reductions.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static void DynamicNext<T>(WorkShare ws, Thr thr, ForAction<T> forAction, ref T local)
         {
             int chunk_start = ws.Advance((int)ws.chunk_size);
