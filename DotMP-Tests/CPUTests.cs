@@ -12,17 +12,10 @@ using Xunit.Abstractions;
 namespace DotMPTests
 {
     /// <summary>
-    /// Tests for the DotMP library.
+    /// CPU tests for the DotMP library.
     /// </summary>
-    public class ParallelTests
+    public class CPUTests
     {
-        private readonly ITestOutputHelper writer;
-        public ParallelTests(ITestOutputHelper outputwriter)
-        {
-            writer = outputwriter;
-        }
-
-
         /// <summary>
         /// Tests to make sure that parallel performance is higher than sequential performance.
         /// </summary>
