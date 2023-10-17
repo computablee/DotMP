@@ -68,10 +68,6 @@ namespace DotMP
             {
                 return start_pv;
             }
-            private set
-            {
-                start_pv = value;
-            }
         }
         /// <summary>
         /// A generic lock to be used within the parallel for loop.
