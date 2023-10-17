@@ -25,10 +25,6 @@ namespace DotMP
         /// The function to be executed.
         /// </summary>
         internal Action omp_fn;
-        /// <summary>
-        /// Generic SpinWait objects for each thread.
-        /// </summary>
-        internal SpinWait[] spin;
 
         /// <summary>
         /// Creates a specified number of threads available to the parallel region, and sets the function to be executed.
@@ -48,9 +44,6 @@ namespace DotMP
             ws_lock = new object();
             this.num_threads = num_threads;
             this.omp_fn = omp_fn;
-            this.spin = new SpinWait[num_threads];
-            for (int i = 0; i < num_threads; i++)
-                this.spin[i] = new SpinWait();
         }
     }
 
