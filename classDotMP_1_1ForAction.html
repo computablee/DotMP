@@ -126,12 +126,12 @@ Properties</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
-<tr class="memitem:a991d6db2c278176085ffe06ab7ed5353"><td class="memItemLeft" align="right" valign="top">ValueTuple&lt; int, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#a991d6db2c278176085ffe06ab7ed5353">ComputeIndices2</a> (int curr_iter, int diff2, int start1, int start2)</td></tr>
-<tr class="memdesc:a991d6db2c278176085ffe06ab7ed5353"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the indices for collapsed loops with 2 indices.  <a href="classDotMP_1_1ForAction.html#a991d6db2c278176085ffe06ab7ed5353">More...</a><br /></td></tr>
-<tr class="separator:a991d6db2c278176085ffe06ab7ed5353"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a08f333308d2f90a32282ce16242f725c"><td class="memItemLeft" align="right" valign="top">ValueTuple&lt; int, int, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#a08f333308d2f90a32282ce16242f725c">ComputeIndices3</a> (int curr_iter, int diff2, int diff3, int start1, int start2, int start3)</td></tr>
-<tr class="memdesc:a08f333308d2f90a32282ce16242f725c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the indices for collapsed loops with 3 indices.  <a href="classDotMP_1_1ForAction.html#a08f333308d2f90a32282ce16242f725c">More...</a><br /></td></tr>
-<tr class="separator:a08f333308d2f90a32282ce16242f725c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4dc61d0a437c864ccc5c1dfaf1deeef7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#a4dc61d0a437c864ccc5c1dfaf1deeef7">ComputeIndices2</a> (int curr_iter, int diff2, int start1, int start2, out int i, out int j)</td></tr>
+<tr class="memdesc:a4dc61d0a437c864ccc5c1dfaf1deeef7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the indices for collapsed loops with 2 indices.  <a href="classDotMP_1_1ForAction.html#a4dc61d0a437c864ccc5c1dfaf1deeef7">More...</a><br /></td></tr>
+<tr class="separator:a4dc61d0a437c864ccc5c1dfaf1deeef7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a97979d1ac813eb69aa77fe4c4b91b6a1"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#a97979d1ac813eb69aa77fe4c4b91b6a1">ComputeIndices3</a> (int curr_iter, int diff2, int diff3, int start1, int start2, int start3, out int i, out int j, out int k)</td></tr>
+<tr class="memdesc:a97979d1ac813eb69aa77fe4c4b91b6a1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the indices for collapsed loops with 3 indices.  <a href="classDotMP_1_1ForAction.html#a97979d1ac813eb69aa77fe4c4b91b6a1">More...</a><br /></td></tr>
+<tr class="separator:a97979d1ac813eb69aa77fe4c4b91b6a1"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac42037e7729eaa44dcbe337c0945cc26"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#ac42037e7729eaa44dcbe337c0945cc26">ComputeIndicesN</a> (int curr_iter)</td></tr>
 <tr class="memdesc:ac42037e7729eaa44dcbe337c0945cc26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the indices for collapsed loops with 4 or more indices.  <a href="classDotMP_1_1ForAction.html#ac42037e7729eaa44dcbe337c0945cc26">More...</a><br /></td></tr>
 <tr class="separator:ac42037e7729eaa44dcbe337c0945cc26"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -619,8 +619,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Function Documentation</h2>
-<a id="a991d6db2c278176085ffe06ab7ed5353"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a991d6db2c278176085ffe06ab7ed5353">&#9670;&nbsp;</a></span>ComputeIndices2()</h2>
+<a id="a4dc61d0a437c864ccc5c1dfaf1deeef7"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4dc61d0a437c864ccc5c1dfaf1deeef7">&#9670;&nbsp;</a></span>ComputeIndices2()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -629,7 +629,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ValueTuple&lt;int, int&gt; <a class="el" href="classDotMP_1_1ForAction.html">DotMP.ForAction</a>&lt; T &gt;.ComputeIndices2 </td>
+          <td class="memname">void <a class="el" href="classDotMP_1_1ForAction.html">DotMP.ForAction</a>&lt; T &gt;.ComputeIndices2 </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>curr_iter</em>, </td>
@@ -650,7 +650,19 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>start2</em>&#160;</td>
+          <td class="paramname"><em>start2</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out int&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out int&#160;</td>
+          <td class="paramname"><em>j</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -672,15 +684,16 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramname">diff2</td><td>The difference in the second pair of indices.</td></tr>
     <tr><td class="paramname">start1</td><td>The start of the first pair of indices.</td></tr>
     <tr><td class="paramname">start2</td><td>The start of the second pair of indices.</td></tr>
+    <tr><td class="paramname">i</td><td>The first computed index.</td></tr>
+    <tr><td class="paramname">j</td><td>The second computed index.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The two indices.</dd></dl>
 
 </div>
 </div>
-<a id="a08f333308d2f90a32282ce16242f725c"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a08f333308d2f90a32282ce16242f725c">&#9670;&nbsp;</a></span>ComputeIndices3()</h2>
+<a id="a97979d1ac813eb69aa77fe4c4b91b6a1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a97979d1ac813eb69aa77fe4c4b91b6a1">&#9670;&nbsp;</a></span>ComputeIndices3()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -689,7 +702,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ValueTuple&lt;int, int, int&gt; <a class="el" href="classDotMP_1_1ForAction.html">DotMP.ForAction</a>&lt; T &gt;.ComputeIndices3 </td>
+          <td class="memname">void <a class="el" href="classDotMP_1_1ForAction.html">DotMP.ForAction</a>&lt; T &gt;.ComputeIndices3 </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>curr_iter</em>, </td>
@@ -722,7 +735,25 @@ Private Attributes</h2></td></tr>
           <td class="paramkey"></td>
           <td></td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>start3</em>&#160;</td>
+          <td class="paramname"><em>start3</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out int&#160;</td>
+          <td class="paramname"><em>i</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out int&#160;</td>
+          <td class="paramname"><em>j</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">out int&#160;</td>
+          <td class="paramname"><em>k</em>&#160;</td>
         </tr>
         <tr>
           <td></td>
@@ -746,10 +777,12 @@ Private Attributes</h2></td></tr>
     <tr><td class="paramname">start1</td><td>The start of the first pair of indices.</td></tr>
     <tr><td class="paramname">start2</td><td>The start of the second pair of indices.</td></tr>
     <tr><td class="paramname">start3</td><td>The start of the third pair of indices.</td></tr>
+    <tr><td class="paramname">i</td><td>The first computed index.</td></tr>
+    <tr><td class="paramname">j</td><td>The second computed index.</td></tr>
+    <tr><td class="paramname">k</td><td>The third computed index.</td></tr>
   </table>
   </dd>
 </dl>
-<dl class="section return"><dt>Returns</dt><dd>The three indices.</dd></dl>
 
 </div>
 </div>

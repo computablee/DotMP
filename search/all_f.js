@@ -30,14 +30,13 @@ var searchData=
   ['single_206',['Single',['../classDotMP_1_1Parallel.html#a325c61e793664f5c30233a8db2ef951b',1,'DotMP::Parallel']]],
   ['single_5fthread_207',['single_thread',['../classDotMP_1_1Parallel.html#ab4fa9e263e5088f3c981a7d9c9413225',1,'DotMP::Parallel']]],
   ['single_5fworks_208',['Single_works',['../classDotMPTests_1_1ParallelTests.html#a0e63ed7f5551c3aee3fe742d58804cd1',1,'DotMPTests::ParallelTests']]],
-  ['spin_209',['spin',['../classDotMP_1_1Region.html#ab08c5c947707dddddc49960aa655d469',1,'DotMP::Region']]],
-  ['start_210',['start',['../classDotMP_1_1WorkShare.html#ad620a76ed27bcb81597ada069fcdfdc0',1,'DotMP::WorkShare']]],
-  ['start_5fpv_211',['start_pv',['../classDotMP_1_1WorkShare.html#a72dcd0dfd5be8f9e1f0acb421e7cda4a',1,'DotMP::WorkShare']]],
-  ['startthreadpool_212',['StartThreadpool',['../classDotMP_1_1ForkedRegion.html#aeb2a90e75d37da72c6fed2dbdf4c29c2',1,'DotMP::ForkedRegion']]],
-  ['static_213',['Static',['../namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16',1,'DotMP']]],
-  ['static_5fshould_5fproduce_5fcorrect_5fresults_214',['Static_should_produce_correct_results',['../classDotMPTests_1_1ParallelTests.html#a24f097b6e6ef65d7625367832b672f7a',1,'DotMPTests::ParallelTests']]],
-  ['staticloop_3c_20t_20_3e_215',['StaticLoop&lt; T &gt;',['../classDotMP_1_1Iter.html#a374a2fdf1935736399a94f2fb3348eba',1,'DotMP::Iter']]],
-  ['staticnext_3c_20t_20_3e_216',['StaticNext&lt; T &gt;',['../classDotMP_1_1Iter.html#a34d6ce1daa5dcc4ab0cc3d3b201686ce',1,'DotMP::Iter']]],
-  ['sub_217',['Sub',['../classDotMP_1_1Atomic.html#a0ab142334f3de04de8f1221a3a540ae9',1,'DotMP.Atomic.Sub(ref int target, int value)'],['../classDotMP_1_1Atomic.html#ad3f5a90329bf48d9012a6965f2fbd294',1,'DotMP.Atomic.Sub(ref long target, long value)']]],
-  ['subtract_218',['Subtract',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346a1d9baf077ee87921f57a8fe42d510b65',1,'DotMP']]]
+  ['start_209',['start',['../classDotMP_1_1WorkShare.html#ad620a76ed27bcb81597ada069fcdfdc0',1,'DotMP::WorkShare']]],
+  ['start_5fpv_210',['start_pv',['../classDotMP_1_1WorkShare.html#a72dcd0dfd5be8f9e1f0acb421e7cda4a',1,'DotMP::WorkShare']]],
+  ['startthreadpool_211',['StartThreadpool',['../classDotMP_1_1ForkedRegion.html#aeb2a90e75d37da72c6fed2dbdf4c29c2',1,'DotMP::ForkedRegion']]],
+  ['static_212',['Static',['../namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16',1,'DotMP']]],
+  ['static_5fshould_5fproduce_5fcorrect_5fresults_213',['Static_should_produce_correct_results',['../classDotMPTests_1_1ParallelTests.html#a24f097b6e6ef65d7625367832b672f7a',1,'DotMPTests::ParallelTests']]],
+  ['staticloop_3c_20t_20_3e_214',['StaticLoop&lt; T &gt;',['../classDotMP_1_1Iter.html#a374a2fdf1935736399a94f2fb3348eba',1,'DotMP::Iter']]],
+  ['staticnext_3c_20t_20_3e_215',['StaticNext&lt; T &gt;',['../classDotMP_1_1Iter.html#a34d6ce1daa5dcc4ab0cc3d3b201686ce',1,'DotMP::Iter']]],
+  ['sub_216',['Sub',['../classDotMP_1_1Atomic.html#a0ab142334f3de04de8f1221a3a540ae9',1,'DotMP.Atomic.Sub(ref int target, int value)'],['../classDotMP_1_1Atomic.html#ad3f5a90329bf48d9012a6965f2fbd294',1,'DotMP.Atomic.Sub(ref long target, long value)']]],
+  ['subtract_217',['Subtract',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346a1d9baf077ee87921f57a8fe42d510b65',1,'DotMP']]]
 ];
