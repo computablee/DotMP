@@ -23,8 +23,9 @@ A clear and concise description of what you expected to happen.
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
- - OS: [e.g. Windows]
- - Version [e.g. v1.4.0]
+- OS: [e.g. Windows]
+- DotMP Version: [e.g. v1.4.0]
+- .NET Version: [e.g. .NET 6]
 
 **Additional context**
 Add any other context about the problem here.
