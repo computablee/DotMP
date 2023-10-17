@@ -1,5 +1,6 @@
 using System;
 using System.Linq;
+using System.Runtime.CompilerServices;
 
 namespace DotMP
 {
@@ -336,6 +337,7 @@ namespace DotMP
         /// <param name="start2">The start of the second pair of indices.</param>
         /// <param name="i">The first computed index.</param>
         /// <param name="j">The second computed index.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ComputeIndices2(int curr_iter, int diff2, int start1, int start2, out int i, out int j)
         {
             i = Math.DivRem(curr_iter, diff2, out j);
@@ -355,6 +357,7 @@ namespace DotMP
         /// <param name="i">The first computed index.</param>
         /// <param name="j">The second computed index.</param>
         /// <param name="k">The third computed index.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private void ComputeIndices3(int curr_iter, int diff2, int diff3, int start1, int start2, int start3, out int i, out int j, out int k)
         {
             i = Math.DivRem(curr_iter, diff2 * diff3, out j);
