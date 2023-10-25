@@ -69,7 +69,6 @@ $(function() {
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-methods">Private Member Functions</a> &#124;
 <a href="#pri-static-methods">Static Private Member Functions</a> &#124;
-<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classDotMPTests_1_1ParallelTests-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">DotMPTests.ParallelTests Class Reference</div>  </div>
@@ -81,8 +80,6 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a3343888b7880d8861b0f9dfdf181e1b7"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1ParallelTests.html#a3343888b7880d8861b0f9dfdf181e1b7">ParallelTests</a> (ITestOutputHelper outputwriter)</td></tr>
-<tr class="separator:a3343888b7880d8861b0f9dfdf181e1b7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a1d78fd59106a4256899a324fe9a2e081"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1ParallelTests.html#a1d78fd59106a4256899a324fe9a2e081">Parallel_performance_should_be_higher</a> ()</td></tr>
 <tr class="memdesc:a1d78fd59106a4256899a324fe9a2e081"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tests to make sure that parallel performance is higher than sequential performance.  <a href="classDotMPTests_1_1ParallelTests.html#a1d78fd59106a4256899a324fe9a2e081">More...</a><br /></td></tr>
 <tr class="separator:a1d78fd59106a4256899a324fe9a2e081"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -206,6 +203,12 @@ Public Member Functions</h2></td></tr>
 <tr class="memitem:ad33086bb1dfe3a0b19afdd5fe1e420e8"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1ParallelTests.html#ad33086bb1dfe3a0b19afdd5fe1e420e8">Non_parallel_GetThreadNum_should_except</a> ()</td></tr>
 <tr class="memdesc:ad33086bb1dfe3a0b19afdd5fe1e420e8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifies that GetThreadNum used outside of a parallel region throws an exception.  <a href="classDotMPTests_1_1ParallelTests.html#ad33086bb1dfe3a0b19afdd5fe1e420e8">More...</a><br /></td></tr>
 <tr class="separator:ad33086bb1dfe3a0b19afdd5fe1e420e8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3720f7eb4095346fba5c265298aea19b"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1ParallelTests.html#a3720f7eb4095346fba5c265298aea19b">Absent_params_shouldnt_except</a> ()</td></tr>
+<tr class="memdesc:a3720f7eb4095346fba5c265298aea19b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifies that absent parameters shouldn't throw exceptions.  <a href="classDotMPTests_1_1ParallelTests.html#a3720f7eb4095346fba5c265298aea19b">More...</a><br /></td></tr>
+<tr class="separator:a3720f7eb4095346fba5c265298aea19b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac934fc6370203b9c0f635966e096dcde"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1ParallelTests.html#ac934fc6370203b9c0f635966e096dcde">Invalid_params_should_except</a> ()</td></tr>
+<tr class="memdesc:ac934fc6370203b9c0f635966e096dcde"><td class="mdescLeft">&#160;</td><td class="mdescRight">Verifies that invalid parameters throw exceptions.  <a href="classDotMPTests_1_1ParallelTests.html#ac934fc6370203b9c0f635966e096dcde">More...</a><br /></td></tr>
+<tr class="separator:ac934fc6370203b9c0f635966e096dcde"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-methods"></a>
 Private Member Functions</h2></td></tr>
@@ -230,17 +233,12 @@ Static Private Member Functions</h2></td></tr>
 <tr class="memitem:a7d5d1bc493c8207aa7e9c4b4dcbf3851"><td class="memItemLeft" align="right" valign="top">static uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1ParallelTests.html#a7d5d1bc493c8207aa7e9c4b4dcbf3851">CreateRegion</a> ()</td></tr>
 <tr class="memdesc:a7d5d1bc493c8207aa7e9c4b4dcbf3851"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel region and returns the number of threads spawned.  <a href="classDotMPTests_1_1ParallelTests.html#a7d5d1bc493c8207aa7e9c4b4dcbf3851">More...</a><br /></td></tr>
 <tr class="separator:a7d5d1bc493c8207aa7e9c4b4dcbf3851"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
-Private Attributes</h2></td></tr>
-<tr class="memitem:a76d67cae5242ed708f25fa25d21fb22a"><td class="memItemLeft" align="right" valign="top">readonly ITestOutputHelper&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1ParallelTests.html#a76d67cae5242ed708f25fa25d21fb22a">writer</a></td></tr>
-<tr class="separator:a76d67cae5242ed708f25fa25d21fb22a"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Tests for the <a class="el" href="namespaceDotMP.html">DotMP</a> library. </p>
-</div><h2 class="groupheader">Constructor &amp; Destructor Documentation</h2>
-<a id="a3343888b7880d8861b0f9dfdf181e1b7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3343888b7880d8861b0f9dfdf181e1b7">&#9670;&nbsp;</a></span>ParallelTests()</h2>
+</div><h2 class="groupheader">Member Function Documentation</h2>
+<a id="a3720f7eb4095346fba5c265298aea19b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3720f7eb4095346fba5c265298aea19b">&#9670;&nbsp;</a></span>Absent_params_shouldnt_except()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -249,10 +247,9 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">DotMPTests.ParallelTests.ParallelTests </td>
+          <td class="memname">void DotMPTests.ParallelTests.Absent_params_shouldnt_except </td>
           <td>(</td>
-          <td class="paramtype">ITestOutputHelper&#160;</td>
-          <td class="paramname"><em>outputwriter</em></td><td>)</td>
+          <td class="paramname"></td><td>)</td>
           <td></td>
         </tr>
       </table>
@@ -263,9 +260,10 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
+<p>Verifies that absent parameters shouldn't throw exceptions. </p>
+
 </div>
 </div>
-<h2 class="groupheader">Member Function Documentation</h2>
 <a id="ae307e7dc6060fbcfa078006ed60acef0"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#ae307e7dc6060fbcfa078006ed60acef0">&#9670;&nbsp;</a></span>Atomic_works()</h2>
 
@@ -593,6 +591,33 @@ Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Tests to make sure that <a class="el" href="classDotMP_1_1Parallel.html#af80cd4a76a5f23b19e71ab34d7f6b83a" title="Gets whether or not the calling thread is in a parallel region.">DotMP.Parallel.InParallel()</a> works. </p>
+
+</div>
+</div>
+<a id="ac934fc6370203b9c0f635966e096dcde"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac934fc6370203b9c0f635966e096dcde">&#9670;&nbsp;</a></span>Invalid_params_should_except()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DotMPTests.ParallelTests.Invalid_params_should_except </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Verifies that invalid parameters throw exceptions. </p>
 
 </div>
 </div>
@@ -1672,29 +1697,6 @@ Private Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>Elapsed milliseconds of the test.</dd></dl>
-
-</div>
-</div>
-<h2 class="groupheader">Member Data Documentation</h2>
-<a id="a76d67cae5242ed708f25fa25d21fb22a"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a76d67cae5242ed708f25fa25d21fb22a">&#9670;&nbsp;</a></span>writer</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">readonly ITestOutputHelper DotMPTests.ParallelTests.writer</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">private</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
 
 </div>
 </div>

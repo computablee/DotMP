@@ -227,6 +227,9 @@ Static Private Member Functions</h2></td></tr>
 <tr class="memitem:ade73896389039c1af4cf58069dd62578"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ade73896389039c1af4cf58069dd62578">FixArgs</a> (int start, int end, ref <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> sched, ref uint? chunk_size, uint <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>)</td></tr>
 <tr class="memdesc:ade73896389039c1af4cf58069dd62578"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixes the arguments for a parallel for loop. If a Schedule is set to Static, Dynamic, or Guided, then the function simply calculates chunk size if none is given. If a Schedule is set to Runtime, then the function checks the OMP_SCHEDULE environment variable and sets the appropriate values.  <a href="classDotMP_1_1Parallel.html#ade73896389039c1af4cf58069dd62578">More...</a><br /></td></tr>
 <tr class="separator:ade73896389039c1af4cf58069dd62578"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a974fab14fe0d6f06006e1fabf7d1b04d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a974fab14fe0d6f06006e1fabf7d1b04d">ValidateParams</a> (int start=0, int end=0, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null, uint? chunk_size=null, uint? num_tasks=null, uint? grainsize=null)</td></tr>
+<tr class="memdesc:a974fab14fe0d6f06006e1fabf7d1b04d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates all parameters passed to <a class="el" href="namespaceDotMP.html">DotMP</a> functions.  <a href="classDotMP_1_1Parallel.html#a974fab14fe0d6f06006e1fabf7d1b04d">More...</a><br /></td></tr>
+<tr class="separator:a974fab14fe0d6f06006e1fabf7d1b04d"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:aeed0ff628203f800d11e4847ad2c21ea"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#aeed0ff628203f800d11e4847ad2c21ea">For&lt; T &gt;</a> (int start, int end, <a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; forAction, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a>? op=null)</td></tr>
 <tr class="memdesc:aeed0ff628203f800d11e4847ad2c21ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal handler for For.  <a href="classDotMP_1_1Parallel.html#aeed0ff628203f800d11e4847ad2c21ea">More...</a><br /></td></tr>
 <tr class="separator:aeed0ff628203f800d11e4847ad2c21ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -473,6 +476,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -553,6 +557,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -626,6 +631,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -706,6 +712,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -793,6 +800,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -859,6 +867,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -952,6 +961,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1039,6 +1049,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1133,6 +1144,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1234,6 +1246,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1342,6 +1355,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1429,6 +1443,7 @@ Static Private Attributes</h2></td></tr>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel-only construct is used outside of a parallel region.">NotInParallelRegionException</a></td><td>Thrown when not in a parallel region.</td></tr>
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel....">CannotPerformNestedWorksharingException</a></td><td>Thrown when nested inside another worksharing region.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -1831,6 +1846,12 @@ Static Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -1958,6 +1979,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2037,6 +2059,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2123,6 +2146,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2216,6 +2240,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2288,6 +2313,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2387,6 +2413,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2480,6 +2507,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2580,6 +2608,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2687,6 +2716,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2773,6 +2803,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2824,6 +2855,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2910,6 +2942,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -2961,6 +2994,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -3012,6 +3046,7 @@ Static Private Attributes</h2></td></tr>
 <dl class="exception"><dt>Exceptions</dt><dd>
   <table class="exception">
     <tr><td class="paramname"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel....">CannotPerformNestedParallelismException</a></td><td>Thrown if ParallelRegion is called from within another ParallelRegion.</td></tr>
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
   </table>
   </dd>
 </dl>
@@ -3335,6 +3370,12 @@ Static Private Attributes</h2></td></tr>
   </dd>
 </dl>
 <dl class="section return"><dt>Returns</dt><dd>List of tasks generated by taskloop for use as future dependencies.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>
@@ -3362,6 +3403,85 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Wait for all tasks in the queue to complete. Is injected into a Thread's work by the <a class="el" href="classDotMP_1_1Region.html" title="Contains relevant internal information about parallel regions, including the threads and the function...">Region</a> constructor, but can also be called manually. The injection is done to ensure that <a class="el" href="classDotMP_1_1Parallel.html#ac869fe1e889bc6b1db2963ad1f03e447" title="Wait for all tasks in the queue to complete. Is injected into a Thread&#39;s work by the Region construct...">Parallel.Taskwait()</a> is called before a <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">Parallel.ParallelRegion()</a> terminates, guaranteeing all tasks submitted complete. Acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee" title="Creates a barrier. All threads must reach the barrier before any thread can continue....">Barrier()</a>. </p>
+
+</div>
+</div>
+<a id="a974fab14fe0d6f06006e1fabf7d1b04d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a974fab14fe0d6f06006e1fabf7d1b04d">&#9670;&nbsp;</a></span>ValidateParams()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void DotMP.Parallel.ValidateParams </td>
+          <td>(</td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>start</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>end</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint?&#160;</td>
+          <td class="paramname"><em>num_threads</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint?&#160;</td>
+          <td class="paramname"><em>chunk_size</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint?&#160;</td>
+          <td class="paramname"><em>num_tasks</em> = <code>null</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint?&#160;</td>
+          <td class="paramname"><em>grainsize</em> = <code>null</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Validates all parameters passed to <a class="el" href="namespaceDotMP.html">DotMP</a> functions. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">start</td><td>Start of loop.</td></tr>
+    <tr><td class="paramname">end</td><td>End of loop.</td></tr>
+    <tr><td class="paramname">num_threads</td><td>Number of threads.</td></tr>
+    <tr><td class="paramname">chunk_size</td><td>Chunk size.</td></tr>
+    <tr><td class="paramname">num_tasks</td><td>Number of tasks.</td></tr>
+    <tr><td class="paramname">grainsize</td><td>Grainsize.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions.">InvalidArgumentsException</a></td><td>Thrown if any provided arguments are invalid.</td></tr>
+  </table>
+  </dd>
+</dl>
 
 </div>
 </div>

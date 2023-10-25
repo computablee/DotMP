@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['workload_424',['Workload',['../classDotMPTests_1_1ParallelTests.html#a4c04a723fc9a9374f7f848418858bc47',1,'DotMPTests::ParallelTests']]],
-  ['workshare_425',['WorkShare',['../classDotMP_1_1WorkShare.html#a01bd67da69f30485de30493fc7e307b0',1,'DotMP.WorkShare.WorkShare(uint num_threads, Thread[] threads, int start, int end, uint chunk_size, Operations? op, Schedule schedule)'],['../classDotMP_1_1WorkShare.html#a0bda53276ee9ae9b08d845a274f8888b',1,'DotMP.WorkShare.WorkShare()']]]
+  ['validateparams_429',['ValidateParams',['../classDotMP_1_1Parallel.html#a974fab14fe0d6f06006e1fabf7d1b04d',1,'DotMP::Parallel']]]
 ];
