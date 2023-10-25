@@ -1399,6 +1399,14 @@ namespace DotMPTests
                 });
             });
 
+            DotMP.Parallel.ParallelRegion(() =>
+            {
+                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+                {
+                    DotMP.Parallel.For(0, 10, chunk_size: 0, action: i => { });
+                });
+            });
+
             Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelRegion(num_threads: 0, action: () => { });
