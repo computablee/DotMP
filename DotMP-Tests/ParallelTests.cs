@@ -16,13 +16,6 @@ namespace DotMPTests
     /// </summary>
     public class ParallelTests
     {
-        private readonly ITestOutputHelper writer;
-        public ParallelTests(ITestOutputHelper outputwriter)
-        {
-            writer = outputwriter;
-        }
-
-
         /// <summary>
         /// Tests to make sure that parallel performance is higher than sequential performance.
         /// </summary>
@@ -1352,6 +1345,95 @@ namespace DotMPTests
             Assert.Throws<DotMP.NotInParallelRegionException>(() =>
             {
                 int tid = DotMP.Parallel.GetThreadNum();
+            });
+        }
+
+        /// <summary>
+        /// Verifies that absent parameters shouldn't throw exceptions.
+        /// </summary>
+        [Fact]
+        public void Absent_params_shouldnt_except()
+        {
+            var exception = Record.Exception(() =>
+            {
+                DotMP.Parallel.ParallelFor(0, 10, i => { });
+            });
+
+            Assert.Null(exception);
+
+            exception = Record.Exception(() =>
+            {
+                DotMP.Parallel.ParallelMasterTaskloop(0, 10, i => { });
+            });
+
+            Assert.Null(exception);
+        }
+
+        /// <summary>
+        /// Verifies that invalid parameters throw exceptions.
+        /// </summary>
+        [Fact]
+        public void Invalid_params_should_except()
+        {
+            DotMP.Parallel.ParallelRegion(() =>
+            {
+                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+                {
+                    DotMP.Parallel.For(10, 0, i => { });
+                });
+            });
+
+            DotMP.Parallel.ParallelRegion(() =>
+            {
+                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+                {
+                    DotMP.Parallel.For(-1, 10, i => { });
+                });
+            });
+
+            DotMP.Parallel.ParallelRegion(() =>
+            {
+                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+                {
+                    DotMP.Parallel.For(10, -5, i => { });
+                });
+            });
+
+            DotMP.Parallel.ParallelRegion(() =>
+            {
+                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+                {
+                    DotMP.Parallel.For(0, 10, chunk_size: 0, action: i => { });
+                });
+            });
+
+            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelRegion(num_threads: 0, action: () => { });
+            });
+
+            DotMP.Parallel.ParallelMaster(() =>
+            {
+                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+                {
+                    DotMP.Parallel.Taskloop(10, 0, i => { });
+                });
+            });
+
+            DotMP.Parallel.ParallelMaster(() =>
+            {
+                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+                {
+                    DotMP.Parallel.Taskloop(0, 10, grainsize: 0, action: i => { });
+                });
+            });
+
+            DotMP.Parallel.ParallelMaster(() =>
+            {
+                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+                {
+                    DotMP.Parallel.Taskloop(0, 10, num_tasks: 0, action: i => { });
+                });
             });
         }
 

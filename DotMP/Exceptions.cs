@@ -37,4 +37,16 @@ namespace DotMP
         /// <param name="msg">The message to associate with the exception.</param>
         public CannotPerformNestedWorksharingException(string msg) : base(msg) { }
     }
+
+    /// <summary>
+    /// Exception thrown if invalid arguments are specified to DotMP functions.
+    /// </summary>
+    public class InvalidArgumentsException : Exception
+    {
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        public InvalidArgumentsException(string msg) : base(msg) { }
+    }
 }
