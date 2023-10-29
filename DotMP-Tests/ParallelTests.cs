@@ -1603,58 +1603,58 @@ namespace DotMPTests
             return z;
         }
     }
-}
-
-/// <summary>
-/// Custom scheduler which runs a for loop in serial.
-/// </summary>
-class Serial : IScheduler
-{
-    /// <summary>
-    /// Start of the loop, inclusive.
-    /// </summary>
-    private int start;
-    /// <summary>
-    /// End of the loop, exclusive.
-    /// </summary>
-    private int end;
-    /// <summary>
-    /// Determines if the loop has already been executed.
-    /// </summary>
-    private bool executed;
 
     /// <summary>
-    /// Initializes the loop.
+    /// Custom scheduler which runs a for loop in serial.
     /// </summary>
-    /// <param name="start">The start of the loop, inclusive.</param>
-    /// <param name="end">The end of the loop, exclusive.</param>
-    /// <param name="num_threads">Unused.</param>
-    /// <param name="chunk_size">Unused.</param>
-    public void LoopInit(int start, int end, uint num_threads, uint chunk_size)
+    class Serial : IScheduler
     {
-        this.start = start;
-        this.end = end;
-        this.executed = false;
-    }
+        /// <summary>
+        /// Start of the loop, inclusive.
+        /// </summary>
+        private int start;
+        /// <summary>
+        /// End of the loop, exclusive.
+        /// </summary>
+        private int end;
+        /// <summary>
+        /// Determines if the loop has already been executed.
+        /// </summary>
+        private bool executed;
 
-    /// <summary>
-    /// Runs the whole loop if the thread ID is 0.
-    /// </summary>
-    /// <param name="thread_id">The thread ID.</param>
-    /// <param name="start">The start of the loop if thread_id==0, else 0.</param>
-    /// <param name="end">The end of the loop if thread_id==0, else 0.</param>
-    public void LoopNext(int thread_id, out int start, out int end)
-    {
-        if (thread_id == 0 && !executed)
+        /// <summary>
+        /// Initializes the loop.
+        /// </summary>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="num_threads">Unused.</param>
+        /// <param name="chunk_size">Unused.</param>
+        public void LoopInit(int start, int end, uint num_threads, uint chunk_size)
         {
-            start = this.start;
-            end = this.end;
-            executed = true;
+            this.start = start;
+            this.end = end;
+            this.executed = false;
         }
-        else
+
+        /// <summary>
+        /// Runs the whole loop if the thread ID is 0.
+        /// </summary>
+        /// <param name="thread_id">The thread ID.</param>
+        /// <param name="start">The start of the loop if thread_id==0, else 0.</param>
+        /// <param name="end">The end of the loop if thread_id==0, else 0.</param>
+        public void LoopNext(int thread_id, out int start, out int end)
         {
-            start = 0;
-            end = 0;
+            if (thread_id == 0 && !executed)
+            {
+                start = this.start;
+                end = this.end;
+                executed = true;
+            }
+            else
+            {
+                start = 0;
+                end = 0;
+            }
         }
     }
 }
