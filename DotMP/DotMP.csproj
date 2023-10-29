@@ -4,7 +4,7 @@
     <TargetFrameworks>net6.0;net7.0</TargetFrameworks>
     <RootNamespace>DotMP</RootNamespace>
     <PackageId>DotMP</PackageId>
-    <Version>1.5.0</Version>
+    <Version>1.5.1-pre</Version>
     <Authors>Phillip Allen Lane,et al.</Authors>
     <PackageDescription>A library for fork-join parallelism in .NET, with an OpenMP-like API.</PackageDescription>
     <RepositoryUrl>https://github.com/computablee/DotMP</RepositoryUrl>
@@ -12,7 +12,7 @@
     <Copyright>Copyright (c) Phillip Allen Lane 2023</Copyright>
     <PackageReadmeFile>ProcessedREADME.md</PackageReadmeFile>
     <PackageTags>hpc,parallel,openmp,parallelization,high performance computing,threading</PackageTags>
-    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
     <PackageReleaseNotes>Add collapsed worksharing for loops. Improve locking API. Bug fixes, documentation fixes, new logo, more rigorous testing, refactoring.</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <DebugType>pdbonly</DebugType>
