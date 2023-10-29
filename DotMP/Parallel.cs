@@ -42,8 +42,10 @@ namespace DotMP
         /// <param name="sched">The schedule of the loop.</param>
         /// <param name="chunk_size">The chunk size of the loop.</param>
         /// <param name="num_threads">The number of threads to be used in the loop.</param>
-        private static void FixArgs(int start, int end, ref Schedule sched, ref uint? chunk_size, uint num_threads)
+        private static void FixArgs(int start, int end, ref IScheduler sched, ref uint? chunk_size, uint num_threads)
         {
+            sched ??= Schedule.Static;
+
             if (sched == Schedule.Runtime)
             {
                 string schedule = Environment.GetEnvironmentVariable("OMP_SCHEDULE");
@@ -90,20 +92,20 @@ namespace DotMP
 
             if (chunk_size == null)
             {
-                switch (sched)
+                if (sched is StaticScheduler)
                 {
-                    case Schedule.Static:
-                        chunk_size = (uint)((end - start) / num_threads);
-                        if ((end - start) % num_threads > 0)
-                            chunk_size++;
-                        break;
-                    case Schedule.Dynamic:
-                        chunk_size = (uint)((end - start) / num_threads) / 32;
-                        if (chunk_size < 1) chunk_size = 1;
-                        break;
-                    case Schedule.Guided:
-                        chunk_size = 1;
-                        break;
+                    chunk_size = (uint)((end - start) / num_threads);
+                    if ((end - start) % num_threads > 0)
+                        chunk_size++;
+                }
+                else if (sched is DynamicScheduler)
+                {
+                    chunk_size = (uint)((end - start) / num_threads) / 32;
+                    if (chunk_size < 1) chunk_size = 1;
+                }
+                else if (sched is GuidedScheduler)
+                {
+                    chunk_size = 1;
                 }
             }
         }
@@ -113,12 +115,13 @@ namespace DotMP
         /// </summary>
         /// <param name="start">Start of loop.</param>
         /// <param name="end">End of loop.</param>
+        /// <param name="schedule">Scheduler used.</param>
         /// <param name="num_threads">Number of threads.</param>
         /// <param name="chunk_size">Chunk size.</param>
         /// <param name="num_tasks">Number of tasks.</param>
         /// <param name="grainsize">Grainsize.</param>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        private static void ValidateParams(int start = 0, int end = 0, uint? num_threads = null, uint? chunk_size = null, uint? num_tasks = null, uint? grainsize = null)
+        private static void ValidateParams(int start = 0, int end = 0, IScheduler schedule = null, uint? num_threads = null, uint? chunk_size = null, uint? num_tasks = null, uint? grainsize = null)
         {
             if (end < start)
                 throw new InvalidArgumentsException(string.Format("Start of loop ({0}) must be less than end of loop ({1}).", start, end));
@@ -134,6 +137,9 @@ namespace DotMP
 
             if ((num_tasks is not null && num_tasks < 1) || (grainsize is not null && grainsize < 1))
                 throw new InvalidArgumentsException(string.Format("Number of tasks ({0}) and grain size ({1}) must both be positive integers.", num_tasks, grainsize));
+
+            if (schedule is not null && schedule is not StaticScheduler && schedule is not DynamicScheduler && schedule is not GuidedScheduler && schedule is not RuntimeScheduler && chunk_size is null)
+                throw new InvalidArgumentsException(string.Format("Chunk size must be specified with user-defined schedulers, as it cannot be inferred."));
         }
 
         /// <summary>
@@ -151,7 +157,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void For(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void For(int start, int end, Action<int> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action);
 
@@ -174,7 +180,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, Action<int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, Action<int, int> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange });
 
@@ -201,7 +207,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Action<int, int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Action<int, int, int> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange, thirdRange });
 
@@ -230,7 +236,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Action<int, int, int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Action<int, int, int, int> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange, thirdRange, fourthRange });
 
@@ -257,7 +263,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ForCollapse((int, int)[] ranges, Action<int[]> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForCollapse((int, int)[] ranges, Action<int[]> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action, ranges);
 
@@ -281,11 +287,11 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        private static void For<T>(int start, int end, ForAction<T> forAction, Schedule schedule = Schedule.Static, uint? chunk_size = null, Operations? op = null)
+        private static void For<T>(int start, int end, ForAction<T> forAction, IScheduler schedule = null, uint? chunk_size = null, Operations? op = null)
         {
             var freg = new ForkedRegion();
 
-            ValidateParams(start, end, chunk_size: chunk_size);
+            ValidateParams(start, end, schedule: schedule, chunk_size: chunk_size);
 
             if (!freg.in_parallel)
             {
@@ -306,16 +312,7 @@ namespace DotMP
             ws.in_for = true;
             Interlocked.Increment(ref freg.in_workshare);
 
-            switch (schedule)
-            {
-                case Schedule.Static:
-                    Iter.StaticLoop(ws, GetThreadNum(), forAction);
-                    break;
-                case Schedule.Dynamic:
-                case Schedule.Guided:
-                    Iter.LoadBalancingLoop(ws, forAction, schedule);
-                    break;
-            }
+            Iter.PerformLoop(ws, schedule, forAction);
 
             ws.in_for = false;
             Interlocked.Decrement(ref freg.in_workshare);
@@ -345,7 +342,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<T> forAction = new ForAction<T>(action);
 
@@ -373,7 +370,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, Operations op, ref T reduce_to, ActionRef2<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, Operations op, ref T reduce_to, ActionRef2<T> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<T> forAction = new ForAction<T>(action, new (int, int)[] { firstRange, secondRange });
 
@@ -405,7 +402,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Operations op, ref T reduce_to, ActionRef3<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Operations op, ref T reduce_to, ActionRef3<T> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<T> forAction = new ForAction<T>(action, new (int, int)[] { firstRange, secondRange, thirdRange });
 
@@ -439,7 +436,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Operations op, ref T reduce_to, ActionRef4<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Operations op, ref T reduce_to, ActionRef4<T> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<T> forAction = new ForAction<T>(action, new (int, int)[] { firstRange, secondRange, thirdRange, fourthRange });
 
@@ -471,7 +468,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ForReductionCollapse<T>((int, int)[] ranges, Operations op, ref T reduce_to, ActionRefN<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        public static void ForReductionCollapse<T>((int, int)[] ranges, Operations op, ref T reduce_to, ActionRefN<T> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<T> forAction = new ForAction<T>(action, ranges);
 
@@ -496,7 +493,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        private static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ForAction<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null)
+        private static void ForReduction<T>(int start, int end, Operations op, ref T reduce_to, ForAction<T> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             For(start, end, action, schedule, chunk_size, op);
 
@@ -587,7 +584,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ParallelFor(int start, int end, Action<int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void ParallelFor(int start, int end, Action<int> action, IScheduler schedule = null, uint? chunk_size = null, uint? num_threads = null)
         {
             ParallelRegion(num_threads: num_threads, action: () =>
             {
@@ -610,7 +607,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ParallelForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void ParallelForReduction<T>(int start, int end, Operations op, ref T reduce_to, ActionRef<T> action, IScheduler schedule = null, uint? chunk_size = null, uint? num_threads = null)
         {
             T local = reduce_to;
 
@@ -634,7 +631,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ParallelForCollapse((int, int) firstRange, (int, int) secondRange, Action<int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void ParallelForCollapse((int, int) firstRange, (int, int) secondRange, Action<int, int> action, IScheduler schedule = null, uint? chunk_size = null, uint? num_threads = null)
         {
             ParallelRegion(num_threads: num_threads, action: () =>
             {
@@ -655,7 +652,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ParallelForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Action<int, int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void ParallelForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Action<int, int, int> action, IScheduler schedule = null, uint? chunk_size = null, uint? num_threads = null)
         {
             ParallelRegion(num_threads: num_threads, action: () =>
             {
@@ -677,7 +674,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ParallelForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Action<int, int, int, int> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void ParallelForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Action<int, int, int, int> action, IScheduler schedule = null, uint? chunk_size = null, uint? num_threads = null)
         {
             ParallelRegion(num_threads: num_threads, action: () =>
             {
@@ -696,7 +693,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ParallelForCollapse((int, int)[] ranges, Action<int[]> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void ParallelForCollapse((int, int)[] ranges, Action<int[]> action, IScheduler schedule = null, uint? chunk_size = null, uint? num_threads = null)
         {
             ParallelRegion(num_threads: num_threads, action: () =>
             {
@@ -718,7 +715,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ParallelForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, Operations op, ref T reduce_to, ActionRef2<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void ParallelForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, Operations op, ref T reduce_to, ActionRef2<T> action, IScheduler schedule = null, uint? chunk_size = null, uint? num_threads = null)
         {
             T local = reduce_to;
 
@@ -745,7 +742,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ParallelForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Operations op, ref T reduce_to, ActionRef3<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void ParallelForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Operations op, ref T reduce_to, ActionRef3<T> action, IScheduler schedule = null, uint? chunk_size = null, uint? num_threads = null)
         {
             T local = reduce_to;
 
@@ -773,7 +770,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ParallelForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Operations op, ref T reduce_to, ActionRef4<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void ParallelForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Operations op, ref T reduce_to, ActionRef4<T> action, IScheduler schedule = null, uint? chunk_size = null, uint? num_threads = null)
         {
             T local = reduce_to;
 
@@ -798,7 +795,7 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop, defaulting to null. If null, will be calculated on-the-fly.</param>
         /// <exception cref="CannotPerformNestedParallelismException">Thrown if ParallelRegion is called from within another ParallelRegion.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
-        public static void ParallelForReductionCollapse<T>((int, int)[] ranges, Operations op, ref T reduce_to, ActionRefN<T> action, Schedule schedule = Schedule.Static, uint? chunk_size = null, uint? num_threads = null)
+        public static void ParallelForReductionCollapse<T>((int, int)[] ranges, Operations op, ref T reduce_to, ActionRefN<T> action, IScheduler schedule = null, uint? chunk_size = null, uint? num_threads = null)
         {
             T local = reduce_to;
 
@@ -1288,7 +1285,7 @@ namespace DotMP
         /// Returns the current schedule being used in a For() or ForReduction&lt;T&gt;() loop.
         /// </summary>
         /// <returns>The schedule being used in the For() or ForReduction&lt;T&gt;() loop, or null if a For() or ForReduction&lt;T&gt;() has not been encountered yet.</returns>
-        public static Schedule? GetSchedule()
+        public static IScheduler GetSchedule()
         {
             return new WorkShare().schedule;
         }
