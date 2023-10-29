@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>DotMP: Serial Class Reference</title>
+<title>DotMP: DotMPTests.Serial Class Reference</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -59,64 +59,68 @@ $(function() {
 </iframe>
 </div>
 
+<div id="nav-path" class="navpath">
+  <ul>
+<li class="navelem"><a class="el" href="namespaceDotMPTests.html">DotMPTests</a></li><li class="navelem"><a class="el" href="classDotMPTests_1_1Serial.html">Serial</a></li>  </ul>
+</div>
 </div><!-- top -->
 <div class="header">
   <div class="summary">
 <a href="#pub-methods">Public Member Functions</a> &#124;
 <a href="#pri-attribs">Private Attributes</a> &#124;
-<a href="classSerial-members.html">List of all members</a>  </div>
+<a href="classDotMPTests_1_1Serial-members.html">List of all members</a>  </div>
   <div class="headertitle">
-<div class="title">Serial Class Reference</div>  </div>
+<div class="title">DotMPTests.Serial Class Reference</div>  </div>
 </div><!--header-->
 <div class="contents">
 
 <p>Custom scheduler which runs a for loop in serial.  
- <a href="classSerial.html#details">More...</a></p>
+ <a href="classDotMPTests_1_1Serial.html#details">More...</a></p>
 <div class="dynheader">
-Inheritance diagram for Serial:</div>
+Inheritance diagram for DotMPTests.Serial:</div>
 <div class="dyncontent">
-<div class="center"><img src="classSerial__inherit__graph.png" border="0" usemap="#aSerial_inherit__map" alt="Inheritance graph"/></div>
-<map name="aSerial_inherit__map" id="aSerial_inherit__map">
-<area shape="rect" title="Custom scheduler which runs a for loop in serial." alt="" coords="21,80,80,107"/>
-<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,5,96,32"/>
+<div class="center"><img src="classDotMPTests_1_1Serial__inherit__graph.png" border="0" usemap="#aDotMPTests_8Serial_inherit__map" alt="Inheritance graph"/></div>
+<map name="aDotMPTests_8Serial_inherit__map" id="aDotMPTests_8Serial_inherit__map">
+<area shape="rect" title="Custom scheduler which runs a for loop in serial." alt="" coords="5,80,144,107"/>
+<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="29,5,120,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
-Collaboration diagram for Serial:</div>
+Collaboration diagram for DotMPTests.Serial:</div>
 <div class="dyncontent">
-<div class="center"><img src="classSerial__coll__graph.png" border="0" usemap="#aSerial_coll__map" alt="Collaboration graph"/></div>
-<map name="aSerial_coll__map" id="aSerial_coll__map">
-<area shape="rect" title="Custom scheduler which runs a for loop in serial." alt="" coords="21,80,80,107"/>
-<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,5,96,32"/>
+<div class="center"><img src="classDotMPTests_1_1Serial__coll__graph.png" border="0" usemap="#aDotMPTests_8Serial_coll__map" alt="Collaboration graph"/></div>
+<map name="aDotMPTests_8Serial_coll__map" id="aDotMPTests_8Serial_coll__map">
+<area shape="rect" title="Custom scheduler which runs a for loop in serial." alt="" coords="5,80,144,107"/>
+<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="29,5,120,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a5c50965fe5e8124003f596958b1a1035"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial.html#a5c50965fe5e8124003f596958b1a1035">LoopInit</a> (int <a class="el" href="classSerial.html#a89caf9e9430054d49ab509427dcb47c2">start</a>, int <a class="el" href="classSerial.html#a91e85808a4474443e1ace7712a962a83">end</a>, uint num_threads, uint chunk_size)</td></tr>
-<tr class="memdesc:a5c50965fe5e8124003f596958b1a1035"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the loop.  <a href="classSerial.html#a5c50965fe5e8124003f596958b1a1035">More...</a><br /></td></tr>
-<tr class="separator:a5c50965fe5e8124003f596958b1a1035"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5f7cd903ee494cebeb4c3978897a44f7"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial.html#a5f7cd903ee494cebeb4c3978897a44f7">LoopNext</a> (int thread_id, out int <a class="el" href="classSerial.html#a89caf9e9430054d49ab509427dcb47c2">start</a>, out int <a class="el" href="classSerial.html#a91e85808a4474443e1ace7712a962a83">end</a>)</td></tr>
-<tr class="memdesc:a5f7cd903ee494cebeb4c3978897a44f7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the whole loop if the thread ID is 0.  <a href="classSerial.html#a5f7cd903ee494cebeb4c3978897a44f7">More...</a><br /></td></tr>
-<tr class="separator:a5f7cd903ee494cebeb4c3978897a44f7"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a485a2848dad776cc744b738a67fcb31a"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1Serial.html#a485a2848dad776cc744b738a67fcb31a">LoopInit</a> (int <a class="el" href="classDotMPTests_1_1Serial.html#ad0a3ea7035fcdae6bbe7ae99a3dd08a8">start</a>, int <a class="el" href="classDotMPTests_1_1Serial.html#a34f327bc394595b729ae8a5ca0ed851a">end</a>, uint num_threads, uint chunk_size)</td></tr>
+<tr class="memdesc:a485a2848dad776cc744b738a67fcb31a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Initializes the loop.  <a href="classDotMPTests_1_1Serial.html#a485a2848dad776cc744b738a67fcb31a">More...</a><br /></td></tr>
+<tr class="separator:a485a2848dad776cc744b738a67fcb31a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a45746f9d4a085aa6032b97f4f0998b62"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1Serial.html#a45746f9d4a085aa6032b97f4f0998b62">LoopNext</a> (int thread_id, out int <a class="el" href="classDotMPTests_1_1Serial.html#ad0a3ea7035fcdae6bbe7ae99a3dd08a8">start</a>, out int <a class="el" href="classDotMPTests_1_1Serial.html#a34f327bc394595b729ae8a5ca0ed851a">end</a>)</td></tr>
+<tr class="memdesc:a45746f9d4a085aa6032b97f4f0998b62"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runs the whole loop if the thread ID is 0.  <a href="classDotMPTests_1_1Serial.html#a45746f9d4a085aa6032b97f4f0998b62">More...</a><br /></td></tr>
+<tr class="separator:a45746f9d4a085aa6032b97f4f0998b62"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
-<tr class="memitem:a89caf9e9430054d49ab509427dcb47c2"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial.html#a89caf9e9430054d49ab509427dcb47c2">start</a></td></tr>
-<tr class="memdesc:a89caf9e9430054d49ab509427dcb47c2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start of the loop, inclusive.  <a href="classSerial.html#a89caf9e9430054d49ab509427dcb47c2">More...</a><br /></td></tr>
-<tr class="separator:a89caf9e9430054d49ab509427dcb47c2"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a91e85808a4474443e1ace7712a962a83"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial.html#a91e85808a4474443e1ace7712a962a83">end</a></td></tr>
-<tr class="memdesc:a91e85808a4474443e1ace7712a962a83"><td class="mdescLeft">&#160;</td><td class="mdescRight">End of the loop, exclusive.  <a href="classSerial.html#a91e85808a4474443e1ace7712a962a83">More...</a><br /></td></tr>
-<tr class="separator:a91e85808a4474443e1ace7712a962a83"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab1ace0cd334909aa689a3eb16f8157ec"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classSerial.html#ab1ace0cd334909aa689a3eb16f8157ec">executed</a></td></tr>
-<tr class="memdesc:ab1ace0cd334909aa689a3eb16f8157ec"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if the loop has already been executed.  <a href="classSerial.html#ab1ace0cd334909aa689a3eb16f8157ec">More...</a><br /></td></tr>
-<tr class="separator:ab1ace0cd334909aa689a3eb16f8157ec"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad0a3ea7035fcdae6bbe7ae99a3dd08a8"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1Serial.html#ad0a3ea7035fcdae6bbe7ae99a3dd08a8">start</a></td></tr>
+<tr class="memdesc:ad0a3ea7035fcdae6bbe7ae99a3dd08a8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start of the loop, inclusive.  <a href="classDotMPTests_1_1Serial.html#ad0a3ea7035fcdae6bbe7ae99a3dd08a8">More...</a><br /></td></tr>
+<tr class="separator:ad0a3ea7035fcdae6bbe7ae99a3dd08a8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a34f327bc394595b729ae8a5ca0ed851a"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1Serial.html#a34f327bc394595b729ae8a5ca0ed851a">end</a></td></tr>
+<tr class="memdesc:a34f327bc394595b729ae8a5ca0ed851a"><td class="mdescLeft">&#160;</td><td class="mdescRight">End of the loop, exclusive.  <a href="classDotMPTests_1_1Serial.html#a34f327bc394595b729ae8a5ca0ed851a">More...</a><br /></td></tr>
+<tr class="separator:a34f327bc394595b729ae8a5ca0ed851a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad7d41faa8aef4dac9fc06379fd121234"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMPTests_1_1Serial.html#ad7d41faa8aef4dac9fc06379fd121234">executed</a></td></tr>
+<tr class="memdesc:ad7d41faa8aef4dac9fc06379fd121234"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if the loop has already been executed.  <a href="classDotMPTests_1_1Serial.html#ad7d41faa8aef4dac9fc06379fd121234">More...</a><br /></td></tr>
+<tr class="separator:ad7d41faa8aef4dac9fc06379fd121234"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Custom scheduler which runs a for loop in serial. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
-<a id="a5c50965fe5e8124003f596958b1a1035"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5c50965fe5e8124003f596958b1a1035">&#9670;&nbsp;</a></span>LoopInit()</h2>
+<a id="a485a2848dad776cc744b738a67fcb31a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a485a2848dad776cc744b738a67fcb31a">&#9670;&nbsp;</a></span>LoopInit()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -125,7 +129,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Serial.LoopInit </td>
+          <td class="memname">void DotMPTests.Serial.LoopInit </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>start</em>, </td>
@@ -176,8 +180,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5f7cd903ee494cebeb4c3978897a44f7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5f7cd903ee494cebeb4c3978897a44f7">&#9670;&nbsp;</a></span>LoopNext()</h2>
+<a id="a45746f9d4a085aa6032b97f4f0998b62"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a45746f9d4a085aa6032b97f4f0998b62">&#9670;&nbsp;</a></span>LoopNext()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -186,7 +190,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">void Serial.LoopNext </td>
+          <td class="memname">void DotMPTests.Serial.LoopNext </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>thread_id</em>, </td>
@@ -231,8 +235,8 @@ Private Attributes</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a91e85808a4474443e1ace7712a962a83"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a91e85808a4474443e1ace7712a962a83">&#9670;&nbsp;</a></span>end</h2>
+<a id="a34f327bc394595b729ae8a5ca0ed851a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a34f327bc394595b729ae8a5ca0ed851a">&#9670;&nbsp;</a></span>end</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -241,7 +245,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int Serial.end</td>
+          <td class="memname">int DotMPTests.Serial.end</td>
         </tr>
       </table>
   </td>
@@ -255,8 +259,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab1ace0cd334909aa689a3eb16f8157ec"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab1ace0cd334909aa689a3eb16f8157ec">&#9670;&nbsp;</a></span>executed</h2>
+<a id="ad7d41faa8aef4dac9fc06379fd121234"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad7d41faa8aef4dac9fc06379fd121234">&#9670;&nbsp;</a></span>executed</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -265,7 +269,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">bool Serial.executed</td>
+          <td class="memname">bool DotMPTests.Serial.executed</td>
         </tr>
       </table>
   </td>
@@ -279,8 +283,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a89caf9e9430054d49ab509427dcb47c2"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a89caf9e9430054d49ab509427dcb47c2">&#9670;&nbsp;</a></span>start</h2>
+<a id="ad0a3ea7035fcdae6bbe7ae99a3dd08a8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad0a3ea7035fcdae6bbe7ae99a3dd08a8">&#9670;&nbsp;</a></span>start</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -289,7 +293,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int Serial.start</td>
+          <td class="memname">int DotMPTests.Serial.start</td>
         </tr>
       </table>
   </td>

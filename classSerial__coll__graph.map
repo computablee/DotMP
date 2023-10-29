@@ -1,4 +1,0 @@
-<map id="Serial" name="Serial">
-<area shape="rect" id="node1" title="Custom scheduler which runs a for loop in serial." alt="" coords="21,80,80,107"/>
-<area shape="rect" id="node2" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,5,96,32"/>
-</map>

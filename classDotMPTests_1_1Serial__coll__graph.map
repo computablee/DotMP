@@ -1,0 +1,4 @@
+<map id="DotMPTests.Serial" name="DotMPTests.Serial">
+<area shape="rect" id="node1" title="Custom scheduler which runs a for loop in serial." alt="" coords="5,80,144,107"/>
+<area shape="rect" id="node2" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="29,5,120,32"/>
+</map>
