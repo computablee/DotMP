@@ -70,20 +70,6 @@ namespace DotMP
             }
         }
         /// <summary>
-        /// A generic lock to be used within the parallel for loop.
-        /// </summary>
-        private static object ws_lock_pv = new object();
-        /// <summary>
-        /// Getter for the singleton object WorkShare.ws_lock_pv.
-        /// </summary>
-        internal object ws_lock
-        {
-            get
-            {
-                return ws_lock_pv;
-            }
-        }
-        /// <summary>
         /// The ending iteration of the parallel for loop, exclusive.
         /// </summary>
         internal int end { get; private set; }
@@ -130,11 +116,11 @@ namespace DotMP
         /// <summary>
         /// The schedule to be used in the parallel for loop.
         /// </summary>
-        private static Schedule? schedule_pv;
+        private static IScheduler schedule_pv;
         /// <summary>
         /// Getter and setter for singleton object WorkShare.schedule_pv.
         /// </summary>
-        internal Schedule? schedule
+        internal IScheduler schedule
         {
             get
             {
@@ -179,7 +165,7 @@ namespace DotMP
         /// <param name="chunk_size">The chunk size to use.</param>
         /// <param name="op">The operation for reduction, null if not a reduction.</param>
         /// <param name="schedule">The Parallel.Schedule to use.</param>
-        internal WorkShare(uint num_threads, Thread[] threads, int start, int end, uint chunk_size, Operations? op, Schedule schedule)
+        internal WorkShare(uint num_threads, Thread[] threads, int start, int end, uint chunk_size, Operations? op, IScheduler schedule)
         {
             this.end = end;
             this.num_threads = num_threads;
@@ -201,16 +187,6 @@ namespace DotMP
         /// Default constructor.
         /// </summary>
         internal WorkShare() { }
-
-        /// <summary>
-        /// Advance the start by some value.
-        /// </summary>
-        /// <param name="advance_by">The value to advance start by.</param>
-        /// <returns>The start of the current chunk to execute.</returns>
-        internal int Advance(int advance_by)
-        {
-            return Interlocked.Add(ref start_pv, advance_by) - advance_by;
-        }
 
         /// <summary>
         /// Add a value to reduction_list.
