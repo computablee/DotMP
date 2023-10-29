@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Net.Http.Headers;
 using System.Text.Json.Serialization;
 using System.Threading;
 using DotMP;
@@ -1407,6 +1408,14 @@ namespace DotMPTests
                 });
             });
 
+            DotMP.Parallel.ParallelRegion(() =>
+            {
+                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+                {
+                    DotMP.Parallel.For(0, 10, schedule: new Serial(), action: i => { });
+                });
+            });
+
             Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelRegion(num_threads: 0, action: () => { });
@@ -1434,6 +1443,20 @@ namespace DotMPTests
                 {
                     DotMP.Parallel.Taskloop(0, 10, num_tasks: 0, action: i => { });
                 });
+            });
+        }
+
+        /// <summary>
+        /// Verifies that custom schedulers work.
+        /// </summary>
+        [Fact]
+        public void Custom_scheduler_works()
+        {
+            int ctr = 0;
+
+            DotMP.Parallel.ParallelFor(0, 1024, schedule: new Serial(), chunk_size: 1, action: i =>
+            {
+                ctr++.Should().Be(i);
             });
         }
 
@@ -1578,6 +1601,60 @@ namespace DotMPTests
             });
 
             return z;
+        }
+    }
+}
+
+/// <summary>
+/// Custom scheduler which runs a for loop in serial.
+/// </summary>
+class Serial : IScheduler
+{
+    /// <summary>
+    /// Start of the loop, inclusive.
+    /// </summary>
+    private int start;
+    /// <summary>
+    /// End of the loop, exclusive.
+    /// </summary>
+    private int end;
+    /// <summary>
+    /// Determines if the loop has already been executed.
+    /// </summary>
+    private bool executed;
+
+    /// <summary>
+    /// Initializes the loop.
+    /// </summary>
+    /// <param name="start">The start of the loop, inclusive.</param>
+    /// <param name="end">The end of the loop, exclusive.</param>
+    /// <param name="num_threads">Unused.</param>
+    /// <param name="chunk_size">Unused.</param>
+    public void LoopInit(int start, int end, uint num_threads, uint chunk_size)
+    {
+        this.start = start;
+        this.end = end;
+        this.executed = false;
+    }
+
+    /// <summary>
+    /// Runs the whole loop if the thread ID is 0.
+    /// </summary>
+    /// <param name="thread_id">The thread ID.</param>
+    /// <param name="start">The start of the loop if thread_id==0, else 0.</param>
+    /// <param name="end">The end of the loop if thread_id==0, else 0.</param>
+    public void LoopNext(int thread_id, out int start, out int end)
+    {
+        if (thread_id == 0 && !executed)
+        {
+            start = this.start;
+            end = this.end;
+            executed = true;
+        }
+        else
+        {
+            start = 0;
+            end = 0;
         }
     }
 }
