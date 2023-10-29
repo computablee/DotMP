@@ -67,8 +67,7 @@ $(function() {
 <div class="header">
   <div class="summary">
 <a href="#nested-classes">Classes</a> &#124;
-<a href="#namespaces">Namespaces</a> &#124;
-<a href="#enum-members">Enumerations</a>  </div>
+<a href="#namespaces">Namespaces</a>  </div>
   <div class="headertitle">
 <div class="title">Iter.cs File Reference</div>  </div>
 </div><!--header-->
@@ -76,6 +75,21 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html">DotMP.Schedule</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the various scheduling strategies for parallel for loops. Detailed explanations of each scheduling strategy are provided alongside each getter. If no schedule is specified, the default is <a class="el" href="classDotMP_1_1Schedule.html#a4f10839d1931afddf9fbd522cb1a86ca" title="The static scheduling strategy. Iterations are divided amongst threads in round-robin fashion....">Schedule.Static</a>.  <a href="classDotMP_1_1Schedule.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html">DotMP.StaticScheduler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of static scheduling.  <a href="classDotMP_1_1StaticScheduler.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1DynamicScheduler.html">DotMP.DynamicScheduler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of dynamic scheduling.  <a href="classDotMP_1_1DynamicScheduler.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1GuidedScheduler.html">DotMP.GuidedScheduler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of guided scheduling.  <a href="classDotMP_1_1GuidedScheduler.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1RuntimeScheduler.html">DotMP.RuntimeScheduler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for the runtime scheduler. Is not meant to be called directly. The <a class="el" href="classDotMP_1_1Parallel.html#ac3592a3029e775b2991b33632980c17d" title="Fixes the arguments for a parallel for loop. If a Schedule is set to Static, Dynamic,...">Parallel.FixArgs</a> method should detect its existence and swap it out for another scheduler with implementations.  <a href="classDotMP_1_1RuntimeScheduler.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Iter.html">DotMP.Iter</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains all of the scheduling code for parallel for loops.  <a href="classDotMP_1_1Iter.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -84,16 +98,6 @@ Classes</h2></td></tr>
 Namespaces</h2></td></tr>
 <tr class="memitem:namespaceDotMP"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDotMP.html">DotMP</a></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-</table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="enum-members"></a>
-Enumerations</h2></td></tr>
-<tr class="memitem:a7649aa86afd760c0c7d5d26443cd36d5"><td class="memItemLeft" align="right" valign="top">enum class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">DotMP.Schedule</a> { <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">DotMP.Static</a>
-, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a971fd8cc345d8bd9f92e9f7d88fdf20c">DotMP.Dynamic</a>
-, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a5e6a52241e27d2424cb006aea0869702">DotMP.Guided</a>
-, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5abc366f2d0ba3d681e7a3899917c5d3de">DotMP.Runtime</a>
- }</td></tr>
-<tr class="memdesc:a7649aa86afd760c0c7d5d26443cd36d5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the various scheduling strategies for parallel for loops. Detailed explanations of each scheduling strategy are provided alongside each enumeration value. If no schedule is specified, the default is Schedule.Static.  <a href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">More...</a><br /></td></tr>
-<tr class="separator:a7649aa86afd760c0c7d5d26443cd36d5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 </div><!-- contents -->
 <!-- start footer part -->

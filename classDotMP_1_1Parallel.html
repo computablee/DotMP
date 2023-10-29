@@ -80,69 +80,69 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
 Static Public Member Functions</h2></td></tr>
-<tr class="memitem:a350cbe182378ea27bff6f728e935a0ba"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba">For</a> (int start, int end, Action&lt; int &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null)</td></tr>
-<tr class="memdesc:a350cbe182378ea27bff6f728e935a0ba"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region is executed in parallel, with iterations being distributed among the threads, and potentially out-of-order. A schedule is provided to inform the runtime how to distribute iterations of the loop to threads. Available schedules are specified by the Schedule enum, and have detailed documentation in the <a class="el" href="classDotMP_1_1Iter.html" title="Contains all of the scheduling code for parallel for loops.">Iter</a> class. Acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee" title="Creates a barrier. All threads must reach the barrier before any thread can continue....">Barrier()</a>.  <a href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba">More...</a><br /></td></tr>
-<tr class="separator:a350cbe182378ea27bff6f728e935a0ba"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a6b4dcfa3d0ee6363c873d1b84988f845"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845">ForCollapse</a> ((int, int) firstRange,(int, int) secondRange, Action&lt; int, int &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null)</td></tr>
-<tr class="memdesc:a6b4dcfa3d0ee6363c873d1b84988f845"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845">More...</a><br /></td></tr>
-<tr class="separator:a6b4dcfa3d0ee6363c873d1b84988f845"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a0a912a120c0ff478058dae35a96c37e5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a0a912a120c0ff478058dae35a96c37e5">ForCollapse</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange, Action&lt; int, int, int &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null)</td></tr>
-<tr class="memdesc:a0a912a120c0ff478058dae35a96c37e5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#a0a912a120c0ff478058dae35a96c37e5">More...</a><br /></td></tr>
-<tr class="separator:a0a912a120c0ff478058dae35a96c37e5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a659e95de109b83b7eacd00f8a3860db5"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a659e95de109b83b7eacd00f8a3860db5">ForCollapse</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange,(int, int) fourthRange, Action&lt; int, int, int, int &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null)</td></tr>
-<tr class="memdesc:a659e95de109b83b7eacd00f8a3860db5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#a659e95de109b83b7eacd00f8a3860db5">More...</a><br /></td></tr>
-<tr class="separator:a659e95de109b83b7eacd00f8a3860db5"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac174faa649465457db7f1df5f3940892"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ac174faa649465457db7f1df5f3940892">ForCollapse</a> ((int, int)[] ranges, Action&lt; int[]&gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null)</td></tr>
-<tr class="memdesc:ac174faa649465457db7f1df5f3940892"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#ac174faa649465457db7f1df5f3940892">More...</a><br /></td></tr>
-<tr class="separator:ac174faa649465457db7f1df5f3940892"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a24428698879a9233ae4f3349d3959d15"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a24428698879a9233ae4f3349d3959d15">ForReduction&lt; T &gt;</a> (int start, int end, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef&lt; T &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null)</td></tr>
-<tr class="memdesc:a24428698879a9233ae4f3349d3959d15"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a for loop inside a parallel region with a reduction. This is similar to <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a>, but the reduction allows multiple threads to reduce their work down to a single variable. Using ForReduction&lt;T&gt; allows the runtime to perform this operation much more efficiently than a naive approach using the Locking or <a class="el" href="classDotMP_1_1Atomic.html" title="Provides atomic operations for integral types as a wrapper around the Interlocked class....">Atomic</a> classes. Each thread gets a thread-local version of the reduction variable, and the runtime performs a global reduction at the end of the loop. Since the global reduction only involves as many variables as there are threads, it is much more efficient than a naive approach. Acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee" title="Creates a barrier. All threads must reach the barrier before any thread can continue....">Barrier()</a>.  <a href="classDotMP_1_1Parallel.html#a24428698879a9233ae4f3349d3959d15">More...</a><br /></td></tr>
-<tr class="separator:a24428698879a9233ae4f3349d3959d15"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:acac431af975fdac52ca33b0411bd1b61"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#acac431af975fdac52ca33b0411bd1b61">ForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef2&lt; T &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null)</td></tr>
-<tr class="memdesc:acac431af975fdac52ca33b0411bd1b61"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#acac431af975fdac52ca33b0411bd1b61">More...</a><br /></td></tr>
-<tr class="separator:acac431af975fdac52ca33b0411bd1b61"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a5105e73577f00666140e9fc5b3f1edea"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a5105e73577f00666140e9fc5b3f1edea">ForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef3&lt; T &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null)</td></tr>
-<tr class="memdesc:a5105e73577f00666140e9fc5b3f1edea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#a5105e73577f00666140e9fc5b3f1edea">More...</a><br /></td></tr>
-<tr class="separator:a5105e73577f00666140e9fc5b3f1edea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a7baf6f23a4f9fc56b66579b77184d11b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a7baf6f23a4f9fc56b66579b77184d11b">ForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange,(int, int) fourthRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef4&lt; T &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null)</td></tr>
-<tr class="memdesc:a7baf6f23a4f9fc56b66579b77184d11b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#a7baf6f23a4f9fc56b66579b77184d11b">More...</a><br /></td></tr>
-<tr class="separator:a7baf6f23a4f9fc56b66579b77184d11b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac0ce606ee5f8c0817248e253eecfbac9"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ac0ce606ee5f8c0817248e253eecfbac9">ForReductionCollapse&lt; T &gt;</a> ((int, int)[] ranges, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRefN&lt; T &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null)</td></tr>
-<tr class="memdesc:ac0ce606ee5f8c0817248e253eecfbac9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#ac0ce606ee5f8c0817248e253eecfbac9">More...</a><br /></td></tr>
-<tr class="separator:ac0ce606ee5f8c0817248e253eecfbac9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aa3e8e137910faf38453900c1fe29fde8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8">For</a> (int start, int end, Action&lt; int &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null)</td></tr>
+<tr class="memdesc:aa3e8e137910faf38453900c1fe29fde8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region is executed in parallel, with iterations being distributed among the threads, and potentially out-of-order. A schedule is provided to inform the runtime how to distribute iterations of the loop to threads. Available schedules are specified by the <a class="el" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc...">Schedule</a> enum, and have detailed documentation in the <a class="el" href="classDotMP_1_1Iter.html" title="Contains all of the scheduling code for parallel for loops.">Iter</a> class. Acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee" title="Creates a barrier. All threads must reach the barrier before any thread can continue....">Barrier()</a>.  <a href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8">More...</a><br /></td></tr>
+<tr class="separator:aa3e8e137910faf38453900c1fe29fde8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac62e6e6afa3cfdbc4bfc4f10dfe9b411"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411">ForCollapse</a> ((int, int) firstRange,(int, int) secondRange, Action&lt; int, int &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null)</td></tr>
+<tr class="memdesc:ac62e6e6afa3cfdbc4bfc4f10dfe9b411"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411">More...</a><br /></td></tr>
+<tr class="separator:ac62e6e6afa3cfdbc4bfc4f10dfe9b411"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a7f3153b26279c5ded49d0807582970cf"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a7f3153b26279c5ded49d0807582970cf">ForCollapse</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange, Action&lt; int, int, int &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null)</td></tr>
+<tr class="memdesc:a7f3153b26279c5ded49d0807582970cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#a7f3153b26279c5ded49d0807582970cf">More...</a><br /></td></tr>
+<tr class="separator:a7f3153b26279c5ded49d0807582970cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a42842ae2894ddcf9162a122383cf9894"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a42842ae2894ddcf9162a122383cf9894">ForCollapse</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange,(int, int) fourthRange, Action&lt; int, int, int, int &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null)</td></tr>
+<tr class="memdesc:a42842ae2894ddcf9162a122383cf9894"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#a42842ae2894ddcf9162a122383cf9894">More...</a><br /></td></tr>
+<tr class="separator:a42842ae2894ddcf9162a122383cf9894"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:adff51a3110818c51d7ab442ef6c1acb8"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#adff51a3110818c51d7ab442ef6c1acb8">ForCollapse</a> ((int, int)[] ranges, Action&lt; int[]&gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null)</td></tr>
+<tr class="memdesc:adff51a3110818c51d7ab442ef6c1acb8"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#adff51a3110818c51d7ab442ef6c1acb8">More...</a><br /></td></tr>
+<tr class="separator:adff51a3110818c51d7ab442ef6c1acb8"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad2e67dc31d85cdce99d5133169261a5e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ad2e67dc31d85cdce99d5133169261a5e">ForReduction&lt; T &gt;</a> (int start, int end, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef&lt; T &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null)</td></tr>
+<tr class="memdesc:ad2e67dc31d85cdce99d5133169261a5e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a for loop inside a parallel region with a reduction. This is similar to <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a>, but the reduction allows multiple threads to reduce their work down to a single variable. Using ForReduction&lt;T&gt; allows the runtime to perform this operation much more efficiently than a naive approach using the Locking or <a class="el" href="classDotMP_1_1Atomic.html" title="Provides atomic operations for integral types as a wrapper around the Interlocked class....">Atomic</a> classes. Each thread gets a thread-local version of the reduction variable, and the runtime performs a global reduction at the end of the loop. Since the global reduction only involves as many variables as there are threads, it is much more efficient than a naive approach. Acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee" title="Creates a barrier. All threads must reach the barrier before any thread can continue....">Barrier()</a>.  <a href="classDotMP_1_1Parallel.html#ad2e67dc31d85cdce99d5133169261a5e">More...</a><br /></td></tr>
+<tr class="separator:ad2e67dc31d85cdce99d5133169261a5e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a296811c8b52d4412ad0b5bcec561cfa1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a296811c8b52d4412ad0b5bcec561cfa1">ForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef2&lt; T &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null)</td></tr>
+<tr class="memdesc:a296811c8b52d4412ad0b5bcec561cfa1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#a296811c8b52d4412ad0b5bcec561cfa1">More...</a><br /></td></tr>
+<tr class="separator:a296811c8b52d4412ad0b5bcec561cfa1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2505b06b590848829b927ad09c01bd8c"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a2505b06b590848829b927ad09c01bd8c">ForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef3&lt; T &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null)</td></tr>
+<tr class="memdesc:a2505b06b590848829b927ad09c01bd8c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#a2505b06b590848829b927ad09c01bd8c">More...</a><br /></td></tr>
+<tr class="separator:a2505b06b590848829b927ad09c01bd8c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5650d8168c11b743cc1795b3ed526649"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a5650d8168c11b743cc1795b3ed526649">ForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange,(int, int) fourthRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef4&lt; T &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null)</td></tr>
+<tr class="memdesc:a5650d8168c11b743cc1795b3ed526649"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#a5650d8168c11b743cc1795b3ed526649">More...</a><br /></td></tr>
+<tr class="separator:a5650d8168c11b743cc1795b3ed526649"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc025cf89299bf23ce0dbb9417817204"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#abc025cf89299bf23ce0dbb9417817204">ForReductionCollapse&lt; T &gt;</a> ((int, int)[] ranges, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRefN&lt; T &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null)</td></tr>
+<tr class="memdesc:abc025cf89299bf23ce0dbb9417817204"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops.  <a href="classDotMP_1_1Parallel.html#abc025cf89299bf23ce0dbb9417817204">More...</a><br /></td></tr>
+<tr class="separator:abc025cf89299bf23ce0dbb9417817204"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a46b434b01754e4a98bed3b2372241f11"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11">ParallelRegion</a> (Action action, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
 <tr class="memdesc:a46b434b01754e4a98bed3b2372241f11"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel region. The body of a parallel region is executed by as many threads as specified by the num_threads parameter. If the num_threads parameter is absent, then the runtime checks if SetNumThreads has been called. If so, it will use that many threads. If not, the runtime will try to use as many threads as there are logical processors.  <a href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11">More...</a><br /></td></tr>
 <tr class="separator:a46b434b01754e4a98bed3b2372241f11"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aed54bae2fe0c20dde6b625d2fc54e76b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#aed54bae2fe0c20dde6b625d2fc54e76b">ParallelFor</a> (int start, int end, Action&lt; int &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
-<tr class="memdesc:aed54bae2fe0c20dde6b625d2fc54e76b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a>. This is simply a convenience method for creating a parallel region and a for loop inside of it.  <a href="classDotMP_1_1Parallel.html#aed54bae2fe0c20dde6b625d2fc54e76b">More...</a><br /></td></tr>
-<tr class="separator:aed54bae2fe0c20dde6b625d2fc54e76b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae4eead0923d172719282dc963ff0ebf6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ae4eead0923d172719282dc963ff0ebf6">ParallelForReduction&lt; T &gt;</a> (int start, int end, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef&lt; T &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
-<tr class="memdesc:ae4eead0923d172719282dc963ff0ebf6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel for loop with a reduction. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and ForReduction&lt;T&gt;(). This is simply a convenience method for creating a parallel region and a for loop with a reduction inside of it.  <a href="classDotMP_1_1Parallel.html#ae4eead0923d172719282dc963ff0ebf6">More...</a><br /></td></tr>
-<tr class="separator:ae4eead0923d172719282dc963ff0ebf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:adfa05ff90de7aca0d538b6618bce967e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#adfa05ff90de7aca0d538b6618bce967e">ParallelForCollapse</a> ((int, int) firstRange,(int, int) secondRange, Action&lt; int, int &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
-<tr class="memdesc:adfa05ff90de7aca0d538b6618bce967e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop.  <a href="classDotMP_1_1Parallel.html#adfa05ff90de7aca0d538b6618bce967e">More...</a><br /></td></tr>
-<tr class="separator:adfa05ff90de7aca0d538b6618bce967e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac6c7e75a6c99f0fc59e69ca690e27ead"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ac6c7e75a6c99f0fc59e69ca690e27ead">ParallelForCollapse</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange, Action&lt; int, int, int &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
-<tr class="memdesc:ac6c7e75a6c99f0fc59e69ca690e27ead"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop.  <a href="classDotMP_1_1Parallel.html#ac6c7e75a6c99f0fc59e69ca690e27ead">More...</a><br /></td></tr>
-<tr class="separator:ac6c7e75a6c99f0fc59e69ca690e27ead"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a75d5a9ae1613421dd0df4594cbd65900"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a75d5a9ae1613421dd0df4594cbd65900">ParallelForCollapse</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange,(int, int) fourthRange, Action&lt; int, int, int, int &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
-<tr class="memdesc:a75d5a9ae1613421dd0df4594cbd65900"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop.  <a href="classDotMP_1_1Parallel.html#a75d5a9ae1613421dd0df4594cbd65900">More...</a><br /></td></tr>
-<tr class="separator:a75d5a9ae1613421dd0df4594cbd65900"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a71106f47119d9aa0c9954b46388cc0a3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a71106f47119d9aa0c9954b46388cc0a3">ParallelForCollapse</a> ((int, int)[] ranges, Action&lt; int[]&gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
-<tr class="memdesc:a71106f47119d9aa0c9954b46388cc0a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop.  <a href="classDotMP_1_1Parallel.html#a71106f47119d9aa0c9954b46388cc0a3">More...</a><br /></td></tr>
-<tr class="separator:a71106f47119d9aa0c9954b46388cc0a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a024b12a6a7f0c5bd18280b5435d55ca3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a024b12a6a7f0c5bd18280b5435d55ca3">ParallelForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef2&lt; T &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
-<tr class="memdesc:a024b12a6a7f0c5bd18280b5435d55ca3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed reduction for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and ForReductionCollapse(). This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.  <a href="classDotMP_1_1Parallel.html#a024b12a6a7f0c5bd18280b5435d55ca3">More...</a><br /></td></tr>
-<tr class="separator:a024b12a6a7f0c5bd18280b5435d55ca3"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a64dcea5c24f84b4a3b91fd38122db30e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a64dcea5c24f84b4a3b91fd38122db30e">ParallelForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef3&lt; T &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
-<tr class="memdesc:a64dcea5c24f84b4a3b91fd38122db30e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed reduction for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and ForReductionCollapse(). This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.  <a href="classDotMP_1_1Parallel.html#a64dcea5c24f84b4a3b91fd38122db30e">More...</a><br /></td></tr>
-<tr class="separator:a64dcea5c24f84b4a3b91fd38122db30e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a27fcefff0e04eebd46e35d973a5665eb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a27fcefff0e04eebd46e35d973a5665eb">ParallelForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange,(int, int) fourthRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef4&lt; T &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
-<tr class="memdesc:a27fcefff0e04eebd46e35d973a5665eb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed reduction for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and ForReductionCollapse(). This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.  <a href="classDotMP_1_1Parallel.html#a27fcefff0e04eebd46e35d973a5665eb">More...</a><br /></td></tr>
-<tr class="separator:a27fcefff0e04eebd46e35d973a5665eb"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae506fcff5f749a3f38697c505df4b4a3"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ae506fcff5f749a3f38697c505df4b4a3">ParallelForReductionCollapse&lt; T &gt;</a> ((int, int)[] ranges, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRefN&lt; T &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
-<tr class="memdesc:ae506fcff5f749a3f38697c505df4b4a3"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed reduction for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and ForReductionCollapse(). This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.  <a href="classDotMP_1_1Parallel.html#ae506fcff5f749a3f38697c505df4b4a3">More...</a><br /></td></tr>
-<tr class="separator:ae506fcff5f749a3f38697c505df4b4a3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae7c9de3fc14ceef13051d19a4ebf77fb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ae7c9de3fc14ceef13051d19a4ebf77fb">ParallelFor</a> (int start, int end, Action&lt; int &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
+<tr class="memdesc:ae7c9de3fc14ceef13051d19a4ebf77fb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a>. This is simply a convenience method for creating a parallel region and a for loop inside of it.  <a href="classDotMP_1_1Parallel.html#ae7c9de3fc14ceef13051d19a4ebf77fb">More...</a><br /></td></tr>
+<tr class="separator:ae7c9de3fc14ceef13051d19a4ebf77fb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a28aa36e3da8fff21c55583aed3a8b974"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a28aa36e3da8fff21c55583aed3a8b974">ParallelForReduction&lt; T &gt;</a> (int start, int end, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef&lt; T &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
+<tr class="memdesc:a28aa36e3da8fff21c55583aed3a8b974"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel for loop with a reduction. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and ForReduction&lt;T&gt;(). This is simply a convenience method for creating a parallel region and a for loop with a reduction inside of it.  <a href="classDotMP_1_1Parallel.html#a28aa36e3da8fff21c55583aed3a8b974">More...</a><br /></td></tr>
+<tr class="separator:a28aa36e3da8fff21c55583aed3a8b974"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4d4afbf296108126e6275adb598ec9aa"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a4d4afbf296108126e6275adb598ec9aa">ParallelForCollapse</a> ((int, int) firstRange,(int, int) secondRange, Action&lt; int, int &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
+<tr class="memdesc:a4d4afbf296108126e6275adb598ec9aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop.  <a href="classDotMP_1_1Parallel.html#a4d4afbf296108126e6275adb598ec9aa">More...</a><br /></td></tr>
+<tr class="separator:a4d4afbf296108126e6275adb598ec9aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ab163f84335d01358cdfbc5d89666c2f1"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ab163f84335d01358cdfbc5d89666c2f1">ParallelForCollapse</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange, Action&lt; int, int, int &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
+<tr class="memdesc:ab163f84335d01358cdfbc5d89666c2f1"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop.  <a href="classDotMP_1_1Parallel.html#ab163f84335d01358cdfbc5d89666c2f1">More...</a><br /></td></tr>
+<tr class="separator:ab163f84335d01358cdfbc5d89666c2f1"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a2535cd03826d38bdb630bfd1c216082f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a2535cd03826d38bdb630bfd1c216082f">ParallelForCollapse</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange,(int, int) fourthRange, Action&lt; int, int, int, int &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
+<tr class="memdesc:a2535cd03826d38bdb630bfd1c216082f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop.  <a href="classDotMP_1_1Parallel.html#a2535cd03826d38bdb630bfd1c216082f">More...</a><br /></td></tr>
+<tr class="separator:a2535cd03826d38bdb630bfd1c216082f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af924ff0fb01f56a181897080ba001cbe"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#af924ff0fb01f56a181897080ba001cbe">ParallelForCollapse</a> ((int, int)[] ranges, Action&lt; int[]&gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
+<tr class="memdesc:af924ff0fb01f56a181897080ba001cbe"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop.  <a href="classDotMP_1_1Parallel.html#af924ff0fb01f56a181897080ba001cbe">More...</a><br /></td></tr>
+<tr class="separator:af924ff0fb01f56a181897080ba001cbe"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a353726e93bd2ceae646f91dfa23d6586"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a353726e93bd2ceae646f91dfa23d6586">ParallelForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef2&lt; T &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
+<tr class="memdesc:a353726e93bd2ceae646f91dfa23d6586"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed reduction for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and ForReductionCollapse(). This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.  <a href="classDotMP_1_1Parallel.html#a353726e93bd2ceae646f91dfa23d6586">More...</a><br /></td></tr>
+<tr class="separator:a353726e93bd2ceae646f91dfa23d6586"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac70b02fbf0574763533e4531e2dcd31a"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ac70b02fbf0574763533e4531e2dcd31a">ParallelForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef3&lt; T &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
+<tr class="memdesc:ac70b02fbf0574763533e4531e2dcd31a"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed reduction for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and ForReductionCollapse(). This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.  <a href="classDotMP_1_1Parallel.html#ac70b02fbf0574763533e4531e2dcd31a">More...</a><br /></td></tr>
+<tr class="separator:ac70b02fbf0574763533e4531e2dcd31a"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:af9de54156826088cb8f763cc46ffe343"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#af9de54156826088cb8f763cc46ffe343">ParallelForReductionCollapse&lt; T &gt;</a> ((int, int) firstRange,(int, int) secondRange,(int, int) thirdRange,(int, int) fourthRange, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRef4&lt; T &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
+<tr class="memdesc:af9de54156826088cb8f763cc46ffe343"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed reduction for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and ForReductionCollapse(). This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.  <a href="classDotMP_1_1Parallel.html#af9de54156826088cb8f763cc46ffe343">More...</a><br /></td></tr>
+<tr class="separator:af9de54156826088cb8f763cc46ffe343"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a6b02874ce74d46662b580c8bd900420e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a6b02874ce74d46662b580c8bd900420e">ParallelForReductionCollapse&lt; T &gt;</a> ((int, int)[] ranges, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, ActionRefN&lt; T &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null)</td></tr>
+<tr class="memdesc:a6b02874ce74d46662b580c8bd900420e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a parallel collapsed reduction for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and ForReductionCollapse(). This is simply a convenience method for creating a parallel region and a collapsed for loop with a reduction inside of it.  <a href="classDotMP_1_1Parallel.html#a6b02874ce74d46662b580c8bd900420e">More...</a><br /></td></tr>
+<tr class="separator:a6b02874ce74d46662b580c8bd900420e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a33e20aede41a6e4ac4e2ed95dbd2e43d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a33e20aede41a6e4ac4e2ed95dbd2e43d">Sections</a> (params Action[] actions)</td></tr>
 <tr class="memdesc:a33e20aede41a6e4ac4e2ed95dbd2e43d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a sections region. Sections allows for the user to submit multiple, individual tasks to be distributed among threads in parallel. In parallel, each thread active will dequeue a callback and execute it. This is useful if you have lots of individual tasks that need to be executed in parallel, and each task requires its own lambda. Acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee" title="Creates a barrier. All threads must reach the barrier before any thread can continue....">Barrier()</a>.  <a href="classDotMP_1_1Parallel.html#a33e20aede41a6e4ac4e2ed95dbd2e43d">More...</a><br /></td></tr>
 <tr class="separator:a33e20aede41a6e4ac4e2ed95dbd2e43d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -183,7 +183,7 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memdesc:a325c61e793664f5c30233a8db2ef951b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a single region. A single region is only executed once per <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">Parallel.ParallelRegion</a>. The first thread to encounter the single region marks the region as encountered, then executes it.  <a href="classDotMP_1_1Parallel.html#a325c61e793664f5c30233a8db2ef951b">More...</a><br /></td></tr>
 <tr class="separator:a325c61e793664f5c30233a8db2ef951b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8aaf51a7e2f0be6f3541257764ab982e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a8aaf51a7e2f0be6f3541257764ab982e">Ordered</a> (int id, Action action)</td></tr>
-<tr class="memdesc:a8aaf51a7e2f0be6f3541257764ab982e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an ordered region. An ordered region is a region of code that is executed in order inside of a <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. This also acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654" title="Creates a critical region. A critical region is a region of code that can only be executed by one thr...">Critical()</a> region.  <a href="classDotMP_1_1Parallel.html#a8aaf51a7e2f0be6f3541257764ab982e">More...</a><br /></td></tr>
+<tr class="memdesc:a8aaf51a7e2f0be6f3541257764ab982e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an ordered region. An ordered region is a region of code that is executed in order inside of a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. This also acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654" title="Creates a critical region. A critical region is a region of code that can only be executed by one thr...">Critical()</a> region.  <a href="classDotMP_1_1Parallel.html#a8aaf51a7e2f0be6f3541257764ab982e">More...</a><br /></td></tr>
 <tr class="separator:a8aaf51a7e2f0be6f3541257764ab982e"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4c9ac665dff246a2e16929b5e1ca3f2"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ac4c9ac665dff246a2e16929b5e1ca3f2">GetNumThreads</a> ()</td></tr>
 <tr class="memdesc:ac4c9ac665dff246a2e16929b5e1ca3f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the number of active threads. If not inside of a <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a>, returns 1.  <a href="classDotMP_1_1Parallel.html#ac4c9ac665dff246a2e16929b5e1ca3f2">More...</a><br /></td></tr>
@@ -215,27 +215,27 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a029c19f86a28d82e6e0324265d437c82"><td class="memItemLeft" align="right" valign="top">static double&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a029c19f86a28d82e6e0324265d437c82">GetWTime</a> ()</td></tr>
 <tr class="memdesc:a029c19f86a28d82e6e0324265d437c82"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the wall time as a double, representing the number of seconds since the epoch.  <a href="classDotMP_1_1Parallel.html#a029c19f86a28d82e6e0324265d437c82">More...</a><br /></td></tr>
 <tr class="separator:a029c19f86a28d82e6e0324265d437c82"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a592f6ced6e2132380e3d4cfd83e1d260"><td class="memItemLeft" align="right" valign="top">static ? <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a592f6ced6e2132380e3d4cfd83e1d260">GetSchedule</a> ()</td></tr>
-<tr class="memdesc:a592f6ced6e2132380e3d4cfd83e1d260"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current schedule being used in a <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop.  <a href="classDotMP_1_1Parallel.html#a592f6ced6e2132380e3d4cfd83e1d260">More...</a><br /></td></tr>
-<tr class="separator:a592f6ced6e2132380e3d4cfd83e1d260"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaf8d6becb00f380fbea8a6c3fece2416"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#aaf8d6becb00f380fbea8a6c3fece2416">GetSchedule</a> ()</td></tr>
+<tr class="memdesc:aaf8d6becb00f380fbea8a6c3fece2416"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current schedule being used in a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop.  <a href="classDotMP_1_1Parallel.html#aaf8d6becb00f380fbea8a6c3fece2416">More...</a><br /></td></tr>
+<tr class="separator:aaf8d6becb00f380fbea8a6c3fece2416"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a88a0580da911ed8956357fb4701fb9fc"><td class="memItemLeft" align="right" valign="top">static uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a88a0580da911ed8956357fb4701fb9fc">GetChunkSize</a> ()</td></tr>
-<tr class="memdesc:a88a0580da911ed8956357fb4701fb9fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current chunk size being used in a <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop.  <a href="classDotMP_1_1Parallel.html#a88a0580da911ed8956357fb4701fb9fc">More...</a><br /></td></tr>
+<tr class="memdesc:a88a0580da911ed8956357fb4701fb9fc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Returns the current chunk size being used in a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop.  <a href="classDotMP_1_1Parallel.html#a88a0580da911ed8956357fb4701fb9fc">More...</a><br /></td></tr>
 <tr class="separator:a88a0580da911ed8956357fb4701fb9fc"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-methods"></a>
 Static Private Member Functions</h2></td></tr>
-<tr class="memitem:ade73896389039c1af4cf58069dd62578"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ade73896389039c1af4cf58069dd62578">FixArgs</a> (int start, int end, ref <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> sched, ref uint? chunk_size, uint <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>)</td></tr>
-<tr class="memdesc:ade73896389039c1af4cf58069dd62578"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixes the arguments for a parallel for loop. If a Schedule is set to Static, Dynamic, or Guided, then the function simply calculates chunk size if none is given. If a Schedule is set to Runtime, then the function checks the OMP_SCHEDULE environment variable and sets the appropriate values.  <a href="classDotMP_1_1Parallel.html#ade73896389039c1af4cf58069dd62578">More...</a><br /></td></tr>
-<tr class="separator:ade73896389039c1af4cf58069dd62578"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a974fab14fe0d6f06006e1fabf7d1b04d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a974fab14fe0d6f06006e1fabf7d1b04d">ValidateParams</a> (int start=0, int end=0, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null, uint? chunk_size=null, uint? num_tasks=null, uint? grainsize=null)</td></tr>
-<tr class="memdesc:a974fab14fe0d6f06006e1fabf7d1b04d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates all parameters passed to <a class="el" href="namespaceDotMP.html">DotMP</a> functions.  <a href="classDotMP_1_1Parallel.html#a974fab14fe0d6f06006e1fabf7d1b04d">More...</a><br /></td></tr>
-<tr class="separator:a974fab14fe0d6f06006e1fabf7d1b04d"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aeed0ff628203f800d11e4847ad2c21ea"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#aeed0ff628203f800d11e4847ad2c21ea">For&lt; T &gt;</a> (int start, int end, <a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; forAction, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a>? op=null)</td></tr>
-<tr class="memdesc:aeed0ff628203f800d11e4847ad2c21ea"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal handler for For.  <a href="classDotMP_1_1Parallel.html#aeed0ff628203f800d11e4847ad2c21ea">More...</a><br /></td></tr>
-<tr class="separator:aeed0ff628203f800d11e4847ad2c21ea"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a3ffa92aeb85996b796c131c77e05c822"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a3ffa92aeb85996b796c131c77e05c822">ForReduction&lt; T &gt;</a> (int start, int end, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, <a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; action, <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> schedule=<a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a>, uint? chunk_size=null)</td></tr>
-<tr class="memdesc:a3ffa92aeb85996b796c131c77e05c822"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal handler for ForReduction.  <a href="classDotMP_1_1Parallel.html#a3ffa92aeb85996b796c131c77e05c822">More...</a><br /></td></tr>
-<tr class="separator:a3ffa92aeb85996b796c131c77e05c822"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac3592a3029e775b2991b33632980c17d"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ac3592a3029e775b2991b33632980c17d">FixArgs</a> (int start, int end, ref <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> sched, ref uint? chunk_size, uint <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>)</td></tr>
+<tr class="memdesc:ac3592a3029e775b2991b33632980c17d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Fixes the arguments for a parallel for loop. If a <a class="el" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc...">Schedule</a> is set to Static, Dynamic, or Guided, then the function simply calculates chunk size if none is given. If a <a class="el" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc...">Schedule</a> is set to Runtime, then the function checks the OMP_SCHEDULE environment variable and sets the appropriate values.  <a href="classDotMP_1_1Parallel.html#ac3592a3029e775b2991b33632980c17d">More...</a><br /></td></tr>
+<tr class="separator:ac3592a3029e775b2991b33632980c17d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ae2c8f1f0d27757de18577068e59fbcdb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ae2c8f1f0d27757de18577068e59fbcdb">ValidateParams</a> (int start=0, int end=0, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null, uint? chunk_size=null, uint? num_tasks=null, uint? grainsize=null)</td></tr>
+<tr class="memdesc:ae2c8f1f0d27757de18577068e59fbcdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates all parameters passed to <a class="el" href="namespaceDotMP.html">DotMP</a> functions.  <a href="classDotMP_1_1Parallel.html#ae2c8f1f0d27757de18577068e59fbcdb">More...</a><br /></td></tr>
+<tr class="separator:ae2c8f1f0d27757de18577068e59fbcdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6567152afc4c568b5f11633de61a889"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ad6567152afc4c568b5f11633de61a889">For&lt; T &gt;</a> (int start, int end, <a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; forAction, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a>? op=null)</td></tr>
+<tr class="memdesc:ad6567152afc4c568b5f11633de61a889"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal handler for For.  <a href="classDotMP_1_1Parallel.html#ad6567152afc4c568b5f11633de61a889">More...</a><br /></td></tr>
+<tr class="separator:ad6567152afc4c568b5f11633de61a889"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aeb3356a91d9279a2e2abd6cd5c4c22bb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#aeb3356a91d9279a2e2abd6cd5c4c22bb">ForReduction&lt; T &gt;</a> (int start, int end, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a> op, ref T reduce_to, <a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; action, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null)</td></tr>
+<tr class="memdesc:aeb3356a91d9279a2e2abd6cd5c4c22bb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal handler for ForReduction.  <a href="classDotMP_1_1Parallel.html#aeb3356a91d9279a2e2abd6cd5c4c22bb">More...</a><br /></td></tr>
+<tr class="separator:aeb3356a91d9279a2e2abd6cd5c4c22bb"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
@@ -343,8 +343,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ade73896389039c1af4cf58069dd62578"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ade73896389039c1af4cf58069dd62578">&#9670;&nbsp;</a></span>FixArgs()</h2>
+<a id="ac3592a3029e775b2991b33632980c17d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac3592a3029e775b2991b33632980c17d">&#9670;&nbsp;</a></span>FixArgs()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -367,7 +367,7 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype">ref <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
+          <td class="paramtype">ref <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
           <td class="paramname"><em>sched</em>, </td>
         </tr>
         <tr>
@@ -395,7 +395,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Fixes the arguments for a parallel for loop. If a Schedule is set to Static, Dynamic, or Guided, then the function simply calculates chunk size if none is given. If a Schedule is set to Runtime, then the function checks the OMP_SCHEDULE environment variable and sets the appropriate values. </p>
+<p>Fixes the arguments for a parallel for loop. If a <a class="el" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc...">Schedule</a> is set to Static, Dynamic, or Guided, then the function simply calculates chunk size if none is given. If a <a class="el" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc...">Schedule</a> is set to Runtime, then the function checks the OMP_SCHEDULE environment variable and sets the appropriate values. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">start</td><td>The start of the loop.</td></tr>
@@ -409,8 +409,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a350cbe182378ea27bff6f728e935a0ba"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a350cbe182378ea27bff6f728e935a0ba">&#9670;&nbsp;</a></span>For()</h2>
+<a id="aa3e8e137910faf38453900c1fe29fde8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aa3e8e137910faf38453900c1fe29fde8">&#9670;&nbsp;</a></span>For()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -439,8 +439,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -461,7 +461,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region is executed in parallel, with iterations being distributed among the threads, and potentially out-of-order. A schedule is provided to inform the runtime how to distribute iterations of the loop to threads. Available schedules are specified by the Schedule enum, and have detailed documentation in the <a class="el" href="classDotMP_1_1Iter.html" title="Contains all of the scheduling code for parallel for loops.">Iter</a> class. Acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee" title="Creates a barrier. All threads must reach the barrier before any thread can continue....">Barrier()</a>. </p>
+<p>Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region is executed in parallel, with iterations being distributed among the threads, and potentially out-of-order. A schedule is provided to inform the runtime how to distribute iterations of the loop to threads. Available schedules are specified by the <a class="el" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc...">Schedule</a> enum, and have detailed documentation in the <a class="el" href="classDotMP_1_1Iter.html" title="Contains all of the scheduling code for parallel for loops.">Iter</a> class. Acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee" title="Creates a barrier. All threads must reach the barrier before any thread can continue....">Barrier()</a>. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">start</td><td>The start of the loop, inclusive.</td></tr>
@@ -483,8 +483,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aeed0ff628203f800d11e4847ad2c21ea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aeed0ff628203f800d11e4847ad2c21ea">&#9670;&nbsp;</a></span>For&lt; T &gt;()</h2>
+<a id="ad6567152afc4c568b5f11633de61a889"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6567152afc4c568b5f11633de61a889">&#9670;&nbsp;</a></span>For&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -493,7 +493,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static void <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba">DotMP.Parallel.For</a>&lt; T &gt; </td>
+          <td class="memname">static void <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8">DotMP.Parallel.For</a>&lt; T &gt; </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>start</em>, </td>
@@ -513,8 +513,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -564,8 +564,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a6b4dcfa3d0ee6363c873d1b84988f845"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a6b4dcfa3d0ee6363c873d1b84988f845">&#9670;&nbsp;</a></span>ForCollapse() <span class="overload">[1/4]</span></h2>
+<a id="ac62e6e6afa3cfdbc4bfc4f10dfe9b411"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac62e6e6afa3cfdbc4bfc4f10dfe9b411">&#9670;&nbsp;</a></span>ForCollapse() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -594,8 +594,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -638,8 +638,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a0a912a120c0ff478058dae35a96c37e5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a0a912a120c0ff478058dae35a96c37e5">&#9670;&nbsp;</a></span>ForCollapse() <span class="overload">[2/4]</span></h2>
+<a id="a7f3153b26279c5ded49d0807582970cf"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a7f3153b26279c5ded49d0807582970cf">&#9670;&nbsp;</a></span>ForCollapse() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -674,8 +674,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -719,8 +719,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a659e95de109b83b7eacd00f8a3860db5"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a659e95de109b83b7eacd00f8a3860db5">&#9670;&nbsp;</a></span>ForCollapse() <span class="overload">[3/4]</span></h2>
+<a id="a42842ae2894ddcf9162a122383cf9894"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a42842ae2894ddcf9162a122383cf9894">&#9670;&nbsp;</a></span>ForCollapse() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -761,8 +761,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -807,8 +807,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac174faa649465457db7f1df5f3940892"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac174faa649465457db7f1df5f3940892">&#9670;&nbsp;</a></span>ForCollapse() <span class="overload">[4/4]</span></h2>
+<a id="adff51a3110818c51d7ab442ef6c1acb8"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#adff51a3110818c51d7ab442ef6c1acb8">&#9670;&nbsp;</a></span>ForCollapse() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -831,8 +831,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -874,8 +874,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a24428698879a9233ae4f3349d3959d15"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a24428698879a9233ae4f3349d3959d15">&#9670;&nbsp;</a></span>ForReduction&lt; T &gt;() <span class="overload">[1/2]</span></h2>
+<a id="ad2e67dc31d85cdce99d5133169261a5e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad2e67dc31d85cdce99d5133169261a5e">&#9670;&nbsp;</a></span>ForReduction&lt; T &gt;() <span class="overload">[1/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -916,8 +916,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -938,7 +938,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates a for loop inside a parallel region with a reduction. This is similar to <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a>, but the reduction allows multiple threads to reduce their work down to a single variable. Using ForReduction&lt;T&gt; allows the runtime to perform this operation much more efficiently than a naive approach using the Locking or <a class="el" href="classDotMP_1_1Atomic.html" title="Provides atomic operations for integral types as a wrapper around the Interlocked class....">Atomic</a> classes. Each thread gets a thread-local version of the reduction variable, and the runtime performs a global reduction at the end of the loop. Since the global reduction only involves as many variables as there are threads, it is much more efficient than a naive approach. Acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee" title="Creates a barrier. All threads must reach the barrier before any thread can continue....">Barrier()</a>. </p>
+<p>Creates a for loop inside a parallel region with a reduction. This is similar to <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a>, but the reduction allows multiple threads to reduce their work down to a single variable. Using ForReduction&lt;T&gt; allows the runtime to perform this operation much more efficiently than a naive approach using the Locking or <a class="el" href="classDotMP_1_1Atomic.html" title="Provides atomic operations for integral types as a wrapper around the Interlocked class....">Atomic</a> classes. Each thread gets a thread-local version of the reduction variable, and the runtime performs a global reduction at the end of the loop. Since the global reduction only involves as many variables as there are threads, it is much more efficient than a naive approach. Acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee" title="Creates a barrier. All threads must reach the barrier before any thread can continue....">Barrier()</a>. </p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>The type of the reduction.</td></tr>
@@ -968,8 +968,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a3ffa92aeb85996b796c131c77e05c822"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a3ffa92aeb85996b796c131c77e05c822">&#9670;&nbsp;</a></span>ForReduction&lt; T &gt;() <span class="overload">[2/2]</span></h2>
+<a id="aeb3356a91d9279a2e2abd6cd5c4c22bb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aeb3356a91d9279a2e2abd6cd5c4c22bb">&#9670;&nbsp;</a></span>ForReduction&lt; T &gt;() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1010,8 +1010,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1056,8 +1056,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="acac431af975fdac52ca33b0411bd1b61"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#acac431af975fdac52ca33b0411bd1b61">&#9670;&nbsp;</a></span>ForReductionCollapse&lt; T &gt;() <span class="overload">[1/4]</span></h2>
+<a id="a296811c8b52d4412ad0b5bcec561cfa1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a296811c8b52d4412ad0b5bcec561cfa1">&#9670;&nbsp;</a></span>ForReductionCollapse&lt; T &gt;() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1098,8 +1098,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1121,7 +1121,7 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops. </p>
-<p>Unlike <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">Parallel.ForCollapse</a>, this method permits a reduction parameter.</p>
+<p>Unlike <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">Parallel.ForCollapse</a>, this method permits a reduction parameter.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>The type of the reduction.</td></tr>
@@ -1151,8 +1151,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a5105e73577f00666140e9fc5b3f1edea"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a5105e73577f00666140e9fc5b3f1edea">&#9670;&nbsp;</a></span>ForReductionCollapse&lt; T &gt;() <span class="overload">[2/4]</span></h2>
+<a id="a2505b06b590848829b927ad09c01bd8c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2505b06b590848829b927ad09c01bd8c">&#9670;&nbsp;</a></span>ForReductionCollapse&lt; T &gt;() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1199,8 +1199,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1222,7 +1222,7 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops. </p>
-<p>Unlike <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">Parallel.ForCollapse</a>, this method permits a reduction parameter.</p>
+<p>Unlike <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">Parallel.ForCollapse</a>, this method permits a reduction parameter.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>The type of the reduction.</td></tr>
@@ -1253,8 +1253,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a7baf6f23a4f9fc56b66579b77184d11b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a7baf6f23a4f9fc56b66579b77184d11b">&#9670;&nbsp;</a></span>ForReductionCollapse&lt; T &gt;() <span class="overload">[3/4]</span></h2>
+<a id="a5650d8168c11b743cc1795b3ed526649"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5650d8168c11b743cc1795b3ed526649">&#9670;&nbsp;</a></span>ForReductionCollapse&lt; T &gt;() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1307,8 +1307,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1330,7 +1330,7 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops. </p>
-<p>Unlike <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">Parallel.ForCollapse</a>, this method permits a reduction parameter.</p>
+<p>Unlike <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">Parallel.ForCollapse</a>, this method permits a reduction parameter.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>The type of the reduction.</td></tr>
@@ -1362,8 +1362,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac0ce606ee5f8c0817248e253eecfbac9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac0ce606ee5f8c0817248e253eecfbac9">&#9670;&nbsp;</a></span>ForReductionCollapse&lt; T &gt;() <span class="overload">[4/4]</span></h2>
+<a id="abc025cf89299bf23ce0dbb9417817204"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc025cf89299bf23ce0dbb9417817204">&#9670;&nbsp;</a></span>ForReductionCollapse&lt; T &gt;() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1398,8 +1398,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1421,7 +1421,7 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates a collapsed reduction for loop inside a parallel region. A collapsed for loop can be used when you want to parallelize two or more nested for loops. Instead of only parallelizing across the outermost loop, the nested loops are flattened before scheduling, which has the effect of parallelizing across both loops. This has the effect multiplying the number of iterations the scheduler can work with, which can improve load balancing in irregular nested loops. </p>
-<p>Unlike <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">Parallel.ForCollapse</a>, this method permits a reduction parameter.</p>
+<p>Unlike <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">Parallel.ForCollapse</a>, this method permits a reduction parameter.</p>
 <dl class="tparams"><dt>Template Parameters</dt><dd>
   <table class="tparams">
     <tr><td class="paramname">T</td><td>The type of the reduction.</td></tr>
@@ -1473,8 +1473,8 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the current chunk size being used in a <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. </p>
-<dl class="section return"><dt>Returns</dt><dd>The chunk size being used in a <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. If 0, a <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() has not been encountered yet.</dd></dl>
+<p>Returns the current chunk size being used in a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. </p>
+<dl class="section return"><dt>Returns</dt><dd>The chunk size being used in a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. If 0, a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() has not been encountered yet.</dd></dl>
 
 </div>
 </div>
@@ -1618,8 +1618,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a592f6ced6e2132380e3d4cfd83e1d260"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a592f6ced6e2132380e3d4cfd83e1d260">&#9670;&nbsp;</a></span>GetSchedule()</h2>
+<a id="aaf8d6becb00f380fbea8a6c3fece2416"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaf8d6becb00f380fbea8a6c3fece2416">&#9670;&nbsp;</a></span>GetSchedule()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1628,7 +1628,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">static ? <a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a> DotMP.Parallel.GetSchedule </td>
+          <td class="memname">static <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> DotMP.Parallel.GetSchedule </td>
           <td>(</td>
           <td class="paramname"></td><td>)</td>
           <td></td>
@@ -1641,8 +1641,8 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Returns the current schedule being used in a <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. </p>
-<dl class="section return"><dt>Returns</dt><dd>The schedule being used in the <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop, or null if a <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() has not been encountered yet.</dd></dl>
+<p>Returns the current schedule being used in a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. </p>
+<dl class="section return"><dt>Returns</dt><dd>The schedule being used in the <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop, or null if a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() has not been encountered yet.</dd></dl>
 
 </div>
 </div>
@@ -1889,7 +1889,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates an ordered region. An ordered region is a region of code that is executed in order inside of a <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. This also acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654" title="Creates a critical region. A critical region is a region of code that can only be executed by one thr...">Critical()</a> region. </p>
+<p>Creates an ordered region. An ordered region is a region of code that is executed in order inside of a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. This also acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654" title="Creates a critical region. A critical region is a region of code that can only be executed by one thr...">Critical()</a> region. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>The ID of the ordered region. Must be unique per region but consistent across all threads.</td></tr>
@@ -1906,8 +1906,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="aed54bae2fe0c20dde6b625d2fc54e76b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aed54bae2fe0c20dde6b625d2fc54e76b">&#9670;&nbsp;</a></span>ParallelFor()</h2>
+<a id="ae7c9de3fc14ceef13051d19a4ebf77fb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae7c9de3fc14ceef13051d19a4ebf77fb">&#9670;&nbsp;</a></span>ParallelFor()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1936,8 +1936,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -1964,7 +1964,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates a parallel for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#a350cbe182378ea27bff6f728e935a0ba" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a>. This is simply a convenience method for creating a parallel region and a for loop inside of it. </p>
+<p>Creates a parallel for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a>. This is simply a convenience method for creating a parallel region and a for loop inside of it. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">start</td><td>The start of the loop, inclusive.</td></tr>
@@ -1986,8 +1986,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="adfa05ff90de7aca0d538b6618bce967e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#adfa05ff90de7aca0d538b6618bce967e">&#9670;&nbsp;</a></span>ParallelForCollapse() <span class="overload">[1/4]</span></h2>
+<a id="a4d4afbf296108126e6275adb598ec9aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4d4afbf296108126e6275adb598ec9aa">&#9670;&nbsp;</a></span>ParallelForCollapse() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2016,8 +2016,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2044,7 +2044,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop. </p>
+<p>Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">firstRange</td><td>A tuple representing the start and end of the first for loop.</td></tr>
@@ -2066,8 +2066,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac6c7e75a6c99f0fc59e69ca690e27ead"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac6c7e75a6c99f0fc59e69ca690e27ead">&#9670;&nbsp;</a></span>ParallelForCollapse() <span class="overload">[2/4]</span></h2>
+<a id="ab163f84335d01358cdfbc5d89666c2f1"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ab163f84335d01358cdfbc5d89666c2f1">&#9670;&nbsp;</a></span>ParallelForCollapse() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2102,8 +2102,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2130,7 +2130,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop. </p>
+<p>Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">firstRange</td><td>A tuple representing the start and end of the first for loop.</td></tr>
@@ -2153,8 +2153,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a75d5a9ae1613421dd0df4594cbd65900"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a75d5a9ae1613421dd0df4594cbd65900">&#9670;&nbsp;</a></span>ParallelForCollapse() <span class="overload">[3/4]</span></h2>
+<a id="a2535cd03826d38bdb630bfd1c216082f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2535cd03826d38bdb630bfd1c216082f">&#9670;&nbsp;</a></span>ParallelForCollapse() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2195,8 +2195,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2223,7 +2223,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop. </p>
+<p>Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">firstRange</td><td>A tuple representing the start and end of the first for loop.</td></tr>
@@ -2247,8 +2247,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a71106f47119d9aa0c9954b46388cc0a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a71106f47119d9aa0c9954b46388cc0a3">&#9670;&nbsp;</a></span>ParallelForCollapse() <span class="overload">[4/4]</span></h2>
+<a id="af924ff0fb01f56a181897080ba001cbe"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af924ff0fb01f56a181897080ba001cbe">&#9670;&nbsp;</a></span>ParallelForCollapse() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2271,8 +2271,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2299,7 +2299,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#a6b4dcfa3d0ee6363c873d1b84988f845" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop. </p>
+<p>Creates a parallel collapsed for loop. Contains all of the parameters from <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a> and <a class="el" href="classDotMP_1_1Parallel.html#ac62e6e6afa3cfdbc4bfc4f10dfe9b411" title="Creates a collapsed for loop inside a parallel region. A collapsed for loop can be used when you want...">ForCollapse()</a>. This is simply a convenience method for creating a parallel region and a collapsed for loop. </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">ranges</td><td>A tuple representing the start and end of each of the for loops.</td></tr>
@@ -2320,8 +2320,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae4eead0923d172719282dc963ff0ebf6"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae4eead0923d172719282dc963ff0ebf6">&#9670;&nbsp;</a></span>ParallelForReduction&lt; T &gt;()</h2>
+<a id="a28aa36e3da8fff21c55583aed3a8b974"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a28aa36e3da8fff21c55583aed3a8b974">&#9670;&nbsp;</a></span>ParallelForReduction&lt; T &gt;()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2362,8 +2362,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2420,8 +2420,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a024b12a6a7f0c5bd18280b5435d55ca3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a024b12a6a7f0c5bd18280b5435d55ca3">&#9670;&nbsp;</a></span>ParallelForReductionCollapse&lt; T &gt;() <span class="overload">[1/4]</span></h2>
+<a id="a353726e93bd2ceae646f91dfa23d6586"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a353726e93bd2ceae646f91dfa23d6586">&#9670;&nbsp;</a></span>ParallelForReductionCollapse&lt; T &gt;() <span class="overload">[1/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2462,8 +2462,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2514,8 +2514,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a64dcea5c24f84b4a3b91fd38122db30e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a64dcea5c24f84b4a3b91fd38122db30e">&#9670;&nbsp;</a></span>ParallelForReductionCollapse&lt; T &gt;() <span class="overload">[2/4]</span></h2>
+<a id="ac70b02fbf0574763533e4531e2dcd31a"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac70b02fbf0574763533e4531e2dcd31a">&#9670;&nbsp;</a></span>ParallelForReductionCollapse&lt; T &gt;() <span class="overload">[2/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2562,8 +2562,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2615,8 +2615,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a27fcefff0e04eebd46e35d973a5665eb"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a27fcefff0e04eebd46e35d973a5665eb">&#9670;&nbsp;</a></span>ParallelForReductionCollapse&lt; T &gt;() <span class="overload">[3/4]</span></h2>
+<a id="af9de54156826088cb8f763cc46ffe343"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af9de54156826088cb8f763cc46ffe343">&#9670;&nbsp;</a></span>ParallelForReductionCollapse&lt; T &gt;() <span class="overload">[3/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2669,8 +2669,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -2723,8 +2723,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae506fcff5f749a3f38697c505df4b4a3"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae506fcff5f749a3f38697c505df4b4a3">&#9670;&nbsp;</a></span>ParallelForReductionCollapse&lt; T &gt;() <span class="overload">[4/4]</span></h2>
+<a id="a6b02874ce74d46662b580c8bd900420e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a6b02874ce74d46662b580c8bd900420e">&#9670;&nbsp;</a></span>ParallelForReductionCollapse&lt; T &gt;() <span class="overload">[4/4]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -2759,8 +2759,8 @@ Static Private Attributes</h2></td></tr>
         <tr>
           <td class="paramkey"></td>
           <td></td>
-          <td class="paramtype"><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5">Schedule</a>&#160;</td>
-          <td class="paramname"><em>schedule</em> = <code><a class="el" href="namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a84a8921b25f505d0d2077aeb5db4bc16">Schedule.Static</a></code>, </td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -3406,8 +3406,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a974fab14fe0d6f06006e1fabf7d1b04d"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a974fab14fe0d6f06006e1fabf7d1b04d">&#9670;&nbsp;</a></span>ValidateParams()</h2>
+<a id="ae2c8f1f0d27757de18577068e59fbcdb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ae2c8f1f0d27757de18577068e59fbcdb">&#9670;&nbsp;</a></span>ValidateParams()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3426,6 +3426,12 @@ Static Private Attributes</h2></td></tr>
           <td></td>
           <td class="paramtype">int&#160;</td>
           <td class="paramname"><em>end</em> = <code>0</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype"><a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a>&#160;</td>
+          <td class="paramname"><em>schedule</em> = <code>null</code>, </td>
         </tr>
         <tr>
           <td class="paramkey"></td>
@@ -3469,6 +3475,7 @@ Static Private Attributes</h2></td></tr>
   <table class="params">
     <tr><td class="paramname">start</td><td>Start of loop.</td></tr>
     <tr><td class="paramname">end</td><td>End of loop.</td></tr>
+    <tr><td class="paramname">schedule</td><td>Scheduler used.</td></tr>
     <tr><td class="paramname">num_threads</td><td>Number of threads.</td></tr>
     <tr><td class="paramname">chunk_size</td><td>Chunk size.</td></tr>
     <tr><td class="paramname">num_tasks</td><td>Number of tasks.</td></tr>

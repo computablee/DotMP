@@ -1,4 +1,5 @@
 <map id="DotMP.WorkShare" name="DotMP.WorkShare">
-<area shape="rect" id="node1" title="Contains all relevant information about a parallel for loop. Contains a collection of Thr objects,..." alt="" coords="5,95,143,121"/>
-<area shape="rect" id="node2" href="$classDotMP_1_1Thr.html" title="Encapsulates a Thread object with information about its progress through a parallel for loop...." alt="" coords="30,5,118,32"/>
+<area shape="rect" id="node1" title="Contains all relevant information about a parallel for loop. Contains a collection of Thr objects,..." alt="" coords="72,95,209,121"/>
+<area shape="rect" id="node2" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,5,140,32"/>
+<area shape="rect" id="node3" href="$classDotMP_1_1Thr.html" title="Encapsulates a Thread object with information about its progress through a parallel for loop...." alt="" coords="165,5,253,32"/>
 </map>

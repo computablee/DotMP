@@ -1,0 +1,8 @@
+<map id="DotMP.StaticScheduler" name="DotMP.StaticScheduler">
+<area shape="rect" id="node1" title="Implementation of static scheduling." alt="" coords="100,5,268,32"/>
+<area shape="rect" id="node2" href="$classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="269,95,350,121"/>
+<area shape="rect" id="node4" href="$classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="5,184,192,211"/>
+<area shape="rect" id="node5" href="$classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="217,184,394,211"/>
+<area shape="rect" id="node6" href="$classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="419,184,608,211"/>
+<area shape="rect" id="node3" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="297,5,388,32"/>
+</map>

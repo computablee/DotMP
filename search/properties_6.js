@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['reduction_5fvalues_507',['reduction_values',['../classDotMP_1_1WorkShare.html#a801c828093592fdbfb4d6658f85b4c25',1,'DotMP::WorkShare']]],
-  ['reg_508',['reg',['../classDotMP_1_1ForkedRegion.html#a2f06280f3a34fe77da626a7cd65bb0e2',1,'DotMP::ForkedRegion']]]
+  ['op_528',['op',['../classDotMP_1_1WorkShare.html#a6634d9c02d5866e509f27386bfa1b99b',1,'DotMP::WorkShare']]]
 ];

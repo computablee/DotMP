@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['guided_490',['Guided',['../namespaceDotMP.html#a7649aa86afd760c0c7d5d26443cd36d5a5e6a52241e27d2424cb006aea0869702',1,'DotMP']]]
+  ['subtract_516',['Subtract',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346a1d9baf077ee87921f57a8fe42d510b65',1,'DotMP']]]
 ];

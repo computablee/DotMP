@@ -1,3 +1,9 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classDotMP_1_1Iter.html" title="Contains all of the scheduling code for parallel for loops." alt="" coords="5,5,95,32"/>
+<area shape="rect" id="node1" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,107,140,133"/>
+<area shape="rect" id="node2" href="$classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="188,81,315,108"/>
+<area shape="rect" id="node7" href="$classSerial.html" title="Custom scheduler which runs a for loop in serial." alt="" coords="222,132,281,159"/>
+<area shape="rect" id="node3" href="$classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="363,5,552,32"/>
+<area shape="rect" id="node4" href="$classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="369,56,546,83"/>
+<area shape="rect" id="node5" href="$classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="364,107,551,133"/>
+<area shape="rect" id="node6" href="$classDotMP_1_1StaticScheduler.html" title="Implementation of static scheduling." alt="" coords="373,157,541,184"/>
 </map>
