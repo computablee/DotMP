@@ -1376,44 +1376,29 @@ namespace DotMPTests
         [Fact]
         public void Invalid_params_should_except()
         {
-            DotMP.Parallel.ParallelRegion(() =>
+            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
-                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
-                {
-                    DotMP.Parallel.For(10, 0, i => { });
-                });
+                DotMP.Parallel.ParallelFor(10, 0, i => { });
             });
 
-            DotMP.Parallel.ParallelRegion(() =>
+            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
-                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
-                {
-                    DotMP.Parallel.For(-1, 10, i => { });
-                });
+                DotMP.Parallel.ParallelFor(-1, 10, i => { });
             });
 
-            DotMP.Parallel.ParallelRegion(() =>
+            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
-                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
-                {
-                    DotMP.Parallel.For(10, -5, i => { });
-                });
+                DotMP.Parallel.ParallelFor(10, -5, i => { });
             });
 
-            DotMP.Parallel.ParallelRegion(() =>
+            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
-                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
-                {
-                    DotMP.Parallel.For(0, 10, chunk_size: 0, action: i => { });
-                });
+                DotMP.Parallel.ParallelFor(10, 0, chunk_size: 0, action: i => { });
             });
 
-            DotMP.Parallel.ParallelRegion(() =>
+            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
-                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
-                {
-                    DotMP.Parallel.For(0, 10, schedule: new Serial(), action: i => { });
-                });
+                DotMP.Parallel.ParallelFor(10, 0, schedule: new Serial(), action: i => { });
             });
 
             Assert.Throws<DotMP.InvalidArgumentsException>(() =>
@@ -1421,28 +1406,19 @@ namespace DotMPTests
                 DotMP.Parallel.ParallelRegion(num_threads: 0, action: () => { });
             });
 
-            DotMP.Parallel.ParallelMaster(() =>
+            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
-                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
-                {
-                    DotMP.Parallel.Taskloop(10, 0, i => { });
-                });
+                DotMP.Parallel.ParallelMasterTaskloop(10, 0, i => { });
             });
 
-            DotMP.Parallel.ParallelMaster(() =>
+            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
-                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
-                {
-                    DotMP.Parallel.Taskloop(0, 10, grainsize: 0, action: i => { });
-                });
+                DotMP.Parallel.ParallelMasterTaskloop(0, 10, grainsize: 0, action: i => { });
             });
 
-            DotMP.Parallel.ParallelMaster(() =>
+            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
-                Assert.Throws<DotMP.InvalidArgumentsException>(() =>
-                {
-                    DotMP.Parallel.Taskloop(0, 10, num_tasks: 0, action: i => { });
-                });
+                DotMP.Parallel.ParallelMasterTaskloop(0, 10, num_tasks: 0, action: i => { });
             });
         }
 
