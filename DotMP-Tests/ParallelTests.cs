@@ -1222,9 +1222,9 @@ namespace DotMPTests
         [Fact]
         public void Nested_parallelism_should_except()
         {
-            DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+            Assert.Throws<DotMP.CannotPerformNestedParallelismException>(() =>
             {
-                Assert.Throws<DotMP.CannotPerformNestedParallelismException>(() =>
+                DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
                 {
                     DotMP.Parallel.ParallelRegion(num_threads: 8, action: () => { });
                 });
@@ -1297,28 +1297,28 @@ namespace DotMPTests
         [Fact]
         public void Nested_worksharing_should_except()
         {
-            DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
+            Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
             {
-                Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+                DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
                 {
                     DotMP.Parallel.Single(0, () => { });
                 });
             });
 
-            DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+            Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
             {
-                DotMP.Parallel.Single(0, () =>
+                DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
                 {
-                    Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+                    DotMP.Parallel.Single(0, () =>
                     {
                         DotMP.Parallel.For(0, 10, action: i => { });
                     });
                 });
             });
 
-            DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
+            Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
             {
-                Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+                DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
                 {
                     DotMP.Parallel.For(0, 10, j => { });
                 });
