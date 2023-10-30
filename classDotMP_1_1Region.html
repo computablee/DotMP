@@ -79,6 +79,9 @@ $(function() {
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pac-methods"></a>
 Package Functions</h2></td></tr>
+<tr class="memitem:a714d78358f8699e31df7da0579c34319"><td class="memItemLeft" align="right" valign="top">Thread&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Region.html#a714d78358f8699e31df7da0579c34319">CreateThread</a> (Action <a class="el" href="classDotMP_1_1Region.html#a8b47660ccc8e238df34688a39f2c8846">omp_fn</a>, int tid, uint <a class="el" href="classDotMP_1_1Region.html#af52a78c9d496c812545e76d38dc872c4">num_threads</a>)</td></tr>
+<tr class="memdesc:a714d78358f8699e31df7da0579c34319"><td class="mdescLeft">&#160;</td><td class="mdescRight">Factory for creating threads in the threadpool.  <a href="classDotMP_1_1Region.html#a714d78358f8699e31df7da0579c34319">More...</a><br /></td></tr>
+<tr class="separator:a714d78358f8699e31df7da0579c34319"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a5a131ad38ebaac3381b2a7568788818f"><td class="memItemLeft" align="right" valign="top">&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Region.html#a5a131ad38ebaac3381b2a7568788818f">Region</a> (uint <a class="el" href="classDotMP_1_1Region.html#af52a78c9d496c812545e76d38dc872c4">num_threads</a>, Action <a class="el" href="classDotMP_1_1Region.html#a8b47660ccc8e238df34688a39f2c8846">omp_fn</a>)</td></tr>
 <tr class="memdesc:a5a131ad38ebaac3381b2a7568788818f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a specified number of threads available to the parallel region, and sets the function to be executed. Also sets other relevant data for the parallel region.  <a href="classDotMP_1_1Region.html#a5a131ad38ebaac3381b2a7568788818f">More...</a><br /></td></tr>
 <tr class="separator:a5a131ad38ebaac3381b2a7568788818f"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -97,6 +100,9 @@ Package Attributes</h2></td></tr>
 <tr class="memitem:a8b47660ccc8e238df34688a39f2c8846"><td class="memItemLeft" align="right" valign="top">Action&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Region.html#a8b47660ccc8e238df34688a39f2c8846">omp_fn</a></td></tr>
 <tr class="memdesc:a8b47660ccc8e238df34688a39f2c8846"><td class="mdescLeft">&#160;</td><td class="mdescRight">The function to be executed.  <a href="classDotMP_1_1Region.html#a8b47660ccc8e238df34688a39f2c8846">More...</a><br /></td></tr>
 <tr class="separator:a8b47660ccc8e238df34688a39f2c8846"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:afe9c4fb11322028e220a9e566d6a5836"><td class="memItemLeft" align="right" valign="top">Exception&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Region.html#afe9c4fb11322028e220a9e566d6a5836">ex</a></td></tr>
+<tr class="memdesc:afe9c4fb11322028e220a9e566d6a5836"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception caught from threads.  <a href="classDotMP_1_1Region.html#afe9c4fb11322028e220a9e566d6a5836">More...</a><br /></td></tr>
+<tr class="separator:afe9c4fb11322028e220a9e566d6a5836"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Contains relevant internal information about parallel regions, including the threads and the function to be executed. Provides a region-wide lock and SpinWait objects for each thread. </p>
@@ -146,7 +152,85 @@ Package Attributes</h2></td></tr>
 
 </div>
 </div>
+<h2 class="groupheader">Member Function Documentation</h2>
+<a id="a714d78358f8699e31df7da0579c34319"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a714d78358f8699e31df7da0579c34319">&#9670;&nbsp;</a></span>CreateThread()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Thread DotMP.Region.CreateThread </td>
+          <td>(</td>
+          <td class="paramtype">Action&#160;</td>
+          <td class="paramname"><em>omp_fn</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>tid</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">uint&#160;</td>
+          <td class="paramname"><em>num_threads</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">package</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Factory for creating threads in the threadpool. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">omp_fn</td><td>The function to execute.</td></tr>
+    <tr><td class="paramname">tid</td><td>The thread ID.</td></tr>
+    <tr><td class="paramname">num_threads</td><td>The total number of threads.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The created Thread object.</dd></dl>
+
+</div>
+</div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="afe9c4fb11322028e220a9e566d6a5836"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#afe9c4fb11322028e220a9e566d6a5836">&#9670;&nbsp;</a></span>ex</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">Exception DotMP.Region.ex</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">package</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Exception caught from threads. </p>
+
+</div>
+</div>
 <a id="af52a78c9d496c812545e76d38dc872c4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#af52a78c9d496c812545e76d38dc872c4">&#9670;&nbsp;</a></span>num_threads</h2>
 
