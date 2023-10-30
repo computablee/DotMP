@@ -144,6 +144,7 @@ namespace DotMP
                 reg.threads[i].Name = i.ToString();
 
             in_parallel_prv = false;
+            in_workshare_prv = 0;
         }
 
         /// <summary>
