@@ -25,6 +25,37 @@ namespace DotMP
         /// The function to be executed.
         /// </summary>
         internal Action omp_fn;
+        /// <summary>
+        /// Exception caught from threads.
+        /// </summary>
+        internal Exception ex;
+
+        /// <summary>
+        /// Factory for creating threads in the threadpool.
+        /// </summary>
+        /// <param name="omp_fn">The function to execute.</param>
+        /// <param name="tid">The thread ID.</param>
+        /// <param name="num_threads">The total number of threads.</param>
+        /// <returns>The created Thread object.</returns>
+        internal Thread CreateThread(Action omp_fn, int tid, uint num_threads)
+        {
+            return new Thread(() =>
+            {
+                try
+                {
+                    omp_fn();
+                    Parallel.Taskwait();
+                }
+                catch (Exception ex)
+                {
+                    this.ex ??= ex;
+
+                    for (int i = 0; i < num_threads; i++)
+                        if (i != tid)
+                            threads[i].Interrupt();
+                }
+            });
+        }
 
         /// <summary>
         /// Creates a specified number of threads available to the parallel region, and sets the function to be executed.
@@ -36,14 +67,11 @@ namespace DotMP
         {
             threads = new Thread[num_threads];
             for (int i = 0; i < num_threads; i++)
-                threads[i] = new Thread(() =>
-                {
-                    omp_fn();
-                    Parallel.Taskwait();
-                });
+                threads[i] = CreateThread(omp_fn, i, num_threads);
             ws_lock = new object();
             this.num_threads = num_threads;
             this.omp_fn = omp_fn;
+            this.ex = null;
         }
     }
 
@@ -116,11 +144,13 @@ namespace DotMP
                 reg.threads[i].Name = i.ToString();
 
             in_parallel_prv = false;
+            in_workshare_prv = 0;
         }
 
         /// <summary>
         /// Starts the threadpool and waits for all threads to complete before returning.
         /// </summary>
+        /// <exception cref="Exception">Thrown if an exception is caught in the threadpool. If multiple are thrown, the first one thrown is returned.</exception>
         internal void StartThreadpool()
         {
             in_parallel = true;
@@ -132,6 +162,9 @@ namespace DotMP
                 reg.threads[i].Join();
 
             in_parallel = false;
+
+            if (reg.ex is not null)
+                System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(reg.ex).Throw();
         }
     }
 }

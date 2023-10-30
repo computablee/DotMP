@@ -99,7 +99,7 @@ namespace DotMP
     /// <summary>
     /// Implementation of static scheduling.
     /// </summary>
-    internal class StaticScheduler : Schedule
+    internal sealed class StaticScheduler : Schedule
     {
         /// <summary>
         /// The chunk size.
@@ -157,7 +157,7 @@ namespace DotMP
     /// <summary>
     /// Implementation of dynamic scheduling.
     /// </summary>
-    internal class DynamicScheduler : Schedule
+    internal sealed class DynamicScheduler : Schedule
     {
         /// <summary>
         /// The chunk size.
@@ -207,7 +207,7 @@ namespace DotMP
     /// <summary>
     /// Implementation of guided scheduling.
     /// </summary>
-    internal class GuidedScheduler : Schedule
+    internal sealed class GuidedScheduler : Schedule
     {
         /// <summary>
         /// The chunk size.
@@ -272,7 +272,7 @@ namespace DotMP
     /// Placeholder for the runtime scheduler.
     /// Is not meant to be called directly. The Parallel.FixArgs method should detect its existence and swap it out for another scheduler with implementations.
     /// </summary>
-    internal class RuntimeScheduler : Schedule
+    internal sealed class RuntimeScheduler : Schedule
     {
         /// <summary>
         /// Should not be called.
