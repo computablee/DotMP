@@ -1393,12 +1393,12 @@ namespace DotMPTests
 
             Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
-                DotMP.Parallel.ParallelFor(10, 0, chunk_size: 0, action: i => { });
+                DotMP.Parallel.ParallelFor(0, 10, chunk_size: 0, action: i => { });
             });
 
             Assert.Throws<DotMP.InvalidArgumentsException>(() =>
             {
-                DotMP.Parallel.ParallelFor(10, 0, schedule: new Serial(), action: i => { });
+                DotMP.Parallel.ParallelFor(0, 10, schedule: new Serial(), action: i => { });
             });
 
             Assert.Throws<DotMP.InvalidArgumentsException>(() =>
