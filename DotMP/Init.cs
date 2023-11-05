@@ -251,5 +251,42 @@ namespace DotMP
                     break;
             }
         }
+
+        /// <summary>
+        /// Performs a parallel for loop according to the scheduling policy provided.
+        /// </summary>
+        /// <typeparam name="T">The type of reductions, if applicable.</typeparam>
+        /// <param name="scheduler">Scheduler to use while parallelizing the loop.</param>
+        /// <param name="forAction">The function to be executed.</param>
+        internal void PerformLoop<T>(IScheduler scheduler, ForAction<T> forAction)
+        {
+            Thr thr = thread;
+            int start = start_pv;
+            int end = this.end;
+            uint num_threads = this.num_threads;
+            uint chunk_size = chunk_size_pv;
+            int thread_id = Parallel.GetThreadNum();
+
+            T local = default;
+            if (forAction.IsReduction)
+                SetLocal(ref local);
+
+            Parallel.Master(() => scheduler.LoopInit(start, end, num_threads, chunk_size));
+            Parallel.Barrier();
+
+            int chunk_start, chunk_end;
+            ref int curr_iter = ref thr.working_iter;
+
+            while (true)
+            {
+                scheduler.LoopNext(thread_id, out chunk_start, out chunk_end);
+
+                if (chunk_start < chunk_end)
+                    forAction.PerformLoop(ref curr_iter, chunk_start, chunk_end, ref local);
+                else break;
+            }
+
+            AddReductionValue(local);
+        }
     }
 }
