@@ -102,6 +102,9 @@ Package Functions</h2></td></tr>
 <tr class="memitem:a53d787c309c1fdaae4c4e8e7253763af"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1WorkShare.html#a53d787c309c1fdaae4c4e8e7253763af">SetLocal&lt; T &gt;</a> (ref T local)</td></tr>
 <tr class="memdesc:a53d787c309c1fdaae4c4e8e7253763af"><td class="mdescLeft">&#160;</td><td class="mdescRight">Sets the local variable to the appropriate value based on the operation for parallel for reduction loops. For addition and subtraction, the initial starting value is 0. For multiplication, the initial starting value is 1. For binary And, the initial starting value is the bitwise negation of 0. For binary Or and Xor, the initial starting value is 0. For boolean And, the initial starting value is true. For boolean Or, the initial starting value is false. For min, the initial starting value is int.MaxValue. For max, the initial starting value is int.MinValue.  <a href="classDotMP_1_1WorkShare.html#a53d787c309c1fdaae4c4e8e7253763af">More...</a><br /></td></tr>
 <tr class="separator:a53d787c309c1fdaae4c4e8e7253763af"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3d033d132634d2a9c82395246a13cb04"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1WorkShare.html#a3d033d132634d2a9c82395246a13cb04">PerformLoop&lt; T &gt;</a> (<a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; forAction)</td></tr>
+<tr class="memdesc:a3d033d132634d2a9c82395246a13cb04"><td class="mdescLeft">&#160;</td><td class="mdescRight">Performs a parallel for loop according to the scheduling policy provided.  <a href="classDotMP_1_1WorkShare.html#a3d033d132634d2a9c82395246a13cb04">More...</a><br /></td></tr>
+<tr class="separator:a3d033d132634d2a9c82395246a13cb04"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
@@ -293,6 +296,46 @@ Static Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">value</td><td>The value to add to reduction_list.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a3d033d132634d2a9c82395246a13cb04"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3d033d132634d2a9c82395246a13cb04">&#9670;&nbsp;</a></span>PerformLoop&lt; T &gt;()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DotMP.WorkShare.PerformLoop&lt; T &gt; </td>
+          <td>(</td>
+          <td class="paramtype"><a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt;&#160;</td>
+          <td class="paramname"><em>forAction</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">package</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Performs a parallel for loop according to the scheduling policy provided. </p>
+<dl class="tparams"><dt>Template Parameters</dt><dd>
+  <table class="tparams">
+    <tr><td class="paramname">T</td><td>The type of reductions, if applicable.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">forAction</td><td>The function to be executed.</td></tr>
   </table>
   </dd>
 </dl>
@@ -702,7 +745,7 @@ Static Private Attributes</h2></td></tr>
 </div>
 </div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>DotMP/<a class="el" href="Init_8cs.html">Init.cs</a></li>
+<li>DotMP/<a class="el" href="WorkShare_8cs.html">WorkShare.cs</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
