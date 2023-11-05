@@ -311,7 +311,7 @@ namespace DotMP
             ws.in_for = true;
             Interlocked.Increment(ref freg.in_workshare);
 
-            ws.PerformLoop(schedule, forAction);
+            ws.PerformLoop(forAction);
 
             ws.in_for = false;
             Interlocked.Decrement(ref freg.in_workshare);

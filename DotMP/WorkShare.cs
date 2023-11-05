@@ -256,15 +256,15 @@ namespace DotMP
         /// Performs a parallel for loop according to the scheduling policy provided.
         /// </summary>
         /// <typeparam name="T">The type of reductions, if applicable.</typeparam>
-        /// <param name="scheduler">Scheduler to use while parallelizing the loop.</param>
         /// <param name="forAction">The function to be executed.</param>
-        internal void PerformLoop<T>(IScheduler scheduler, ForAction<T> forAction)
+        internal void PerformLoop<T>(ForAction<T> forAction)
         {
             Thr thr = thread;
-            int start = start_pv;
+            int start = this.start;
             int end = this.end;
             uint num_threads = this.num_threads;
-            uint chunk_size = chunk_size_pv;
+            uint chunk_size = this.chunk_size;
+            IScheduler scheduler = schedule;
             int thread_id = Parallel.GetThreadNum();
 
             T local = default;
