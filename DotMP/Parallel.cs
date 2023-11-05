@@ -71,8 +71,7 @@ namespace DotMP
                             break;
                         default:
                             Master(() => Console.WriteLine("Invalid schedule specified by OMP_SCHEDULE, defaulting to static."));
-                            sched = Schedule.Static;
-                            break;
+                            goto case "static";
                     }
 
                     if (parts.Length > 1)
@@ -312,7 +311,7 @@ namespace DotMP
             ws.in_for = true;
             Interlocked.Increment(ref freg.in_workshare);
 
-            Iter.PerformLoop(ws, schedule, forAction);
+            ws.PerformLoop(forAction);
 
             ws.in_for = false;
             Interlocked.Decrement(ref freg.in_workshare);
@@ -1154,8 +1153,6 @@ namespace DotMP
             {
                 throw new NotInParallelRegionException("Cannot use DotMP Ordered outside of a parallel region.");
             }
-
-            int tid = GetThreadNum();
 
             lock (ordered)
             {

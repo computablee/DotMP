@@ -1,8 +1,35 @@
-﻿using System;
+using System;
 using System.Threading;
 
 namespace DotMP
 {
+    #region ScheduleInterface
+    /// <summary>
+    /// Interface for user-defined schedulers.
+    /// </summary>
+    public interface IScheduler
+    {
+        /// <summary>
+        /// Called before each worksharing parallel-for loop.
+        /// Used to instantiate scheduler variables.
+        /// </summary>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="num_threads">The number of threads.</param>
+        /// <param name="chunk_size">Provided chunk size.</param>
+        public void LoopInit(int start, int end, uint num_threads, uint chunk_size);
+
+        /// <summary>
+        /// Called between each chunk to calculate the bounds of the next chunk.
+        /// </summary>
+        /// <param name="thread_id">The thread ID to provide a chunk to.</param>
+        /// <param name="start">The start of the chunk, inclusive.</param>
+        /// <param name="end">The end of the chunk, exclusive.</param>
+        public void LoopNext(int thread_id, out int start, out int end);
+    }
+    #endregion
+
+    #region ScheduleClass
     /// <summary>
     /// Represents the various scheduling strategies for parallel for loops.
     /// Detailed explanations of each scheduling strategy are provided alongside each getter.
@@ -95,7 +122,9 @@ namespace DotMP
         /// <param name="end">The end of the chunk, exclusive.</param>
         public abstract void LoopNext(int thread_id, out int start, out int end);
     }
+    #endregion
 
+    #region Schedulers
     /// <summary>
     /// Implementation of static scheduling.
     /// </summary>
@@ -299,48 +328,5 @@ namespace DotMP
             throw new NotImplementedException("The runtime scheduler isn't meant to be called directly.");
         }
     }
-
-    /// <summary>
-    /// Contains all of the scheduling code for parallel for loops.
-    /// </summary>
-    internal static class Iter
-    {
-        /// <summary>
-        /// Performs a parallel for loop according to the scheduling policy provided.
-        /// </summary>
-        /// <typeparam name="T">The type of reductions, if applicable.</typeparam>
-        /// <param name="ws">The workshare singleton.</param>
-        /// <param name="scheduler">Scheduler to use while parallelizing the loop.</param>
-        /// <param name="forAction">The function to be executed.</param>
-        internal static void PerformLoop<T>(WorkShare ws, IScheduler scheduler, ForAction<T> forAction)
-        {
-            Thr thr = ws.thread;
-            int start = ws.start;
-            int end = ws.end;
-            uint num_threads = ws.num_threads;
-            uint chunk_size = ws.chunk_size;
-            int thread_id = Parallel.GetThreadNum();
-
-            T local = default;
-            if (forAction.IsReduction)
-                ws.SetLocal(ref local);
-
-            Parallel.Master(() => scheduler.LoopInit(start, end, num_threads, chunk_size));
-            Parallel.Barrier();
-
-            int chunk_start, chunk_end;
-            ref int curr_iter = ref thr.working_iter;
-
-            while (true)
-            {
-                scheduler.LoopNext(thread_id, out chunk_start, out chunk_end);
-
-                if (chunk_start < chunk_end)
-                    forAction.PerformLoop(ref curr_iter, chunk_start, chunk_end, ref local);
-                else break;
-            }
-
-            ws.AddReductionValue(local);
-        }
-    }
+    #endregion
 }
