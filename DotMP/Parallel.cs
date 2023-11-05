@@ -71,8 +71,7 @@ namespace DotMP
                             break;
                         default:
                             Master(() => Console.WriteLine("Invalid schedule specified by OMP_SCHEDULE, defaulting to static."));
-                            sched = Schedule.Static;
-                            break;
+                            goto case "static";
                     }
 
                     if (parts.Length > 1)
