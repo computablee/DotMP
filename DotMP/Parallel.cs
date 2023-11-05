@@ -311,7 +311,7 @@ namespace DotMP
             ws.in_for = true;
             Interlocked.Increment(ref freg.in_workshare);
 
-            Iter.PerformLoop(ws, schedule, forAction);
+            ws.PerformLoop(schedule, forAction);
 
             ws.in_for = false;
             Interlocked.Decrement(ref freg.in_workshare);
@@ -1153,8 +1153,6 @@ namespace DotMP
             {
                 throw new NotInParallelRegionException("Cannot use DotMP Ordered outside of a parallel region.");
             }
-
-            int tid = GetThreadNum();
 
             lock (ordered)
             {
