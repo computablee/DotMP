@@ -5,37 +5,6 @@ using System;
 namespace DotMP
 {
     /// <summary>
-    /// Encapsulates a Thread object with information about its progress through a parallel for loop.
-    /// For keeping track of its progress through a parallel for loop, we keep track of the current next iteration of the loop to be worked on, and the iteration the current thread is currently working on.
-    /// </summary>
-    internal class Thr
-    {
-        /// <summary>
-        /// The Thread object to be encapsulated.
-        /// </summary>
-        internal Thread thread;
-        /// <summary>
-        /// The current iteration of the parallel for loop.
-        /// </summary>
-        volatile internal int curr_iter;
-        /// <summary>
-        /// The iteration the thread is currently working on.
-        /// </summary>
-        internal int working_iter;
-
-        /// <summary>
-        /// Creates a Thr object with the specified Thread object.
-        /// </summary>
-        /// <param name="thread">The Thread object to be encapsulated.</param>
-        internal Thr(Thread thread)
-        {
-            this.thread = thread;
-            curr_iter = 0;
-            working_iter = 0;
-        }
-    }
-
-    /// <summary>
     /// Contains all relevant information about a parallel for loop.
     /// Contains a collection of Thr objects, the loop's start and end iterations, the chunk size, the number of threads, and the number of threads that have completed their work.
     /// </summary>
@@ -44,15 +13,19 @@ namespace DotMP
         /// <summary>
         /// The threads to be used in the parallel for loop.
         /// </summary>
-        private static Thr[] threads;
+        private static Thread[] threads;
+        /// <summary>
+        /// The working iterations of each thread.
+        /// </summary>
+        private static int[] working_iters;
         /// <summary>
         /// Get Thr object based on current thread ID.
         /// </summary>
-        internal Thr thread
+        internal int working_iter
         {
             get
             {
-                return threads[Parallel.GetThreadNum()];
+                return working_iters[Parallel.GetThreadNum()];
             }
         }
         /// <summary>
@@ -174,9 +147,8 @@ namespace DotMP
             this.op = op;
             Parallel.Master(() =>
             {
-                WorkShare.threads = new Thr[num_threads];
-                for (int i = 0; i < num_threads; i++)
-                    WorkShare.threads[i] = new Thr(threads[i]);
+                WorkShare.threads = threads;
+                working_iters = new int[num_threads];
                 reduction_list = new List<dynamic>();
                 in_for_pv = new bool[num_threads];
                 start_pv = start;
@@ -259,7 +231,6 @@ namespace DotMP
         /// <param name="forAction">The function to be executed.</param>
         internal void PerformLoop<T>(ForAction<T> forAction)
         {
-            Thr thr = thread;
             int start = this.start;
             int end = this.end;
             uint num_threads = this.num_threads;
@@ -275,18 +246,17 @@ namespace DotMP
             Parallel.Barrier();
 
             int chunk_start, chunk_end;
-            ref int curr_iter = ref thr.working_iter;
+            ref int curr_iter = ref working_iters[thread_id];
 
-            while (true)
+            do
             {
                 scheduler.LoopNext(thread_id, out chunk_start, out chunk_end);
-
-                if (chunk_start < chunk_end)
-                    forAction.PerformLoop(ref curr_iter, chunk_start, chunk_end, ref local);
-                else break;
+                forAction.PerformLoop(ref curr_iter, chunk_start, chunk_end, ref local);
             }
+            while (chunk_start < chunk_end);
 
-            AddReductionValue(local);
+            if (forAction.IsReduction)
+                AddReductionValue(local);
         }
     }
 }
