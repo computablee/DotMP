@@ -1,6 +1,7 @@
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using DivideSharp;
 
 namespace DotMP
 {
@@ -185,6 +186,21 @@ namespace DotMP
         internal bool IsReduction { get; private set; }
 
         /// <summary>
+        /// Divisor for the difference between the second pair of indices.
+        /// </summary>
+        private UInt32Divisor diff2;
+
+        /// <summary>
+        /// Divisor for the difference between the third pair of indices.
+        /// </summary>
+        private UInt32Divisor diff3;
+
+        /// <summary>
+        /// Divisor for the difference between the second pair of indices times the difference between the third pair of indices.
+        /// </summary>
+        private UInt32Divisor diff2tdiff3;
+
+        /// <summary>
         /// Constructor for regular for loops with 1 variable.
         /// </summary>
         /// <param name="action">The action to run.</param>
@@ -220,6 +236,7 @@ namespace DotMP
             this.ranges = ranges;
             IsCollapse = true;
             IsReduction = false;
+            diff2 = new UInt32Divisor((uint)(ranges[1].Item2 - ranges[1].Item1));
         }
 
         /// <summary>
@@ -234,6 +251,8 @@ namespace DotMP
             this.ranges = ranges;
             IsCollapse = true;
             IsReduction = false;
+            diff3 = new UInt32Divisor((uint)(ranges[2].Item2 - ranges[2].Item1));
+            diff2tdiff3 = new UInt32Divisor((uint)((ranges[1].Item2 - ranges[1].Item1) * (ranges[2].Item2 - ranges[2].Item1)));
         }
 
         /// <summary>
@@ -280,6 +299,7 @@ namespace DotMP
             this.ranges = ranges;
             IsCollapse = true;
             IsReduction = true;
+            diff2 = new UInt32Divisor((uint)(ranges[1].Item2 - ranges[1].Item1));
         }
 
         /// <summary>
@@ -294,6 +314,8 @@ namespace DotMP
             this.ranges = ranges;
             IsCollapse = true;
             IsReduction = true;
+            diff3 = new UInt32Divisor((uint)(ranges[2].Item2 - ranges[2].Item1));
+            diff2tdiff3 = new UInt32Divisor((uint)((ranges[1].Item2 - ranges[1].Item1) * (ranges[2].Item2 - ranges[2].Item1)));
         }
 
         /// <summary>
@@ -332,39 +354,38 @@ namespace DotMP
         /// Computes the indices for collapsed loops with 2 indices.
         /// </summary>
         /// <param name="curr_iter">The current iteration to unflatten.</param>
-        /// <param name="diff2">The difference in the second pair of indices.</param>
         /// <param name="start1">The start of the first pair of indices.</param>
         /// <param name="start2">The start of the second pair of indices.</param>
         /// <param name="i">The first computed index.</param>
         /// <param name="j">The second computed index.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ComputeIndices2(int curr_iter, int diff2, int start1, int start2, out int i, out int j)
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ComputeIndices2(int curr_iter, int start1, int start2, out int i, out int j)
         {
-            i = Math.DivRem(curr_iter, diff2, out j);
-            i += start1;
-            j += start2;
+            uint iu, ju;
+            ju = diff2.DivRem((uint)curr_iter, out iu);
+            i = (int)iu + start1;
+            j = (int)ju + start2;
         }
 
         /// <summary>
         /// Computes the indices for collapsed loops with 3 indices.
         /// </summary>
         /// <param name="curr_iter">The current iteration to unflatten.</param>
-        /// <param name="diff2">The difference in the second pair of indices.</param>
-        /// <param name="diff3">The difference in the third pair of indices.</param>
         /// <param name="start1">The start of the first pair of indices.</param>
         /// <param name="start2">The start of the second pair of indices.</param>
         /// <param name="start3">The start of the third pair of indices.</param>
         /// <param name="i">The first computed index.</param>
         /// <param name="j">The second computed index.</param>
         /// <param name="k">The third computed index.</param>
-        [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        private void ComputeIndices3(int curr_iter, int diff2, int diff3, int start1, int start2, int start3, out int i, out int j, out int k)
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        private void ComputeIndices3(int curr_iter, int start1, int start2, int start3, out int i, out int j, out int k)
         {
-            i = Math.DivRem(curr_iter, diff2 * diff3, out j);
-            j = Math.DivRem(j, diff3, out k);
-            i += start1;
-            j += start2;
-            k += start3;
+            uint iu, ju, ku;
+            ju = diff2tdiff3.DivRem((uint)curr_iter, out iu);
+            ku = diff3.DivRem(ju, out ju);
+            i = (int)iu + start1;
+            j = (int)ju + start2;
+            k = (int)ku + start3;
         }
 
         /// <summary>
@@ -421,13 +442,11 @@ namespace DotMP
                 case ActionSelector.Collapse2:
                     int start1 = ranges[0].Item1;
                     int start2 = ranges[1].Item1;
-                    int diff1 = ranges[0].Item2 - start1;
-                    int diff2 = ranges[1].Item2 - start2;
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
                         int i, j;
-                        ComputeIndices2(curr_iter, diff2, start1, start2, out i, out j);
+                        ComputeIndices2(curr_iter, start1, start2, out i, out j);
                         omp_col_2(i, j);
                     }
                     break;
@@ -435,14 +454,11 @@ namespace DotMP
                     start1 = ranges[0].Item1;
                     start2 = ranges[1].Item1;
                     int start3 = ranges[2].Item1;
-                    diff1 = ranges[0].Item2 - start1;
-                    diff2 = ranges[1].Item2 - start2;
-                    int diff3 = ranges[2].Item2 - start3;
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
                         int i, j, k;
-                        ComputeIndices3(curr_iter, diff2, diff3, start1, start2, start3, out i, out j, out k);
+                        ComputeIndices3(curr_iter, start1, start2, start3, out i, out j, out k);
                         omp_col_3(i, j, k);
                     }
                     break;
@@ -463,13 +479,11 @@ namespace DotMP
                 case ActionSelector.ReductionCollapse2:
                     start1 = ranges[0].Item1;
                     start2 = ranges[1].Item1;
-                    diff1 = ranges[0].Item2 - start1;
-                    diff2 = ranges[1].Item2 - start2;
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
                         int i, j;
-                        ComputeIndices2(curr_iter, diff2, start1, start2, out i, out j);
+                        ComputeIndices2(curr_iter, start1, start2, out i, out j);
                         omp_red_col_2(ref local, i, j);
                     }
                     break;
@@ -477,14 +491,11 @@ namespace DotMP
                     start1 = ranges[0].Item1;
                     start2 = ranges[1].Item1;
                     start3 = ranges[2].Item1;
-                    diff1 = ranges[0].Item2 - start1;
-                    diff2 = ranges[1].Item2 - start2;
-                    diff3 = ranges[2].Item2 - start3;
 
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
                         int i, j, k;
-                        ComputeIndices3(curr_iter, diff2, diff3, start1, start2, start3, out i, out j, out k);
+                        ComputeIndices3(curr_iter, start1, start2, start3, out i, out j, out k);
                         omp_red_col_3(ref local, i, j, k);
                     }
                     break;
