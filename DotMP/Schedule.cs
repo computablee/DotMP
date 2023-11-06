@@ -355,7 +355,7 @@ namespace DotMP
         /// Queue struct, ensuring that no two values share a cache line.
         /// This avoids false sharing issues.
         /// </summary>
-        [StructLayout(LayoutKind.Explicit, Size = 192)]
+        [StructLayout(LayoutKind.Explicit, Size = 256)]
         private struct Queue
         {
             /// <summary>
@@ -370,16 +370,24 @@ namespace DotMP
             /// Whether or not there is work remaining in the queue.
             /// </summary>
             [FieldOffset(128)] internal bool work_remaining;
+            /// <summary>
+            /// Lock for this queue.
+            /// </summary>
+            [FieldOffset(192)] internal object qlock;
         }
 
         /// <summary>
-        /// Each thread's queue
+        /// Each thread's queue.
         /// </summary>
         private Queue[] queues;
         /// <summary>
-        /// Chunk size to use
+        /// Chunk size to use.
         /// </summary>
         private uint chunk_size;
+        /// <summary>
+        /// Number of threads.
+        /// </summary>
+        private uint num_threads;
         /// <summary>
         /// Counts the remaining threads with work so threads know when to stop attempting to steal.
         /// </summary>
@@ -397,6 +405,7 @@ namespace DotMP
             this.queues = new Queue[num_threads];
             this.chunk_size = chunk_size;
             this.threads_with_remaining_work = num_threads;
+            this.num_threads = num_threads;
 
             int ctr = start;
             int div = (end - start) / (int)num_threads;
@@ -407,11 +416,13 @@ namespace DotMP
                 ctr += div;
                 queues[i].end = ctr;
                 queues[i].work_remaining = true;
+                queues[i].qlock = new object();
             }
 
             queues[num_threads - 1].start = ctr;
             queues[num_threads - 1].end = end;
             queues[num_threads - 1].work_remaining = true;
+            queues[num_threads - 1].qlock = new object();
         }
 
         /// <summary>
@@ -424,18 +435,19 @@ namespace DotMP
         {
             do
             {
-                start = queues[thread_id].start;
-                end = Math.Min(start + (int)chunk_size, queues[thread_id].end);
+                lock (queues[thread_id].qlock)
+                {
+                    start = queues[thread_id].start;
+                    end = Math.Min(start + (int)chunk_size, queues[thread_id].end);
 
-                if (start >= end)
-                {
-                    StealHandler(thread_id);
+                    if (start < end)
+                    {
+                        queues[thread_id].start += (int)chunk_size;
+                        return;
+                    }
                 }
-                else
-                {
-                    queues[thread_id].start += (int)chunk_size;
-                    return;
-                }
+
+                StealHandler(thread_id);
             }
             while (threads_with_remaining_work > 0);
         }
@@ -466,7 +478,33 @@ namespace DotMP
         /// <returns>Whether or not the steal was successful.</returns>
         private bool DoSteal(int thread_id)
         {
-            return false;
+            int rng = Random.Shared.Next((int)num_threads);
+            int new_start, new_end;
+
+            lock (queues[rng].qlock)
+            {
+                if (queues[rng].start < queues[rng].end)
+                {
+                    int steal_size = (queues[rng].end - queues[rng].start + 1) / 2;
+
+                    new_start = queues[rng].start;
+                    new_end = queues[rng].start + steal_size;
+
+                    queues[rng].start = new_end;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            lock (queues[thread_id].qlock)
+            {
+                queues[thread_id].start = new_start;
+                queues[thread_id].end = new_end;
+            }
+
+            return true;
         }
     }
     #endregion
