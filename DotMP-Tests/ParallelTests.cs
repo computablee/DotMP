@@ -106,8 +106,42 @@ namespace DotMPTests
                 correct[i] = 3.0f;
             }
 
-            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.WorkStealing, 128);
+            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.WorkStealing, 1);
 
+            Assert.Equal(z, correct);
+        }
+
+        /// <summary>
+        /// Tests to ensure that workstealing adequately load balances.
+        /// </summary>
+        [Fact]
+        public void Workstealing_load_balances()
+        {
+            int workload = 100_000;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+            float[] z = new float[workload];
+            float[] correct = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+                correct[i] = 3.0f;
+            }
+
+            double start = DotMP.Parallel.GetWTime();
+            DotMP.Parallel.ParallelFor(0, workload, num_threads: 6, schedule: DotMP.Schedule.WorkStealing, chunk_size: 1, action: i =>
+            {
+                if (i < 6)
+                    Thread.Sleep(1000);
+
+                z[i] = 2.0f * x[i] + y[i];
+            });
+            double end = DotMP.Parallel.GetWTime() - start;
+
+            end.Should().BeLessThan(1.5);
             Assert.Equal(z, correct);
         }
 
