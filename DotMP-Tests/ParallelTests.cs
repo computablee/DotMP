@@ -468,6 +468,13 @@ namespace DotMPTests
                 DotMP.Parallel.GetChunkSize().Should().Be(8);
             });
 
+            Environment.SetEnvironmentVariable("OMP_SCHEDULE", "workstealing,garbage");
+            DotMP.Parallel.ParallelFor(0, 1024, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
+            {
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.WorkStealing);
+                DotMP.Parallel.GetChunkSize().Should().Be(8);
+            });
+
             Environment.SetEnvironmentVariable("OMP_SCHEDULE", null);
             DotMP.Parallel.ParallelFor(0, 1024, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
             {
