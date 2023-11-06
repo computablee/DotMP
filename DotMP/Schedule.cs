@@ -151,17 +151,21 @@ namespace DotMP
     internal sealed class StaticScheduler : Schedule
     {
         /// <summary>
+        /// Struct to ensure that the curr_iter variables cannot reside on the same cache line.
+        /// Avoids false sharing bottlenecks.
+        /// </summary>
+        [StructLayout(LayoutKind.Sequential, Pack = 64, Size = 64)]
+        private struct IterWrapper
+        {
+            /// <summary>
+            /// A thread's current iteration.
+            /// </summary>
+            internal int curr_iter;
+        }
+        /// <summary>
         /// The chunk size.
         /// </summary>
         private uint chunk_size;
-        /// <summary>
-        /// Number of threads.
-        /// </summary>
-        private uint num_threads;
-        /// <summary>
-        /// Start of the loop, inclusive.
-        /// </summary>
-        private int start;
         /// <summary>
         /// End of the loop, exclusive.
         /// </summary>
@@ -169,7 +173,11 @@ namespace DotMP
         /// <summary>
         /// Bookkeeping to check which iteration each thread is on.
         /// </summary>
-        private int[] curr_iters;
+        private IterWrapper[] curr_iters;
+        /// <summary>
+        /// How much to advance by after each chunk.
+        /// </summary>
+        private int advance_by;
 
         /// <summary>
         /// Override method for LoopInit, is called when first starting a static loop.
@@ -181,12 +189,11 @@ namespace DotMP
         public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
         {
             this.chunk_size = chunk_size;
-            this.start = start;
             this.end = end;
-            this.num_threads = num_threads;
-            curr_iters = new int[num_threads];
+            advance_by = (int)(chunk_size * num_threads);
+            curr_iters = new IterWrapper[num_threads];
             for (int i = 0; i < num_threads; i++)
-                curr_iters[i] = start + ((int)chunk_size * i);
+                curr_iters[i].curr_iter = start + ((int)chunk_size * i);
         }
 
         /// <summary>
@@ -197,9 +204,9 @@ namespace DotMP
         /// <param name="end">The end of the chunk, exclusive.</param>
         public override void LoopNext(int thread_id, out int start, out int end)
         {
-            start = curr_iters[thread_id];
+            start = curr_iters[thread_id].curr_iter;
             end = Math.Min(start + (int)chunk_size, this.end);
-            curr_iters[thread_id] += (int)(chunk_size * num_threads);
+            curr_iters[thread_id].curr_iter += advance_by;
         }
     }
 
@@ -212,10 +219,6 @@ namespace DotMP
         /// The chunk size.
         /// </summary>
         private uint chunk_size;
-        /// <summary>
-        /// Number of threads.
-        /// </summary>
-        private uint num_threads;
         /// <summary>
         /// Start of the loop, inclusive.
         /// </summary>
@@ -237,7 +240,6 @@ namespace DotMP
             this.chunk_size = chunk_size;
             this.start = start;
             this.end = end;
-            this.num_threads = num_threads;
         }
 
         /// <summary>
