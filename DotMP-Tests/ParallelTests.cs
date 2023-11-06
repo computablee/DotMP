@@ -60,10 +60,7 @@ namespace DotMPTests
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Static, null);
             float[] z2 = saxpy_parallelfor(2.0f, x, y);
 
-            for (int i = 0; i < z.Length; i++)
-            {
-                z[i].Should().Be(z2[i]);
-            }
+            Assert.Equal(z, z2);
         }
 
         /// <summary>
@@ -76,19 +73,42 @@ namespace DotMPTests
 
             float[] x = new float[workload];
             float[] y = new float[workload];
+            float[] correct = new float[workload];
 
             for (int i = 0; i < x.Length; i++)
             {
                 x[i] = 1.0f;
                 y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
 
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Guided, 3);
 
-            for (int i = 0; i < z.Length; i++)
+            Assert.Equal(z, correct);
+        }
+
+        /// <summary>
+        /// Tests to make sure that DotMP.Schedule.Guided produces correct results.
+        /// </summary>
+        [Fact]
+        public void Workstealing_should_produce_correct_results()
+        {
+            int workload = 1_000_000;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+            float[] correct = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
             {
-                z[i].Should().Be(3.0f);
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
+
+            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.WorkStealing, 128);
+
+            Assert.Equal(z, correct);
         }
 
         /// <summary>
@@ -101,19 +121,18 @@ namespace DotMPTests
 
             float[] x = new float[workload];
             float[] y = new float[workload];
+            float[] correct = new float[workload];
 
             for (int i = 0; i < x.Length; i++)
             {
                 x[i] = 1.0f;
                 y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
 
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Static, 1024);
 
-            for (int i = 0; i < z.Length; i++)
-            {
-                z[i].Should().Be(3.0f);
-            }
+            Assert.Equal(z, correct);
         }
 
         /// <summary>
@@ -126,19 +145,18 @@ namespace DotMPTests
 
             float[] x = new float[workload];
             float[] y = new float[workload];
+            float[] correct = new float[workload];
 
             for (int i = 0; i < x.Length; i++)
             {
                 x[i] = 1.0f;
                 y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
 
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Dynamic, 1);
 
-            for (int i = 0; i < z.Length; i++)
-            {
-                z[i].Should().Be(3.0f);
-            }
+            Assert.Equal(z, correct);
         }
 
         /// <summary>
