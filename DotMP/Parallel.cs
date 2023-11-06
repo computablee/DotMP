@@ -66,6 +66,9 @@ namespace DotMP
                         case "guided":
                             sched = Schedule.Guided;
                             break;
+                        case "workstealing":
+                            sched = Schedule.WorkStealing;
+                            break;
                         case "static":
                             sched = Schedule.Static;
                             break;
@@ -97,7 +100,7 @@ namespace DotMP
                     if ((end - start) % num_threads > 0)
                         chunk_size++;
                 }
-                else if (sched is DynamicScheduler)
+                else if (sched is DynamicScheduler || sched is WorkStealingScheduler)
                 {
                     chunk_size = (uint)((end - start) / num_threads) / 32;
                     if (chunk_size < 1) chunk_size = 1;
@@ -137,7 +140,7 @@ namespace DotMP
             if ((num_tasks is not null && num_tasks < 1) || (grainsize is not null && grainsize < 1))
                 throw new InvalidArgumentsException(string.Format("Number of tasks ({0}) and grain size ({1}) must both be positive integers.", num_tasks, grainsize));
 
-            if (schedule is not null && schedule is not StaticScheduler && schedule is not DynamicScheduler && schedule is not GuidedScheduler && schedule is not RuntimeScheduler && chunk_size is null)
+            if (schedule is not null && schedule is not StaticScheduler && schedule is not DynamicScheduler && schedule is not GuidedScheduler && schedule is not RuntimeScheduler && schedule is not WorkStealingScheduler && chunk_size is null)
                 throw new InvalidArgumentsException(string.Format("Chunk size must be specified with user-defined schedulers, as it cannot be inferred."));
         }
 
@@ -1165,7 +1168,7 @@ namespace DotMP
 
             WorkShare ws = new WorkShare();
 
-            while (ordered[id] != ws.thread.working_iter) ;
+            while (ordered[id] != ws.working_iter) ;
 
             action();
 
