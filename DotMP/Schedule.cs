@@ -351,6 +351,9 @@ namespace DotMP
         }
     }
 
+    /// <summary>
+    /// Implementation of work-stealing scheduling.
+    /// </summary>
     internal sealed class WorkStealingScheduler : Schedule
     {
         /// <summary>
