@@ -106,7 +106,7 @@ namespace DotMPTests
                 correct[i] = 3.0f;
             }
 
-            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.WorkStealing, 1);
+            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.WorkStealing, 3);
 
             Assert.Equal(z, correct);
         }
@@ -1625,7 +1625,7 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelFor(0, x.Length, schedule: DotMP.Schedule.Guided, action: i =>
             {
-                z[i] = a * x[i] + y[i];
+                z[i] += a * x[i] + y[i];
             });
 
             return z;
