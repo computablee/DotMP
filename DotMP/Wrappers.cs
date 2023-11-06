@@ -3,6 +3,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using DivideSharp;
 
+/* jscpd:ignore-start */
 namespace DotMP
 {
     /// <summary>
@@ -426,7 +427,6 @@ namespace DotMP
         {
             switch (selector)
             {
-                /* jscpd:ignore-start */
                 case ActionSelector.Regular:
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
@@ -513,8 +513,8 @@ namespace DotMP
                         omp_red_col_n(ref local, indices);
                     }
                     break;
-                    /* jscpd:ignore-end */
             }
         }
     }
 }
+/* jscpd:ignore-end */
