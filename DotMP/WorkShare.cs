@@ -251,7 +251,8 @@ namespace DotMP
             do
             {
                 scheduler.LoopNext(thread_id, out chunk_start, out chunk_end);
-                forAction.PerformLoop(ref curr_iter, chunk_start, chunk_end, ref local);
+                if (chunk_start < chunk_end)
+                    forAction.PerformLoop(ref curr_iter, chunk_start, chunk_end, ref local);
             }
             while (chunk_start < chunk_end);
 
