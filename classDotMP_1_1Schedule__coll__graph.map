@@ -1,9 +1,12 @@
 <map id="DotMP.Schedule" name="DotMP.Schedule">
-<area shape="rect" id="node1" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="773,114,900,141"/>
-<area shape="rect" id="node2" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,62,96,89"/>
-<area shape="rect" id="node4" href="$classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="145,136,227,162"/>
-<area shape="rect" id="node3" href="$classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="407,57,593,84"/>
-<area shape="rect" id="node5" href="$classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="411,114,589,141"/>
-<area shape="rect" id="node6" href="$classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="405,180,595,206"/>
-<area shape="rect" id="node7" href="$classDotMP_1_1StaticScheduler.html" title="Implementation of static scheduling." alt="" coords="416,258,584,285"/>
+<area shape="rect" id="node1" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="996,211,1123,238"/>
+<area shape="rect" id="node2" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,110,96,136"/>
+<area shape="rect" id="node4" href="$classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="215,234,296,260"/>
+<area shape="rect" id="node3" href="$classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="587,186,774,212"/>
+<area shape="rect" id="node5" href="$classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="592,311,769,338"/>
+<area shape="rect" id="node6" href="$classDotMP_1_1WorkStealingScheduler.html" title="Implementation of work&#45;stealing scheduling." alt="" coords="572,407,789,434"/>
+<area shape="rect" id="node8" href="$classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="586,236,775,263"/>
+<area shape="rect" id="node9" href="$classDotMP_1_1StaticScheduler.html" title="Implementation of static scheduling." alt="" coords="597,92,765,119"/>
+<area shape="rect" id="node7" href="$structDotMP_1_1WorkStealingScheduler_1_1Queue.html" title="Queue struct, ensuring that no two values share a cache line. This avoids false sharing issues." alt="" coords="145,462,365,504"/>
+<area shape="rect" id="node10" href="$structDotMP_1_1StaticScheduler_1_1IterWrapper.html" title="Struct to ensure that the curr_iter variables cannot reside on the same cache line...." alt="" coords="159,36,352,77"/>
 </map>

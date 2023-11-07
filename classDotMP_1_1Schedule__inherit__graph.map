@@ -1,8 +1,9 @@
 <map id="DotMP.Schedule" name="DotMP.Schedule">
-<area shape="rect" id="node1" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="144,81,271,108"/>
-<area shape="rect" id="node3" href="$classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="319,5,508,32"/>
-<area shape="rect" id="node4" href="$classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="325,56,502,83"/>
-<area shape="rect" id="node5" href="$classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="320,107,507,133"/>
-<area shape="rect" id="node6" href="$classDotMP_1_1StaticScheduler.html" title="Implementation of static scheduling." alt="" coords="329,157,497,184"/>
-<area shape="rect" id="node2" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,81,96,108"/>
+<area shape="rect" id="node1" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="144,107,271,133"/>
+<area shape="rect" id="node3" href="$classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="333,5,522,32"/>
+<area shape="rect" id="node4" href="$classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="339,56,516,83"/>
+<area shape="rect" id="node5" href="$classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="334,107,521,133"/>
+<area shape="rect" id="node6" href="$classDotMP_1_1StaticScheduler.html" title="Implementation of static scheduling." alt="" coords="343,157,511,184"/>
+<area shape="rect" id="node7" href="$classDotMP_1_1WorkStealingScheduler.html" title="Implementation of work&#45;stealing scheduling." alt="" coords="319,208,536,235"/>
+<area shape="rect" id="node2" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,107,96,133"/>
 </map>

@@ -66,8 +66,9 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#nested-classes">Classes</a> &#124;
 <a href="#pub-methods">Public Member Functions</a> &#124;
-<a href="#pac-attribs">Package Attributes</a> &#124;
+<a href="#pri-attribs">Private Attributes</a> &#124;
 <a href="classDotMP_1_1StaticScheduler-members.html">List of all members</a>  </div>
   <div class="headertitle">
 <div class="title">DotMP.StaticScheduler Class Reference</div>  </div>
@@ -91,41 +92,47 @@ Collaboration diagram for DotMP.StaticScheduler:</div>
 <div class="dyncontent">
 <div class="center"><img src="classDotMP_1_1StaticScheduler__coll__graph.png" border="0" usemap="#aDotMP_8StaticScheduler_coll__map" alt="Collaboration graph"/></div>
 <map name="aDotMP_8StaticScheduler_coll__map" id="aDotMP_8StaticScheduler_coll__map">
-<area shape="rect" title="Implementation of static scheduling." alt="" coords="100,5,268,32"/>
-<area shape="rect" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="269,95,350,121"/>
-<area shape="rect" href="classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="5,184,192,211"/>
-<area shape="rect" href="classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="217,184,394,211"/>
-<area shape="rect" href="classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="419,184,608,211"/>
-<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="297,5,388,32"/>
+<area shape="rect" title="Implementation of static scheduling." alt="" coords="312,221,480,247"/>
+<area shape="rect" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="708,191,789,218"/>
+<area shape="rect" href="classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="1081,153,1267,179"/>
+<area shape="rect" href="classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="1085,239,1263,266"/>
+<area shape="rect" href="classDotMP_1_1WorkStealingScheduler.html" title="Implementation of work&#45;stealing scheduling." alt="" coords="1065,57,1283,83"/>
+<area shape="rect" href="classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="1079,303,1269,330"/>
+<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="351,157,441,183"/>
+<area shape="rect" href="structDotMP_1_1WorkStealingScheduler_1_1Queue.html" title="Queue struct, ensuring that no two values share a cache line. This avoids false sharing issues." alt="" coords="639,5,859,47"/>
+<area shape="rect" href="structDotMP_1_1StaticScheduler_1_1IterWrapper.html" title="Struct to ensure that the curr_iter variables cannot reside on the same cache line...." alt="" coords="5,213,199,255"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
+Classes</h2></td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDotMP_1_1StaticScheduler_1_1IterWrapper.html">IterWrapper</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct to ensure that the curr_iter variables cannot reside on the same cache line. Avoids false sharing bottlenecks.  <a href="structDotMP_1_1StaticScheduler_1_1IterWrapper.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-methods"></a>
 Public Member Functions</h2></td></tr>
-<tr class="memitem:a50c1e26c3b96752522cb05ed7153fffa"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html#a50c1e26c3b96752522cb05ed7153fffa">LoopInit</a> (int <a class="el" href="classDotMP_1_1StaticScheduler.html#a46ae485f1926d8c976ee5c3b32ec0ac7">start</a>, int <a class="el" href="classDotMP_1_1StaticScheduler.html#a78fda89e1534274ed0fa940897191443">end</a>, uint <a class="el" href="classDotMP_1_1StaticScheduler.html#a8a9f15c96e21dca6305ced2919745745">num_threads</a>, uint <a class="el" href="classDotMP_1_1StaticScheduler.html#a98b7b116929a1aa5b2ef9a85928e33f4">chunk_size</a>)</td></tr>
+<tr class="memitem:a50c1e26c3b96752522cb05ed7153fffa"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html#a50c1e26c3b96752522cb05ed7153fffa">LoopInit</a> (int start, int <a class="el" href="classDotMP_1_1StaticScheduler.html#a78fda89e1534274ed0fa940897191443">end</a>, uint num_threads, uint <a class="el" href="classDotMP_1_1StaticScheduler.html#a98b7b116929a1aa5b2ef9a85928e33f4">chunk_size</a>)</td></tr>
 <tr class="memdesc:a50c1e26c3b96752522cb05ed7153fffa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Override method for LoopInit, is called when first starting a static loop.  <a href="classDotMP_1_1StaticScheduler.html#a50c1e26c3b96752522cb05ed7153fffa">More...</a><br /></td></tr>
 <tr class="separator:a50c1e26c3b96752522cb05ed7153fffa"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a4f3f161d8e2ed13f7727d76efc92cf45"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html#a4f3f161d8e2ed13f7727d76efc92cf45">LoopNext</a> (int thread_id, out int <a class="el" href="classDotMP_1_1StaticScheduler.html#a46ae485f1926d8c976ee5c3b32ec0ac7">start</a>, out int <a class="el" href="classDotMP_1_1StaticScheduler.html#a78fda89e1534274ed0fa940897191443">end</a>)</td></tr>
+<tr class="memitem:a4f3f161d8e2ed13f7727d76efc92cf45"><td class="memItemLeft" align="right" valign="top">override void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html#a4f3f161d8e2ed13f7727d76efc92cf45">LoopNext</a> (int thread_id, out int start, out int <a class="el" href="classDotMP_1_1StaticScheduler.html#a78fda89e1534274ed0fa940897191443">end</a>)</td></tr>
 <tr class="memdesc:a4f3f161d8e2ed13f7727d76efc92cf45"><td class="mdescLeft">&#160;</td><td class="mdescRight">Override method for LoopNext, is called to get the bounds of the next chunk to execute.  <a href="classDotMP_1_1StaticScheduler.html#a4f3f161d8e2ed13f7727d76efc92cf45">More...</a><br /></td></tr>
 <tr class="separator:a4f3f161d8e2ed13f7727d76efc92cf45"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
-<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pac-attribs"></a>
-Package Attributes</h2></td></tr>
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
+Private Attributes</h2></td></tr>
 <tr class="memitem:a98b7b116929a1aa5b2ef9a85928e33f4"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html#a98b7b116929a1aa5b2ef9a85928e33f4">chunk_size</a></td></tr>
 <tr class="memdesc:a98b7b116929a1aa5b2ef9a85928e33f4"><td class="mdescLeft">&#160;</td><td class="mdescRight">The chunk size.  <a href="classDotMP_1_1StaticScheduler.html#a98b7b116929a1aa5b2ef9a85928e33f4">More...</a><br /></td></tr>
 <tr class="separator:a98b7b116929a1aa5b2ef9a85928e33f4"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a8a9f15c96e21dca6305ced2919745745"><td class="memItemLeft" align="right" valign="top">uint&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html#a8a9f15c96e21dca6305ced2919745745">num_threads</a></td></tr>
-<tr class="memdesc:a8a9f15c96e21dca6305ced2919745745"><td class="mdescLeft">&#160;</td><td class="mdescRight">Number of threads.  <a href="classDotMP_1_1StaticScheduler.html#a8a9f15c96e21dca6305ced2919745745">More...</a><br /></td></tr>
-<tr class="separator:a8a9f15c96e21dca6305ced2919745745"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a46ae485f1926d8c976ee5c3b32ec0ac7"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html#a46ae485f1926d8c976ee5c3b32ec0ac7">start</a></td></tr>
-<tr class="memdesc:a46ae485f1926d8c976ee5c3b32ec0ac7"><td class="mdescLeft">&#160;</td><td class="mdescRight">Start of the loop, inclusive.  <a href="classDotMP_1_1StaticScheduler.html#a46ae485f1926d8c976ee5c3b32ec0ac7">More...</a><br /></td></tr>
-<tr class="separator:a46ae485f1926d8c976ee5c3b32ec0ac7"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78fda89e1534274ed0fa940897191443"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html#a78fda89e1534274ed0fa940897191443">end</a></td></tr>
 <tr class="memdesc:a78fda89e1534274ed0fa940897191443"><td class="mdescLeft">&#160;</td><td class="mdescRight">End of the loop, exclusive.  <a href="classDotMP_1_1StaticScheduler.html#a78fda89e1534274ed0fa940897191443">More...</a><br /></td></tr>
 <tr class="separator:a78fda89e1534274ed0fa940897191443"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a63da85397a6268e58617c764ebe97874"><td class="memItemLeft" align="right" valign="top">int[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html#a63da85397a6268e58617c764ebe97874">curr_iters</a></td></tr>
-<tr class="memdesc:a63da85397a6268e58617c764ebe97874"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bookkeeping to check which iteration each thread is on.  <a href="classDotMP_1_1StaticScheduler.html#a63da85397a6268e58617c764ebe97874">More...</a><br /></td></tr>
-<tr class="separator:a63da85397a6268e58617c764ebe97874"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a4c119ae46eefe61118ebd056762877cb"><td class="memItemLeft" align="right" valign="top"><a class="el" href="structDotMP_1_1StaticScheduler_1_1IterWrapper.html">IterWrapper</a>[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html#a4c119ae46eefe61118ebd056762877cb">curr_iters</a></td></tr>
+<tr class="memdesc:a4c119ae46eefe61118ebd056762877cb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Bookkeeping to check which iteration each thread is on.  <a href="classDotMP_1_1StaticScheduler.html#a4c119ae46eefe61118ebd056762877cb">More...</a><br /></td></tr>
+<tr class="separator:a4c119ae46eefe61118ebd056762877cb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad606adf423da62392cb2f8b28ef910f5"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html#ad606adf423da62392cb2f8b28ef910f5">advance_by</a></td></tr>
+<tr class="memdesc:ad606adf423da62392cb2f8b28ef910f5"><td class="mdescLeft">&#160;</td><td class="mdescRight">How much to advance by after each chunk.  <a href="classDotMP_1_1StaticScheduler.html#ad606adf423da62392cb2f8b28ef910f5">More...</a><br /></td></tr>
+<tr class="separator:ad606adf423da62392cb2f8b28ef910f5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="inherited"></a>
 Additional Inherited Members</h2></td></tr>
@@ -142,6 +149,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:ad938151822cdde06bc0a2fdcf8ac48ee inherit properties_classDotMP_1_1Schedule"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1Schedule.html">Schedule</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#ad938151822cdde06bc0a2fdcf8ac48ee">Runtime</a><code> [get]</code></td></tr>
 <tr class="memdesc:ad938151822cdde06bc0a2fdcf8ac48ee inherit properties_classDotMP_1_1Schedule"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runtime-defined scheduling strategy. <a class="el" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc...">Schedule</a> is determined by the 'OMP_SCHEDULE' environment variable. Expected format: "schedule[,chunk_size]", e.g., "static,128", "guided", or "dynamic,3".  <a href="classDotMP_1_1Schedule.html#ad938151822cdde06bc0a2fdcf8ac48ee">More...</a><br /></td></tr>
 <tr class="separator:ad938151822cdde06bc0a2fdcf8ac48ee inherit properties_classDotMP_1_1Schedule"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47784117dd10aaaf94c739656aa30844 inherit properties_classDotMP_1_1Schedule"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1Schedule.html">Schedule</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#a47784117dd10aaaf94c739656aa30844">WorkStealing</a><code> [get]</code></td></tr>
+<tr class="memdesc:a47784117dd10aaaf94c739656aa30844 inherit properties_classDotMP_1_1Schedule"><td class="mdescLeft">&#160;</td><td class="mdescRight">The work-stealing scheduling strategy. Each thread gets its own local queue of iterations to execute. If a thread's queue is empty, it randomly selects another thread's queue as its "victim" and steals half of its remaining iterations. The chunk size parameter specifies how many iterations a thread should execute from its local queue at a time.  <a href="classDotMP_1_1Schedule.html#a47784117dd10aaaf94c739656aa30844">More...</a><br /></td></tr>
+<tr class="separator:a47784117dd10aaaf94c739656aa30844 inherit properties_classDotMP_1_1Schedule"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Implementation of static scheduling. </p>
@@ -262,6 +272,30 @@ Additional Inherited Members</h2></td></tr>
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
+<a id="ad606adf423da62392cb2f8b28ef910f5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad606adf423da62392cb2f8b28ef910f5">&#9670;&nbsp;</a></span>advance_by</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int DotMP.StaticScheduler.advance_by</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>How much to advance by after each chunk. </p>
+
+</div>
+</div>
 <a id="a98b7b116929a1aa5b2ef9a85928e33f4"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a98b7b116929a1aa5b2ef9a85928e33f4">&#9670;&nbsp;</a></span>chunk_size</h2>
 
@@ -277,7 +311,7 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span></span>  </td>
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -286,8 +320,8 @@ Additional Inherited Members</h2></td></tr>
 
 </div>
 </div>
-<a id="a63da85397a6268e58617c764ebe97874"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a63da85397a6268e58617c764ebe97874">&#9670;&nbsp;</a></span>curr_iters</h2>
+<a id="a4c119ae46eefe61118ebd056762877cb"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a4c119ae46eefe61118ebd056762877cb">&#9670;&nbsp;</a></span>curr_iters</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -296,12 +330,12 @@ Additional Inherited Members</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">int [] DotMP.StaticScheduler.curr_iters</td>
+          <td class="memname"><a class="el" href="structDotMP_1_1StaticScheduler_1_1IterWrapper.html">IterWrapper</a> [] DotMP.StaticScheduler.curr_iters</td>
         </tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span></span>  </td>
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
@@ -325,60 +359,12 @@ Additional Inherited Members</h2></td></tr>
       </table>
   </td>
   <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span></span>  </td>
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
   </tr>
 </table>
 </div><div class="memdoc">
 
 <p>End of the loop, exclusive. </p>
-
-</div>
-</div>
-<a id="a8a9f15c96e21dca6305ced2919745745"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8a9f15c96e21dca6305ced2919745745">&#9670;&nbsp;</a></span>num_threads</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">uint DotMP.StaticScheduler.num_threads</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Number of threads. </p>
-
-</div>
-</div>
-<a id="a46ae485f1926d8c976ee5c3b32ec0ac7"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a46ae485f1926d8c976ee5c3b32ec0ac7">&#9670;&nbsp;</a></span>start</h2>
-
-<div class="memitem">
-<div class="memproto">
-<table class="mlabels">
-  <tr>
-  <td class="mlabels-left">
-      <table class="memname">
-        <tr>
-          <td class="memname">int DotMP.StaticScheduler.start</td>
-        </tr>
-      </table>
-  </td>
-  <td class="mlabels-right">
-<span class="mlabels"><span class="mlabel">package</span></span>  </td>
-  </tr>
-</table>
-</div><div class="memdoc">
-
-<p>Start of the loop, inclusive. </p>
 
 </div>
 </div>

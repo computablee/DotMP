@@ -1,0 +1,5 @@
+<map id="DotMP.WorkStealingScheduler" name="DotMP.WorkStealingScheduler">
+<area shape="rect" id="node1" title="Implementation of work&#45;stealing scheduling." alt="" coords="5,155,223,181"/>
+<area shape="rect" id="node2" href="$classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="73,80,155,107"/>
+<area shape="rect" id="node3" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="69,5,159,32"/>
+</map>

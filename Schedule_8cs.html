@@ -84,6 +84,9 @@ Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html">DotMP.StaticScheduler</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of static scheduling.  <a href="classDotMP_1_1StaticScheduler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDotMP_1_1StaticScheduler_1_1IterWrapper.html">DotMP.StaticScheduler.IterWrapper</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Struct to ensure that the curr_iter variables cannot reside on the same cache line. Avoids false sharing bottlenecks.  <a href="structDotMP_1_1StaticScheduler_1_1IterWrapper.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1DynamicScheduler.html">DotMP.DynamicScheduler</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of dynamic scheduling.  <a href="classDotMP_1_1DynamicScheduler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -92,6 +95,12 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1RuntimeScheduler.html">DotMP.RuntimeScheduler</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for the runtime scheduler. Is not meant to be called directly. The <a class="el" href="classDotMP_1_1Parallel.html#ac3592a3029e775b2991b33632980c17d" title="Fixes the arguments for a parallel for loop. If a Schedule is set to Static, Dynamic,...">Parallel.FixArgs</a> method should detect its existence and swap it out for another scheduler with implementations.  <a href="classDotMP_1_1RuntimeScheduler.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1WorkStealingScheduler.html">DotMP.WorkStealingScheduler</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of work-stealing scheduling.  <a href="classDotMP_1_1WorkStealingScheduler.html#details">More...</a><br /></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">struct &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="structDotMP_1_1WorkStealingScheduler_1_1Queue.html">DotMP.WorkStealingScheduler.Queue</a></td></tr>
+<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="structDotMP_1_1WorkStealingScheduler_1_1Queue.html" title="Queue struct, ensuring that no two values share a cache line. This avoids false sharing issues.">Queue</a> struct, ensuring that no two values share a cache line. This avoids false sharing issues.  <a href="structDotMP_1_1WorkStealingScheduler_1_1Queue.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>

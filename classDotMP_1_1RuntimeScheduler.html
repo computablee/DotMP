@@ -90,12 +90,15 @@ Collaboration diagram for DotMP.RuntimeScheduler:</div>
 <div class="dyncontent">
 <div class="center"><img src="classDotMP_1_1RuntimeScheduler__coll__graph.png" border="0" usemap="#aDotMP_8RuntimeScheduler_coll__map" alt="Collaboration graph"/></div>
 <map name="aDotMP_8RuntimeScheduler_coll__map" id="aDotMP_8RuntimeScheduler_coll__map">
-<area shape="rect" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="62,5,249,32"/>
-<area shape="rect" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="252,95,333,121"/>
-<area shape="rect" href="classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="5,184,183,211"/>
-<area shape="rect" href="classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="210,184,399,211"/>
-<area shape="rect" href="classDotMP_1_1StaticScheduler.html" title="Implementation of static scheduling." alt="" coords="425,184,593,211"/>
-<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="281,5,371,32"/>
+<area shape="rect" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="5,149,192,175"/>
+<area shape="rect" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="435,179,516,206"/>
+<area shape="rect" href="classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="812,225,989,251"/>
+<area shape="rect" href="classDotMP_1_1WorkStealingScheduler.html" title="Implementation of work&#45;stealing scheduling." alt="" coords="792,314,1009,341"/>
+<area shape="rect" href="classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="806,35,995,62"/>
+<area shape="rect" href="classDotMP_1_1StaticScheduler.html" title="Implementation of static scheduling." alt="" coords="817,122,985,149"/>
+<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="53,213,144,239"/>
+<area shape="rect" href="structDotMP_1_1WorkStealingScheduler_1_1Queue.html" title="Queue struct, ensuring that no two values share a cache line. This avoids false sharing issues." alt="" coords="365,352,585,393"/>
+<area shape="rect" href="structDotMP_1_1StaticScheduler_1_1IterWrapper.html" title="Struct to ensure that the curr_iter variables cannot reside on the same cache line...." alt="" coords="379,25,572,67"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -123,6 +126,9 @@ Additional Inherited Members</h2></td></tr>
 <tr class="memitem:ad938151822cdde06bc0a2fdcf8ac48ee inherit properties_classDotMP_1_1Schedule"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1Schedule.html">Schedule</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#ad938151822cdde06bc0a2fdcf8ac48ee">Runtime</a><code> [get]</code></td></tr>
 <tr class="memdesc:ad938151822cdde06bc0a2fdcf8ac48ee inherit properties_classDotMP_1_1Schedule"><td class="mdescLeft">&#160;</td><td class="mdescRight">Runtime-defined scheduling strategy. <a class="el" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc...">Schedule</a> is determined by the 'OMP_SCHEDULE' environment variable. Expected format: "schedule[,chunk_size]", e.g., "static,128", "guided", or "dynamic,3".  <a href="classDotMP_1_1Schedule.html#ad938151822cdde06bc0a2fdcf8ac48ee">More...</a><br /></td></tr>
 <tr class="separator:ad938151822cdde06bc0a2fdcf8ac48ee inherit properties_classDotMP_1_1Schedule"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a47784117dd10aaaf94c739656aa30844 inherit properties_classDotMP_1_1Schedule"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1Schedule.html">Schedule</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#a47784117dd10aaaf94c739656aa30844">WorkStealing</a><code> [get]</code></td></tr>
+<tr class="memdesc:a47784117dd10aaaf94c739656aa30844 inherit properties_classDotMP_1_1Schedule"><td class="mdescLeft">&#160;</td><td class="mdescRight">The work-stealing scheduling strategy. Each thread gets its own local queue of iterations to execute. If a thread's queue is empty, it randomly selects another thread's queue as its "victim" and steals half of its remaining iterations. The chunk size parameter specifies how many iterations a thread should execute from its local queue at a time.  <a href="classDotMP_1_1Schedule.html#a47784117dd10aaaf94c739656aa30844">More...</a><br /></td></tr>
+<tr class="separator:a47784117dd10aaaf94c739656aa30844 inherit properties_classDotMP_1_1Schedule"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Placeholder for the runtime scheduler. Is not meant to be called directly. The <a class="el" href="classDotMP_1_1Parallel.html#ac3592a3029e775b2991b33632980c17d" title="Fixes the arguments for a parallel for loop. If a Schedule is set to Static, Dynamic,...">Parallel.FixArgs</a> method should detect its existence and swap it out for another scheduler with implementations. </p>

@@ -74,6 +74,9 @@ $(function() {
 <li>actions_pv
 : <a class="el" href="classDotMP_1_1SectionsContainer.html#a7d68b3825bd9fd83f38bfa30836de2e9">DotMP.SectionsContainer</a>
 </li>
+<li>advance_by
+: <a class="el" href="classDotMP_1_1StaticScheduler.html#ad606adf423da62392cb2f8b28ef910f5">DotMP.StaticScheduler</a>
+</li>
 <li>associations
 : <a class="el" href="classDotMP_1_1DAG.html#a3b7c2efa06ff1087f8d9d2983a89edc3">DotMP.DAG&lt; T, U &gt;</a>
 </li>
@@ -92,6 +95,7 @@ $(function() {
 : <a class="el" href="classDotMP_1_1DynamicScheduler.html#ac2c365814b740e1bd40edfd71d836e2b">DotMP.DynamicScheduler</a>
 , <a class="el" href="classDotMP_1_1GuidedScheduler.html#a75a7b23eeee94396d3cc3eb352afd5c5">DotMP.GuidedScheduler</a>
 , <a class="el" href="classDotMP_1_1StaticScheduler.html#a98b7b116929a1aa5b2ef9a85928e33f4">DotMP.StaticScheduler</a>
+, <a class="el" href="classDotMP_1_1WorkStealingScheduler.html#ae35b0b1a19dbe5b2907345628407694f">DotMP.WorkStealingScheduler</a>
 </li>
 <li>chunk_size_pv
 : <a class="el" href="classDotMP_1_1WorkShare.html#a4d1b923b8e2f8446bc3b3cd865090e2e">DotMP.WorkShare</a>
@@ -103,10 +107,10 @@ $(function() {
 : <a class="el" href="classDotMP_1_1Parallel.html#a1cd8ec62aad3b04b226dbc1de209c014">DotMP.Parallel</a>
 </li>
 <li>curr_iter
-: <a class="el" href="classDotMP_1_1Thr.html#a051fb27b45bf14e97cce2ccbb159eb67">DotMP.Thr</a>
+: <a class="el" href="structDotMP_1_1StaticScheduler_1_1IterWrapper.html#ad51d2d6fbe2bf75897484e0a64313b70">DotMP.StaticScheduler.IterWrapper</a>
 </li>
 <li>curr_iters
-: <a class="el" href="classDotMP_1_1StaticScheduler.html#a63da85397a6268e58617c764ebe97874">DotMP.StaticScheduler</a>
+: <a class="el" href="classDotMP_1_1StaticScheduler.html#a4c119ae46eefe61118ebd056762877cb">DotMP.StaticScheduler</a>
 </li>
 </ul>
 
@@ -129,6 +133,7 @@ $(function() {
 : <a class="el" href="classDotMP_1_1DynamicScheduler.html#a95fa60112822a82355be688f915c53bd">DotMP.DynamicScheduler</a>
 , <a class="el" href="classDotMP_1_1GuidedScheduler.html#aa88b3cdbcbd776babf8647e005d54b2f">DotMP.GuidedScheduler</a>
 , <a class="el" href="classDotMP_1_1StaticScheduler.html#a78fda89e1534274ed0fa940897191443">DotMP.StaticScheduler</a>
+, <a class="el" href="structDotMP_1_1WorkStealingScheduler_1_1Queue.html#a61d354b70222b3fccd22af0e0d60df44">DotMP.WorkStealingScheduler.Queue</a>
 , <a class="el" href="classDotMPTests_1_1Serial.html#a34f327bc394595b729ae8a5ca0ed851a">DotMPTests.Serial</a>
 </li>
 <li>ex
@@ -177,11 +182,10 @@ $(function() {
 : <a class="el" href="classDotMP_1_1DAG.html#a18b726d94829ae7351c3dc835ce440d8">DotMP.DAG&lt; T, U &gt;</a>
 </li>
 <li>num_threads
-: <a class="el" href="classDotMP_1_1DynamicScheduler.html#a9bff5002f608b0ab3075bf1f77c41343">DotMP.DynamicScheduler</a>
-, <a class="el" href="classDotMP_1_1GuidedScheduler.html#a461e9c795889e76a24cd107ac2ea5d38">DotMP.GuidedScheduler</a>
+: <a class="el" href="classDotMP_1_1GuidedScheduler.html#a461e9c795889e76a24cd107ac2ea5d38">DotMP.GuidedScheduler</a>
 , <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">DotMP.Parallel</a>
 , <a class="el" href="classDotMP_1_1Region.html#af52a78c9d496c812545e76d38dc872c4">DotMP.Region</a>
-, <a class="el" href="classDotMP_1_1StaticScheduler.html#a8a9f15c96e21dca6305ced2919745745">DotMP.StaticScheduler</a>
+, <a class="el" href="classDotMP_1_1WorkStealingScheduler.html#addca6ef667c0ff6c2e40fa233072efaf">DotMP.WorkStealingScheduler</a>
 </li>
 </ul>
 
@@ -220,6 +224,16 @@ $(function() {
 </li>
 <li>ordered
 : <a class="el" href="classDotMP_1_1Parallel.html#ae1a397f8dec7f0985de1654ea98e330b">DotMP.Parallel</a>
+</li>
+</ul>
+
+
+<h3><a id="index_q"></a>- q -</h3><ul>
+<li>qlock
+: <a class="el" href="structDotMP_1_1WorkStealingScheduler_1_1Queue.html#abf92add661fe0ff840d378d3464f316d">DotMP.WorkStealingScheduler.Queue</a>
+</li>
+<li>queues
+: <a class="el" href="classDotMP_1_1WorkStealingScheduler.html#ac7eb5aea2ff66845bdaaefbad498b6ae">DotMP.WorkStealingScheduler</a>
 </li>
 </ul>
 
@@ -265,7 +279,7 @@ $(function() {
 <li>start
 : <a class="el" href="classDotMP_1_1DynamicScheduler.html#a64483f79c0bae4bee87349aee0745c70">DotMP.DynamicScheduler</a>
 , <a class="el" href="classDotMP_1_1GuidedScheduler.html#a4d54db48590bc2dcb7aee7760a8d40d0">DotMP.GuidedScheduler</a>
-, <a class="el" href="classDotMP_1_1StaticScheduler.html#a46ae485f1926d8c976ee5c3b32ec0ac7">DotMP.StaticScheduler</a>
+, <a class="el" href="structDotMP_1_1WorkStealingScheduler_1_1Queue.html#a284ab9a623dd11ed06e3c05253e90a90">DotMP.WorkStealingScheduler.Queue</a>
 , <a class="el" href="classDotMPTests_1_1Serial.html#ad0a3ea7035fcdae6bbe7ae99a3dd08a8">DotMPTests.Serial</a>
 </li>
 <li>start_pv
@@ -281,12 +295,12 @@ $(function() {
 <li>tasks_remaining
 : <a class="el" href="classDotMP_1_1DAG.html#af21688cea81be80252270c6f87336487">DotMP.DAG&lt; T, U &gt;</a>
 </li>
-<li>thread
-: <a class="el" href="classDotMP_1_1Thr.html#a4c994a56167d9dfd9d47fb9b8b0ba020">DotMP.Thr</a>
-</li>
 <li>threads
 : <a class="el" href="classDotMP_1_1Region.html#aa364df8709dabac461dd7bad2d4c9286">DotMP.Region</a>
-, <a class="el" href="classDotMP_1_1WorkShare.html#a2d55df5632a296d10258115e0cf5bdde">DotMP.WorkShare</a>
+, <a class="el" href="classDotMP_1_1WorkShare.html#ac2a413fd9a48305221e1e2b6fa7fbe75">DotMP.WorkShare</a>
+</li>
+<li>threads_with_remaining_work
+: <a class="el" href="classDotMP_1_1WorkStealingScheduler.html#a29203eea7a9f903420e15ce1ab2232d3">DotMP.WorkStealingScheduler</a>
 </li>
 </ul>
 
@@ -302,8 +316,14 @@ $(function() {
 
 
 <h3><a id="index_w"></a>- w -</h3><ul>
-<li>working_iter
-: <a class="el" href="classDotMP_1_1Thr.html#a25a338cce1a698e8bb9f420d3b27d5dc">DotMP.Thr</a>
+<li>work_remaining
+: <a class="el" href="structDotMP_1_1WorkStealingScheduler_1_1Queue.html#a21b0ba1e6fd82261ee65b1d192a54d02">DotMP.WorkStealingScheduler.Queue</a>
+</li>
+<li>working_iters
+: <a class="el" href="classDotMP_1_1WorkShare.html#a29ec7011d03930ff0b12f24b1518955f">DotMP.WorkShare</a>
+</li>
+<li>workstealing_scheduler
+: <a class="el" href="classDotMP_1_1Schedule.html#ace6774ac67985f0cd514572a625e2bc9">DotMP.Schedule</a>
 </li>
 <li>ws_lock
 : <a class="el" href="classDotMP_1_1Region.html#a3df81abb19865bf08fda557206462437">DotMP.Region</a>
