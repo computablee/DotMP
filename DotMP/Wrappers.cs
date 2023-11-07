@@ -424,15 +424,7 @@ namespace DotMP
                     int diff2 = end2 - start2;
 
                     ComputeIndices2(start, start1, start2, diff2, out int istart, out int jstart);
-                    ComputeIndices2(end - 1, start1, start2, diff2, out int iend, out int jend);
-
-                    ++jend;
-
-                    if (jend == end2)
-                    {
-                        jend = start2;
-                        ++iend;
-                    }
+                    ComputeIndices2(end, start1, start2, diff2, out int iend, out int jend);
 
                     while (istart != iend || jstart != jend)
                     {
@@ -455,21 +447,7 @@ namespace DotMP
                     int diff3 = end3 - start3;
 
                     ComputeIndices3(start, start1, start2, start3, diff2, diff3, out istart, out jstart, out int kstart);
-                    ComputeIndices3(end - 1, start1, start2, start3, diff2, diff3, out iend, out jend, out int kend);
-
-                    ++kend;
-
-                    if (kend == end3)
-                    {
-                        kend = start3;
-                        ++jend;
-                    }
-
-                    if (jend == end2)
-                    {
-                        jend = start2;
-                        ++iend;
-                    }
+                    ComputeIndices3(end, start1, start2, start3, diff2, diff3, out iend, out jend, out int kend);
 
                     while (istart != iend || jstart != jend || kstart != kend)
                     {
@@ -510,15 +488,7 @@ namespace DotMP
                     diff2 = end2 - start2;
 
                     ComputeIndices2(start, start1, start2, diff2, out istart, out jstart);
-                    ComputeIndices2(end - 1, start1, start2, diff2, out iend, out jend);
-
-                    ++jend;
-
-                    if (jend == end2)
-                    {
-                        jend = start2;
-                        ++iend;
-                    }
+                    ComputeIndices2(end, start1, start2, diff2, out iend, out jend);
 
                     while (istart != iend || jstart != jend)
                     {
@@ -541,21 +511,7 @@ namespace DotMP
                     diff3 = end3 - start3;
 
                     ComputeIndices3(start, start1, start2, start3, diff2, diff3, out istart, out jstart, out kstart);
-                    ComputeIndices3(end - 1, start1, start2, start3, diff2, diff3, out iend, out jend, out kend);
-
-                    ++kend;
-
-                    if (kend == end3)
-                    {
-                        kend = start3;
-                        ++jend;
-                    }
-
-                    if (jend == end2)
-                    {
-                        jend = start2;
-                        ++iend;
-                    }
+                    ComputeIndices3(end, start1, start2, start3, diff2, diff3, out iend, out jend, out kend);
 
                     while (istart != iend || jstart != jend || kstart != kend)
                     {
