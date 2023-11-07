@@ -23,8 +23,4 @@
     <None Include="../ProcessedREADME.md" Pack="true" PackagePath="." />
   </ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="DivideSharp" Version="0.0.5" />
-  </ItemGroup>
-
 </Project>
