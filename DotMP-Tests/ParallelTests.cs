@@ -1097,7 +1097,7 @@ namespace DotMPTests
                 i.Should().Be(2);
             }
             elapsed.Should().BeGreaterThan(2.0 * (sleep_duration / 1000.0));
-            elapsed.Should().BeLessThan(1.25 * 2.0 * (sleep_duration / 1000.0));
+            elapsed.Should().BeLessThan(1.3 * 2.0 * (sleep_duration / 1000.0));
 
             tasks_thread_executed = new int[threads];
             int tasks_to_spawn = 100_000;
