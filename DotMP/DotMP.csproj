@@ -20,7 +20,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="../ProcessedREADME.md" Pack="true" PackagePath="."/>
+    <None Include="../ProcessedREADME.md" Pack="true" PackagePath="." />
   </ItemGroup>
 
 </Project>

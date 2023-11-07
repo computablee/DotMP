@@ -60,10 +60,7 @@ namespace DotMPTests
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Static, null);
             float[] z2 = saxpy_parallelfor(2.0f, x, y);
 
-            for (int i = 0; i < z.Length; i++)
-            {
-                z[i].Should().Be(z2[i]);
-            }
+            Assert.Equal(z, z2);
         }
 
         /// <summary>
@@ -76,19 +73,76 @@ namespace DotMPTests
 
             float[] x = new float[workload];
             float[] y = new float[workload];
+            float[] correct = new float[workload];
 
             for (int i = 0; i < x.Length; i++)
             {
                 x[i] = 1.0f;
                 y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
 
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Guided, 3);
 
-            for (int i = 0; i < z.Length; i++)
+            Assert.Equal(z, correct);
+        }
+
+        /// <summary>
+        /// Tests to make sure that DotMP.Schedule.Guided produces correct results.
+        /// </summary>
+        [Fact]
+        public void Workstealing_should_produce_correct_results()
+        {
+            int workload = 1_000_000;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+            float[] correct = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
             {
-                z[i].Should().Be(3.0f);
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
+
+            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.WorkStealing, 3);
+
+            Assert.Equal(z, correct);
+        }
+
+        /// <summary>
+        /// Tests to ensure that workstealing adequately load balances.
+        /// </summary>
+        [Fact]
+        public void Workstealing_load_balances()
+        {
+            int workload = 100_000;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+            float[] z = new float[workload];
+            float[] correct = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+                correct[i] = 3.0f;
+            }
+
+            double start = DotMP.Parallel.GetWTime();
+            DotMP.Parallel.ParallelFor(0, workload, num_threads: 6, schedule: DotMP.Schedule.WorkStealing, chunk_size: 1, action: i =>
+            {
+                if (i < 6)
+                    Thread.Sleep(1000);
+
+                z[i] = 2.0f * x[i] + y[i];
+            });
+            double end = DotMP.Parallel.GetWTime() - start;
+
+            end.Should().BeLessThan(1.5);
+            Assert.Equal(z, correct);
         }
 
         /// <summary>
@@ -101,19 +155,18 @@ namespace DotMPTests
 
             float[] x = new float[workload];
             float[] y = new float[workload];
+            float[] correct = new float[workload];
 
             for (int i = 0; i < x.Length; i++)
             {
                 x[i] = 1.0f;
                 y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
 
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Static, 1024);
 
-            for (int i = 0; i < z.Length; i++)
-            {
-                z[i].Should().Be(3.0f);
-            }
+            Assert.Equal(z, correct);
         }
 
         /// <summary>
@@ -126,19 +179,18 @@ namespace DotMPTests
 
             float[] x = new float[workload];
             float[] y = new float[workload];
+            float[] correct = new float[workload];
 
             for (int i = 0; i < x.Length; i++)
             {
                 x[i] = 1.0f;
                 y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
 
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Dynamic, 1);
 
-            for (int i = 0; i < z.Length; i++)
-            {
-                z[i].Should().Be(3.0f);
-            }
+            Assert.Equal(z, correct);
         }
 
         /// <summary>
@@ -413,6 +465,13 @@ namespace DotMPTests
             DotMP.Parallel.ParallelFor(0, 1024, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
             {
                 DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Dynamic);
+                DotMP.Parallel.GetChunkSize().Should().Be(8);
+            });
+
+            Environment.SetEnvironmentVariable("OMP_SCHEDULE", "workstealing,garbage");
+            DotMP.Parallel.ParallelFor(0, 1024, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
+            {
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.WorkStealing);
                 DotMP.Parallel.GetChunkSize().Should().Be(8);
             });
 
@@ -1573,7 +1632,7 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelFor(0, x.Length, schedule: DotMP.Schedule.Guided, action: i =>
             {
-                z[i] = a * x[i] + y[i];
+                z[i] += a * x[i] + y[i];
             });
 
             return z;
