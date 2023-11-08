@@ -47,8 +47,3 @@ Below is a list of all contributors to DotMP!
 <!-- prettier-ignore-end -->
 
 <!-- ALL-CONTRIBUTORS-LIST:END -->
-
-
-| omp_get_wtime()          | DotMP.Parallel.GetWTime()         | Returns the number of seconds since the Unix Epoch as a double
-| omp_get_schedule()       | DotMP.Parallel.GetSchedule()      | Gets the current schedule of the parallel for loop
-| omp_get_schedule()       | DotMP.Parallel.GetChunkSize()     | Gets the current chunk size of the parallel for loop
