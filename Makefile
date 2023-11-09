@@ -41,8 +41,12 @@ build:
 docs: ProcessedREADME.md
 	doxygen
 
-pack: ProcessedREADME.md
+pack: ProcessedREADME.md build
 	$(DN) pack -c $(BUILD) DotMP
+	cp ./DotMP/bin/Release/net6.0/DotMP.dll ./DotMP/bin/Release/DotMP-NET6.0.dll
+	cp ./DotMP/bin/Release/net7.0/DotMP.dll ./DotMP/bin/Release/DotMP-NET7.0.dll
+	cp ./DotMP/bin/Release/net6.0/DotMP.pdb ./DotMP/bin/Release/DotMP-NET6.0.pdb
+	cp ./DotMP/bin/Release/net7.0/DotMP.pdb ./DotMP/bin/Release/DotMP-NET7.0.pdb
 
 clean:
 	rm -f ProcessedREADME.md
