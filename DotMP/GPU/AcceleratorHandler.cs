@@ -47,14 +47,14 @@ namespace DotMP.GPU
         private void Synchronize() => accelerator.Synchronize();
 
         /// <summary>
-        /// Dispatches a kernel with one parameters.
+        /// Dispatches a kernel with one parameter.
         /// </summary>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
-        /// <param name="buf1">The first buffer to run the kernel with.</param>
+        /// <param name="buf">The buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T>(int start, int end, Buffer<T> buf1, Action<Index, GPUArray<T>> action)
+        internal void DispatchKernel<T>(int start, int end, Buffer<T> buf, Action<Index, GPUArray<T>> action)
             where T : unmanaged
         {
             var idx = new Index();
@@ -62,7 +62,7 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View));
+                new GPUArray<T>(buf.View));
 
             Synchronize();
         }
