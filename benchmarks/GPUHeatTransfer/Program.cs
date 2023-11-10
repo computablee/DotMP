@@ -53,6 +53,12 @@ public class HeatTransfer
     // change this to configure the number of threads to use
     public uint num_threads = 6;
 
+    // buffer for grid
+    private DotMP.GPU.Buffer<double> gridbuf;
+
+    // buffer for scratch
+    private DotMP.GPU.Buffer<double> scratchbuf;
+
     // run the setup
     [GlobalSetup]
     public void Setup()
@@ -62,6 +68,9 @@ public class HeatTransfer
 
         grid[0, dim / 2 - 1] = 100.0;
         grid[0, dim / 2] = 100.0;
+
+        gridbuf = new DotMP.GPU.Buffer<double>(grid, DotMP.GPU.Buffer.Behavior.To);
+        scratchbuf = new DotMP.GPU.Buffer<double>(scratch, DotMP.GPU.Buffer.Behavior.NoCopy);
     }
 
     //run the simulation
@@ -115,7 +124,22 @@ public class HeatTransfer
                 break;
 
             case ParType.DMPGPU:
-                DotMP.GPU.ParallelFor();
+                DotMP.GPU.Parallel.ParallelFor(1, dim - 1, gridbuf, scratchbuf, (i, grid, scratch) =>
+                {
+                    for (int j = 1; j < dim - 1; j++)
+                    {
+                        //set the scratch array to the average of the surrounding cells
+                        scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
+                    }
+                });
+
+                DotMP.GPU.Parallel.ParallelFor(1, dim - 1, gridbuf, scratchbuf, (i, grid, scratch) =>
+                {
+                    for (int j = 1; j < dim - 1; j++)
+                    {
+                        grid[i, j] = scratch[i, j];
+                    }
+                });
                 break;
         }
     }
@@ -130,19 +154,25 @@ public class HeatTransferVerify
     private double[,] grid = new double[0, 0];
 
     // parallel type enum
-    public enum ParType { TPL, For, ForCollapse, Serial }
+    public enum ParType { DMPFor, DMPGPU }
 
     // test dims of 100x100, 1000x1000, and 5000x5000
-    public int dim = 500;
+    public int dim = 514;
 
     // test with 10 steps and 100 steps
     public int steps = 100;
 
     // test with all 3 parallel types
-    public ParType type = ParType.For;
+    public ParType type = ParType.DMPFor;
 
     // change this to configure the number of threads to use
     public uint num_threads = 6;
+
+    // buffer for grid
+    private DotMP.GPU.Buffer<double> gridbuf;
+
+    // buffer for scratch
+    private DotMP.GPU.Buffer<double> scratchbuf;
 
     // run the setup
     public void Setup()
@@ -152,6 +182,12 @@ public class HeatTransferVerify
 
         grid[0, dim / 2 - 1] = 100.0;
         grid[0, dim / 2] = 100.0;
+
+        if (type == ParType.DMPGPU)
+        {
+            gridbuf = new DotMP.GPU.Buffer<double>(grid, DotMP.GPU.Buffer.Behavior.ToFrom);
+            scratchbuf = new DotMP.GPU.Buffer<double>(scratch, DotMP.GPU.Buffer.Behavior.NoCopy);
+        }
     }
 
     //run the simulation
@@ -166,9 +202,11 @@ public class HeatTransferVerify
             }
         };
 
-        if (type == ParType.TPL || type == ParType.Serial)
+        if (type == ParType.DMPGPU)
         {
             action();
+            gridbuf.Dispose();
+            scratchbuf.Dispose();
         }
         else
         {
@@ -182,28 +220,7 @@ public class HeatTransferVerify
     {
         switch (type)
         {
-            case ParType.TPL:
-                //iterate over all cells not on the border
-                System.Threading.Tasks.Parallel.For(1, dim - 1, i =>
-                {
-                    System.Threading.Tasks.Parallel.For(1, dim - 1, j =>
-                    {
-                        //set the scratch array to the average of the surrounding cells
-                        scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
-                    });
-                });
-
-                //copy the scratch array to the grid array
-                System.Threading.Tasks.Parallel.For(1, dim - 1, i =>
-                {
-                    System.Threading.Tasks.Parallel.For(1, dim - 1, j =>
-                    {
-                        grid[i, j] = scratch[i, j];
-                    });
-                });
-                break;
-
-            case ParType.For:
+            case ParType.DMPFor:
                 //iterate over all cells not on the border
                 DotMP.Parallel.For(1, dim - 1, schedule: DotMP.Schedule.Guided, action: i =>
                 {
@@ -224,52 +241,36 @@ public class HeatTransferVerify
                 });
                 break;
 
-            case ParType.ForCollapse:
-                //iterate over all cells not on the border
-                DotMP.Parallel.ForCollapse((1, dim - 1), (1, dim - 1), schedule: DotMP.Schedule.Guided, action: (i, j) =>
+            case ParType.DMPGPU:
+                DotMP.GPU.Parallel.ParallelFor(1, dim - 1, gridbuf, scratchbuf, (i, grid, scratch) =>
                 {
-                    //set the scratch array to the average of the surrounding cells
-                    scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
-                });
-
-                //copy the scratch array to the grid array
-                DotMP.Parallel.ForCollapse((1, dim - 1), (1, dim - 1), schedule: DotMP.Schedule.Guided, action: (i, j) =>
-                {
-                    grid[i, j] = scratch[i, j];
-                });
-                break;
-
-            case ParType.Serial:
-                for (int i = 1; i < dim - 1; i++)
-                {
-                    for (int j = 1; j < dim - 1; j++)
+                    for (int j = 1; j < 514 - 1; j++)
                     {
                         //set the scratch array to the average of the surrounding cells
                         scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
                     }
-                }
+                });
 
-                //copy the scratch array to the grid array
-                for (int i = 1; i < dim - 1; i++)
+                DotMP.GPU.Parallel.ParallelFor(1, dim - 1, gridbuf, scratchbuf, (i, grid, scratch) =>
                 {
-                    for (int j = 1; j < dim - 1; j++)
+                    for (int j = 1; j < 514 - 1; j++)
                     {
                         grid[i, j] = scratch[i, j];
                     }
-                }
+                });
                 break;
         }
     }
 
     public void Verify()
     {
+        type = ParType.DMPFor;
         Setup();
-        type = ParType.For;
         DoSimulation();
         double[,] gridA = grid;
 
+        type = ParType.DMPGPU;
         Setup();
-        type = ParType.Serial;
         DoSimulation();
         double[,] gridB = grid;
 
@@ -278,7 +279,10 @@ public class HeatTransferVerify
         for (int i = 0; i < dim; i++)
             for (int j = 0; j < dim; j++)
                 if (gridA[i, j] != gridB[i, j])
+                {
                     wrong = true;
+                    Console.WriteLine("Wrong at ({0}, {1}), expected {2}, got {3}.", i, j, gridA[i, j], gridB[i, j]);
+                }
 
         if (wrong)
             Console.WriteLine("WRONG RESULT");
