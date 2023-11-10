@@ -18,6 +18,7 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Diagnosers;
+using System.Threading;
 
 [SimpleJob(RuntimeMoniker.Net60)]
 [ThreadingDiagnoser]
@@ -32,6 +33,7 @@ public class MiscBench
     [GlobalSetup]
     public void Setup()
     {
+        Thread.CurrentThread.Name = tid.ToString();
     }
 
     [Benchmark]
