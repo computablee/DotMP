@@ -35,11 +35,20 @@ namespace DotMP.GPU
             if (initialized) return;
 
             context = Context.CreateDefault();
-            accelerator = context.Devices[1].CreateAccelerator(context);
+            var selectedDevice = context.Devices[0];
+
             foreach (var d in context.Devices)
             {
                 Console.WriteLine("Detected {0} accelerator.", d.ToString());
+
+                if (selectedDevice.AcceleratorType == AcceleratorType.CPU && d.AcceleratorType == AcceleratorType.OpenCL)
+                    selectedDevice = d;
+                if (selectedDevice.AcceleratorType != AcceleratorType.Cuda && d.AcceleratorType == AcceleratorType.Cuda)
+                    selectedDevice = d;
             }
+
+            accelerator = selectedDevice.CreateAccelerator(context);
+
             Console.WriteLine("Using {0} accelerator.", accelerator.AcceleratorType.ToString());
             initialized = true;
             block_size = accelerator.AcceleratorType == AcceleratorType.CPU ? 16 : 256;
@@ -61,7 +70,7 @@ namespace DotMP.GPU
         internal void DispatchKernel<T>(int start, int end, Buffer<T> buf, Action<Index, GPUArray<T>> action)
             where T : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -85,7 +94,7 @@ namespace DotMP.GPU
             where T : unmanaged
             where U : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -113,7 +122,7 @@ namespace DotMP.GPU
             where U : unmanaged
             where V : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -145,7 +154,7 @@ namespace DotMP.GPU
             where V : unmanaged
             where W : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -181,7 +190,7 @@ namespace DotMP.GPU
             where W : unmanaged
             where X : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -221,7 +230,7 @@ namespace DotMP.GPU
             where X : unmanaged
             where Y : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -265,7 +274,7 @@ namespace DotMP.GPU
             where Y : unmanaged
             where Z : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -313,7 +322,7 @@ namespace DotMP.GPU
             where Z : unmanaged
             where A : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -365,7 +374,7 @@ namespace DotMP.GPU
             where A : unmanaged
             where B : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -421,7 +430,7 @@ namespace DotMP.GPU
             where B : unmanaged
             where C : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -481,7 +490,7 @@ namespace DotMP.GPU
             where C : unmanaged
             where D : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -545,7 +554,7 @@ namespace DotMP.GPU
             where D : unmanaged
             where E : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
@@ -613,7 +622,7 @@ namespace DotMP.GPU
             where E : unmanaged
             where F : unmanaged
         {
-            var idx = new Index();
+            var idx = new Index(start);
 
             var kernel = accelerator.LoadStreamKernel(action);
 
