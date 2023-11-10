@@ -9,6 +9,7 @@ docs/*
 .vscode
 *.opencover.xml
 *.sln
+parfor_dump.cs
 ProcessedREADME.md
 
 # User-specific files
