@@ -22,7 +22,11 @@ namespace DotMP.GPU
             /// <summary>
             /// Specifies that data should be transfered both to and from the GPU.
             /// </summary>
-            ToFrom
+            ToFrom,
+            /// <summary>
+            /// Specifies that the data shouldn't be transfered to or from the GPU. For internal use.
+            /// </summary>
+            NoCopy
         }
     }
 
@@ -100,6 +104,7 @@ namespace DotMP.GPU
                     buf1d = AcceleratorHandler.accelerator.Allocate1D(data);
                     break;
                 case Buffer.Behavior.From:
+                case Buffer.Behavior.NoCopy:
                     buf1d = AcceleratorHandler.accelerator.Allocate1D<T>(data.Length);
                     break;
             }
@@ -126,6 +131,7 @@ namespace DotMP.GPU
                     buf2d = AcceleratorHandler.accelerator.Allocate2DDenseY(data);
                     break;
                 case Buffer.Behavior.From:
+                case Buffer.Behavior.NoCopy:
                     buf2d = AcceleratorHandler.accelerator.Allocate2DDenseY<T>((data.GetLength(0), data.GetLength(1)));
                     break;
             }
