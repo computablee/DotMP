@@ -35,7 +35,11 @@ namespace DotMP.GPU
             if (initialized) return;
 
             context = Context.CreateDefault();
-            accelerator = context.Devices[0].CreateAccelerator(context);
+            accelerator = context.Devices[1].CreateAccelerator(context);
+            foreach (var d in context.Devices)
+            {
+                Console.WriteLine("Detected {0} accelerator.", d.ToString());
+            }
             Console.WriteLine("Using {0} accelerator.", accelerator.AcceleratorType.ToString());
             initialized = true;
             block_size = accelerator.AcceleratorType == AcceleratorType.CPU ? 16 : 256;
@@ -62,7 +66,7 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf.View));
+                new GPUArray<T>(buf));
 
             Synchronize();
         }
@@ -86,8 +90,8 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2));
 
             Synchronize();
         }
@@ -114,9 +118,9 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View),
-                new GPUArray<V>(buf3.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2),
+                new GPUArray<V>(buf3));
 
             Synchronize();
         }
@@ -146,10 +150,10 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View),
-                new GPUArray<V>(buf3.View),
-                new GPUArray<W>(buf4.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2),
+                new GPUArray<V>(buf3),
+                new GPUArray<W>(buf4));
 
             Synchronize();
         }
@@ -182,11 +186,11 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View),
-                new GPUArray<V>(buf3.View),
-                new GPUArray<W>(buf4.View),
-                new GPUArray<X>(buf5.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2),
+                new GPUArray<V>(buf3),
+                new GPUArray<W>(buf4),
+                new GPUArray<X>(buf5));
 
             Synchronize();
         }
@@ -222,12 +226,12 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View),
-                new GPUArray<V>(buf3.View),
-                new GPUArray<W>(buf4.View),
-                new GPUArray<X>(buf5.View),
-                new GPUArray<Y>(buf6.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2),
+                new GPUArray<V>(buf3),
+                new GPUArray<W>(buf4),
+                new GPUArray<X>(buf5),
+                new GPUArray<Y>(buf6));
 
             Synchronize();
         }
@@ -266,13 +270,13 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View),
-                new GPUArray<V>(buf3.View),
-                new GPUArray<W>(buf4.View),
-                new GPUArray<X>(buf5.View),
-                new GPUArray<Y>(buf6.View),
-                new GPUArray<Z>(buf7.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2),
+                new GPUArray<V>(buf3),
+                new GPUArray<W>(buf4),
+                new GPUArray<X>(buf5),
+                new GPUArray<Y>(buf6),
+                new GPUArray<Z>(buf7));
 
             Synchronize();
         }
@@ -314,14 +318,14 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View),
-                new GPUArray<V>(buf3.View),
-                new GPUArray<W>(buf4.View),
-                new GPUArray<X>(buf5.View),
-                new GPUArray<Y>(buf6.View),
-                new GPUArray<Z>(buf7.View),
-                new GPUArray<A>(buf8.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2),
+                new GPUArray<V>(buf3),
+                new GPUArray<W>(buf4),
+                new GPUArray<X>(buf5),
+                new GPUArray<Y>(buf6),
+                new GPUArray<Z>(buf7),
+                new GPUArray<A>(buf8));
 
             Synchronize();
         }
@@ -366,15 +370,15 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View),
-                new GPUArray<V>(buf3.View),
-                new GPUArray<W>(buf4.View),
-                new GPUArray<X>(buf5.View),
-                new GPUArray<Y>(buf6.View),
-                new GPUArray<Z>(buf7.View),
-                new GPUArray<A>(buf8.View),
-                new GPUArray<B>(buf9.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2),
+                new GPUArray<V>(buf3),
+                new GPUArray<W>(buf4),
+                new GPUArray<X>(buf5),
+                new GPUArray<Y>(buf6),
+                new GPUArray<Z>(buf7),
+                new GPUArray<A>(buf8),
+                new GPUArray<B>(buf9));
 
             Synchronize();
         }
@@ -422,16 +426,16 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View),
-                new GPUArray<V>(buf3.View),
-                new GPUArray<W>(buf4.View),
-                new GPUArray<X>(buf5.View),
-                new GPUArray<Y>(buf6.View),
-                new GPUArray<Z>(buf7.View),
-                new GPUArray<A>(buf8.View),
-                new GPUArray<B>(buf9.View),
-                new GPUArray<C>(buf10.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2),
+                new GPUArray<V>(buf3),
+                new GPUArray<W>(buf4),
+                new GPUArray<X>(buf5),
+                new GPUArray<Y>(buf6),
+                new GPUArray<Z>(buf7),
+                new GPUArray<A>(buf8),
+                new GPUArray<B>(buf9),
+                new GPUArray<C>(buf10));
 
             Synchronize();
         }
@@ -482,17 +486,17 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View),
-                new GPUArray<V>(buf3.View),
-                new GPUArray<W>(buf4.View),
-                new GPUArray<X>(buf5.View),
-                new GPUArray<Y>(buf6.View),
-                new GPUArray<Z>(buf7.View),
-                new GPUArray<A>(buf8.View),
-                new GPUArray<B>(buf9.View),
-                new GPUArray<C>(buf10.View),
-                new GPUArray<D>(buf11.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2),
+                new GPUArray<V>(buf3),
+                new GPUArray<W>(buf4),
+                new GPUArray<X>(buf5),
+                new GPUArray<Y>(buf6),
+                new GPUArray<Z>(buf7),
+                new GPUArray<A>(buf8),
+                new GPUArray<B>(buf9),
+                new GPUArray<C>(buf10),
+                new GPUArray<D>(buf11));
 
             Synchronize();
         }
@@ -546,18 +550,18 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View),
-                new GPUArray<V>(buf3.View),
-                new GPUArray<W>(buf4.View),
-                new GPUArray<X>(buf5.View),
-                new GPUArray<Y>(buf6.View),
-                new GPUArray<Z>(buf7.View),
-                new GPUArray<A>(buf8.View),
-                new GPUArray<B>(buf9.View),
-                new GPUArray<C>(buf10.View),
-                new GPUArray<D>(buf11.View),
-                new GPUArray<E>(buf12.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2),
+                new GPUArray<V>(buf3),
+                new GPUArray<W>(buf4),
+                new GPUArray<X>(buf5),
+                new GPUArray<Y>(buf6),
+                new GPUArray<Z>(buf7),
+                new GPUArray<A>(buf8),
+                new GPUArray<B>(buf9),
+                new GPUArray<C>(buf10),
+                new GPUArray<D>(buf11),
+                new GPUArray<E>(buf12));
 
             Synchronize();
         }
@@ -614,19 +618,19 @@ namespace DotMP.GPU
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(buf1.View),
-                new GPUArray<U>(buf2.View),
-                new GPUArray<V>(buf3.View),
-                new GPUArray<W>(buf4.View),
-                new GPUArray<X>(buf5.View),
-                new GPUArray<Y>(buf6.View),
-                new GPUArray<Z>(buf7.View),
-                new GPUArray<A>(buf8.View),
-                new GPUArray<B>(buf9.View),
-                new GPUArray<C>(buf10.View),
-                new GPUArray<D>(buf11.View),
-                new GPUArray<E>(buf12.View),
-                new GPUArray<F>(buf13.View));
+                new GPUArray<T>(buf1),
+                new GPUArray<U>(buf2),
+                new GPUArray<V>(buf3),
+                new GPUArray<W>(buf4),
+                new GPUArray<X>(buf5),
+                new GPUArray<Y>(buf6),
+                new GPUArray<Z>(buf7),
+                new GPUArray<A>(buf8),
+                new GPUArray<B>(buf9),
+                new GPUArray<C>(buf10),
+                new GPUArray<D>(buf11),
+                new GPUArray<E>(buf12),
+                new GPUArray<F>(buf13));
 
             Synchronize();
         }

@@ -1,5 +1,5 @@
 using System;
-using DotMP.GPU;
+using ILGPU;
 using ILGPU.Runtime;
 
 namespace DotMP.GPU
@@ -32,11 +32,15 @@ namespace DotMP.GPU
     public class Buffer<T> : IDisposable
         where T : unmanaged
     {
+        /// <summary>
+        /// The ILGPU buffer for 1D arrays.
+        /// </summary>
+        private MemoryBuffer1D<T, Stride1D.Dense> buf1d;
 
         /// <summary>
-        /// The ILGPU buffer.
+        /// The ILGPU buffer for 2D arrays.
         /// </summary>
-        private MemoryBuffer1D<T, ILGPU.Stride1D.Dense> buf;
+        private MemoryBuffer2D<T, Stride2D.DenseY> buf2d;
 
         /// <summary>
         /// Behavior of the data, as specified by Behavior.
@@ -44,12 +48,41 @@ namespace DotMP.GPU
         private Buffer.Behavior behavior;
 
         /// <summary>
-        /// The CPU array, so that we can copy the data back.
+        /// The CPU 1D array, so that we can copy the data back.
         /// </summary>
-        private T[] data;
+        private T[] data1d;
 
         /// <summary>
-        /// Constructor for buffer object. Allocates data on the GPU and makes it available for the next GPU kernel.
+        /// The CPU 2D array, so that we can copy the data back.
+        /// </summary>
+        private T[,] data2d;
+
+        /// <summary>
+        /// Handler int for the number of dimensions in the array.
+        /// </summary>
+        private int dims;
+
+        /// <summary>
+        /// The number of dimensions in the array.
+        /// </summary>
+        internal int Dimensions
+        {
+            get
+            {
+                return dims;
+            }
+
+            private set
+            {
+                if (value < 1 || value > 3)
+                    throw new ArgumentOutOfRangeException("Number of dimensions must be between 1 and 3.");
+
+                dims = value;
+            }
+        }
+
+        /// <summary>
+        /// Constructor for buffer object. Allocates a 1D array on the GPU and makes it available for the next GPU kernel.
         /// </summary>
         /// <param name="data">The data to allocate on the GPU.</param>
         /// <param name="behavior">The behavior of the data, see Behavior.</param>
@@ -58,18 +91,46 @@ namespace DotMP.GPU
             new AcceleratorHandler();
 
             this.behavior = behavior;
-            this.data = data;
+            this.data1d = data;
 
             switch (behavior)
             {
                 case Buffer.Behavior.To:
                 case Buffer.Behavior.ToFrom:
-                    buf = AcceleratorHandler.accelerator.Allocate1D(data);
+                    buf1d = AcceleratorHandler.accelerator.Allocate1D(data);
                     break;
                 case Buffer.Behavior.From:
-                    buf = AcceleratorHandler.accelerator.Allocate1D<T>(data.Length);
+                    buf1d = AcceleratorHandler.accelerator.Allocate1D<T>(data.Length);
                     break;
             }
+
+            Dimensions = 1;
+        }
+
+        /// <summary>
+        /// Constructor for buffer object. Allocates a 2D array on the GPU and makes it available for the next GPU kernel.
+        /// </summary>
+        /// <param name="data">The data to allocate on the GPU.</param>
+        /// <param name="behavior">The behavior of the data, see Behavior.</param>
+        public Buffer(T[,] data, Buffer.Behavior behavior)
+        {
+            new AcceleratorHandler();
+
+            this.behavior = behavior;
+            this.data2d = data;
+
+            switch (behavior)
+            {
+                case Buffer.Behavior.To:
+                case Buffer.Behavior.ToFrom:
+                    buf2d = AcceleratorHandler.accelerator.Allocate2DDenseY(data);
+                    break;
+                case Buffer.Behavior.From:
+                    buf2d = AcceleratorHandler.accelerator.Allocate2DDenseY<T>((data.GetLength(0), data.GetLength(1)));
+                    break;
+            }
+
+            Dimensions = 2;
         }
 
         /// <summary>
@@ -77,17 +138,34 @@ namespace DotMP.GPU
         /// </summary>
         public void Dispose()
         {
-            if (behavior == Buffer.Behavior.From || behavior == Buffer.Behavior.ToFrom)
+            if (Dimensions == 1)
             {
-                buf.GetAsArray1D().CopyTo(data, 0);
-            }
+                if (behavior == Buffer.Behavior.From || behavior == Buffer.Behavior.ToFrom)
+                {
+                    buf1d.GetAsArray1D().CopyTo(data1d, 0);
+                }
 
-            buf.Dispose();
+                buf1d.Dispose();
+            }
+            else if (Dimensions == 2)
+            {
+                if (behavior == Buffer.Behavior.From || behavior == Buffer.Behavior.ToFrom)
+                {
+                    buf2d.GetAsArray2D().CopyTo(data2d, 0);
+                }
+
+                buf2d.Dispose();
+            }
         }
 
         /// <summary>
         /// Get the view of the memory for the GPU.
         /// </summary>
-        internal ArrayView1D<T, ILGPU.Stride1D.Dense> View { get => buf.View; }
+        internal ArrayView1D<T, Stride1D.Dense> View1D { get => buf1d.View; }
+
+        /// <summary>
+        /// Get the view of the memory for the GPU.
+        /// </summary>
+        internal ArrayView2D<T, Stride2D.DenseY> View2D { get => buf2d.View; }
     }
 }
