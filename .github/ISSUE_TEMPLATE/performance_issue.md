@@ -16,5 +16,10 @@ Give us some specific code that you're having issues with, trimmed down to a min
 **Describe the performance expected vs. performance observed.**
 How is this use case falling short of expectations? Please provide specific measured performance results.
 
+**Desktop (please complete the following information):**
+- OS: [e.g. Windows]
+- DotMP Version: [e.g. v1.4.0]
+- .NET Version: [e.g. .NET 6]
+
 **Additional context?**
 Add any other context or screenshots about the performance issue here.
