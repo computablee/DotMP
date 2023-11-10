@@ -1,4 +1,4 @@
-ofile = open("./parfor_dump.cs", "w")
+ofile = open("./dispatch_dump.cs", "w")
 
 cardinals = ["one", "two", "three", "four", "five", "six", "seven", "eight",
              "nine", "ten", "eleven", "twelve", "thirteen", "fourteen", "fifteen", "sixteen"]
@@ -8,13 +8,11 @@ ordinals = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "
 letters = ["T", "U", "V", "W", "X", "Y", "Z",
            "A", "B", "C", "D", "E", "F", "G", "H", "I"]
 
-for i in range(0, 16):
+for i in range(0, 13):
     funcstr = ""
 
     funcstr += """/// <summary>
-/// Creates a GPU parallel for loop.
-/// The body of the kernel is run on a GPU target.
-/// This overload specifies that {c} arrays are used on the GPU.
+/// Dispatches a kernel with {c} parameters.
 /// </summary>
 /// <param name="start">The start of the loop, inclusive.</param>
 /// <param name="end">The end of the loop, exclusive.</param>""".format(c=cardinals[i])
@@ -33,7 +31,7 @@ for i in range(0, 16):
 /// <typeparam name="{l}">The base type of the {o} argument. Must be an unmanaged type.</typeparam>""".format(l=letters[j], o=ordinals[j])
 
     funcstr += """
-public static void ParallelFor<"""
+internal void DispatchKernel<"""
 
     for j in range(i):
         funcstr += "{l}, ".format(l=letters[j])
@@ -57,16 +55,23 @@ public static void ParallelFor<"""
 
     funcstr += """
 {
-    var handler = new AcceleratorHandler();
-    handler.DispatchKernel(start, end, """
+    var idx = new Index();
 
-    for j in range(i + 1):
-        adjusted = j + 1
-        funcstr += "buf{a}, ".format(a=adjusted)
+    var kernel = accelerator.LoadStreamKernel(action);
 
-    funcstr += """action);
-}
-
+    kernel(((end - start) / block_size, block_size), idx,
 """
+
+    for j in range(i):
+        adjusted = j + 1
+        funcstr += """        new GPUArray<{l}>(buf{a}.View),
+""".format(l=letters[j], a=adjusted)
+
+    funcstr += """        new GPUArray<{l}>(buf{a}.View));
+
+    Synchronize();
+""".format(l=letters[i], a=i + 1)
+
+    funcstr += "}\n\n"
 
     ofile.write(funcstr)

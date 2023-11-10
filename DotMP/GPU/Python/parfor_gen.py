@@ -8,7 +8,7 @@ ordinals = ["first", "second", "third", "fourth", "fifth", "sixth", "seventh", "
 letters = ["T", "U", "V", "W", "X", "Y", "Z",
            "A", "B", "C", "D", "E", "F", "G", "H", "I"]
 
-for i in range(0, 16):
+for i in range(0, 13):
     funcstr = ""
 
     funcstr += """/// <summary>
