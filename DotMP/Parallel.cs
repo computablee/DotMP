@@ -5,11 +5,11 @@
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
-
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
  * License for more details.
-
+ *
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
  * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
@@ -47,6 +47,10 @@ namespace DotMP
         /// Number of threads to be used in the next parallel region, where 0 means that it will be determined on-the-fly.
         /// </summary>
         private static volatile uint num_threads = 0;
+        /// <summary>
+        /// Current thread num, cached.
+        /// </summary>
+        private static ThreadLocal<int> thread_num = new ThreadLocal<int>(() => Convert.ToInt32(Thread.CurrentThread.Name));
 
         /// <summary>
         /// Fixes the arguments for a parallel for loop.
@@ -1220,7 +1224,7 @@ namespace DotMP
                 throw new NotInParallelRegionException("Cannot get current thread number outside of a parallel region.");
             }
 
-            return Convert.ToInt32(Thread.CurrentThread.Name);
+            return thread_num.Value;
         }
 
         /// <summary>
