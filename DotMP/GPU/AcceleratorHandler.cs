@@ -122,7 +122,7 @@ namespace DotMP.GPU
         }
 
         /// <summary>
-        /// The type of the first data parameter.
+        /// Dispatches a kernel with four parameters.
         /// </summary>
         /// <typeparam name="T">The type of the first data parameter.</typeparam>
         /// <typeparam name="U">The type of the second data parameter.</typeparam>
@@ -150,6 +150,84 @@ namespace DotMP.GPU
                 new GPUArray<U>(buf2.View),
                 new GPUArray<V>(buf3.View),
                 new GPUArray<W>(buf4.View));
+
+            Synchronize();
+        }
+
+        /// <summary>
+        /// Dispatches a kernel with five parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of the first data parameter.</typeparam>
+        /// <typeparam name="U">The type of the second data parameter.</typeparam>
+        /// <typeparam name="V">The type of the third data parameter.</typeparam>
+        /// <typeparam name="W">The type of the fourth data parameter.</typeparam>
+        /// <typeparam name="X">The type of the fifth data parameter.</typeparam>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="buf1">The first buffer to run the kernel with.</param>
+        /// <param name="buf2">The second buffer to run the kernel with.</param>
+        /// <param name="buf3">The third buffer to run the kernel with.</param>
+        /// <param name="buf4">The fourth buffer to run the kernel with.</param>
+        /// <param name="buf5">The fifth buffer to run the kernel with.</param>
+        /// <param name="action">The action to perform.</param>
+        internal void DispatchKernel<T, U, V, W, X>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>> action)
+            where T : unmanaged
+            where U : unmanaged
+            where V : unmanaged
+            where W : unmanaged
+            where X : unmanaged
+        {
+            var idx = new Index();
+
+            var kernel = accelerator.LoadStreamKernel(action);
+
+            kernel(((end - start) / block_size, block_size), idx,
+                new GPUArray<T>(buf1.View),
+                new GPUArray<U>(buf2.View),
+                new GPUArray<V>(buf3.View),
+                new GPUArray<W>(buf4.View),
+                new GPUArray<X>(buf5.View));
+
+            Synchronize();
+        }
+
+        /// <summary>
+        /// Dispatches a kernel with six parameters.
+        /// </summary>
+        /// <typeparam name="T">The type of the first data parameter.</typeparam>
+        /// <typeparam name="U">The type of the second data parameter.</typeparam>
+        /// <typeparam name="V">The type of the third data parameter.</typeparam>
+        /// <typeparam name="W">The type of the fourth data parameter.</typeparam>
+        /// <typeparam name="X">The type of the fifth data parameter.</typeparam>
+        /// <typeparam name="Y">The type of the sixth data parameter.</typeparam>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="buf1">The first buffer to run the kernel with.</param>
+        /// <param name="buf2">The second buffer to run the kernel with.</param>
+        /// <param name="buf3">The third buffer to run the kernel with.</param>
+        /// <param name="buf4">The fourth buffer to run the kernel with.</param>
+        /// <param name="buf5">The fifth buffer to run the kernel with.</param>
+        /// <param name="buf6">The sixth buffer to run the kernel with.</param>
+        /// <param name="action">The action to perform.</param>
+        internal void DispatchKernel<T, U, V, W, X, Y>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>> action)
+            where T : unmanaged
+            where U : unmanaged
+            where V : unmanaged
+            where W : unmanaged
+            where X : unmanaged
+            where Y : unmanaged
+        {
+            var idx = new Index();
+
+            var kernel = accelerator.LoadStreamKernel(action);
+
+            kernel(((end - start) / block_size, block_size), idx,
+                new GPUArray<T>(buf1.View),
+                new GPUArray<U>(buf2.View),
+                new GPUArray<V>(buf3.View),
+                new GPUArray<W>(buf4.View),
+                new GPUArray<X>(buf5.View),
+                new GPUArray<Y>(buf6.View));
 
             Synchronize();
         }
