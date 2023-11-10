@@ -7,19 +7,19 @@ assignees: ''
 
 ---
 
-**Describe the bug**
+**Describe the bug.**
 A clear and concise description of what the bug is.
 
-**To Reproduce**
+**To Reproduce.**
 Provide some C# code using DotMP that demonstrates the erroneous behavior.
 ```cs
 // code here
 ```
 
-**Expected behavior**
+**Expected behavior.**
 A clear and concise description of what you expected to happen.
 
-**Screenshots**
+**Screenshots.**
 If applicable, add screenshots to help explain your problem.
 
 **Desktop (please complete the following information):**
@@ -27,5 +27,5 @@ If applicable, add screenshots to help explain your problem.
 - DotMP Version: [e.g. v1.4.0]
 - .NET Version: [e.g. .NET 6]
 
-**Additional context**
+**Additional context.**
 Add any other context about the problem here.
