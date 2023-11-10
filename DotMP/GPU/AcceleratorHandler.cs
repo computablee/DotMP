@@ -21,31 +21,10 @@ namespace DotMP.GPU
         /// <summary>
         /// The accelerator object.
         /// </summary>
-        private static Accelerator accelerator;
+        internal static Accelerator accelerator;
         /// <summary>
-        /// The GPU pointers for arrays going to the GPU.
+        /// 
         /// </summary>
-        private static dynamic[] tos;
-        /// <summary>
-        /// The GPU pointers for arrays coming back from the GPU.
-        /// </summary>
-        private static dynamic[] froms;
-        /// <summary>
-        /// The CPU pointers for arrays coming back from the GPU.
-        /// </summary>
-        private static dynamic[] froms_cpu;
-        /// <summary>
-        /// The GPU pointers for arrays going both to and from the GPU.
-        /// </summary>
-        private static dynamic[] tofroms;
-        /// <summary>
-        /// The CPU pointers for arrays going both to and from the GPU.
-        /// </summary>
-        private static dynamic[] tofroms_cpu;
-        /// <summary>
-        /// Counts how many arrays have been copied back to the CPU for bookkeeping.
-        /// </summary>
-        private static int copied_back;
         private static int block_size;
 
         /// <summary>
@@ -59,129 +38,13 @@ namespace DotMP.GPU
             accelerator = context.Devices[0].CreateAccelerator(context);
             Console.WriteLine("Using {0} accelerator.", accelerator.AcceleratorType.ToString());
             initialized = true;
-            copied_back = 0;
             block_size = accelerator.AcceleratorType == AcceleratorType.CPU ? 16 : 256;
-
-            tos = new dynamic[0];
-            froms = new dynamic[0];
-            tofroms = new dynamic[0];
-            froms_cpu = new dynamic[0][];
-            tofroms_cpu = new dynamic[0][];
         }
 
         /// <summary>
-        /// Aggregates the parameters into a single array.
+        /// Synchronize pending operations.
         /// </summary>
-        /// <returns>A dynamic array of all parameters.</returns>
-        private dynamic[] AggregateParams(int count)
-        {
-            dynamic[] ret = tos.Concat(froms).Concat(tofroms).ToArray();
-
-            if (ret.Length != count)
-                throw new WrongNumberOfDataMovementsSpecifiedException(string.Format("Specified {0} data movement(s), expected {1}.", ret.Length, count));
-
-            return ret;
-        }
-
-        /// <summary>
-        /// Called if data should be moved to the device.
-        /// Allocates data on GPU and copies the data from the CPU.
-        /// </summary>
-        /// <typeparam name="T">The type of data to allocate.</typeparam>
-        /// <param name="values">The data to allocate.</param>
-        internal void AllocateTo<T>(T[][] values)
-            where T : unmanaged
-        {
-            if (froms.Length > 0 || tofroms.Length > 0)
-                throw new ImproperDataMovementOrderingException("DataTo should be called before DataFrom and DataToFrom.");
-
-            var tos = values.Select(v => accelerator.Allocate1D(v)).ToArray();
-            AcceleratorHandler.tos = AcceleratorHandler.tos.Concat(tos).ToArray();
-
-            for (int i = 0; i < tos.Length; i++)
-                tos[i].CopyFromCPU(values[i]);
-        }
-
-        /// <summary>
-        /// Called if data should be moved from the device.
-        /// Allocates data on GPU.
-        /// </summary>
-        /// <typeparam name="T">The type of data to allocate.</typeparam>
-        /// <param name="values">The data to allocate.</param>
-        internal void AllocateFrom<T>(T[][] values)
-            where T : unmanaged
-        {
-            if (tofroms.Length > 0)
-                throw new ImproperDataMovementOrderingException("DataFrom should be called before DataToFrom.");
-
-            var froms = values.Select(v => accelerator.Allocate1D<T>(v.Length)).ToArray();
-            AcceleratorHandler.froms = AcceleratorHandler.froms.Concat(froms).ToArray();
-            AcceleratorHandler.froms_cpu = AcceleratorHandler.froms_cpu.Concat(values).ToArray();
-        }
-
-        /// <summary>
-        /// Called if data should be moved to and from the device.
-        /// Allocates data on GPU and copies the data from the CPU.
-        /// </summary>
-        /// <typeparam name="T">The type of data to allocate.</typeparam>
-        /// <param name="values">The data to allocate.</param>
-        internal void AllocateToFrom<T>(T[][] values)
-            where T : unmanaged
-        {
-            var tofroms = values.Select(v => accelerator.Allocate1D(v)).ToArray();
-            AcceleratorHandler.tofroms = AcceleratorHandler.tofroms.Concat(tofroms).ToArray();
-            AcceleratorHandler.tofroms_cpu = AcceleratorHandler.tofroms_cpu.Concat(values).ToArray();
-
-            for (int i = 0; i < tos.Length; i++)
-                tofroms[i].CopyFromCPU(values[i]);
-        }
-
-        /// <summary>
-        /// Synchronizes the GPU stream.
-        /// </summary>
-        internal void Synchronize() =>
-            accelerator.DefaultStream.Synchronize();
-
-        /// <summary>
-        /// Copies a piece of GPU memory back to the CPU.
-        /// </summary>
-        /// <typeparam name="T">The type of the data to transfer.</typeparam>
-        /// <param name="item">A MemoryBuffer1D object to transfer.</param>
-        internal void CopyBack<T>(dynamic item)
-            where T : unmanaged
-        {
-            MemoryBuffer1D<T, Stride1D.Dense> castedItem = item;
-
-            if (copied_back >= tos.Length && copied_back - tos.Length < froms.Length)
-                castedItem.GetAsArray1D().CopyTo(froms_cpu[copied_back - tos.Length], 0);
-            else if (copied_back >= tos.Length)
-                castedItem.GetAsArray1D().CopyTo(tofroms_cpu[copied_back - tos.Length - froms.Length], 0);
-
-            copied_back++;
-        }
-
-        /// <summary>
-        /// Called to finalize kernel execution.
-        /// Clears all of the arrays used in the kernel.
-        /// </summary>
-        internal void FinalizeKernel()
-        {
-            foreach (var i in tos)
-                i.Dispose();
-            tos = new dynamic[0];
-
-            foreach (var i in froms)
-                i.Dispose();
-            froms = new dynamic[0];
-            froms_cpu = new dynamic[0][];
-
-            foreach (var i in tofroms)
-                i.Dispose();
-            tofroms = new dynamic[0];
-            tofroms_cpu = new dynamic[0][];
-
-            copied_back = 0;
-        }
+        private void Synchronize() => accelerator.Synchronize();
 
         /// <summary>
         /// Dispatches a kernel with one data parameter.
@@ -189,21 +52,19 @@ namespace DotMP.GPU
         /// <typeparam name="T">The type of the data parameter.</typeparam>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="buf">The buffer to run the kernel with.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T>(int start, int end, Action<Index, GPUArray<T>> action)
+        internal void DispatchKernel<T>(int start, int end, Buffer<T> buf, Action<Index, GPUArray<T>> action)
             where T : unmanaged
         {
-            dynamic[] parameters = AggregateParams(1);
             var idx = new Index();
 
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(parameters[0].View));
+                new GPUArray<T>(buf.View));
 
             Synchronize();
-            CopyBack<T>(parameters[0]);
-            FinalizeKernel();
         }
 
         /// <summary>
@@ -213,24 +74,22 @@ namespace DotMP.GPU
         /// <typeparam name="U">The type of the second data parameter.</typeparam>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="buf1">The first buffer to run the kernel with.</param>
+        /// <param name="buf2">The second buffer to run the kernel with.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T, U>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>> action)
+        internal void DispatchKernel<T, U>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Action<Index, GPUArray<T>, GPUArray<U>> action)
             where T : unmanaged
             where U : unmanaged
         {
-            dynamic[] parameters = AggregateParams(2);
             var idx = new Index();
 
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(parameters[0].View),
-                new GPUArray<U>(parameters[1].View));
+                new GPUArray<T>(buf1.View),
+                new GPUArray<U>(buf2.View));
 
             Synchronize();
-            CopyBack<T>(parameters[0]);
-            CopyBack<U>(parameters[1]);
-            FinalizeKernel();
         }
 
         /// <summary>
@@ -241,27 +100,25 @@ namespace DotMP.GPU
         /// <typeparam name="V">The type of the third data parameter.</typeparam>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="buf1">The first buffer to run the kernel with.</param>
+        /// <param name="buf2">The second buffer to run the kernel with.</param>
+        /// <param name="buf3">The third buffer to run the kernel with.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T, U, V>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>> action)
+        internal void DispatchKernel<T, U, V>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>> action)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
         {
-            dynamic[] parameters = AggregateParams(3);
             var idx = new Index();
 
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(parameters[0].View),
-                new GPUArray<U>(parameters[1].View),
-                new GPUArray<V>(parameters[2].View));
+                new GPUArray<T>(buf1.View),
+                new GPUArray<U>(buf2.View),
+                new GPUArray<V>(buf3.View));
 
             Synchronize();
-            CopyBack<T>(parameters[0]);
-            CopyBack<U>(parameters[1]);
-            CopyBack<V>(parameters[2]);
-            FinalizeKernel();
         }
 
         /// <summary>
@@ -273,30 +130,28 @@ namespace DotMP.GPU
         /// <typeparam name="W">The type of the fourth data parameter.</typeparam>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="buf1">The first buffer to run the kernel with.</param>
+        /// <param name="buf2">The second buffer to run the kernel with.</param>
+        /// <param name="buf3">The third buffer to run the kernel with.</param>
+        /// <param name="buf4">The fourth buffer to run the kernel with.</param>
         /// <param name="action">The action to perform.</param>
-        internal void DispatchKernel<T, U, V, W>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>> action)
+        internal void DispatchKernel<T, U, V, W>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>> action)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
             where W : unmanaged
         {
-            dynamic[] parameters = AggregateParams(4);
             var idx = new Index();
 
             var kernel = accelerator.LoadStreamKernel(action);
 
             kernel(((end - start) / block_size, block_size), idx,
-                new GPUArray<T>(parameters[0].View),
-                new GPUArray<U>(parameters[1].View),
-                new GPUArray<V>(parameters[2].View),
-                new GPUArray<W>(parameters[3].View));
+                new GPUArray<T>(buf1.View),
+                new GPUArray<U>(buf2.View),
+                new GPUArray<V>(buf3.View),
+                new GPUArray<W>(buf4.View));
 
             Synchronize();
-            CopyBack<T>(parameters[0]);
-            CopyBack<U>(parameters[1]);
-            CopyBack<V>(parameters[2]);
-            CopyBack<W>(parameters[3]);
-            FinalizeKernel();
         }
     }
 }

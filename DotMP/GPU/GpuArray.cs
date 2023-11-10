@@ -1,4 +1,5 @@
 using ILGPU;
+using System;
 
 namespace DotMP.GPU
 {
@@ -6,7 +7,8 @@ namespace DotMP.GPU
     /// Wrapper object for representing arrays on the GPU.
     /// </summary>
     /// <typeparam name="T"></typeparam>
-    public struct GPUArray<T> where T : unmanaged
+    public struct GPUArray<T>
+        where T : unmanaged
     {
         /// <summary>
         /// Internal ArrayView object.

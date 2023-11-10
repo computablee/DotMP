@@ -17,13 +17,14 @@ namespace DotMP.GPU
         /// </summary>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="buf">The buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
-        public static void ParallelFor<T>(int start, int end, Action<Index, GPUArray<T>> action)
+        public static void ParallelFor<T>(int start, int end, Buffer<T> buf, Action<Index, GPUArray<T>> action)
             where T : unmanaged
         {
             var handler = new AcceleratorHandler();
-            handler.DispatchKernel(start, end, action);
+            handler.DispatchKernel(start, end, buf, action);
         }
 
         /// <summary>
@@ -33,15 +34,17 @@ namespace DotMP.GPU
         /// </summary>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="buf1">The first buffer to run the kernel with.</param>
+        /// <param name="buf2">The second buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
-        public static void ParallelFor<T, U>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>> action)
+        public static void ParallelFor<T, U>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Action<Index, GPUArray<T>, GPUArray<U>> action)
             where T : unmanaged
             where U : unmanaged
         {
             var handler = new AcceleratorHandler();
-            handler.DispatchKernel(start, end, action);
+            handler.DispatchKernel(start, end, buf1, buf2, action);
         }
 
         /// <summary>
@@ -51,17 +54,20 @@ namespace DotMP.GPU
         /// </summary>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="buf1">The first buffer to run the kernel with.</param>
+        /// <param name="buf2">The second buffer to run the kernel with.</param>
+        /// <param name="buf3">The third buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
-        public static void ParallelFor<T, U, V>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>> action)
+        public static void ParallelFor<T, U, V>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>> action)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
         {
             var handler = new AcceleratorHandler();
-            handler.DispatchKernel(start, end, action);
+            handler.DispatchKernel(start, end, buf1, buf2, buf3, action);
         }
 
         /// <summary>
@@ -71,58 +77,23 @@ namespace DotMP.GPU
         /// </summary>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="buf1">The first buffer to run the kernel with.</param>
+        /// <param name="buf2">The second buffer to run the kernel with.</param>
+        /// <param name="buf3">The third buffer to run the kernel with.</param>
+        /// <param name="buf4">The fourth buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="W">The base type of the fourth argument. Must be an unmanaged type.</typeparam>
-        public static void ParallelFor<T, U, V, W>(int start, int end, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>> action)
+        public static void ParallelFor<T, U, V, W>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>> action)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
             where W : unmanaged
         {
             var handler = new AcceleratorHandler();
-            handler.DispatchKernel(start, end, action);
-        }
-
-        /// <summary>
-        /// Specifies data movement to the GPU at the start of the kernel, but not back to the CPU at the end of the kernel.
-        /// Can be called multiple times with different datatypes, but is cleared after a call to Kernel().
-        /// </summary>
-        /// <typeparam name="T">The base type of the data. Must be an unmanaged type.</typeparam>
-        /// <param name="to_data">The data to move to the GPU.</param>
-        public static void DataTo<T>(params T[][] to_data)
-            where T : unmanaged
-        {
-            var handler = new AcceleratorHandler();
-            handler.AllocateTo(to_data);
-        }
-
-        /// <summary>
-        /// Specifies data movement back to the CPU at the end of the kernel, but not to the GPU at the start of the kernel..
-        /// Can be called multiple times with different datatypes, but is cleared after a call to Kernel().
-        /// </summary>
-        /// <typeparam name="T">The base type of the data. Must be an unmanaged type.</typeparam>
-        /// <param name="to_data">The data to move from the GPU.</param>
-        public static void DataFrom<T>(params T[][] to_data)
-            where T : unmanaged
-        {
-            var handler = new AcceleratorHandler();
-            handler.AllocateFrom(to_data);
-        }
-
-        /// <summary>
-        /// Specifies data movement to the GPU at the start of the kernel, and from the GPU back to the CPU at the end of the kernel.
-        /// Can be called multiple times with different datatypes, but is cleared after a call to Kernel().
-        /// </summary>
-        /// <typeparam name="T">The base type of the data. Must be an unmanaged type.</typeparam>
-        /// <param name="to_data">The data to move to and from the GPU.</param>
-        public static void DataToFrom<T>(params T[][] to_data)
-            where T : unmanaged
-        {
-            var handler = new AcceleratorHandler();
-            handler.AllocateToFrom(to_data);
+            handler.DispatchKernel(start, end, buf1, buf2, buf3, buf4, action);
         }
     }
 }
