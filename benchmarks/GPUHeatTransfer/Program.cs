@@ -33,13 +33,11 @@ public class HeatTransfer
     // grid array
     private double[,] grid = new double[0, 0];
 
-    //private 
-
     // parallel type enum
     public enum ParType { DMPFor, DMPGPU }
 
     // test dims of 100x100, 1000x1000, and 5000x5000
-    [Params(500)]
+    [Params(514)]
     public int dim;
 
     // test with 10 steps and 100 steps
@@ -69,8 +67,11 @@ public class HeatTransfer
         grid[0, dim / 2 - 1] = 100.0;
         grid[0, dim / 2] = 100.0;
 
-        gridbuf = new DotMP.GPU.Buffer<double>(grid, DotMP.GPU.Buffer.Behavior.To);
-        scratchbuf = new DotMP.GPU.Buffer<double>(scratch, DotMP.GPU.Buffer.Behavior.NoCopy);
+        if (type == ParType.DMPGPU)
+        {
+            gridbuf = new DotMP.GPU.Buffer<double>(grid, DotMP.GPU.Buffer.Behavior.ToFrom);
+            scratchbuf = new DotMP.GPU.Buffer<double>(scratch, DotMP.GPU.Buffer.Behavior.NoCopy);
+        }
     }
 
     //run the simulation
@@ -89,6 +90,8 @@ public class HeatTransfer
         if (type == ParType.DMPGPU)
         {
             action();
+            gridbuf.Dispose();
+            scratchbuf.Dispose();
         }
         else
         {
@@ -126,7 +129,7 @@ public class HeatTransfer
             case ParType.DMPGPU:
                 DotMP.GPU.Parallel.ParallelFor(1, dim - 1, gridbuf, scratchbuf, (i, grid, scratch) =>
                 {
-                    for (int j = 1; j < dim - 1; j++)
+                    for (int j = 1; j < 514 - 1; j++)
                     {
                         //set the scratch array to the average of the surrounding cells
                         scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
@@ -135,7 +138,7 @@ public class HeatTransfer
 
                 DotMP.GPU.Parallel.ParallelFor(1, dim - 1, gridbuf, scratchbuf, (i, grid, scratch) =>
                 {
-                    for (int j = 1; j < dim - 1; j++)
+                    for (int j = 1; j < 514 - 1; j++)
                     {
                         grid[i, j] = scratch[i, j];
                     }
