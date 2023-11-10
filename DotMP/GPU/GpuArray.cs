@@ -25,24 +25,6 @@ namespace DotMP.GPU
         }
 
         /// <summary>
-        /// Implicit conversion to ArrayView.
-        /// </summary>
-        /// <param name="array">The GPUArray object.</param>
-        public static implicit operator ArrayView<T>(GPUArray<T> array)
-        {
-            return array.arrayView;
-        }
-
-        /// <summary>
-        /// Implicit conversion to GPUArray.
-        /// </summary>
-        /// <param name="array">The ArrayView object.</param>
-        public static implicit operator GPUArray<T>(ArrayView<T> array)
-        {
-            return new GPUArray<T>(array);
-        }
-
-        /// <summary>
         /// Overload for [] operator.
         /// </summary>
         /// <param name="idx">The ID to index into.</param>
