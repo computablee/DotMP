@@ -35,17 +35,21 @@ namespace DotMP.GPU
             if (arrayView.Dimensions == 1)
             {
                 view1d = arrayView.View1D;
-                view2d = ArrayView2D<T, Stride2D.DenseY>.Empty;
+                // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
             }
             else if (arrayView.Dimensions == 2)
             {
-                view1d = ArrayView1D<T, Stride1D.Dense>.Empty;
+                // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
                 view2d = arrayView.View2D;
             }
             else
             {
-                view1d = ArrayView1D<T, Stride1D.Dense>.Empty;
-                view2d = ArrayView2D<T, Stride2D.DenseY>.Empty;
+                // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
+                // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
             }
 
             dims = arrayView.Dimensions;
