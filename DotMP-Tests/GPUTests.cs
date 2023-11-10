@@ -33,13 +33,18 @@ namespace DotMPTests
             random_init(x);
             random_init(y);
 
-            DotMP.GPU.Parallel.DataTo(a, x, y);
-            DotMP.GPU.Parallel.DataFrom(res);
-            DotMP.GPU.Parallel.ParallelFor<double, double, double, float>
-                (0, a.Length, (i, a, x, y, res) =>
             {
-                res[i] = (float)(a[i] * x[i] + y[i]);
-            });
+                using var a_gpu = new DotMP.GPU.Buffer<double>(a, DotMP.GPU.Buffer.Behavior.To);
+                using var x_gpu = new DotMP.GPU.Buffer<double>(x, DotMP.GPU.Buffer.Behavior.To);
+                using var y_gpu = new DotMP.GPU.Buffer<double>(y, DotMP.GPU.Buffer.Behavior.To);
+                using var res_gpu = new DotMP.GPU.Buffer<float>(res, DotMP.GPU.Buffer.Behavior.From);
+
+                DotMP.GPU.Parallel.ParallelFor(0, a.Length, a_gpu, x_gpu, y_gpu, res_gpu,
+                    (i, a, x, y, res) =>
+                {
+                    res[i] = (float)(a[i] * x[i] + y[i]);
+                });
+            }
 
             for (int i = 0; i < a.Length; i++)
             {
@@ -50,11 +55,13 @@ namespace DotMPTests
 
             double[] a_old = a.Select(a => a).ToArray();
 
-            DotMP.GPU.Parallel.DataToFrom(a);
-            DotMP.GPU.Parallel.ParallelFor<double>(0, a.Length, (i, a) =>
+            using (var a_gpu = new DotMP.GPU.Buffer<double>(a, DotMP.GPU.Buffer.Behavior.ToFrom))
             {
-                a[i]++;
-            });
+                DotMP.GPU.Parallel.ParallelFor(0, a.Length, a_gpu, (i, a) =>
+                {
+                    a[i]++;
+                });
+            }
 
             for (int i = 0; i < a.Length; i++)
             {
