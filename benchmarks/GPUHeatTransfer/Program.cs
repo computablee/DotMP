@@ -90,8 +90,8 @@ public class HeatTransfer
         if (type == ParType.DMPGPU)
         {
             action();
-            gridbuf.Dispose();
-            scratchbuf.Dispose();
+            //gridbuf.Dispose();
+            //scratchbuf.Dispose();
         }
         else
         {
