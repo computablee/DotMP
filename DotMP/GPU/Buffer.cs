@@ -1,4 +1,5 @@
 using System;
+using System.Runtime.CompilerServices;
 using ILGPU;
 using ILGPU.Runtime;
 
@@ -157,7 +158,7 @@ namespace DotMP.GPU
             {
                 if (behavior == Buffer.Behavior.From || behavior == Buffer.Behavior.ToFrom)
                 {
-                    buf2d.GetAsArray2D().CopyTo(data2d, 0);
+                    System.Buffer.BlockCopy(buf2d.GetAsArray2D(), 0, data2d, 0, Unsafe.SizeOf<T>() * data2d.Length);
                 }
 
                 buf2d.Dispose();
