@@ -63,13 +63,11 @@ namespace DotMP.GPU
             switch (behavior)
             {
                 case Buffer.Behavior.To:
+                case Buffer.Behavior.ToFrom:
                     buf = AcceleratorHandler.accelerator.Allocate1D(data);
                     break;
                 case Buffer.Behavior.From:
                     buf = AcceleratorHandler.accelerator.Allocate1D<T>(data.Length);
-                    break;
-                case Buffer.Behavior.ToFrom:
-                    buf = AcceleratorHandler.accelerator.Allocate1D(data);
                     break;
             }
         }
