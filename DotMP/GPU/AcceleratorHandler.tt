@@ -14,7 +14,6 @@
 * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
 */
 
-
 <#@ template debug="false" hostspecific="false" language="C#" #>
 <#@ output extension=".cs" #>
 <# var letters = new char[] { 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F' };
@@ -145,6 +144,5 @@ namespace DotMP.GPU
         Synchronize();
 }
 <# } #>
-
 }
 }
