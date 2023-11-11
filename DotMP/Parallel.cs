@@ -972,6 +972,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         [Obsolete("This version of Critical is deprecated. Omit the id parameter for the updated version. This overload will be removed in a future release.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
+        [ExcludeFromCodeCoverage]
         public static int Critical(int id, Action action)
         {
             if (!InParallel())
@@ -1097,6 +1098,7 @@ namespace DotMP
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         [Obsolete("This version of Single is deprecated. Omit the id parameter for the updated version. This overload will be removed in a future release.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
+        [ExcludeFromCodeCoverage]
         public static void Single(int id, Action action)
         {
             var freg = new ForkedRegion();
@@ -1196,6 +1198,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         [Obsolete("This version of Ordered is deprecated. Omit the id parameter for the updated version. This overload will be removed in a future release.")]
         [EditorBrowsable(EditorBrowsableState.Never)]
+        [ExcludeFromCodeCoverage]
         public static void Ordered(int id, Action action)
         {
             var freg = new ForkedRegion();
