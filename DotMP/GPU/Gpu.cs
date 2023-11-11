@@ -71,23 +71,23 @@ namespace DotMP.GPU
         /// <param name="path">The path to the file this method was called from.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
-        /*public static void ParallelFor<T, U>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Action<Index, GPUArray<T>, GPUArray<U>> action, [CallerFilePath] string path = "", [CallerLineNumber] int line = 0)
+        public static void ParallelFor<T, U>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Action<Index, GPUArray<T>, GPUArray<U>> action, [CallerFilePath] string path = "", [CallerLineNumber] int line = 0)
             where T : unmanaged
             where U : unmanaged
         {
             var handler = new AcceleratorHandler();
             string src = FormatCaller(path, line);
             handler.DispatchKernel(start, end, buf1, buf2, action, src);
-        }*/
+        }
 
-        public static void ParallelForCollapse<T, U>((int, int) range1, (int, int) range2, Buffer<T> buf1, Buffer<U> buf2, Action<Index, GPUArray<T>, GPUArray<U>> action, [CallerFilePath] string path = "", [CallerLineNumber] int line = 0)
+        /*public static void ParallelForCollapse<T, U>((int, int) range1, (int, int) range2, Buffer<T> buf1, Buffer<U> buf2, Action<Index, GPUArray<T>, GPUArray<U>> action, [CallerFilePath] string path = "", [CallerLineNumber] int line = 0)
             where T : unmanaged
             where U : unmanaged
         {
             var handler = new AcceleratorHandler();
             string src = FormatCaller(path, line);
             handler.DispatchKernel(new (int, int)[] { range1, range2 }, buf1, buf2, action, src);
-        }
+        }*/
 
         /// <summary>
         /// Creates a GPU parallel for loop.
