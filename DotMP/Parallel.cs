@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 using System.ComponentModel;
 using System.Threading;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DotMP
 {
