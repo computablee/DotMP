@@ -429,7 +429,7 @@ namespace DotMPTests
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
                 for (int i = 0; i < iters; i++)
-                    DotMP.Parallel.Critical(0, () => ++total);
+                    DotMP.Parallel.Critical(() => ++total);
             });
 
             total.Should().Be((int)threads * iters);
@@ -438,14 +438,13 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
             {
-                if (DotMP.Parallel.GetThreadNum() == 0) DotMP.Parallel.Critical(0, () => Thread.Sleep(1000));
-                if (DotMP.Parallel.GetThreadNum() == 1) DotMP.Parallel.Critical(1, () => Thread.Sleep(1000));
-                if (DotMP.Parallel.GetThreadNum() == 2) DotMP.Parallel.Critical(0, () => Thread.Sleep(1000));
-                if (DotMP.Parallel.GetThreadNum() == 3) DotMP.Parallel.Critical(1, () => Thread.Sleep(1000));
+                if (DotMP.Parallel.GetThreadNum() % 2 == 0) DotMP.Parallel.Critical(() => Thread.Sleep(1000));
+                if (DotMP.Parallel.GetThreadNum() % 2 == 1) DotMP.Parallel.Critical(() => Thread.Sleep(1000));
             });
 
             double elapsed = DotMP.Parallel.GetWTime() - start;
-            elapsed.Should().BeLessThan(2200);
+            elapsed.Should().BeLessThan(2.2);
+            elapsed.Should().BeGreaterThan(2.0);
         }
 
         /// <summary>
@@ -478,7 +477,7 @@ namespace DotMPTests
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    DotMP.Parallel.Single(0, () => DotMP.Atomic.Inc(ref total));
+                    DotMP.Parallel.Single(() => DotMP.Atomic.Inc(ref total));
                 }
             });
 
@@ -490,7 +489,7 @@ namespace DotMPTests
             {
                 for (int i = 0; i < 10; i++)
                 {
-                    DotMP.Parallel.Single(0, () => DotMP.Atomic.Inc(ref total));
+                    DotMP.Parallel.Single(() => DotMP.Atomic.Inc(ref total));
                 }
             });
 
@@ -646,7 +645,7 @@ namespace DotMPTests
             DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Static,
                                         num_threads: threads, action: i =>
             {
-                DotMP.Parallel.Ordered(0, () => incrementing[i] = i);
+                DotMP.Parallel.Ordered(() => incrementing[i] = i);
             });
 
             for (int i = 0; i < incrementing.Length; i++)
@@ -1004,7 +1003,7 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                DotMP.Parallel.Single(0, () =>
+                DotMP.Parallel.Single(() =>
                 {
                     for (int i = 0; i < threads * 2; i++)
                     {
@@ -1033,7 +1032,7 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                DotMP.Parallel.Single(0, () =>
+                DotMP.Parallel.Single(() =>
                 {
                     for (int i = 0; i < tasks_to_spawn; i++)
                     {
@@ -1093,7 +1092,7 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
-                DotMP.Parallel.Single(0, () =>
+                DotMP.Parallel.Single(() =>
                 {
                     DotMP.Parallel.Task(() =>
                     {
@@ -1263,7 +1262,7 @@ namespace DotMPTests
         {
             Assert.Throws<DotMP.NotInParallelRegionException>(() =>
             {
-                DotMP.Parallel.Single(0, () => { });
+                DotMP.Parallel.Single(() => { });
             });
         }
 
@@ -1275,7 +1274,7 @@ namespace DotMPTests
         {
             Assert.Throws<DotMP.NotInParallelRegionException>(() =>
             {
-                DotMP.Parallel.Critical(0, () => { });
+                DotMP.Parallel.Critical(() => { });
             });
         }
 
@@ -1289,13 +1288,13 @@ namespace DotMPTests
             {
                 Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
                 {
-                    DotMP.Parallel.Single(0, () => { });
+                    DotMP.Parallel.Single(() => { });
                 });
             });
 
             DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
             {
-                DotMP.Parallel.Single(0, () =>
+                DotMP.Parallel.Single(() =>
                 {
                     Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
                     {
@@ -1321,7 +1320,7 @@ namespace DotMPTests
         {
             Assert.Throws<DotMP.NotInParallelRegionException>(() =>
             {
-                DotMP.Parallel.Ordered(0, () => { });
+                DotMP.Parallel.Ordered(() => { });
             });
         }
 
