@@ -16,12 +16,14 @@
 
 using ILGPU;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DotMP.GPU
 {
     /// <summary>
     /// Handle for a GPU kernel to retrieve its kernel variables.
     /// </summary>
+    [ExcludeFromCodeCoverage]
     public struct Index
     {
         /// <summary>

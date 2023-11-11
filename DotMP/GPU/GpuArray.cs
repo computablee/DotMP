@@ -17,6 +17,7 @@
 using ILGPU;
 using ILGPU.Runtime;
 using System;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DotMP.GPU
 {
@@ -24,6 +25,7 @@ namespace DotMP.GPU
     /// Wrapper object for representing arrays on the GPU.
     /// </summary>
     /// <typeparam name="T"></typeparam>
+    [ExcludeFromCodeCoverage]
     public struct GPUArray<T>
         where T : unmanaged
     {
