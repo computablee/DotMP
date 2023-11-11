@@ -15,6 +15,7 @@
 */
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using ILGPU;
 using ILGPU.Runtime;
@@ -39,9 +40,13 @@ namespace DotMP.GPU
         /// </summary>
         internal static Accelerator accelerator;
         /// <summary>
-        /// 
+        /// Block size to use for kernels.
         /// </summary>
         private static int block_size;
+        /// <summary>
+        /// Kernel cache.
+        /// </summary>
+        private static Dictionary<string, dynamic> kernels = new Dictionary<string, dynamic>();
 
         /// <summary>
         /// Default constructor. If this is the first time it's called, it initializes all relevant singleton data.
@@ -64,6 +69,7 @@ namespace DotMP.GPU
             }
 
             accelerator = selectedDevice.CreateAccelerator(context);
+            //accelerator = context.Devices[0].CreateAccelerator(context);
 
             Console.WriteLine("Using {0} accelerator.", accelerator.AcceleratorType.ToString());
             initialized = true;
@@ -76,19 +82,96 @@ namespace DotMP.GPU
         private void Synchronize() => accelerator.Synchronize();
 
         /// <summary>
+        /// Get the kernel associated with this lambda.
+        /// </summary>
+        /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
+        /// <param name="action">The action provided on the CPU.</param>
+        /// <param name="src">The calling location.</param>
+        /// <returns>The GPU kernel.</returns>
+        private Action<KernelConfig, Index, GPUArray<T>> GetKernel<T>(Action<Index, GPUArray<T>> action, string src)
+            where T : unmanaged
+        {
+            if (!kernels.ContainsKey(src))
+                kernels.Add(src, accelerator.LoadStreamKernel(action));
+
+            return (Action<KernelConfig, Index, GPUArray<T>>)kernels[src];
+        }
+
+        /// <summary>
+        /// Get the kernel associated with this lambda.
+        /// </summary>
+        /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
+        /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
+        /// <param name="action">The action provided on the CPU.</param>
+        /// <param name="src">The calling location.</param>
+        /// <returns>The GPU kernel.</returns>
+        private Action<KernelConfig, Index, GPUArray<T>, GPUArray<U>> GetKernel<T, U>(Action<Index, GPUArray<T>, GPUArray<U>> action, string src)
+            where T : unmanaged
+            where U : unmanaged
+        {
+            if (!kernels.ContainsKey(src))
+                kernels.Add(src, accelerator.LoadStreamKernel(action));
+
+            return (Action<KernelConfig, Index, GPUArray<T>, GPUArray<U>>)kernels[src];
+        }
+
+        /// <summary>
+        /// Get the kernel associated with this lambda.
+        /// </summary>
+        /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
+        /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
+        /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
+        /// <param name="action">The action provided on the CPU.</param>
+        /// <param name="src">The calling location.</param>
+        /// <returns>The GPU kernel.</returns>
+        private Action<KernelConfig, Index, GPUArray<T>, GPUArray<U>, GPUArray<V>> GetKernel<T, U, V>(Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>> action, string src)
+            where T : unmanaged
+            where U : unmanaged
+            where V : unmanaged
+        {
+            if (!kernels.ContainsKey(src))
+                kernels.Add(src, accelerator.LoadStreamKernel(action));
+
+            return (Action<KernelConfig, Index, GPUArray<T>, GPUArray<U>, GPUArray<V>>)kernels[src];
+        }
+
+        /// <summary>
+        /// Get the kernel associated with this lambda.
+        /// </summary>
+        /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
+        /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
+        /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
+        /// <typeparam name="W">The base type of the fourth argument. Must be an unmanaged type.</typeparam>
+        /// <param name="action">The action provided on the CPU.</param>
+        /// <param name="src">The calling location.</param>
+        /// <returns>The GPU kernel.</returns>
+        private Action<KernelConfig, Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>> GetKernel<T, U, V, W>(Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>> action, string src)
+            where T : unmanaged
+            where U : unmanaged
+            where V : unmanaged
+            where W : unmanaged
+        {
+            if (!kernels.ContainsKey(src))
+                kernels.Add(src, accelerator.LoadStreamKernel(action));
+
+            return (Action<KernelConfig, Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>>)kernels[src];
+        }
+
+        /// <summary>
         /// Dispatches a kernel with one parameter.
         /// </summary>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
         /// <param name="buf">The buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T>(int start, int end, Buffer<T> buf, Action<Index, GPUArray<T>> action)
+        internal void DispatchKernel<T>(int start, int end, Buffer<T> buf, Action<Index, GPUArray<T>> action, string src)
             where T : unmanaged
         {
             var idx = new Index(start);
 
-            var kernel = accelerator.LoadStreamKernel(action);
+            var kernel = GetKernel(action, src);
 
             kernel(((end - start) / block_size, block_size), idx,
                 new GPUArray<T>(buf));
@@ -99,22 +182,23 @@ namespace DotMP.GPU
         /// <summary>
         /// Dispatches a kernel with two parameters.
         /// </summary>
-        /// <param name="start">The start of the loop, inclusive.</param>
-        /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="ranges">The starts and ends of the loop.</param>
         /// <param name="buf1">The first buffer to run the kernel with.</param>
         /// <param name="buf2">The second buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Action<Index, GPUArray<T>, GPUArray<U>> action)
+        internal void DispatchKernel<T, U>((int, int)[] ranges, Buffer<T> buf1, Buffer<U> buf2, Action<Index, GPUArray<T>, GPUArray<U>> action, string src)
             where T : unmanaged
             where U : unmanaged
         {
-            var idx = new Index(start);
+            int len = ranges.Select(tup => tup.Item2 - tup.Item1).Aggregate((x, y) => x * y);
+            var idx = new Index(ranges);
 
-            var kernel = accelerator.LoadStreamKernel(action);
+            var kernel = GetKernel(action, src);
 
-            kernel(((end - start) / block_size, block_size), idx,
+            kernel((len / block_size, block_size), idx,
                 new GPUArray<T>(buf1),
                 new GPUArray<U>(buf2));
 
@@ -130,17 +214,18 @@ namespace DotMP.GPU
         /// <param name="buf2">The second buffer to run the kernel with.</param>
         /// <param name="buf3">The third buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U, V>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>> action)
+        internal void DispatchKernel<T, U, V>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>> action, string src)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
         {
             var idx = new Index(start);
 
-            var kernel = accelerator.LoadStreamKernel(action);
+            var kernel = GetKernel(action, src);
 
             kernel(((end - start) / block_size, block_size), idx,
                 new GPUArray<T>(buf1),
@@ -160,11 +245,12 @@ namespace DotMP.GPU
         /// <param name="buf3">The third buffer to run the kernel with.</param>
         /// <param name="buf4">The fourth buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="W">The base type of the fourth argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U, V, W>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>> action)
+        internal void DispatchKernel<T, U, V, W>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>> action, string src)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
@@ -172,7 +258,7 @@ namespace DotMP.GPU
         {
             var idx = new Index(start);
 
-            var kernel = accelerator.LoadStreamKernel(action);
+            var kernel = GetKernel(action, src);
 
             kernel(((end - start) / block_size, block_size), idx,
                 new GPUArray<T>(buf1),
@@ -194,12 +280,13 @@ namespace DotMP.GPU
         /// <param name="buf4">The fourth buffer to run the kernel with.</param>
         /// <param name="buf5">The fifth buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="W">The base type of the fourth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="X">The base type of the fifth argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U, V, W, X>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>> action)
+        internal void DispatchKernel<T, U, V, W, X>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>> action, string src)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
@@ -232,13 +319,14 @@ namespace DotMP.GPU
         /// <param name="buf5">The fifth buffer to run the kernel with.</param>
         /// <param name="buf6">The sixth buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="W">The base type of the fourth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="X">The base type of the fifth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="Y">The base type of the sixth argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U, V, W, X, Y>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>> action)
+        internal void DispatchKernel<T, U, V, W, X, Y>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>> action, string src)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
@@ -274,6 +362,7 @@ namespace DotMP.GPU
         /// <param name="buf6">The sixth buffer to run the kernel with.</param>
         /// <param name="buf7">The seventh buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
@@ -281,7 +370,7 @@ namespace DotMP.GPU
         /// <typeparam name="X">The base type of the fifth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="Y">The base type of the sixth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="Z">The base type of the seventh argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U, V, W, X, Y, Z>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>> action)
+        internal void DispatchKernel<T, U, V, W, X, Y, Z>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>> action, string src)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
@@ -320,6 +409,7 @@ namespace DotMP.GPU
         /// <param name="buf7">The seventh buffer to run the kernel with.</param>
         /// <param name="buf8">The eighth buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
@@ -328,7 +418,7 @@ namespace DotMP.GPU
         /// <typeparam name="Y">The base type of the sixth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="Z">The base type of the seventh argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="A">The base type of the eighth argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U, V, W, X, Y, Z, A>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>> action)
+        internal void DispatchKernel<T, U, V, W, X, Y, Z, A>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>> action, string src)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
@@ -370,6 +460,7 @@ namespace DotMP.GPU
         /// <param name="buf8">The eighth buffer to run the kernel with.</param>
         /// <param name="buf9">The ninth buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
@@ -379,7 +470,7 @@ namespace DotMP.GPU
         /// <typeparam name="Z">The base type of the seventh argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="A">The base type of the eighth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="B">The base type of the ninth argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U, V, W, X, Y, Z, A, B>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Buffer<B> buf9, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>, GPUArray<B>> action)
+        internal void DispatchKernel<T, U, V, W, X, Y, Z, A, B>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Buffer<B> buf9, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>, GPUArray<B>> action, string src)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
@@ -424,6 +515,7 @@ namespace DotMP.GPU
         /// <param name="buf9">The ninth buffer to run the kernel with.</param>
         /// <param name="buf10">The tenth buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
@@ -434,7 +526,7 @@ namespace DotMP.GPU
         /// <typeparam name="A">The base type of the eighth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="B">The base type of the ninth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="C">The base type of the tenth argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U, V, W, X, Y, Z, A, B, C>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Buffer<B> buf9, Buffer<C> buf10, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>, GPUArray<B>, GPUArray<C>> action)
+        internal void DispatchKernel<T, U, V, W, X, Y, Z, A, B, C>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Buffer<B> buf9, Buffer<C> buf10, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>, GPUArray<B>, GPUArray<C>> action, string src)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
@@ -482,6 +574,7 @@ namespace DotMP.GPU
         /// <param name="buf10">The tenth buffer to run the kernel with.</param>
         /// <param name="buf11">The eleventh buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
@@ -493,7 +586,7 @@ namespace DotMP.GPU
         /// <typeparam name="B">The base type of the ninth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="C">The base type of the tenth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="D">The base type of the eleventh argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U, V, W, X, Y, Z, A, B, C, D>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Buffer<B> buf9, Buffer<C> buf10, Buffer<D> buf11, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>, GPUArray<B>, GPUArray<C>, GPUArray<D>> action)
+        internal void DispatchKernel<T, U, V, W, X, Y, Z, A, B, C, D>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Buffer<B> buf9, Buffer<C> buf10, Buffer<D> buf11, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>, GPUArray<B>, GPUArray<C>, GPUArray<D>> action, string src)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
@@ -544,6 +637,7 @@ namespace DotMP.GPU
         /// <param name="buf11">The eleventh buffer to run the kernel with.</param>
         /// <param name="buf12">The twelfth buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
@@ -556,7 +650,7 @@ namespace DotMP.GPU
         /// <typeparam name="C">The base type of the tenth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="D">The base type of the eleventh argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="E">The base type of the twelfth argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U, V, W, X, Y, Z, A, B, C, D, E>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Buffer<B> buf9, Buffer<C> buf10, Buffer<D> buf11, Buffer<E> buf12, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>, GPUArray<B>, GPUArray<C>, GPUArray<D>, GPUArray<E>> action)
+        internal void DispatchKernel<T, U, V, W, X, Y, Z, A, B, C, D, E>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Buffer<B> buf9, Buffer<C> buf10, Buffer<D> buf11, Buffer<E> buf12, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>, GPUArray<B>, GPUArray<C>, GPUArray<D>, GPUArray<E>> action, string src)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged
@@ -610,6 +704,7 @@ namespace DotMP.GPU
         /// <param name="buf12">The twelfth buffer to run the kernel with.</param>
         /// <param name="buf13">The thirteenth buffer to run the kernel with.</param>
         /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
         /// <typeparam name="T">The base type of the first argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="U">The base type of the second argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="V">The base type of the third argument. Must be an unmanaged type.</typeparam>
@@ -623,7 +718,7 @@ namespace DotMP.GPU
         /// <typeparam name="D">The base type of the eleventh argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="E">The base type of the twelfth argument. Must be an unmanaged type.</typeparam>
         /// <typeparam name="F">The base type of the thirteenth argument. Must be an unmanaged type.</typeparam>
-        internal void DispatchKernel<T, U, V, W, X, Y, Z, A, B, C, D, E, F>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Buffer<B> buf9, Buffer<C> buf10, Buffer<D> buf11, Buffer<E> buf12, Buffer<F> buf13, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>, GPUArray<B>, GPUArray<C>, GPUArray<D>, GPUArray<E>, GPUArray<F>> action)
+        internal void DispatchKernel<T, U, V, W, X, Y, Z, A, B, C, D, E, F>(int start, int end, Buffer<T> buf1, Buffer<U> buf2, Buffer<V> buf3, Buffer<W> buf4, Buffer<X> buf5, Buffer<Y> buf6, Buffer<Z> buf7, Buffer<A> buf8, Buffer<B> buf9, Buffer<C> buf10, Buffer<D> buf11, Buffer<E> buf12, Buffer<F> buf13, Action<Index, GPUArray<T>, GPUArray<U>, GPUArray<V>, GPUArray<W>, GPUArray<X>, GPUArray<Y>, GPUArray<Z>, GPUArray<A>, GPUArray<B>, GPUArray<C>, GPUArray<D>, GPUArray<E>, GPUArray<F>> action, string src)
             where T : unmanaged
             where U : unmanaged
             where V : unmanaged

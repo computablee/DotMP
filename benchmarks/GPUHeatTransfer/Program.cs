@@ -127,21 +127,15 @@ public class HeatTransfer
                 break;
 
             case ParType.DMPGPU:
-                DotMP.GPU.Parallel.ParallelFor(1, dim - 1, gridbuf, scratchbuf, (i, grid, scratch) =>
+                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
                 {
-                    for (int j = 1; j < 514 - 1; j++)
-                    {
-                        //set the scratch array to the average of the surrounding cells
-                        scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
-                    }
+                    //set the scratch array to the average of the surrounding cells
+                    scratch[idx.i, idx.j] = 0.25 * (grid[idx.i - 1, idx.j] + grid[idx.i + 1, idx.j] + grid[idx.i, idx.j - 1] + grid[idx.i, idx.j + 1]);
                 });
 
-                DotMP.GPU.Parallel.ParallelFor(1, dim - 1, gridbuf, scratchbuf, (i, grid, scratch) =>
+                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
                 {
-                    for (int j = 1; j < 514 - 1; j++)
-                    {
-                        grid[i, j] = scratch[i, j];
-                    }
+                    grid[idx.i, idx.j] = scratch[idx.i, idx.j];
                 });
                 break;
         }
@@ -245,21 +239,15 @@ public class HeatTransferVerify
                 break;
 
             case ParType.DMPGPU:
-                DotMP.GPU.Parallel.ParallelFor(1, dim - 1, gridbuf, scratchbuf, (i, grid, scratch) =>
+                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
                 {
-                    for (int j = 1; j < 514 - 1; j++)
-                    {
-                        //set the scratch array to the average of the surrounding cells
-                        scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
-                    }
+                    //set the scratch array to the average of the surrounding cells
+                    scratch[idx.i, idx.j] = 0.25 * (grid[idx.i - 1, idx.j] + grid[idx.i + 1, idx.j] + grid[idx.i, idx.j - 1] + grid[idx.i, idx.j + 1]);
                 });
 
-                DotMP.GPU.Parallel.ParallelFor(1, dim - 1, gridbuf, scratchbuf, (i, grid, scratch) =>
+                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
                 {
-                    for (int j = 1; j < 514 - 1; j++)
-                    {
-                        grid[i, j] = scratch[i, j];
-                    }
+                    grid[idx.i, idx.j] = scratch[idx.i, idx.j];
                 });
                 break;
         }
