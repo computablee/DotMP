@@ -95,11 +95,11 @@ namespace DotMP.GPU
         /// <returns>The GPU kernel.</returns>
         private Action<KernelConfig, Index,
 <# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
-> GetKernel<
+        > GetKernel<
 <# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
->(Action<Index,
+        >(Action<Index,
 <# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? ", " : "" #> <# } #>
-> action, string src)
+        > action, string src)
 <# for (int i = 0; i < c; i++) { #> where <#= letters[i] #> : unmanaged <# } #>
         {
             if (!kernels.ContainsKey(src))
@@ -108,41 +108,41 @@ namespace DotMP.GPU
             return (Action<KernelConfig, Index,
 <# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #> 
             >) kernels[src];
-    }
+        }
 <# } #>
 
 <# for (int c = 1; c <= max; c++) { #>
-    /// <summary>
-    /// Dispatches a kernel with the given number of parameters.
-    /// </summary>
-    /// <param name="start">The start of the loop, inclusive.</param>
-    /// <param name="end">The end of the loop, exclusive.</param>
+        /// <summary>
+        /// Dispatches a kernel with the given number of parameters.
+        /// </summary>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
 <# for (int i = 0; i < c; i++) { #>
-    /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
+        /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
 <# } #>
-    /// <param name="action">The kernel to run on the GPU.</param>
-    /// <param name="src">The originating caller location.</param>
-    internal void DispatchKernel<
+        /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
+        internal void DispatchKernel<
 <# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
-    >(int start, int end,
+        >(int start, int end,
 <# for (int i = 0; i < c; i++) { #> Buffer<<#= letters[i] #>> buf<#= i + 1 #>, <# } #>
-    Action<Index,
+        Action<Index,
 <# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
-    > action, string src)
+        > action, string src)
 <# for (int i = 0; i < c; i++) { #> where <#= letters[i] #> : unmanaged <# } #>
-    {
-        var idx = new Index(start);
+        {
+            var idx = new Index(start);
 
-    var kernel = GetKernel(action, src);
+            var kernel = GetKernel(action, src);
 
-    kernel(((end - start) / block_size, block_size), idx
+            kernel(((end - start) / block_size, block_size), idx
 <# for (int i = 0; i < c; i++) { #>
             , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
 <# } #>
             );
 
-        Synchronize();
-}
+            Synchronize();
+        }
 <# } #>
-}
+    }
 }
