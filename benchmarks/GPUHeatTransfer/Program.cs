@@ -37,7 +37,7 @@ public class HeatTransfer
     public enum ParType { DMPFor, DMPGPU }
 
     // test dims of 100x100, 1000x1000, and 5000x5000
-    [Params(514)]
+    [Params(500)]
     public int dim;
 
     // test with 10 steps and 100 steps
@@ -64,8 +64,13 @@ public class HeatTransfer
         scratch = new double[dim, dim];
         grid = new double[dim, dim];
 
-        grid[0, dim / 2 - 1] = 100.0;
-        grid[0, dim / 2] = 100.0;
+        for (int i = 0; i < dim; i++)
+        {
+            grid[0, i] = 100.0;
+            grid[i, 0] = 100.0;
+            grid[dim - 1, i] = 100.0;
+            grid[i, dim - 1] = 100.0;
+        }
 
         if (type == ParType.DMPGPU)
         {
@@ -129,13 +134,17 @@ public class HeatTransfer
             case ParType.DMPGPU:
                 DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
                 {
+                    int i = idx.i;
+                    int j = idx.j;
                     //set the scratch array to the average of the surrounding cells
-                    scratch[idx.i, idx.j] = 0.25 * (grid[idx.i - 1, idx.j] + grid[idx.i + 1, idx.j] + grid[idx.i, idx.j - 1] + grid[idx.i, idx.j + 1]);
+                    scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
                 });
 
                 DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
                 {
-                    grid[idx.i, idx.j] = scratch[idx.i, idx.j];
+                    int i = idx.i;
+                    int j = idx.j;
+                    grid[i, j] = scratch[i, j];
                 });
                 break;
         }
@@ -154,7 +163,7 @@ public class HeatTransferVerify
     public enum ParType { DMPFor, DMPGPU }
 
     // test dims of 100x100, 1000x1000, and 5000x5000
-    public int dim = 514;
+    public int dim = 500;
 
     // test with 10 steps and 100 steps
     public int steps = 100;
@@ -177,8 +186,13 @@ public class HeatTransferVerify
         scratch = new double[dim, dim];
         grid = new double[dim, dim];
 
-        grid[0, dim / 2 - 1] = 100.0;
-        grid[0, dim / 2] = 100.0;
+        for (int i = 0; i < dim; i++)
+        {
+            grid[0, i] = 100.0;
+            grid[i, 0] = 100.0;
+            grid[dim - 1, i] = 100.0;
+            grid[i, dim - 1] = 100.0;
+        }
 
         if (type == ParType.DMPGPU)
         {
@@ -241,13 +255,17 @@ public class HeatTransferVerify
             case ParType.DMPGPU:
                 DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
                 {
+                    int i = idx.i;
+                    int j = idx.j;
                     //set the scratch array to the average of the surrounding cells
-                    scratch[idx.i, idx.j] = 0.25 * (grid[idx.i - 1, idx.j] + grid[idx.i + 1, idx.j] + grid[idx.i, idx.j - 1] + grid[idx.i, idx.j + 1]);
+                    scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
                 });
 
                 DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
                 {
-                    grid[idx.i, idx.j] = scratch[idx.i, idx.j];
+                    int i = idx.i;
+                    int j = idx.j;
+                    grid[i, j] = scratch[i, j];
                 });
                 break;
         }
