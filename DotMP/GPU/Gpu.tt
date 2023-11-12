@@ -67,7 +67,38 @@ namespace DotMP.GPU
         {
             var handler = new AcceleratorHandler();
             string src = FormatCaller(path, line);
-            handler.DispatchKernel(start, end, 
+            handler.DispatchKernel(new (int, int)[] { (start, end) }, 
+<# for (int i = 0; i < c; i++) { #> buf<#= i + 1 #>, <# } #>
+            action, src);
+        }
+<# } #>
+
+<# for (int c = 1; c <= max; c++) { #>
+        /// <summary>
+        /// Creates a collapsed GPU parallel for loop.
+        /// The body of the kernel is run on a GPU target.
+        /// This overload specifies that one array is used on the GPU.
+        /// </summary>
+        /// <param name="range1">The range of the outer for loop.</param>
+        /// <param name="range2">The range of the outer for loop.</param>
+<# for (int i = 0; i < c; i++) { #>
+        /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
+<# } #>
+        /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="line">The line number this method was called from.</param>
+        /// <param name="path">The path to the file this method was called from.</param>
+        public static void ParallelForCollapse<
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >((int, int) range1, (int, int) range2, 
+<# for (int i = 0; i < c; i++) { #> Buffer<<#= letters[i] #>> buf<#= i + 1 #>, <# } #>
+        Action<Index, 
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > action, [CallerFilePath] string path = "", [CallerLineNumber] int line = 0)
+<# for (int i = 0; i < c; i++) { #> where <#= letters[i] #> : unmanaged <# } #>
+        {
+            var handler = new AcceleratorHandler();
+            string src = FormatCaller(path, line);
+            handler.DispatchKernel(new (int, int)[] { range1, range2 }, 
 <# for (int i = 0; i < c; i++) { #> buf<#= i + 1 #>, <# } #>
             action, src);
         }

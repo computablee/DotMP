@@ -42,23 +42,25 @@ namespace DotMP.GPU
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="start">The start of the parallel for loop.</param>
-        internal Index(int start)
-        {
-            this.start1 = start;
-            this.start2 = 0;
-            i_prv = -1;
-            j_prv = -1;
-            diff = 0;
-        }
-
+        /// <param name="ranges">The ranges of the for loop.</param>
         internal Index((int, int)[] ranges)
         {
-            start1 = ranges[0].Item1;
-            start2 = ranges[1].Item1;
-            i_prv = -1;
-            j_prv = -1;
-            diff = ranges[1].Item2 - ranges[1].Item1;
+            if (ranges.Length == 1)
+            {
+                start1 = ranges[0].Item1;
+                start2 = -1;
+                i_prv = -1;
+                j_prv = -1;
+                diff = -1;
+            }
+            else
+            {
+                start1 = ranges[0].Item1;
+                start2 = ranges[1].Item1;
+                i_prv = -1;
+                j_prv = -1;
+                diff = ranges[1].Item2 - ranges[1].Item1;
+            }
         }
 
         /// <summary>

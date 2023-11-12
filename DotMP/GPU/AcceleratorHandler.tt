@@ -115,8 +115,7 @@ namespace DotMP.GPU
         /// <summary>
         /// Dispatches a kernel with the given number of parameters.
         /// </summary>
-        /// <param name="start">The start of the loop, inclusive.</param>
-        /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="ranges">The ranges of the for loop.</param>
 <# for (int i = 0; i < c; i++) { #>
         /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
 <# } #>
@@ -124,18 +123,19 @@ namespace DotMP.GPU
         /// <param name="src">The originating caller location.</param>
         internal void DispatchKernel<
 <# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
-        >(int start, int end,
+        >((int, int)[] ranges,
 <# for (int i = 0; i < c; i++) { #> Buffer<<#= letters[i] #>> buf<#= i + 1 #>, <# } #>
         Action<Index,
 <# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
         > action, string src)
 <# for (int i = 0; i < c; i++) { #> where <#= letters[i] #> : unmanaged <# } #>
         {
-            var idx = new Index(start);
+            var len = ranges.Select(tup => tup.Item2 - tup.Item1).Aggregate((x, y) => x * y);
+            var idx = new Index(ranges);
 
             var kernel = GetKernel(action, src);
 
-            kernel(((end - start) / block_size, block_size), idx
+            kernel((len / block_size, block_size), idx
 <# for (int i = 0; i < c; i++) { #>
             , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
 <# } #>
