@@ -46,7 +46,6 @@ namespace DotMP.GPU
         /// <summary>
         /// Creates a GPU parallel for loop.
         /// The body of the kernel is run on a GPU target.
-        /// This overload specifies that one array is used on the GPU.
         /// </summary>
         /// <param name="start">The start of the loop, inclusive.</param>
         /// <param name="end">The end of the loop, exclusive.</param>
@@ -77,7 +76,6 @@ namespace DotMP.GPU
         /// <summary>
         /// Creates a collapsed GPU parallel for loop.
         /// The body of the kernel is run on a GPU target.
-        /// This overload specifies that one array is used on the GPU.
         /// </summary>
         /// <param name="range1">The range of the outer for loop.</param>
         /// <param name="range2">The range of the outer for loop.</param>
