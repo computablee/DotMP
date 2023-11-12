@@ -141,6 +141,19 @@ namespace DotMP.GPU
 <# } #>
             );
 
+            int not_done = len % block_size;
+
+            if (not_done > 0)
+            {
+                idx = new Index(ranges, len - (not_done));
+
+                kernel((1, not_done), idx
+<# for (int i = 0; i < c; i++) { #>
+                , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
+<# } #>
+                );
+            }
+
             Synchronize();
         }
 <# } #>

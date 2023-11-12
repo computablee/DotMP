@@ -15,6 +15,7 @@
 */
 
 using ILGPU;
+using ILGPU.Runtime.Cuda;
 using System;
 using System.Diagnostics.CodeAnalysis;
 using System.Linq;
@@ -39,12 +40,16 @@ namespace DotMP.GPU
 
         private int diff;
 
+        private int offset;
+
         /// <summary>
         /// Constructor.
         /// </summary>
         /// <param name="ranges">The ranges of the for loop.</param>
-        internal Index((int, int)[] ranges)
+        internal Index((int, int)[] ranges, int offset = 0)
         {
+            this.offset = offset;
+
             if (ranges.Length == 1)
             {
                 start1 = ranges[0].Item1;
@@ -70,7 +75,7 @@ namespace DotMP.GPU
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator int(Index h)
         {
-            return Grid.GlobalLinearIndex + h.start1;
+            return Grid.GlobalLinearIndex + h.start1 + h.offset;
         }
 
         public int i
@@ -79,8 +84,9 @@ namespace DotMP.GPU
             {
                 if (i_prv == -1)
                 {
-                    i_prv = IntrinsicMath.DivRoundDown(Grid.GlobalLinearIndex, diff);
-                    j_prv = Grid.GlobalLinearIndex - i_prv * diff;
+                    int idxoffset = Grid.GlobalLinearIndex + offset;
+                    i_prv = IntrinsicMath.DivRoundDown(idxoffset, diff);
+                    j_prv = idxoffset - i_prv * diff;
                     i_prv += start1;
                     j_prv += start2;
                 }
@@ -95,8 +101,9 @@ namespace DotMP.GPU
             {
                 if (j_prv == -1)
                 {
-                    i_prv = IntrinsicMath.DivRoundDown(Grid.GlobalLinearIndex, diff);
-                    j_prv = Grid.GlobalLinearIndex - i_prv * diff;
+                    int idxoffset = Grid.GlobalLinearIndex + offset;
+                    i_prv = IntrinsicMath.DivRoundDown(idxoffset, diff);
+                    j_prv = idxoffset - i_prv * diff;
                     i_prv += start1;
                     j_prv += start2;
                 }
