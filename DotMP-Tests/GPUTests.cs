@@ -23,11 +23,11 @@ namespace DotMPTests
         [Fact]
         public void GPU_for_works()
         {
-            double[] a = new double[65536];
-            double[] x = new double[65536];
-            double[] y = new double[65536];
-            float[] res = new float[65536];
-            float[] res_cpu = new float[65536];
+            double[] a = new double[50000];
+            double[] x = new double[50000];
+            double[] y = new double[50000];
+            float[] res = new float[50000];
+            float[] res_cpu = new float[50000];
 
             random_init(a);
             random_init(x);
