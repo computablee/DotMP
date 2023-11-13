@@ -132,18 +132,14 @@ public class HeatTransfer
                 break;
 
             case ParType.DMPGPU:
-                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
+                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (i, j, grid, scratch) =>
                 {
-                    int i = idx.i;
-                    int j = idx.j;
                     //set the scratch array to the average of the surrounding cells
                     scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
                 });
 
-                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
+                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (i, j, grid, scratch) =>
                 {
-                    int i = idx.i;
-                    int j = idx.j;
                     grid[i, j] = scratch[i, j];
                 });
                 break;
@@ -253,18 +249,14 @@ public class HeatTransferVerify
                 break;
 
             case ParType.DMPGPU:
-                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
+                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (i, j, grid, scratch) =>
                 {
-                    int i = idx.i;
-                    int j = idx.j;
                     //set the scratch array to the average of the surrounding cells
                     scratch[i, j] = 0.25 * (grid[i - 1, j] + grid[i + 1, j] + grid[i, j - 1] + grid[i, j + 1]);
                 });
 
-                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (idx, grid, scratch) =>
+                DotMP.GPU.Parallel.ParallelForCollapse((1, dim - 1), (1, dim - 1), gridbuf, scratchbuf, (i, j, grid, scratch) =>
                 {
-                    int i = idx.i;
-                    int j = idx.j;
                     grid[i, j] = scratch[i, j];
                 });
                 break;

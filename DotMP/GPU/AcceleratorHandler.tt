@@ -98,19 +98,75 @@ namespace DotMP.GPU
         /// <param name="action">The action provided on the CPU.</param>
         /// <param name="src">The calling location.</param>
         /// <returns>The GPU kernel.</returns>
-        private Action<KernelConfig, Index,
+        private Action<KernelConfig, IndexI,
 <# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
         > GetKernel<
 <# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
-        >(Action<Index,
+        >(Action<IndexI,
 <# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? ", " : "" #> <# } #>
         > action, string src)
-<# for (int i = 0; i < c; i++) { #> where <#= letters[i] #> : unmanaged <# } #>
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
         {
             if (!kernels.ContainsKey(src))
                 kernels.Add(src, accelerator.LoadStreamKernel(action));
 
-            return (Action<KernelConfig, Index,
+            return (Action<KernelConfig, IndexI,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #> 
+            >) kernels[src];
+        }
+<# } #>
+
+<# for (int c = 1; c <= max - 1; c++) { #>
+        /// <summary>
+        /// Get the kernel associated with this lambda.
+        /// </summary>
+        /// <param name="action">The action provided on the CPU.</param>
+        /// <param name="src">The calling location.</param>
+        /// <returns>The GPU kernel.</returns>
+        private Action<KernelConfig, IndexI, IndexJ,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > GetKernel<
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >(Action<IndexI, IndexJ,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? ", " : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+        {
+            if (!kernels.ContainsKey(src))
+                kernels.Add(src, accelerator.LoadStreamKernel(action));
+
+            return (Action<KernelConfig, IndexI, IndexJ,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #> 
+            >) kernels[src];
+        }
+<# } #>
+
+<# for (int c = 1; c <= max - 2; c++) { #>
+        /// <summary>
+        /// Get the kernel associated with this lambda.
+        /// </summary>
+        /// <param name="action">The action provided on the CPU.</param>
+        /// <param name="src">The calling location.</param>
+        /// <returns>The GPU kernel.</returns>
+        private Action<KernelConfig, IndexI, IndexJ, IndexK,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > GetKernel<
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >(Action<IndexI, IndexJ, IndexK,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? ", " : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+        {
+            if (!kernels.ContainsKey(src))
+                kernels.Add(src, accelerator.LoadStreamKernel(action));
+
+            return (Action<KernelConfig, IndexI, IndexJ, IndexK,
 <# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #> 
             >) kernels[src];
         }
@@ -118,9 +174,9 @@ namespace DotMP.GPU
 
 <# for (int c = 1; c <= max; c++) { #>
         /// <summary>
-        /// Dispatches a kernel with the given number of parameters.
+        /// Dispatches a linear kernel with the given number of parameters.
         /// </summary>
-        /// <param name="ranges">The ranges of the for loop.</param>
+        /// <param name="range1">The range of the for loop.</param>
 <# for (int i = 0; i < c; i++) { #>
         /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
 <# } #>
@@ -128,15 +184,17 @@ namespace DotMP.GPU
         /// <param name="src">The originating caller location.</param>
         internal void DispatchKernel<
 <# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
-        >((int, int)[] ranges,
+        >((int, int) range1,
 <# for (int i = 0; i < c; i++) { #> Buffer<<#= letters[i] #>> buf<#= i + 1 #>, <# } #>
-        Action<Index,
+        Action<IndexI,
 <# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
         > action, string src)
-<# for (int i = 0; i < c; i++) { #> where <#= letters[i] #> : unmanaged <# } #>
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
         {
-            var len = ranges.Select(tup => tup.Item2 - tup.Item1).Aggregate((x, y) => x * y);
-            var idx = new Index(ranges);
+            var len = range1.Item2 - range1.Item1;
+            var idx = new IndexI(range1);
 
             var kernel = GetKernel(action, src);
 
@@ -150,9 +208,118 @@ namespace DotMP.GPU
 
             if (not_done > 0)
             {
-                idx = new Index(ranges, len - (not_done));
+                idx = new IndexI(range1, len - (not_done));
 
                 kernel((1, not_done), idx
+<# for (int i = 0; i < c; i++) { #>
+                , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
+<# } #>
+                );
+            }
+
+            Synchronize();
+        }
+<# } #>
+
+<# for (int c = 1; c <= max - 1; c++) { #>
+        /// <summary>
+        /// Dispatches a 2D kernel with the given number of parameters.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The inner range of the for loop.</param>
+<# for (int i = 0; i < c; i++) { #>
+        /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
+<# } #>
+        /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
+        internal void DispatchKernel<
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >((int, int) range1, (int, int) range2,
+<# for (int i = 0; i < c; i++) { #> Buffer<<#= letters[i] #>> buf<#= i + 1 #>, <# } #>
+        Action<IndexI, IndexJ,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+        {
+            var len = (range1.Item2 - range1.Item1) * (range2.Item2 - range2.Item1);
+            var i = new IndexI(range1, range2);
+            var j = new IndexJ(range1, range2);
+
+            var kernel = GetKernel(action, src);
+
+            kernel((len / block_size, block_size), i, j
+<# for (int i = 0; i < c; i++) { #>
+            , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
+<# } #>
+            );
+
+            int not_done = len % block_size;
+
+            if (not_done > 0)
+            {
+                int offset = len - not_done;
+                i = new IndexI(range1, range2, offset);
+                j = new IndexJ(range1, range2, offset);
+
+                kernel((1, not_done), i, j
+<# for (int i = 0; i < c; i++) { #>
+                , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
+<# } #>
+                );
+            }
+
+            Synchronize();
+        }
+<# } #>
+
+<# for (int c = 1; c <= max - 2; c++) { #>
+        /// <summary>
+        /// Dispatches a 3D kernel with the given number of parameters.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The middle range of the for loop.</param>
+        /// <param name="range3">The inner range of the for loop.</param>
+<# for (int i = 0; i < c; i++) { #>
+        /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
+<# } #>
+        /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
+        internal void DispatchKernel<
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >((int, int) range1, (int, int) range2, (int, int) range3,
+<# for (int i = 0; i < c; i++) { #> Buffer<<#= letters[i] #>> buf<#= i + 1 #>, <# } #>
+        Action<IndexI, IndexJ, IndexK,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+        {
+            var len = (range1.Item2 - range1.Item1) * (range2.Item2 - range2.Item1) * (range3.Item2 - range3.Item1);
+            var i = new IndexI(range1, range2, range3);
+            var j = new IndexJ(range1, range2, range3);
+            var k = new IndexK(range1, range2, range3);
+
+            var kernel = GetKernel(action, src);
+
+            kernel((len / block_size, block_size), i, j, k
+<# for (int i = 0; i < c; i++) { #>
+            , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
+<# } #>
+            );
+
+            int not_done = len % block_size;
+
+            if (not_done > 0)
+            {
+                int offset = len - not_done;
+                i = new IndexI(range1, range2, range3, offset);
+                j = new IndexJ(range1, range2, range3, offset);
+                k = new IndexK(range1, range2, range3, offset);
+
+                kernel((1, not_done), i, j, k
 <# for (int i = 0; i < c; i++) { #>
                 , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
 <# } #>

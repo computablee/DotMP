@@ -15,101 +15,338 @@
 */
 
 using ILGPU;
-using ILGPU.Runtime.Cuda;
-using System;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace DotMP.GPU
 {
     /// <summary>
-    /// Handle for a GPU kernel to retrieve its kernel variables.
+    /// Represents an index passed as the first index argument.
     /// </summary>
     [ExcludeFromCodeCoverage]
-    public struct Index
+    public struct IndexI
     {
         /// <summary>
-        /// The start of the for loop, for index calculations.
+        /// The start of the first for loop, for index calculations.
         /// </summary>
         private int start1;
+
+        /// <summary>
+        /// The start of the second for loop, for index calculations.
+        /// </summary>
         private int start2;
 
-        private int i_prv;
-        private int j_prv;
+        /// <summary>
+        /// The start of the third for loop, for index calculations.
+        /// </summary>
+        private int start3;
 
-        private int diff;
+        /// <summary>
+        /// The index to return.
+        /// </summary>
+        private int idx_prv;
 
+        /// <summary>
+        /// The difference between the second set of ranges.
+        /// </summary>
+        private int diff2;
+
+        /// <summary>
+        /// The difference between the third set of ranges.
+        /// </summary>
+        private int diff3;
+
+        /// <summary>
+        /// The offset, in case of a followup kernel.
+        /// </summary>
+        private int offset;
+
+        /// <summary>
+        /// The number of dimensions.
+        /// </summary>
+        private int dims;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="range">The range of the for loop.</param>
+        /// <param name="offset">The offset for followup kernels.</param>
+        internal IndexI((int, int) range, int offset = 0)
+        {
+            this.offset = offset;
+
+            start1 = range.Item1;
+            start2 = -1;
+            start3 = -1;
+            idx_prv = -1;
+            diff2 = -1;
+            diff3 = -1;
+            dims = 1;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The inner range of the for loop.</param>
+        /// <param name="offset">The offset for followup kernels.</param>
+        internal IndexI((int, int) range1, (int, int) range2, int offset = 0)
+        {
+            this.offset = offset;
+
+            start1 = range1.Item1;
+            start2 = range2.Item1;
+            start3 = -1;
+            idx_prv = -1;
+            diff2 = range2.Item2 - range2.Item1;
+            diff3 = -1;
+            dims = 2;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The middle range of the for loop.</param>
+        /// <param name="range3">The inner range of the for loop.</param>
+        /// <param name="offset">The offset for followup kernels.</param>
+        internal IndexI((int, int) range1, (int, int) range2, (int, int) range3, int offset = 0)
+        {
+            this.offset = offset;
+
+            start1 = range1.Item1;
+            start2 = range2.Item1;
+            start3 = range3.Item1;
+            idx_prv = -1;
+            diff2 = range2.Item2 - range2.Item1;
+            diff3 = range3.Item2 - range3.Item1;
+            dims = 3;
+        }
+
+        /// <summary>
+        /// Casts an index to an int.
+        /// </summary>
+        /// <param name="h">The Index struct to cast.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator int(IndexI h)
+        {
+            switch (h.dims)
+            {
+                default:
+                case 1:
+                    if (h.idx_prv == -1)
+                        h.idx_prv = Grid.GlobalLinearIndex + h.start1 + h.offset;
+
+                    return h.idx_prv;
+
+                case 2:
+                    if (h.idx_prv == -1)
+                    {
+                        int idxoffset = Grid.GlobalLinearIndex + h.offset;
+                        h.idx_prv = IntrinsicMath.DivRoundDown(idxoffset, h.diff2) + h.start1;
+                    }
+
+                    return h.idx_prv;
+
+                case 3:
+                    if (h.idx_prv == -1)
+                    {
+
+                    }
+
+                    return h.idx_prv;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represents an index passed as the second index argument.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
+    public struct IndexJ
+    {
+        /// <summary>
+        /// The start of the first for loop, for index calculations.
+        /// </summary>
+        private int start1;
+
+        /// <summary>
+        /// The start of the second for loop, for index calculations.
+        /// </summary>
+        private int start2;
+
+        /// <summary>
+        /// The start of the third for loop, for index calculations.
+        /// </summary>
+        private int start3;
+
+        /// <summary>
+        /// The index to return.
+        /// </summary>
+        private int idx_prv;
+
+        /// <summary>
+        /// The difference between the second set of ranges.
+        /// </summary>
+        private int diff2;
+
+        /// <summary>
+        /// The difference between the third set of ranges.
+        /// </summary>
+        private int diff3;
+
+        /// <summary>
+        /// The offset, in case of a followup kernel.
+        /// </summary>
+        private int offset;
+
+        /// <summary>
+        /// The number of dimensions.
+        /// </summary>
+        private int dims;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The inner range of the for loop.</param>
+        /// <param name="offset">The offset for followup kernels.</param>
+        internal IndexJ((int, int) range1, (int, int) range2, int offset = 0)
+        {
+            this.offset = offset;
+
+            start1 = range1.Item1;
+            start2 = range2.Item1;
+            start3 = -1;
+            idx_prv = -1;
+            diff2 = range2.Item2 - range2.Item1;
+            diff3 = -1;
+            dims = 2;
+        }
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The middle range of the for loop.</param>
+        /// <param name="range3">The inner range of the for loop.</param>
+        /// <param name="offset">The offset for followup kernels.</param>
+        internal IndexJ((int, int) range1, (int, int) range2, (int, int) range3, int offset = 0)
+        {
+            this.offset = offset;
+
+            start1 = range1.Item1;
+            start2 = range2.Item1;
+            start3 = range3.Item1;
+            idx_prv = -1;
+            diff2 = range2.Item2 - range2.Item1;
+            diff3 = range3.Item2 - range3.Item1;
+            dims = 3;
+        }
+
+        /// <summary>
+        /// Casts an index to an int.
+        /// </summary>
+        /// <param name="h">The Index struct to cast.</param>
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        public static implicit operator int(IndexJ h)
+        {
+            switch (h.dims)
+            {
+                default:
+                case 2:
+                    if (h.idx_prv == -1)
+                    {
+                        int idxoffset = Grid.GlobalLinearIndex + h.offset;
+                        h.idx_prv = (idxoffset % h.diff2) + h.start2;
+                    }
+
+                    return h.idx_prv;
+
+                case 3:
+                    if (h.idx_prv == -1)
+                    {
+
+                    }
+
+                    return h.idx_prv;
+            }
+        }
+    }
+
+    /// <summary>
+    /// Represents an index passed as the third index argument.
+    /// </summary>
+    [ExcludeFromCodeCoverage]
+    public struct IndexK
+    {
+        /// <summary>
+        /// The start of the first for loop, for index calculations.
+        /// </summary>
+        private int start1;
+
+        /// <summary>
+        /// The start of the second for loop, for index calculations.
+        /// </summary>
+        private int start2;
+
+        /// <summary>
+        /// The start of the third for loop, for index calculations.
+        /// </summary>
+        private int start3;
+
+        /// <summary>
+        /// The index to return.
+        /// </summary>
+        private int idx_prv;
+
+        /// <summary>
+        /// The difference between the second set of ranges.
+        /// </summary>
+        private int diff2;
+
+        /// <summary>
+        /// The difference between the third set of ranges.
+        /// </summary>
+        private int diff3;
+
+        /// <summary>
+        /// The offset, in case of a followup kernel.
+        /// </summary>
         private int offset;
 
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="ranges">The ranges of the for loop.</param>
-        internal Index((int, int)[] ranges, int offset = 0)
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The middle range of the for loop.</param>
+        /// <param name="range3">The inner range of the for loop.</param>
+        /// <param name="offset">The offset for followup kernels.</param>
+        internal IndexK((int, int) range1, (int, int) range2, (int, int) range3, int offset = 0)
         {
             this.offset = offset;
 
-            if (ranges.Length == 1)
-            {
-                start1 = ranges[0].Item1;
-                start2 = -1;
-                i_prv = -1;
-                j_prv = -1;
-                diff = -1;
-            }
-            else
-            {
-                start1 = ranges[0].Item1;
-                start2 = ranges[1].Item1;
-                i_prv = -1;
-                j_prv = -1;
-                diff = ranges[1].Item2 - ranges[1].Item1;
-            }
+            start1 = range1.Item1;
+            start2 = range2.Item1;
+            start3 = range3.Item1;
+            idx_prv = -1;
+            diff2 = range2.Item2 - range2.Item1;
+            diff3 = range3.Item2 - range3.Item1;
         }
 
         /// <summary>
-        /// Gets the index of the loop.
+        /// Casts an index to an int.
         /// </summary>
-        /// <param name="h">Unused.</param>
+        /// <param name="h">The Index struct to cast.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
-        public static implicit operator int(Index h)
+        public static implicit operator int(IndexK h)
         {
-            return Grid.GlobalLinearIndex + h.start1 + h.offset;
-        }
-
-        public int i
-        {
-            get
+            if (h.idx_prv == -1)
             {
-                if (i_prv == -1)
-                {
-                    int idxoffset = Grid.GlobalLinearIndex + offset;
-                    i_prv = IntrinsicMath.DivRoundDown(idxoffset, diff);
-                    j_prv = idxoffset - i_prv * diff;
-                    i_prv += start1;
-                    j_prv += start2;
-                }
 
-                return i_prv;
             }
-        }
 
-        public int j
-        {
-            get
-            {
-                if (j_prv == -1)
-                {
-                    int idxoffset = Grid.GlobalLinearIndex + offset;
-                    i_prv = IntrinsicMath.DivRoundDown(idxoffset, diff);
-                    j_prv = idxoffset - i_prv * diff;
-                    i_prv += start1;
-                    j_prv += start2;
-                }
-
-                return j_prv;
-            }
+            return h.idx_prv;
         }
     }
 }
