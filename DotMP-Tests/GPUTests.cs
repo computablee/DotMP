@@ -82,7 +82,7 @@ namespace DotMPTests
 
             using (var buf = new Buffer<int>(iters_hit, DotMP.GPU.Buffer.Behavior.ToFrom))
             {
-                DotMP.GPU.Parallel.ParallelForCollapse((258, 512), (512, 600), buf, action: (i, j, iters_hit) =>
+                DotMP.GPU.Parallel.ParallelForCollapse((258, 512), (512, 600), buf, (i, j, iters_hit) =>
                 {
                     iters_hit[i, j]++;
                 });
