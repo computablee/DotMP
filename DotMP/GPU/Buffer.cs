@@ -50,7 +50,7 @@ namespace DotMP.GPU
     /// <summary>
     /// Buffer to manage GPU memory. Should only be created on the CPU.
     /// </summary>
-    public class Buffer<T> : IDisposable
+    public sealed class Buffer<T> : IDisposable
         where T : unmanaged
     {
         /// <summary>
@@ -62,6 +62,11 @@ namespace DotMP.GPU
         /// The ILGPU buffer for 2D arrays.
         /// </summary>
         private MemoryBuffer2D<T, Stride2D.DenseY> buf2d;
+
+        /// <summary>
+        /// The ILGPU buffer for 3D arrays.
+        /// </summary>
+        private MemoryBuffer3D<T, Stride3D.DenseZY> buf3d;
 
         /// <summary>
         /// Behavior of the data, as specified by Behavior.
@@ -77,6 +82,11 @@ namespace DotMP.GPU
         /// The CPU 2D array, so that we can copy the data back.
         /// </summary>
         private T[,] data2d;
+
+        /// <summary>
+        /// The CPU 3D array, so that we can copy the data back.
+        /// </summary>
+        private T[,,] data3d;
 
         /// <summary>
         /// Handler int for the number of dimensions in the array.
@@ -157,6 +167,33 @@ namespace DotMP.GPU
         }
 
         /// <summary>
+        /// Constructor for buffer object. Allocates a 3D array on the GPU and makes it available for the next GPU kernel.
+        /// </summary>
+        /// <param name="data">The data to allocate on the GPU.</param>
+        /// <param name="behavior">The behavior of the data, see Behavior.</param>
+        public Buffer(T[,,] data, Buffer.Behavior behavior)
+        {
+            new AcceleratorHandler();
+
+            this.behavior = behavior;
+            this.data3d = data;
+
+            switch (behavior)
+            {
+                case Buffer.Behavior.To:
+                case Buffer.Behavior.ToFrom:
+                    buf3d = AcceleratorHandler.accelerator.Allocate3DDenseZY(data);
+                    break;
+                case Buffer.Behavior.From:
+                case Buffer.Behavior.NoCopy:
+                    buf3d = AcceleratorHandler.accelerator.Allocate3DDenseZY<T>((data.GetLength(0), data.GetLength(1), data.GetLength(2)));
+                    break;
+            }
+
+            Dimensions = 3;
+        }
+
+        /// <summary>
         /// Dispose of the buffer, freeing GPU memory and copying any relevant data back to the CPU.
         /// </summary>
         public void Dispose()
@@ -179,6 +216,15 @@ namespace DotMP.GPU
 
                 buf2d.Dispose();
             }
+            else if (Dimensions == 3)
+            {
+                if (behavior == Buffer.Behavior.From || behavior == Buffer.Behavior.ToFrom)
+                {
+                    System.Buffer.BlockCopy(buf3d.GetAsArray3D(), 0, data3d, 0, Unsafe.SizeOf<T>() * data3d.Length);
+                }
+
+                buf3d.Dispose();
+            }
         }
 
         /// <summary>
@@ -190,5 +236,10 @@ namespace DotMP.GPU
         /// Get the view of the memory for the GPU.
         /// </summary>
         internal ArrayView2D<T, Stride2D.DenseY> View2D { get => buf2d.View; }
+
+        /// <summary>
+        /// Get the view of the memory for the GPU.
+        /// </summary>
+        internal ArrayView3D<T, Stride3D.DenseZY> View3D { get => buf3d.View; }
     }
 }
