@@ -15,6 +15,7 @@
 */
 
 using ILGPU;
+using ILGPU.IR.Values;
 using ILGPU.Runtime;
 using System;
 using System.Diagnostics.CodeAnalysis;
@@ -30,14 +31,19 @@ namespace DotMP.GPU
         where T : unmanaged
     {
         /// <summary>
-        /// The ILGPU buffer for 1D arrays.
+        /// The ILGPU view for 1D arrays.
         /// </summary>
         private ArrayView1D<T, Stride1D.Dense> view1d;
 
         /// <summary>
-        /// The ILGPU buffer for 2D arrays.
+        /// The ILGPU view for 2D arrays.
         /// </summary>
         private ArrayView2D<T, Stride2D.DenseY> view2d;
+
+        /// <summary>
+        /// The ILGPU view for 3D arrays.
+        /// </summary>
+        private ArrayView3D<T, Stride3D.DenseZY> view3d;
 
         /// <summary>
         /// Number of dimensions.
@@ -47,30 +53,37 @@ namespace DotMP.GPU
         /// <summary>
         /// Constructor.
         /// </summary>
-        /// <param name="arrayView">The ArrayView to wrap.</param>
-        public GPUArray(Buffer<T> arrayView)
+        /// <param name="buf">The Buffer to create an array from.</param>
+        internal GPUArray(Buffer<T> buf)
         {
-            if (arrayView.Dimensions == 1)
+            switch (buf.Dimensions)
             {
-                view1d = arrayView.View1D;
-                // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
-            }
-            else if (arrayView.Dimensions == 2)
-            {
-                // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
-                view2d = arrayView.View2D;
-            }
-            else
-            {
-                // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
-                // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
+                /*case 1:
+                    view1d = buf.View1D;
+                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                    view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
+                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                    view3d = new Buffer<T>(new T[1, 1, 1], Buffer.Behavior.NoCopy).View3D;
+                    break;*/
+		default:
+                case 2:
+                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                    //view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
+                    view2d = buf.View2D;
+                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                    //view3d = new Buffer<T>(new T[1, 1, 1], Buffer.Behavior.NoCopy).View3D;
+                    break;
+                /*case 3:
+                default:
+                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                    view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
+                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                    view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
+                    view3d = buf.View3D;
+                    break;*/
             }
 
-            dims = arrayView.Dimensions;
+            dims = buf.Dimensions;
         }
 
         /// <summary>
@@ -78,11 +91,10 @@ namespace DotMP.GPU
         /// </summary>
         /// <param name="idx">The ID to index into.</param>
         /// <returns>The data at that ID.</returns>
-        public T this[int idx]
-        {
-            get => view1d[idx];
-            set => view1d[idx] = value;
-        }
+        //public ref T this[int idx]
+        //{
+        //    get => ref view1d[idx];
+        //}
 
         /// <summary>
         /// Overload for [,] operator.
@@ -90,11 +102,22 @@ namespace DotMP.GPU
         /// <param name="i">The first ID to index into.</param>
         /// <param name="j">The second ID to index into.</param>
         /// <returns>The data at that ID.</returns>
-        public T this[int i, int j]
+        public ref T this[int i, int j]
         {
-            get => view2d[i, j];
-            set => view2d[i, j] = value;
+            get => ref view2d[i, j];
         }
+
+        /// <summary>
+        /// Overload for [,,] operator.
+        /// </summary>
+        /// <param name="i">The first ID to index into.</param>
+        /// <param name="j">The second ID to index into.</param>
+        /// <param name="k">The third ID to index into.</param>
+        /// <returns>The data at that ID.</returns>
+        //public ref T this[int i, int j, int k]
+        //{
+        //    get => ref view3d[i, j, k];
+        //}
 
         /// <summary>
         /// Gets the length of the array.
@@ -105,11 +128,13 @@ namespace DotMP.GPU
             {
                 switch (dims)
                 {
-                    case 1:
+                    //case 1:
                     default:
-                        return view1d.IntLength;
+                    //    return view1d.IntLength;
                     case 2:
                         return view2d.IntLength;
+                    //case 3:
+                    //    return view3d.IntLength;
                 }
             }
         }
