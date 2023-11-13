@@ -18,6 +18,9 @@ using BenchmarkDotNet.Attributes;
 using BenchmarkDotNet.Jobs;
 using BenchmarkDotNet.Running;
 using BenchmarkDotNet.Diagnosers;
+using System;
+using ILGPU;
+using ILGPU.Runtime;
 
 /* jscpd:ignore-start */
 
@@ -27,20 +30,24 @@ using BenchmarkDotNet.Diagnosers;
 [EventPipeProfiler(EventPipeProfile.CpuSampling)]
 public class Overhead
 {
-    DotMP.GPU.Buffer<int> buf;
+    Action<KernelConfig, ArrayView1D<int, Stride1D.Dense>> kernel;
+    ArrayView1D<int, Stride1D.Dense> data;
 
     // run the setup
     [GlobalSetup]
     public void Setup()
     {
-	buf = new DotMP.GPU.Buffer<int>(new int[1, 1], DotMP.GPU.Buffer.Behavior.NoCopy);
+	var context = Context.CreateDefault();
+	var accelerator = context.Devices[1].CreateAccelerator(context);
+	kernel = accelerator.LoadStreamKernel<ArrayView1D<int, Stride1D.Dense>>(arr => { });
+	data = accelerator.Allocate1D<int>(1); 
     }
 
     //run the simulation
     [Benchmark]
     public void TestOverhead()
     {
-	DotMP.GPU.Parallel.ParallelForCollapse((0, 500), (0, 500), buf, (i, j, buf) => { });
+	kernel((1, 256), data);
     }
 }
 

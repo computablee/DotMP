@@ -37,7 +37,7 @@ public class HeatTransfer
     public enum ParType { DMPFor, DMPGPU }
 
     // test dims of 100x100, 1000x1000, and 5000x5000
-    [Params(500)]
+    [Params(768)]
     public int dim;
 
     // test with 10 steps and 100 steps
@@ -159,7 +159,7 @@ public class HeatTransferVerify
     public enum ParType { DMPFor, DMPGPU }
 
     // test dims of 100x100, 1000x1000, and 5000x5000
-    public int dim = 500;
+    public int dim = 1000;
 
     // test with 10 steps and 100 steps
     public int steps = 100;
