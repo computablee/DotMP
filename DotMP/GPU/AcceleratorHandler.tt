@@ -60,7 +60,12 @@ namespace DotMP.GPU
         {
             if (initialized) return;
 
-            context = Context.CreateDefault();
+            context = Context.Create()
+                .Optimize(OptimizationLevel.O2)
+                .Inlining(InliningMode.Aggressive)
+                .AllAccelerators()
+                //.Math(MathMode.Fast32BitOnly)
+                .ToContext();
             var selectedDevice = context.Devices[0];
 
             foreach (var d in context.Devices)
