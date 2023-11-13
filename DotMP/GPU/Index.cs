@@ -45,7 +45,7 @@ namespace DotMP.GPU
             this.offset = offset;
         }
 
-	[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator int(Index i)
         {
             if (i.idx == -1)

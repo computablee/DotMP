@@ -65,7 +65,7 @@ namespace DotMP.GPU
                     // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
                     view3d = new Buffer<T>(new T[1, 1, 1], Buffer.Behavior.NoCopy).View3D;
                     break;*/
-		default:
+                default:
                 case 2:
                     // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
                     //view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
@@ -73,14 +73,14 @@ namespace DotMP.GPU
                     // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
                     //view3d = new Buffer<T>(new T[1, 1, 1], Buffer.Behavior.NoCopy).View3D;
                     break;
-                /*case 3:
-                default:
-                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                    view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
-                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                    view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
-                    view3d = buf.View3D;
-                    break;*/
+                    /*case 3:
+                    default:
+                        // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                        view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
+                        // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                        view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
+                        view3d = buf.View3D;
+                        break;*/
             }
 
             dims = buf.Dimensions;
@@ -133,8 +133,8 @@ namespace DotMP.GPU
                     //    return view1d.IntLength;
                     case 2:
                         return view2d.IntLength;
-                    //case 3:
-                    //    return view3d.IntLength;
+                        //case 3:
+                        //    return view3d.IntLength;
                 }
             }
         }
