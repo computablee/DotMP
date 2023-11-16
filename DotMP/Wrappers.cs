@@ -182,9 +182,14 @@ namespace DotMP
         private ValueTuple<int, int>[] ranges;
 
         /// <summary>
-        /// Array of indices to pass to actions.
+        /// Array representing the starting indices.
         /// </summary>
         private int[] indices;
+
+        /// <summary>
+        /// Array representing the ending indices.
+        /// </summary>
+        private int[] end_indices;
 
         /// <summary>
         /// Array which represents the length of collapsed loops in each dimension.
@@ -266,6 +271,7 @@ namespace DotMP
             IsCollapse = true;
             IsReduction = false;
             indices = new int[4];
+            end_indices = new int[4];
             diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
         }
 
@@ -282,6 +288,7 @@ namespace DotMP
             IsCollapse = true;
             IsReduction = false;
             indices = new int[ranges.Length];
+            end_indices = new int[ranges.Length];
             diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
         }
 
@@ -326,6 +333,7 @@ namespace DotMP
             IsCollapse = true;
             IsReduction = true;
             indices = new int[4];
+            end_indices = new int[4];
             diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
         }
 
@@ -342,6 +350,7 @@ namespace DotMP
             IsCollapse = true;
             IsReduction = true;
             indices = new int[ranges.Length];
+            end_indices = new int[ranges.Length];
             diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
         }
 
@@ -386,7 +395,8 @@ namespace DotMP
         /// Computes the indices for collapsed loops with 4 or more indices.
         /// </summary>
         /// <param name="curr_iter">The current iteration to unflatten.</param>
-        private void ComputeIndicesN(int curr_iter)
+        /// <param name="indices">The array to store indices in.</param>
+        private void ComputeIndicesN(int curr_iter, int[] indices)
         {
             int mod = curr_iter;
             for (int r = 0; r < ranges.Length - 1; r++)
@@ -483,17 +493,33 @@ namespace DotMP
                     }
                     break;
                 case ActionSelector.Collapse4:
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndicesN(start, indices);
+                    ComputeIndicesN(end, end_indices);
+
+                    while (!indices.SequenceEqual(end_indices))
                     {
-                        ComputeIndicesN(curr_iter);
                         omp_col_4(indices[0], indices[1], indices[2], indices[3]);
+
+                        for (int i = 3; i >= 0; i--)
+                            if (++indices[i] == ranges[i].Item2 && i > 0)
+                                indices[i] = ranges[i].Item1;
+                            else
+                                break;
                     }
                     break;
                 case ActionSelector.CollapseN:
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndicesN(start, indices);
+                    ComputeIndicesN(end, end_indices);
+
+                    while (!indices.SequenceEqual(end_indices))
                     {
-                        ComputeIndicesN(curr_iter);
                         omp_col_n(indices);
+
+                        for (int i = indices.Length - 1; i >= 0; i--)
+                            if (++indices[i] == ranges[i].Item2 && i > 0)
+                                indices[i] = ranges[i].Item1;
+                            else
+                                break;
                     }
                     break;
                 case ActionSelector.ReductionCollapse2:
@@ -547,17 +573,33 @@ namespace DotMP
                     }
                     break;
                 case ActionSelector.ReductionCollapse4:
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndicesN(start, indices);
+                    ComputeIndicesN(end, end_indices);
+
+                    while (!indices.SequenceEqual(end_indices))
                     {
-                        ComputeIndicesN(curr_iter);
                         omp_red_col_4(ref local, indices[0], indices[1], indices[2], indices[3]);
+
+                        for (int i = 3; i >= 0; i--)
+                            if (++indices[i] == ranges[i].Item2 && i > 0)
+                                indices[i] = ranges[i].Item1;
+                            else
+                                break;
                     }
                     break;
                 case ActionSelector.ReductionCollapseN:
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndicesN(start, indices);
+                    ComputeIndicesN(end, end_indices);
+
+                    while (!indices.SequenceEqual(end_indices))
                     {
-                        ComputeIndicesN(curr_iter);
                         omp_red_col_n(ref local, indices);
+
+                        for (int i = indices.Length - 1; i >= 0; i--)
+                            if (++indices[i] == ranges[i].Item2 && i > 0)
+                                indices[i] = ranges[i].Item1;
+                            else
+                                break;
                     }
                     break;
             }
