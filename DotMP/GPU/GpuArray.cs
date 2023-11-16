@@ -33,7 +33,7 @@ namespace DotMP.GPU
         /// <summary>
         /// The ILGPU view for 1D arrays.
         /// </summary>
-        private ArrayView1D<T, Stride1D.Dense> view1d;
+        //private ArrayView1D<T, Stride1D.Dense> view1d;
 
         /// <summary>
         /// The ILGPU view for 2D arrays.
@@ -43,7 +43,7 @@ namespace DotMP.GPU
         /// <summary>
         /// The ILGPU view for 3D arrays.
         /// </summary>
-        private ArrayView3D<T, Stride3D.DenseZY> view3d;
+        //private ArrayView3D<T, Stride3D.DenseZY> view3d;
 
         /// <summary>
         /// Number of dimensions.
