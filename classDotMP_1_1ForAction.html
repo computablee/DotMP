@@ -132,9 +132,9 @@ Private Member Functions</h2></td></tr>
 <tr class="memitem:a097eb8abd45c5110a42c4cdc0f3ed9dd"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#a097eb8abd45c5110a42c4cdc0f3ed9dd">ComputeIndices3</a> (int curr_iter, int start1, int start2, int start3, int diff2, int diff3, out int i, out int j, out int k)</td></tr>
 <tr class="memdesc:a097eb8abd45c5110a42c4cdc0f3ed9dd"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the indices for collapsed loops with 3 indices.  <a href="classDotMP_1_1ForAction.html#a097eb8abd45c5110a42c4cdc0f3ed9dd">More...</a><br /></td></tr>
 <tr class="separator:a097eb8abd45c5110a42c4cdc0f3ed9dd"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ac42037e7729eaa44dcbe337c0945cc26"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#ac42037e7729eaa44dcbe337c0945cc26">ComputeIndicesN</a> (int curr_iter)</td></tr>
-<tr class="memdesc:ac42037e7729eaa44dcbe337c0945cc26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the indices for collapsed loops with 4 or more indices.  <a href="classDotMP_1_1ForAction.html#ac42037e7729eaa44dcbe337c0945cc26">More...</a><br /></td></tr>
-<tr class="separator:ac42037e7729eaa44dcbe337c0945cc26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a5b85dda5b47a86f5a7e47995f2bca8aa"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#a5b85dda5b47a86f5a7e47995f2bca8aa">ComputeIndicesN</a> (int curr_iter, int[] <a class="el" href="classDotMP_1_1ForAction.html#acc6ad943c1d0e97d9776c81f94b55f9d">indices</a>)</td></tr>
+<tr class="memdesc:a5b85dda5b47a86f5a7e47995f2bca8aa"><td class="mdescLeft">&#160;</td><td class="mdescRight">Computes the indices for collapsed loops with 4 or more indices.  <a href="classDotMP_1_1ForAction.html#a5b85dda5b47a86f5a7e47995f2bca8aa">More...</a><br /></td></tr>
+<tr class="separator:a5b85dda5b47a86f5a7e47995f2bca8aa"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-attribs"></a>
 Private Attributes</h2></td></tr>
@@ -175,8 +175,11 @@ Private Attributes</h2></td></tr>
 <tr class="memdesc:af6766205a5f277bda14d825a243b5b26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the ranges of collapsed loops for future unflattening.  <a href="classDotMP_1_1ForAction.html#af6766205a5f277bda14d825a243b5b26">More...</a><br /></td></tr>
 <tr class="separator:af6766205a5f277bda14d825a243b5b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc6ad943c1d0e97d9776c81f94b55f9d"><td class="memItemLeft" align="right" valign="top">int[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#acc6ad943c1d0e97d9776c81f94b55f9d">indices</a></td></tr>
-<tr class="memdesc:acc6ad943c1d0e97d9776c81f94b55f9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array of indices to pass to actions.  <a href="classDotMP_1_1ForAction.html#acc6ad943c1d0e97d9776c81f94b55f9d">More...</a><br /></td></tr>
+<tr class="memdesc:acc6ad943c1d0e97d9776c81f94b55f9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array representing the starting indices.  <a href="classDotMP_1_1ForAction.html#acc6ad943c1d0e97d9776c81f94b55f9d">More...</a><br /></td></tr>
 <tr class="separator:acc6ad943c1d0e97d9776c81f94b55f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a49254f7a118b75a51ca79cb7b286e651"><td class="memItemLeft" align="right" valign="top">int[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#a49254f7a118b75a51ca79cb7b286e651">end_indices</a></td></tr>
+<tr class="memdesc:a49254f7a118b75a51ca79cb7b286e651"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array representing the ending indices.  <a href="classDotMP_1_1ForAction.html#a49254f7a118b75a51ca79cb7b286e651">More...</a><br /></td></tr>
+<tr class="separator:a49254f7a118b75a51ca79cb7b286e651"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a42b50fd772c89bc6d9ba9c600db5c4c0"><td class="memItemLeft" align="right" valign="top">int[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#a42b50fd772c89bc6d9ba9c600db5c4c0">diffs</a></td></tr>
 <tr class="memdesc:a42b50fd772c89bc6d9ba9c600db5c4c0"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array which represents the length of collapsed loops in each dimension.  <a href="classDotMP_1_1ForAction.html#a42b50fd772c89bc6d9ba9c600db5c4c0">More...</a><br /></td></tr>
 <tr class="separator:a42b50fd772c89bc6d9ba9c600db5c4c0"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -786,8 +789,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ac42037e7729eaa44dcbe337c0945cc26"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ac42037e7729eaa44dcbe337c0945cc26">&#9670;&nbsp;</a></span>ComputeIndicesN()</h2>
+<a id="a5b85dda5b47a86f5a7e47995f2bca8aa"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a5b85dda5b47a86f5a7e47995f2bca8aa">&#9670;&nbsp;</a></span>ComputeIndicesN()</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -799,8 +802,18 @@ Private Attributes</h2></td></tr>
           <td class="memname">void <a class="el" href="classDotMP_1_1ForAction.html">DotMP.ForAction</a>&lt; T &gt;.ComputeIndicesN </td>
           <td>(</td>
           <td class="paramtype">int&#160;</td>
-          <td class="paramname"><em>curr_iter</em></td><td>)</td>
+          <td class="paramname"><em>curr_iter</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
           <td></td>
+          <td class="paramtype">int[]&#160;</td>
+          <td class="paramname"><em>indices</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
         </tr>
       </table>
   </td>
@@ -814,6 +827,7 @@ Private Attributes</h2></td></tr>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">curr_iter</td><td>The current iteration to unflatten.</td></tr>
+    <tr><td class="paramname">indices</td><td>The array to store indices in.</td></tr>
   </table>
   </dd>
 </dl>
@@ -904,6 +918,30 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a49254f7a118b75a51ca79cb7b286e651"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a49254f7a118b75a51ca79cb7b286e651">&#9670;&nbsp;</a></span>end_indices</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">int [] <a class="el" href="classDotMP_1_1ForAction.html">DotMP.ForAction</a>&lt; T &gt;.end_indices</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Array representing the ending indices. </p>
+
+</div>
+</div>
 <a id="acc6ad943c1d0e97d9776c81f94b55f9d"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#acc6ad943c1d0e97d9776c81f94b55f9d">&#9670;&nbsp;</a></span>indices</h2>
 
@@ -924,7 +962,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Array of indices to pass to actions. </p>
+<p>Array representing the starting indices. </p>
 
 </div>
 </div>
