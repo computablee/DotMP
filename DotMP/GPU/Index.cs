@@ -29,10 +29,23 @@ namespace DotMP.GPU
     [ExcludeFromCodeCoverage]
     public struct Index
     {
+        /// <summary>
+        /// Lookup table for indices.
+        /// </summary>
         private ArrayView1D<int, Stride1D.Dense> lookup;
+        /// <summary>
+        /// Offset for followup kernels.
+        /// </summary>
         private int offset;
+        /// <summary>
+        /// Cached index.
+        /// </summary>
         private int idx;
 
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="buf">Buffer representing the indices.</param>
         internal Index(Buffer<int> buf)
         {
             this.lookup = buf.View1D;
@@ -40,11 +53,19 @@ namespace DotMP.GPU
             idx = -1;
         }
 
+        /// <summary>
+        /// Adds an offset in preperation for a followup kernel.
+        /// </summary>
+        /// <param name="offset">The offset to set.</param>
         internal void AddOffset(int offset)
         {
             this.offset = offset;
         }
 
+        /// <summary>
+        /// Calculates the index and caches for future use.
+        /// </summary>
+        /// <param name="i">The Index object to cast to int.</param>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public static implicit operator int(Index i)
         {
