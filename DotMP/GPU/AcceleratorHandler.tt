@@ -52,12 +52,18 @@ namespace DotMP.GPU
         /// Kernel cache.
         /// </summary>
         private static Dictionary<string, Delegate> kernels = new Dictionary<string, Delegate>();
-
+        /// <summary>
+        /// Index cache for 1D kernels.
+        /// </summary>
         private static Dictionary<string, ValueTuple<int, int, Buffer<int>>> indices1d = new Dictionary<string, ValueTuple<int, int, Buffer<int>>>();
-
+        /// <summary>
+        /// Index cache for 2D kernels.
+        /// </summary>
         private static Dictionary<string, ValueTuple<int, int, int, int, Buffer<int>, Buffer<int>>> indices2d =
             new Dictionary<string, ValueTuple<int, int, int, int, Buffer<int>, Buffer<int>>>();
-
+        /// <summary>
+        /// Index cache for 3D kernels.
+        /// </summary>
         private static Dictionary<string, ValueTuple<ValueTuple<int, int>, ValueTuple<int, int>, ValueTuple<int, int>, Buffer<int>, Buffer<int>, Buffer<int>>> indices3d =
             new Dictionary<string, ValueTuple<ValueTuple<int, int>, ValueTuple<int, int>, ValueTuple<int, int>, Buffer<int>, Buffer<int>, Buffer<int>>>();
 
@@ -185,7 +191,7 @@ namespace DotMP.GPU
         /// </summary>
         /// <param name="range">The range of the for loop.</param>
         /// <param name="src">The calling location in the source code.</param>
-        /// <returns>A buffer representing the indices.</returns>
+        /// <returns>The calculated index.</returns>
         internal Index Get1DIdx((int, int) range, string src)
         {
             if (indices1d.ContainsKey(src))
@@ -207,6 +213,13 @@ namespace DotMP.GPU
             return new Index(buf);
         }
 
+        /// <summary>
+        /// Precomputes and caches the indices for a 2D for loop.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The inner range of the for loop.</param>
+        /// <param name="src">The calling location in the source code.</param>
+        /// <returns>A tuple of calculated indices.</returns>
         internal ValueTuple<Index, Index> Get2DIdx((int, int) range1, (int, int) range2, string src)
         {
             if (indices2d.ContainsKey(src))
@@ -247,6 +260,14 @@ namespace DotMP.GPU
             return (new Index(b1), new Index(b2));
         }
 
+        /// <summary>
+        /// Precomputes and caches the indices for a 3D for loop.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The middle range of the for loop.</param>
+        /// <param name="range3">The inner range of the for loop.</param>
+        /// <param name="src">The calling location in the source code.</param>
+        /// <returns>A tuple of calculated indices.</returns>
         internal ValueTuple<Index, Index, Index> Get3DIdx((int, int) range1, (int, int) range2, (int, int) range3, string src)
         {
             if (indices3d.ContainsKey(src))
@@ -323,9 +344,13 @@ namespace DotMP.GPU
 
             var kernel = GetKernel(action, src);
 
+<# for (int i = 0; i < c; i++) { #>
+            var gpu<#= i + 1 #> = new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>);
+<# } #>
+
             kernel((len / block_size, block_size), idx
 <# for (int i = 0; i < c; i++) { #>
-            , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
+            , gpu<#= i + 1 #>
 <# } #>
             );
 
@@ -338,7 +363,7 @@ namespace DotMP.GPU
 
                 kernel((1, not_done), idx
 <# for (int i = 0; i < c; i++) { #>
-                , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
+                , gpu<#= i + 1 #>
 <# } #>
                 );
             }
@@ -431,9 +456,13 @@ namespace DotMP.GPU
 
             var kernel = GetKernel(action, src);
 
+<# for (int i = 0; i < c; i++) { #>
+            var gpu<#= i + 1 #> = new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>);
+<# } #>
+
             kernel((len / block_size, block_size), i, j, k
 <# for (int i = 0; i < c; i++) { #>
-            , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
+            , gpu<#= i + 1 #>
 <# } #>
             );
 
@@ -448,7 +477,7 @@ namespace DotMP.GPU
 
                 kernel((1, not_done), i, j, k
 <# for (int i = 0; i < c; i++) { #>
-                , new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>)
+                , gpu<#= i + 1 #>
 <# } #>
                 );
             }
