@@ -40,6 +40,6 @@ var searchData=
   ['static_5fshould_5fproduce_5fcorrect_5fresults_234',['Static_should_produce_correct_results',['../classDotMPTests_1_1ParallelTests.html#a24f097b6e6ef65d7625367832b672f7a',1,'DotMPTests::ParallelTests']]],
   ['staticscheduler_235',['StaticScheduler',['../classDotMP_1_1StaticScheduler.html',1,'DotMP']]],
   ['stealhandler_236',['StealHandler',['../classDotMP_1_1WorkStealingScheduler.html#a656594ff1c4381f688f2f15ef1e5c694',1,'DotMP::WorkStealingScheduler']]],
-  ['sub_237',['Sub',['../classDotMP_1_1Atomic.html#a0ab142334f3de04de8f1221a3a540ae9',1,'DotMP.Atomic.Sub(ref int target, int value)'],['../classDotMP_1_1Atomic.html#ad3f5a90329bf48d9012a6965f2fbd294',1,'DotMP.Atomic.Sub(ref long target, long value)']]],
+  ['sub_237',['Sub',['../classDotMP_1_1Atomic.html#a0ab142334f3de04de8f1221a3a540ae9',1,'DotMP.Atomic.Sub(ref int target, int value)'],['../classDotMP_1_1Atomic.html#acd633cd752efdf0d273c814f3da52651',1,'DotMP.Atomic.Sub(ref uint target, uint value)'],['../classDotMP_1_1Atomic.html#ad3f5a90329bf48d9012a6965f2fbd294',1,'DotMP.Atomic.Sub(ref long target, long value)'],['../classDotMP_1_1Atomic.html#a3c5b811c7d4cac146184d3ed0b033cfb',1,'DotMP.Atomic.Sub(ref ulong target, ulong value)']]],
   ['subtract_238',['Subtract',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346a1d9baf077ee87921f57a8fe42d510b65',1,'DotMP']]]
 ];

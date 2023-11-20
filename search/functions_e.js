@@ -22,5 +22,5 @@ var searchData=
   ['startthreadpool_447',['StartThreadpool',['../classDotMP_1_1ForkedRegion.html#aeb2a90e75d37da72c6fed2dbdf4c29c2',1,'DotMP::ForkedRegion']]],
   ['static_5fshould_5fproduce_5fcorrect_5fresults_448',['Static_should_produce_correct_results',['../classDotMPTests_1_1ParallelTests.html#a24f097b6e6ef65d7625367832b672f7a',1,'DotMPTests::ParallelTests']]],
   ['stealhandler_449',['StealHandler',['../classDotMP_1_1WorkStealingScheduler.html#a656594ff1c4381f688f2f15ef1e5c694',1,'DotMP::WorkStealingScheduler']]],
-  ['sub_450',['Sub',['../classDotMP_1_1Atomic.html#a0ab142334f3de04de8f1221a3a540ae9',1,'DotMP.Atomic.Sub(ref int target, int value)'],['../classDotMP_1_1Atomic.html#ad3f5a90329bf48d9012a6965f2fbd294',1,'DotMP.Atomic.Sub(ref long target, long value)']]]
+  ['sub_450',['Sub',['../classDotMP_1_1Atomic.html#a0ab142334f3de04de8f1221a3a540ae9',1,'DotMP.Atomic.Sub(ref int target, int value)'],['../classDotMP_1_1Atomic.html#acd633cd752efdf0d273c814f3da52651',1,'DotMP.Atomic.Sub(ref uint target, uint value)'],['../classDotMP_1_1Atomic.html#ad3f5a90329bf48d9012a6965f2fbd294',1,'DotMP.Atomic.Sub(ref long target, long value)'],['../classDotMP_1_1Atomic.html#a3c5b811c7d4cac146184d3ed0b033cfb',1,'DotMP.Atomic.Sub(ref ulong target, ulong value)']]]
 ];
