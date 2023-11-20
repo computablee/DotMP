@@ -5,11 +5,11 @@
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
-
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
  * License for more details.
-
+ *
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
  * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
@@ -589,8 +589,8 @@ namespace DotMPTests
             uint threads = 1024;
             int[] int_totals = new int[6];
             long[] long_totals = new long[6];
-            uint[] uint_totals = new uint[5];
-            ulong[] ulong_totals = new ulong[5];
+            uint[] uint_totals = new uint[6];
+            ulong[] ulong_totals = new ulong[6];
 
             uint_totals[1] = 1024;
             ulong_totals[1] = 1024;
@@ -704,6 +704,9 @@ namespace DotMPTests
             long_totals[4].Should().Be((long)res);
             ulong_totals[4].Should().Be((ulong)res);
 
+            uint_totals[5] = threads * 2 + 1;
+            ulong_totals[5] = threads * 2 + 3;
+
             //sub
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
@@ -711,10 +714,16 @@ namespace DotMPTests
                 DotMP.Atomic.Sub(ref int_totals[5], 2);
                 DotMP.Parallel.Barrier();
                 DotMP.Atomic.Sub(ref long_totals[5], 2);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Sub(ref uint_totals[5], 2);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Sub(ref ulong_totals[5], 2);
             });
 
             int_totals[5].Should().Be((int)-threads * 2);
             long_totals[5].Should().Be((long)-threads * 2);
+            uint_totals[5].Should().Be(1);
+            ulong_totals[5].Should().Be(3);
         }
 
         /// <summary>
