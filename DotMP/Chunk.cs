@@ -454,7 +454,6 @@ namespace DotMP
 
         /// <summary>
         /// Executes a chunk using the action selected by ForAction.selector
-        /// TODO: Optimize this whole function.
         /// </summary>
         /// <param name="curr_iter">A reference to the current iteration.</param>
         /// <param name="start">The start of the chunk, inclusive.</param>
