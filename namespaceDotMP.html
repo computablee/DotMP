@@ -62,6 +62,7 @@ $(function() {
 </div><!-- top -->
 <div class="header">
   <div class="summary">
+<a href="#namespaces">Namespaces</a> &#124;
 <a href="#nested-classes">Classes</a> &#124;
 <a href="#enum-members">Enumerations</a> &#124;
 <a href="#func-members">Functions</a>  </div>
@@ -70,6 +71,13 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 <table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="namespaces"></a>
+Namespaces</h2></td></tr>
+<tr class="memitem:namespaceDotMP_1_1Exceptions"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDotMP_1_1Exceptions.html">Exceptions</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:namespaceDotMP_1_1Schedulers"><td class="memItemLeft" align="right" valign="top">namespace &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="namespaceDotMP_1_1Schedulers.html">Schedulers</a></td></tr>
+<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="nested-classes"></a>
 Classes</h2></td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Atomic.html">Atomic</a></td></tr>
@@ -80,18 +88,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1DAG.html">DAG</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight"><a class="el" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies.">DAG</a> for maintaining task dependencies.  <a href="classDotMP_1_1DAG.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1NotInParallelRegionException.html">NotInParallelRegionException</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown if a parallel-only construct is used outside of a parallel region.  <a href="classDotMP_1_1NotInParallelRegionException.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1CannotPerformNestedParallelismException.html">CannotPerformNestedParallelismException</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown if a <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">Parallel.ParallelRegion</a> is created inside of another <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">Parallel.ParallelRegion</a>.  <a href="classDotMP_1_1CannotPerformNestedParallelismException.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1CannotPerformNestedWorksharingException.html">CannotPerformNestedWorksharingException</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown if a <a class="el" href="classDotMP_1_1Parallel.html#a325c61e793664f5c30233a8db2ef951b" title="Creates a single region. A single region is only executed once per Parallel.ParallelRegion....">Parallel.Single</a> is created inside of a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">Parallel.For</a> or Parallel.ForReduction&lt;T&gt;.  <a href="classDotMP_1_1CannotPerformNestedWorksharingException.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1InvalidArgumentsException.html">InvalidArgumentsException</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Exception thrown if invalid arguments are specified to <a class="el" href="namespaceDotMP.html">DotMP</a> functions.  <a href="classDotMP_1_1InvalidArgumentsException.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Region.html">Region</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Contains relevant internal information about parallel regions, including the threads and the function to be executed. Provides a region-wide lock and SpinWait objects for each thread.  <a href="classDotMP_1_1Region.html#details">More...</a><br /></td></tr>
@@ -110,21 +106,6 @@ Classes</h2></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html">Schedule</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the various scheduling strategies for parallel for loops. Detailed explanations of each scheduling strategy are provided alongside each getter. If no schedule is specified, the default is <a class="el" href="classDotMP_1_1Schedule.html#a4f10839d1931afddf9fbd522cb1a86ca" title="The static scheduling strategy. Iterations are divided amongst threads in round-robin fashion....">Schedule.Static</a>.  <a href="classDotMP_1_1Schedule.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1StaticScheduler.html">StaticScheduler</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of static scheduling.  <a href="classDotMP_1_1StaticScheduler.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1DynamicScheduler.html">DynamicScheduler</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of dynamic scheduling.  <a href="classDotMP_1_1DynamicScheduler.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1GuidedScheduler.html">GuidedScheduler</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of guided scheduling.  <a href="classDotMP_1_1GuidedScheduler.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1RuntimeScheduler.html">RuntimeScheduler</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Placeholder for the runtime scheduler. Is not meant to be called directly. The <a class="el" href="classDotMP_1_1Parallel.html#ac3592a3029e775b2991b33632980c17d" title="Fixes the arguments for a parallel for loop. If a Schedule is set to Static, Dynamic,...">Parallel.FixArgs</a> method should detect its existence and swap it out for another scheduler with implementations.  <a href="classDotMP_1_1RuntimeScheduler.html#details">More...</a><br /></td></tr>
-<tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1WorkStealingScheduler.html">WorkStealingScheduler</a></td></tr>
-<tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Implementation of work-stealing scheduling.  <a href="classDotMP_1_1WorkStealingScheduler.html#details">More...</a><br /></td></tr>
 <tr class="separator:"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:"><td class="memItemLeft" align="right" valign="top">class &#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1SectionsContainer.html">SectionsContainer</a></td></tr>
 <tr class="memdesc:"><td class="mdescLeft">&#160;</td><td class="mdescRight">Static class that contains necessary information for sections. Sections allow for the user to submit multiple actions to be executed in parallel. A sections region contains a collection of actions to be executed, specified as Parallel.Section directives. More information can be found in the <a class="el" href="classDotMP_1_1Parallel.html#a33e20aede41a6e4ac4e2ed95dbd2e43d" title="Creates a sections region. Sections allows for the user to submit multiple, individual tasks to be di...">Parallel.Sections</a> documentation.  <a href="classDotMP_1_1SectionsContainer.html#details">More...</a><br /></td></tr>

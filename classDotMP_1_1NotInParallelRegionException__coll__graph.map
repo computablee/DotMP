@@ -1,4 +1,0 @@
-<map id="DotMP.NotInParallelRegionException" name="DotMP.NotInParallelRegionException">
-<area shape="rect" id="node1" title="Exception thrown if a parallel&#45;only construct is used outside of a parallel region." alt="" coords="5,80,200,121"/>
-<area shape="rect" id="node2" title=" " alt="" coords="59,5,146,32"/>
-</map>

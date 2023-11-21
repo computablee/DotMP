@@ -82,13 +82,13 @@ Inheritance diagram for DotMP.Schedule:</div>
 <div class="dyncontent">
 <div class="center"><img src="classDotMP_1_1Schedule__inherit__graph.png" border="0" usemap="#aDotMP_8Schedule_inherit__map" alt="Inheritance graph"/></div>
 <map name="aDotMP_8Schedule_inherit__map" id="aDotMP_8Schedule_inherit__map">
-<area shape="rect" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="144,107,271,133"/>
-<area shape="rect" href="classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="333,5,522,32"/>
-<area shape="rect" href="classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="339,56,516,83"/>
-<area shape="rect" href="classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="334,107,521,133"/>
-<area shape="rect" href="classDotMP_1_1StaticScheduler.html" title="Implementation of static scheduling." alt="" coords="343,157,511,184"/>
-<area shape="rect" href="classDotMP_1_1WorkStealingScheduler.html" title="Implementation of work&#45;stealing scheduling." alt="" coords="319,208,536,235"/>
-<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,107,96,133"/>
+<area shape="rect" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="144,130,271,157"/>
+<area shape="rect" href="classDotMP_1_1Schedulers_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="345,5,545,47"/>
+<area shape="rect" href="classDotMP_1_1Schedulers_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="319,71,571,98"/>
+<area shape="rect" href="classDotMP_1_1Schedulers_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="346,123,543,164"/>
+<area shape="rect" href="classDotMP_1_1Schedulers_1_1StaticScheduler.html" title="Implementation of static scheduling." alt="" coords="323,189,566,215"/>
+<area shape="rect" href="classDotMP_1_1Schedulers_1_1WorkStealingScheduler.html" title="Implementation of work&#45;stealing scheduling." alt="" coords="331,240,559,281"/>
+<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,130,96,157"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <div class="dynheader">
@@ -96,16 +96,9 @@ Collaboration diagram for DotMP.Schedule:</div>
 <div class="dyncontent">
 <div class="center"><img src="classDotMP_1_1Schedule__coll__graph.png" border="0" usemap="#aDotMP_8Schedule_coll__map" alt="Collaboration graph"/></div>
 <map name="aDotMP_8Schedule_coll__map" id="aDotMP_8Schedule_coll__map">
-<area shape="rect" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="996,211,1123,238"/>
-<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,110,96,136"/>
-<area shape="rect" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="215,234,296,260"/>
-<area shape="rect" href="classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="587,186,774,212"/>
-<area shape="rect" href="classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling." alt="" coords="592,311,769,338"/>
-<area shape="rect" href="classDotMP_1_1WorkStealingScheduler.html" title="Implementation of work&#45;stealing scheduling." alt="" coords="572,407,789,434"/>
-<area shape="rect" href="classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling." alt="" coords="586,236,775,263"/>
-<area shape="rect" href="classDotMP_1_1StaticScheduler.html" title="Implementation of static scheduling." alt="" coords="597,92,765,119"/>
-<area shape="rect" href="structDotMP_1_1WorkStealingScheduler_1_1Queue.html" title="Queue struct, ensuring that no two values share a cache line. This avoids false sharing issues." alt="" coords="145,462,365,504"/>
-<area shape="rect" href="structDotMP_1_1StaticScheduler_1_1IterWrapper.html" title="Struct to ensure that the curr_iter variables cannot reside on the same cache line...." alt="" coords="159,36,352,77"/>
+<area shape="rect" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="45,153,171,180"/>
+<area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,5,96,32"/>
+<area shape="rect" title=" " alt="" coords="120,5,213,32"/>
 </map>
 <center><span class="legend">[<a href="graph_legend.html">legend</a>]</span></center></div>
 <table class="memberdecls">
@@ -138,21 +131,21 @@ Properties</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
-<tr class="memitem:ae0b827b8680e389bfb5f5f9f274f1b84"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1StaticScheduler.html">StaticScheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#ae0b827b8680e389bfb5f5f9f274f1b84">static_scheduler</a> = new <a class="el" href="classDotMP_1_1StaticScheduler.html">StaticScheduler</a>()</td></tr>
-<tr class="memdesc:ae0b827b8680e389bfb5f5f9f274f1b84"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal holder for <a class="el" href="classDotMP_1_1StaticScheduler.html" title="Implementation of static scheduling.">StaticScheduler</a> object.  <a href="classDotMP_1_1Schedule.html#ae0b827b8680e389bfb5f5f9f274f1b84">More...</a><br /></td></tr>
-<tr class="separator:ae0b827b8680e389bfb5f5f9f274f1b84"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a9b652d0d2022b34680cf68a5cf878128"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1DynamicScheduler.html">DynamicScheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#a9b652d0d2022b34680cf68a5cf878128">dynamic_scheduler</a> = new <a class="el" href="classDotMP_1_1DynamicScheduler.html">DynamicScheduler</a>()</td></tr>
-<tr class="memdesc:a9b652d0d2022b34680cf68a5cf878128"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal holder for the <a class="el" href="classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling.">DynamicScheduler</a> object.  <a href="classDotMP_1_1Schedule.html#a9b652d0d2022b34680cf68a5cf878128">More...</a><br /></td></tr>
-<tr class="separator:a9b652d0d2022b34680cf68a5cf878128"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:a091be4024adba8df606111705f5c795e"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1GuidedScheduler.html">GuidedScheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#a091be4024adba8df606111705f5c795e">guided_scheduler</a> = new <a class="el" href="classDotMP_1_1GuidedScheduler.html">GuidedScheduler</a>()</td></tr>
-<tr class="memdesc:a091be4024adba8df606111705f5c795e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal holder for the <a class="el" href="classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling.">GuidedScheduler</a> object.  <a href="classDotMP_1_1Schedule.html#a091be4024adba8df606111705f5c795e">More...</a><br /></td></tr>
-<tr class="separator:a091be4024adba8df606111705f5c795e"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:aa37391efbb1104ea5d0913309acca8cf"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1RuntimeScheduler.html">RuntimeScheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#aa37391efbb1104ea5d0913309acca8cf">runtime_scheduler</a> = new <a class="el" href="classDotMP_1_1RuntimeScheduler.html">RuntimeScheduler</a>()</td></tr>
-<tr class="memdesc:aa37391efbb1104ea5d0913309acca8cf"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal holder for the <a class="el" href="classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel....">RuntimeScheduler</a> object.  <a href="classDotMP_1_1Schedule.html#aa37391efbb1104ea5d0913309acca8cf">More...</a><br /></td></tr>
-<tr class="separator:aa37391efbb1104ea5d0913309acca8cf"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ace6774ac67985f0cd514572a625e2bc9"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1WorkStealingScheduler.html">WorkStealingScheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#ace6774ac67985f0cd514572a625e2bc9">workstealing_scheduler</a> = new <a class="el" href="classDotMP_1_1WorkStealingScheduler.html">WorkStealingScheduler</a>()</td></tr>
-<tr class="memdesc:ace6774ac67985f0cd514572a625e2bc9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal holder for the <a class="el" href="classDotMP_1_1WorkStealingScheduler.html" title="Implementation of work-stealing scheduling.">WorkStealingScheduler</a> object.  <a href="classDotMP_1_1Schedule.html#ace6774ac67985f0cd514572a625e2bc9">More...</a><br /></td></tr>
-<tr class="separator:ace6774ac67985f0cd514572a625e2bc9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad6a8f774fa7769774f8f324caa07fb5c"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1Schedulers_1_1StaticScheduler.html">Schedulers.StaticScheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#ad6a8f774fa7769774f8f324caa07fb5c">static_scheduler</a> = new <a class="el" href="classDotMP_1_1Schedulers_1_1StaticScheduler.html">Schedulers.StaticScheduler</a>()</td></tr>
+<tr class="memdesc:ad6a8f774fa7769774f8f324caa07fb5c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal holder for StaticScheduler object.  <a href="classDotMP_1_1Schedule.html#ad6a8f774fa7769774f8f324caa07fb5c">More...</a><br /></td></tr>
+<tr class="separator:ad6a8f774fa7769774f8f324caa07fb5c"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:affb0ab70e8b107ada27ed6f0a45c4692"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1Schedulers_1_1DynamicScheduler.html">Schedulers.DynamicScheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#affb0ab70e8b107ada27ed6f0a45c4692">dynamic_scheduler</a> = new <a class="el" href="classDotMP_1_1Schedulers_1_1DynamicScheduler.html">Schedulers.DynamicScheduler</a>()</td></tr>
+<tr class="memdesc:affb0ab70e8b107ada27ed6f0a45c4692"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal holder for the DynamicScheduler object.  <a href="classDotMP_1_1Schedule.html#affb0ab70e8b107ada27ed6f0a45c4692">More...</a><br /></td></tr>
+<tr class="separator:affb0ab70e8b107ada27ed6f0a45c4692"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ad9f94fc0ddd417d2569d286ed5803d06"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1Schedulers_1_1GuidedScheduler.html">Schedulers.GuidedScheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#ad9f94fc0ddd417d2569d286ed5803d06">guided_scheduler</a> = new <a class="el" href="classDotMP_1_1Schedulers_1_1GuidedScheduler.html">Schedulers.GuidedScheduler</a>()</td></tr>
+<tr class="memdesc:ad9f94fc0ddd417d2569d286ed5803d06"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal holder for the GuidedScheduler object.  <a href="classDotMP_1_1Schedule.html#ad9f94fc0ddd417d2569d286ed5803d06">More...</a><br /></td></tr>
+<tr class="separator:ad9f94fc0ddd417d2569d286ed5803d06"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac6316d8e2397547634208f3162b35cd6"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1Schedulers_1_1RuntimeScheduler.html">Schedulers.RuntimeScheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#ac6316d8e2397547634208f3162b35cd6">runtime_scheduler</a> = new <a class="el" href="classDotMP_1_1Schedulers_1_1RuntimeScheduler.html">Schedulers.RuntimeScheduler</a>()</td></tr>
+<tr class="memdesc:ac6316d8e2397547634208f3162b35cd6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal holder for the RuntimeScheduler object.  <a href="classDotMP_1_1Schedule.html#ac6316d8e2397547634208f3162b35cd6">More...</a><br /></td></tr>
+<tr class="separator:ac6316d8e2397547634208f3162b35cd6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a972a22130f4e7643e9a79ee01137505b"><td class="memItemLeft" align="right" valign="top">static <a class="el" href="classDotMP_1_1Schedulers_1_1WorkStealingScheduler.html">Schedulers.WorkStealingScheduler</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Schedule.html#a972a22130f4e7643e9a79ee01137505b">workstealing_scheduler</a> = new <a class="el" href="classDotMP_1_1Schedulers_1_1WorkStealingScheduler.html">Schedulers.WorkStealingScheduler</a>()</td></tr>
+<tr class="memdesc:a972a22130f4e7643e9a79ee01137505b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal holder for the WorkStealingScheduler object.  <a href="classDotMP_1_1Schedule.html#a972a22130f4e7643e9a79ee01137505b">More...</a><br /></td></tr>
+<tr class="separator:a972a22130f4e7643e9a79ee01137505b"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
 <div class="textblock"><p>Represents the various scheduling strategies for parallel for loops. Detailed explanations of each scheduling strategy are provided alongside each getter. If no schedule is specified, the default is <a class="el" href="classDotMP_1_1Schedule.html#a4f10839d1931afddf9fbd522cb1a86ca" title="The static scheduling strategy. Iterations are divided amongst threads in round-robin fashion....">Schedule.Static</a>. </p>
@@ -216,7 +209,7 @@ Static Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="interfaceDotMP_1_1IScheduler.html#a25a439b8f27f6b263cd1d6c1cdd7d53d">DotMP.IScheduler</a>.</p>
 
-<p>Implemented in <a class="el" href="classDotMP_1_1WorkStealingScheduler.html#a5b095fc62d30cb369674e2b4bc634665">DotMP.WorkStealingScheduler</a>, <a class="el" href="classDotMP_1_1RuntimeScheduler.html#a95f58462e43e20633595b31e75bfe8e5">DotMP.RuntimeScheduler</a>, <a class="el" href="classDotMP_1_1GuidedScheduler.html#a0c039f82085c93fdee9a72cced5bbd26">DotMP.GuidedScheduler</a>, <a class="el" href="classDotMP_1_1DynamicScheduler.html#ad4deeb9ae94a9d54697d5d20e1d8cd67">DotMP.DynamicScheduler</a>, and <a class="el" href="classDotMP_1_1StaticScheduler.html#a50c1e26c3b96752522cb05ed7153fffa">DotMP.StaticScheduler</a>.</p>
+<p>Implemented in <a class="el" href="classDotMP_1_1Schedulers_1_1WorkStealingScheduler.html#a56f19d3aa26768db1a553cdf561b3fed">DotMP.Schedulers.WorkStealingScheduler</a>, <a class="el" href="classDotMP_1_1Schedulers_1_1RuntimeScheduler.html#a184e6e1b3f2462856552bcc1c5e810ab">DotMP.Schedulers.RuntimeScheduler</a>, <a class="el" href="classDotMP_1_1Schedulers_1_1GuidedScheduler.html#ac7e326c18dafafc3b8c04de0bb9c5e58">DotMP.Schedulers.GuidedScheduler</a>, <a class="el" href="classDotMP_1_1Schedulers_1_1DynamicScheduler.html#a881a270589039683cc8de9e34ccc42b4">DotMP.Schedulers.DynamicScheduler</a>, and <a class="el" href="classDotMP_1_1Schedulers_1_1StaticScheduler.html#a978f8f9b379bbb5033981d0a01fe2f6c">DotMP.Schedulers.StaticScheduler</a>.</p>
 
 </div>
 </div>
@@ -272,13 +265,13 @@ Static Private Attributes</h2></td></tr>
 
 <p>Implements <a class="el" href="interfaceDotMP_1_1IScheduler.html#abfb9a870d2bc4c88dd6af8be2e261b7a">DotMP.IScheduler</a>.</p>
 
-<p>Implemented in <a class="el" href="classDotMP_1_1WorkStealingScheduler.html#ae8a5c4ba41f02b373bb5a19e9cd5449e">DotMP.WorkStealingScheduler</a>, <a class="el" href="classDotMP_1_1RuntimeScheduler.html#a29e4ea105271ad62a1aeff1e64e10b5a">DotMP.RuntimeScheduler</a>, <a class="el" href="classDotMP_1_1GuidedScheduler.html#a284383d105aab24dc9f6c65a940c3a7b">DotMP.GuidedScheduler</a>, <a class="el" href="classDotMP_1_1DynamicScheduler.html#aee14063cf27542a61d1275c6122f0850">DotMP.DynamicScheduler</a>, and <a class="el" href="classDotMP_1_1StaticScheduler.html#a4f3f161d8e2ed13f7727d76efc92cf45">DotMP.StaticScheduler</a>.</p>
+<p>Implemented in <a class="el" href="classDotMP_1_1Schedulers_1_1WorkStealingScheduler.html#aef8daeb0a8fe33f741d7530a92c07f45">DotMP.Schedulers.WorkStealingScheduler</a>, <a class="el" href="classDotMP_1_1Schedulers_1_1RuntimeScheduler.html#a63f3f8fb3400a636f6e69b40b319cb49">DotMP.Schedulers.RuntimeScheduler</a>, <a class="el" href="classDotMP_1_1Schedulers_1_1GuidedScheduler.html#acde42a1d9671beb0b7a9c1a738265f73">DotMP.Schedulers.GuidedScheduler</a>, <a class="el" href="classDotMP_1_1Schedulers_1_1DynamicScheduler.html#aed1c0e626d735b8e482dcd3d0f88d721">DotMP.Schedulers.DynamicScheduler</a>, and <a class="el" href="classDotMP_1_1Schedulers_1_1StaticScheduler.html#a4f2040f7f445ef437da2416ffec49605">DotMP.Schedulers.StaticScheduler</a>.</p>
 
 </div>
 </div>
 <h2 class="groupheader">Member Data Documentation</h2>
-<a id="a9b652d0d2022b34680cf68a5cf878128"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a9b652d0d2022b34680cf68a5cf878128">&#9670;&nbsp;</a></span>dynamic_scheduler</h2>
+<a id="affb0ab70e8b107ada27ed6f0a45c4692"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#affb0ab70e8b107ada27ed6f0a45c4692">&#9670;&nbsp;</a></span>dynamic_scheduler</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -287,7 +280,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classDotMP_1_1DynamicScheduler.html">DynamicScheduler</a> DotMP.Schedule.dynamic_scheduler = new <a class="el" href="classDotMP_1_1DynamicScheduler.html">DynamicScheduler</a>()</td>
+          <td class="memname"><a class="el" href="classDotMP_1_1Schedulers_1_1DynamicScheduler.html">Schedulers.DynamicScheduler</a> DotMP.Schedule.dynamic_scheduler = new <a class="el" href="classDotMP_1_1Schedulers_1_1DynamicScheduler.html">Schedulers.DynamicScheduler</a>()</td>
         </tr>
       </table>
   </td>
@@ -297,12 +290,12 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Internal holder for the <a class="el" href="classDotMP_1_1DynamicScheduler.html" title="Implementation of dynamic scheduling.">DynamicScheduler</a> object. </p>
+<p>Internal holder for the DynamicScheduler object. </p>
 
 </div>
 </div>
-<a id="a091be4024adba8df606111705f5c795e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a091be4024adba8df606111705f5c795e">&#9670;&nbsp;</a></span>guided_scheduler</h2>
+<a id="ad9f94fc0ddd417d2569d286ed5803d06"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad9f94fc0ddd417d2569d286ed5803d06">&#9670;&nbsp;</a></span>guided_scheduler</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -311,7 +304,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classDotMP_1_1GuidedScheduler.html">GuidedScheduler</a> DotMP.Schedule.guided_scheduler = new <a class="el" href="classDotMP_1_1GuidedScheduler.html">GuidedScheduler</a>()</td>
+          <td class="memname"><a class="el" href="classDotMP_1_1Schedulers_1_1GuidedScheduler.html">Schedulers.GuidedScheduler</a> DotMP.Schedule.guided_scheduler = new <a class="el" href="classDotMP_1_1Schedulers_1_1GuidedScheduler.html">Schedulers.GuidedScheduler</a>()</td>
         </tr>
       </table>
   </td>
@@ -321,12 +314,12 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Internal holder for the <a class="el" href="classDotMP_1_1GuidedScheduler.html" title="Implementation of guided scheduling.">GuidedScheduler</a> object. </p>
+<p>Internal holder for the GuidedScheduler object. </p>
 
 </div>
 </div>
-<a id="aa37391efbb1104ea5d0913309acca8cf"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#aa37391efbb1104ea5d0913309acca8cf">&#9670;&nbsp;</a></span>runtime_scheduler</h2>
+<a id="ac6316d8e2397547634208f3162b35cd6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac6316d8e2397547634208f3162b35cd6">&#9670;&nbsp;</a></span>runtime_scheduler</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -335,7 +328,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classDotMP_1_1RuntimeScheduler.html">RuntimeScheduler</a> DotMP.Schedule.runtime_scheduler = new <a class="el" href="classDotMP_1_1RuntimeScheduler.html">RuntimeScheduler</a>()</td>
+          <td class="memname"><a class="el" href="classDotMP_1_1Schedulers_1_1RuntimeScheduler.html">Schedulers.RuntimeScheduler</a> DotMP.Schedule.runtime_scheduler = new <a class="el" href="classDotMP_1_1Schedulers_1_1RuntimeScheduler.html">Schedulers.RuntimeScheduler</a>()</td>
         </tr>
       </table>
   </td>
@@ -345,12 +338,12 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Internal holder for the <a class="el" href="classDotMP_1_1RuntimeScheduler.html" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel....">RuntimeScheduler</a> object. </p>
+<p>Internal holder for the RuntimeScheduler object. </p>
 
 </div>
 </div>
-<a id="ae0b827b8680e389bfb5f5f9f274f1b84"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae0b827b8680e389bfb5f5f9f274f1b84">&#9670;&nbsp;</a></span>static_scheduler</h2>
+<a id="ad6a8f774fa7769774f8f324caa07fb5c"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ad6a8f774fa7769774f8f324caa07fb5c">&#9670;&nbsp;</a></span>static_scheduler</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -359,7 +352,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classDotMP_1_1StaticScheduler.html">StaticScheduler</a> DotMP.Schedule.static_scheduler = new <a class="el" href="classDotMP_1_1StaticScheduler.html">StaticScheduler</a>()</td>
+          <td class="memname"><a class="el" href="classDotMP_1_1Schedulers_1_1StaticScheduler.html">Schedulers.StaticScheduler</a> DotMP.Schedule.static_scheduler = new <a class="el" href="classDotMP_1_1Schedulers_1_1StaticScheduler.html">Schedulers.StaticScheduler</a>()</td>
         </tr>
       </table>
   </td>
@@ -369,12 +362,12 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Internal holder for <a class="el" href="classDotMP_1_1StaticScheduler.html" title="Implementation of static scheduling.">StaticScheduler</a> object. </p>
+<p>Internal holder for StaticScheduler object. </p>
 
 </div>
 </div>
-<a id="ace6774ac67985f0cd514572a625e2bc9"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ace6774ac67985f0cd514572a625e2bc9">&#9670;&nbsp;</a></span>workstealing_scheduler</h2>
+<a id="a972a22130f4e7643e9a79ee01137505b"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a972a22130f4e7643e9a79ee01137505b">&#9670;&nbsp;</a></span>workstealing_scheduler</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -383,7 +376,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="classDotMP_1_1WorkStealingScheduler.html">WorkStealingScheduler</a> DotMP.Schedule.workstealing_scheduler = new <a class="el" href="classDotMP_1_1WorkStealingScheduler.html">WorkStealingScheduler</a>()</td>
+          <td class="memname"><a class="el" href="classDotMP_1_1Schedulers_1_1WorkStealingScheduler.html">Schedulers.WorkStealingScheduler</a> DotMP.Schedule.workstealing_scheduler = new <a class="el" href="classDotMP_1_1Schedulers_1_1WorkStealingScheduler.html">Schedulers.WorkStealingScheduler</a>()</td>
         </tr>
       </table>
   </td>
@@ -393,7 +386,7 @@ Static Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Internal holder for the <a class="el" href="classDotMP_1_1WorkStealingScheduler.html" title="Implementation of work-stealing scheduling.">WorkStealingScheduler</a> object. </p>
+<p>Internal holder for the WorkStealingScheduler object. </p>
 
 </div>
 </div>

@@ -1,5 +1,0 @@
-<map id="DotMP.RuntimeScheduler" name="DotMP.RuntimeScheduler">
-<area shape="rect" id="node1" title="Placeholder for the runtime scheduler. Is not meant to be called directly. The Parallel...." alt="" coords="5,155,192,181"/>
-<area shape="rect" id="node2" href="$classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="58,80,139,107"/>
-<area shape="rect" id="node3" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="53,5,144,32"/>
-</map>

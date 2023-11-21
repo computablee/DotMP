@@ -1,0 +1,7 @@
+<map id="DotMP.Schedulers.StaticScheduler" name="DotMP.Schedulers.StaticScheduler">
+<area shape="rect" id="node1" title="Implementation of static scheduling." alt="" coords="127,257,369,284"/>
+<area shape="rect" id="node2" href="$classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="67,161,149,187"/>
+<area shape="rect" id="node3" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,5,96,32"/>
+<area shape="rect" id="node4" title=" " alt="" coords="120,5,213,32"/>
+<area shape="rect" id="node5" href="$structDotMP_1_1Schedulers_1_1StaticScheduler_1_1IterWrapper.html" title="Struct to ensure that the curr_iter variables cannot reside on the same cache line...." alt="" coords="173,153,419,195"/>
+</map>

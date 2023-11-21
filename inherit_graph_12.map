@@ -1,4 +1,3 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" href="$classDotMP_1_1Shared.html" title=" " alt="" coords="5,13,157,39"/>
-<area shape="rect" id="node2" href="$classDotMP_1_1SharedEnumerable.html" title="A specialization of Shared for items that can be indexed with square brackets. The DotMP&#45;parallelized..." alt="" coords="205,5,396,47"/>
+<area shape="rect" id="node1" href="$structDotMP_1_1Schedulers_1_1WorkStealingScheduler_1_1Queue.html" title="Queue struct, ensuring that no two values share a cache line. This avoids false sharing issues." alt="" coords="5,5,233,47"/>
 </map>

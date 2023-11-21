@@ -1,0 +1,5 @@
+<map id="DotMP.Schedulers.GuidedScheduler" name="DotMP.Schedulers.GuidedScheduler">
+<area shape="rect" id="node1" title="Implementation of guided scheduling." alt="" coords="5,155,257,181"/>
+<area shape="rect" id="node2" href="$classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="91,80,172,107"/>
+<area shape="rect" id="node3" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="86,5,177,32"/>
+</map>

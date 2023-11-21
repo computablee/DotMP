@@ -1,0 +1,5 @@
+<map id="DotMP.Schedulers.DynamicScheduler" name="DotMP.Schedulers.DynamicScheduler">
+<area shape="rect" id="node1" title="Implementation of dynamic scheduling." alt="" coords="5,155,205,196"/>
+<area shape="rect" id="node2" href="$classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="65,80,146,107"/>
+<area shape="rect" id="node3" href="$interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="60,5,151,32"/>
+</map>

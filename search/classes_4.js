@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['guidedscheduler_281',['GuidedScheduler',['../classDotMP_1_1GuidedScheduler.html',1,'DotMP']]]
+  ['guidedscheduler_282',['GuidedScheduler',['../classDotMP_1_1Schedulers_1_1GuidedScheduler.html',1,'DotMP::Schedulers']]]
 ];

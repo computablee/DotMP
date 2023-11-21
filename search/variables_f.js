@@ -1,7 +1,7 @@
 var searchData=
 [
-  ['work_5fremaining_529',['work_remaining',['../structDotMP_1_1WorkStealingScheduler_1_1Queue.html#a21b0ba1e6fd82261ee65b1d192a54d02',1,'DotMP::WorkStealingScheduler::Queue']]],
-  ['working_5fiters_530',['working_iters',['../classDotMP_1_1WorkShare.html#a29ec7011d03930ff0b12f24b1518955f',1,'DotMP::WorkShare']]],
-  ['workstealing_5fscheduler_531',['workstealing_scheduler',['../classDotMP_1_1Schedule.html#ace6774ac67985f0cd514572a625e2bc9',1,'DotMP::Schedule']]],
-  ['ws_5flock_532',['ws_lock',['../classDotMP_1_1Region.html#a3df81abb19865bf08fda557206462437',1,'DotMP::Region']]]
+  ['work_5fremaining_532',['work_remaining',['../structDotMP_1_1Schedulers_1_1WorkStealingScheduler_1_1Queue.html#a48cb3944506c888a21d10265fabcf9c8',1,'DotMP::Schedulers::WorkStealingScheduler::Queue']]],
+  ['working_5fiters_533',['working_iters',['../classDotMP_1_1WorkShare.html#a29ec7011d03930ff0b12f24b1518955f',1,'DotMP::WorkShare']]],
+  ['workstealing_5fscheduler_534',['workstealing_scheduler',['../classDotMP_1_1Schedule.html#a972a22130f4e7643e9a79ee01137505b',1,'DotMP::Schedule']]],
+  ['ws_5flock_535',['ws_lock',['../classDotMP_1_1Region.html#a3df81abb19865bf08fda557206462437',1,'DotMP::Region']]]
 ];
