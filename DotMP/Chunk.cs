@@ -5,18 +5,18 @@
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
-
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
  * License for more details.
-
+ *
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
  * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
 
 using System;
 using System.Linq;
-using System.Runtime.CompilerServices;
+using DotMP.Exceptions;
 
 /* jscpd:ignore-start */
 namespace DotMP
@@ -179,7 +179,41 @@ namespace DotMP
         /// <summary>
         /// Represents the ranges of collapsed loops for future unflattening.
         /// </summary>
-        private ValueTuple<int, int>[] ranges;
+        private ValueTuple<int, int>[] ranges_prv;
+
+        /// <summary>
+        /// Represents the ranges of collapsed loops for unflattening, ensuring that loops do not have too many iterations.
+        /// </summary>
+        private ValueTuple<int, int>[] ranges
+        {
+            get => ranges_prv;
+            set
+            {
+                int total_iters = 1;
+
+                try
+                {
+                    foreach ((int start, int end) in value)
+                    {
+                        if (end < start)
+                            throw new InvalidArgumentsException(string.Format("Start of loop ({0}) must be less than end of loop ({1}).", start, end));
+
+                        if (start < 0 || end < 0)
+                            throw new InvalidArgumentsException(string.Format("Start ({0}) and end ({1}) of loop must both be positive integers.", start, end));
+
+                        total_iters = checked(total_iters * (end - start));
+                    }
+                }
+                catch (OverflowException)
+                {
+                    throw new TooManyIterationsException(string.Format("Parallel-for loop has too many iterations (exceeds {0}).", int.MaxValue));
+                }
+                finally
+                {
+                    ranges_prv = value;
+                }
+            }
+        }
 
         /// <summary>
         /// Array representing the starting indices.

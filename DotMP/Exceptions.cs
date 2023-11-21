@@ -65,4 +65,16 @@ namespace DotMP.Exceptions
         /// <param name="msg">The message to associate with the exception.</param>
         public InvalidArgumentsException(string msg) : base(msg) { }
     }
+
+    /// <summary>
+    /// Exception thrown if a for loop has too many iterations and would cause the schedulers to fail.
+    /// </summary>
+    public class TooManyIterationsException : Exception
+    {
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        public TooManyIterationsException(string msg) : base(msg) { }
+    }
 }
