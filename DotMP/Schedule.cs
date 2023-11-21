@@ -5,11 +5,11 @@
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
-
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
  * License for more details.
-
+ *
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
  * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
@@ -57,23 +57,23 @@ namespace DotMP
         /// <summary>
         /// Internal holder for StaticScheduler object.
         /// </summary>
-        private static StaticScheduler static_scheduler = new StaticScheduler();
+        private static Schedulers.StaticScheduler static_scheduler = new Schedulers.StaticScheduler();
         /// <summary>
         /// Internal holder for the DynamicScheduler object.
         /// </summary>
-        private static DynamicScheduler dynamic_scheduler = new DynamicScheduler();
+        private static Schedulers.DynamicScheduler dynamic_scheduler = new Schedulers.DynamicScheduler();
         /// <summary>
         /// Internal holder for the GuidedScheduler object.
         /// </summary>
-        private static GuidedScheduler guided_scheduler = new GuidedScheduler();
+        private static Schedulers.GuidedScheduler guided_scheduler = new Schedulers.GuidedScheduler();
         /// <summary>
         /// Internal holder for the RuntimeScheduler object.
         /// </summary>
-        private static RuntimeScheduler runtime_scheduler = new RuntimeScheduler();
+        private static Schedulers.RuntimeScheduler runtime_scheduler = new Schedulers.RuntimeScheduler();
         /// <summary>
         /// Internal holder for the WorkStealingScheduler object.
         /// </summary>
-        private static WorkStealingScheduler workstealing_scheduler = new WorkStealingScheduler();
+        private static Schedulers.WorkStealingScheduler workstealing_scheduler = new Schedulers.WorkStealingScheduler();
 
         /// <summary>
         /// The static scheduling strategy.
@@ -161,6 +161,8 @@ namespace DotMP
     #endregion
 
     #region Schedulers
+    namespace Schedulers
+    {
     /// <summary>
     /// Implementation of static scheduling.
     /// </summary>
@@ -527,6 +529,7 @@ namespace DotMP
 
             return true;
         }
+    }
     }
     #endregion
 }

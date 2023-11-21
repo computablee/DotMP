@@ -18,13 +18,10 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Net.Http.Headers;
-using System.Text.Json.Serialization;
 using System.Threading;
 using DotMP;
 using FluentAssertions;
 using Xunit;
-using Xunit.Abstractions;
 
 namespace DotMPTests
 {
@@ -1294,7 +1291,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_for_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.For(0, 10, action: i => { });
             });
@@ -1306,7 +1303,7 @@ namespace DotMPTests
         [Fact]
         public void Nested_parallelism_should_except()
         {
-            Assert.Throws<DotMP.CannotPerformNestedParallelismException>(() =>
+            Assert.Throws<DotMP.Exceptions.CannotPerformNestedParallelismException>(() =>
             {
                 DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
                 {
@@ -1321,7 +1318,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_sections_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Sections(() => { }, () => { });
             });
@@ -1333,7 +1330,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_barrier_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Barrier();
             });
@@ -1345,7 +1342,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_master_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Master(() => { });
             });
@@ -1357,7 +1354,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_single_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Single(0, () => { });
             });
@@ -1369,7 +1366,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_critical_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Critical(0, () => { });
             });
@@ -1381,7 +1378,7 @@ namespace DotMPTests
         [Fact]
         public void Nested_worksharing_should_except()
         {
-            Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+            Assert.Throws<DotMP.Exceptions.CannotPerformNestedWorksharingException>(() =>
             {
                 DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
                 {
@@ -1389,7 +1386,7 @@ namespace DotMPTests
                 });
             });
 
-            Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+            Assert.Throws<DotMP.Exceptions.CannotPerformNestedWorksharingException>(() =>
             {
                 DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
                 {
@@ -1400,7 +1397,7 @@ namespace DotMPTests
                 });
             });
 
-            Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+            Assert.Throws<DotMP.Exceptions.CannotPerformNestedWorksharingException>(() =>
             {
                 DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
                 {
@@ -1415,7 +1412,7 @@ namespace DotMPTests
         [Fact]
         public void Non_for_ordered_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Ordered(0, () => { });
             });
@@ -1427,7 +1424,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_GetThreadNum_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 int tid = DotMP.Parallel.GetThreadNum();
             });
@@ -1460,47 +1457,47 @@ namespace DotMPTests
         [Fact]
         public void Invalid_params_should_except()
         {
-            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelFor(10, 0, i => { });
             });
 
-            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelFor(-1, 10, i => { });
             });
 
-            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelFor(10, -5, i => { });
             });
 
-            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelFor(0, 10, chunk_size: 0, action: i => { });
             });
 
-            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelFor(0, 10, schedule: new Serial(), action: i => { });
             });
 
-            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelRegion(num_threads: 0, action: () => { });
             });
 
-            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelMasterTaskloop(10, 0, i => { });
             });
 
-            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelMasterTaskloop(0, 10, grainsize: 0, action: i => { });
             });
 
-            Assert.Throws<DotMP.InvalidArgumentsException>(() =>
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelMasterTaskloop(0, 10, num_tasks: 0, action: i => { });
             });

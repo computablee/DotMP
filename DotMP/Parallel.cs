@@ -17,6 +17,8 @@
 using System;
 using System.Collections.Generic;
 using System.Threading;
+using DotMP.Exceptions;
+using DotMP.Schedulers;
 
 namespace DotMP
 {
