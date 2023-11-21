@@ -7,7 +7,7 @@ var searchData=
   ['actionref_3c_20t_20_3e_5',['ActionRef&lt; T &gt;',['../namespaceDotMP.html#a600242288a8229f98e97b493fd7d7200',1,'DotMP']]],
   ['actionrefn_3c_20t_20_3e_6',['ActionRefN&lt; T &gt;',['../namespaceDotMP.html#a96a05f89610e7f878aa7556572d8b646',1,'DotMP']]],
   ['actions_5fpv_7',['actions_pv',['../classDotMP_1_1SectionsContainer.html#a7d68b3825bd9fd83f38bfa30836de2e9',1,'DotMP::SectionsContainer']]],
-  ['actionselector_8',['ActionSelector',['../Wrappers_8cs.html#a107239b805750bf99cb04c47c78f71c9',1,'Wrappers.cs']]],
+  ['actionselector_8',['ActionSelector',['../Chunk_8cs.html#a107239b805750bf99cb04c47c78f71c9',1,'Chunk.cs']]],
   ['add_9',['Add',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346aec211f7c20af43e742bf2570c3cb84f9',1,'DotMP.Add()'],['../classDotMP_1_1Atomic.html#aad5db70a725981066261c957acabb146',1,'DotMP.Atomic.Add(ref ulong target, ulong value)'],['../classDotMP_1_1Atomic.html#a746e8ae3a59e33f335f941a70f0ad170',1,'DotMP.Atomic.Add(ref long target, long value)'],['../classDotMP_1_1Atomic.html#af053c310227341d7159ffc26ad08080e',1,'DotMP.Atomic.Add(ref uint target, uint value)'],['../classDotMP_1_1Atomic.html#ae9c42691bb52de3eca53ab9b11a181f3',1,'DotMP.Atomic.Add(ref int target, int value)']]],
   ['additem_10',['AddItem',['../classDotMP_1_1DAG.html#a02cb3d351b470f8c03a725b07748d3e4',1,'DotMP::DAG']]],
   ['addreductionvalue_11',['AddReductionValue',['../classDotMP_1_1WorkShare.html#a5e28fe402f9d717b3fe8ec5b63502137',1,'DotMP::WorkShare']]],

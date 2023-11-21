@@ -112,11 +112,14 @@ Package Functions</h2></td></tr>
 <tr class="memdesc:a863e4af12888919d114aa3e37771421c"><td class="mdescLeft">&#160;</td><td class="mdescRight">Constructor for reduction collapsed for loops with unbounded variables.  <a href="classDotMP_1_1ForAction.html#a863e4af12888919d114aa3e37771421c">More...</a><br /></td></tr>
 <tr class="separator:a863e4af12888919d114aa3e37771421c"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a78e313fc7eee4ba952bc8ee67e6c4f19"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#a78e313fc7eee4ba952bc8ee67e6c4f19">PerformLoop</a> (ref int curr_iter, int start, int end, ref T local)</td></tr>
-<tr class="memdesc:a78e313fc7eee4ba952bc8ee67e6c4f19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes a chunk using the action selected by <a class="el" href="classDotMP_1_1ForAction.html#af1b6b1722b975c5f302523f353357a6b" title="Holds the data regarding which action to select.">ForAction.selector</a> TODO: Optimize this whole function.  <a href="classDotMP_1_1ForAction.html#a78e313fc7eee4ba952bc8ee67e6c4f19">More...</a><br /></td></tr>
+<tr class="memdesc:a78e313fc7eee4ba952bc8ee67e6c4f19"><td class="mdescLeft">&#160;</td><td class="mdescRight">Executes a chunk using the action selected by <a class="el" href="classDotMP_1_1ForAction.html#af1b6b1722b975c5f302523f353357a6b" title="Holds the data regarding which action to select.">ForAction.selector</a>  <a href="classDotMP_1_1ForAction.html#a78e313fc7eee4ba952bc8ee67e6c4f19">More...</a><br /></td></tr>
 <tr class="separator:a78e313fc7eee4ba952bc8ee67e6c4f19"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="properties"></a>
 Properties</h2></td></tr>
+<tr class="memitem:af6766205a5f277bda14d825a243b5b26"><td class="memItemLeft" align="right" valign="top">ValueTuple&lt; int, int &gt;[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#af6766205a5f277bda14d825a243b5b26">ranges</a><code> [get, set]</code></td></tr>
+<tr class="memdesc:af6766205a5f277bda14d825a243b5b26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the ranges of collapsed loops for unflattening, ensuring that loops do not have too many iterations.  <a href="classDotMP_1_1ForAction.html#af6766205a5f277bda14d825a243b5b26">More...</a><br /></td></tr>
+<tr class="separator:af6766205a5f277bda14d825a243b5b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a80dbb732a8dce5ad532b1c1ac52e0850"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#a80dbb732a8dce5ad532b1c1ac52e0850">IsCollapse</a><code> [get, private set]</code></td></tr>
 <tr class="memdesc:a80dbb732a8dce5ad532b1c1ac52e0850"><td class="mdescLeft">&#160;</td><td class="mdescRight">Tracks if the action represents a collapsed for loop.  <a href="classDotMP_1_1ForAction.html#a80dbb732a8dce5ad532b1c1ac52e0850">More...</a><br /></td></tr>
 <tr class="separator:a80dbb732a8dce5ad532b1c1ac52e0850"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -168,12 +171,12 @@ Private Attributes</h2></td></tr>
 <tr class="memitem:adab739dbde910ba65d60ec602d4aa7a9"><td class="memItemLeft" align="right" valign="top">ActionRefN&lt; T &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#adab739dbde910ba65d60ec602d4aa7a9">omp_red_col_n</a></td></tr>
 <tr class="memdesc:adab739dbde910ba65d60ec602d4aa7a9"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents an action that can be selected via ActionSelector.ReductionCollapseN  <a href="classDotMP_1_1ForAction.html#adab739dbde910ba65d60ec602d4aa7a9">More...</a><br /></td></tr>
 <tr class="separator:adab739dbde910ba65d60ec602d4aa7a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af1b6b1722b975c5f302523f353357a6b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="Wrappers_8cs.html#a107239b805750bf99cb04c47c78f71c9">ActionSelector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#af1b6b1722b975c5f302523f353357a6b">selector</a></td></tr>
+<tr class="memitem:af1b6b1722b975c5f302523f353357a6b"><td class="memItemLeft" align="right" valign="top"><a class="el" href="Chunk_8cs.html#a107239b805750bf99cb04c47c78f71c9">ActionSelector</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#af1b6b1722b975c5f302523f353357a6b">selector</a></td></tr>
 <tr class="memdesc:af1b6b1722b975c5f302523f353357a6b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Holds the data regarding which action to select.  <a href="classDotMP_1_1ForAction.html#af1b6b1722b975c5f302523f353357a6b">More...</a><br /></td></tr>
 <tr class="separator:af1b6b1722b975c5f302523f353357a6b"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:af6766205a5f277bda14d825a243b5b26"><td class="memItemLeft" align="right" valign="top">ValueTuple&lt; int, int &gt;[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#af6766205a5f277bda14d825a243b5b26">ranges</a></td></tr>
-<tr class="memdesc:af6766205a5f277bda14d825a243b5b26"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the ranges of collapsed loops for future unflattening.  <a href="classDotMP_1_1ForAction.html#af6766205a5f277bda14d825a243b5b26">More...</a><br /></td></tr>
-<tr class="separator:af6766205a5f277bda14d825a243b5b26"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:aaba11677e84e10776148f4c895d4f9de"><td class="memItemLeft" align="right" valign="top">ValueTuple&lt; int, int &gt;[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#aaba11677e84e10776148f4c895d4f9de">ranges_prv</a></td></tr>
+<tr class="memdesc:aaba11677e84e10776148f4c895d4f9de"><td class="mdescLeft">&#160;</td><td class="mdescRight">Represents the ranges of collapsed loops for future unflattening.  <a href="classDotMP_1_1ForAction.html#aaba11677e84e10776148f4c895d4f9de">More...</a><br /></td></tr>
+<tr class="separator:aaba11677e84e10776148f4c895d4f9de"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:acc6ad943c1d0e97d9776c81f94b55f9d"><td class="memItemLeft" align="right" valign="top">int[]&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1ForAction.html#acc6ad943c1d0e97d9776c81f94b55f9d">indices</a></td></tr>
 <tr class="memdesc:acc6ad943c1d0e97d9776c81f94b55f9d"><td class="mdescLeft">&#160;</td><td class="mdescRight">Array representing the starting indices.  <a href="classDotMP_1_1ForAction.html#acc6ad943c1d0e97d9776c81f94b55f9d">More...</a><br /></td></tr>
 <tr class="separator:acc6ad943c1d0e97d9776c81f94b55f9d"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -880,7 +883,7 @@ Private Attributes</h2></td></tr>
 </table>
 </div><div class="memdoc">
 
-<p>Executes a chunk using the action selected by <a class="el" href="classDotMP_1_1ForAction.html#af1b6b1722b975c5f302523f353357a6b" title="Holds the data regarding which action to select.">ForAction.selector</a> TODO: Optimize this whole function. </p>
+<p>Executes a chunk using the action selected by <a class="el" href="classDotMP_1_1ForAction.html#af1b6b1722b975c5f302523f353357a6b" title="Holds the data regarding which action to select.">ForAction.selector</a> </p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">curr_iter</td><td>A reference to the current iteration.</td></tr>
@@ -1206,8 +1209,8 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="af6766205a5f277bda14d825a243b5b26"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#af6766205a5f277bda14d825a243b5b26">&#9670;&nbsp;</a></span>ranges</h2>
+<a id="aaba11677e84e10776148f4c895d4f9de"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#aaba11677e84e10776148f4c895d4f9de">&#9670;&nbsp;</a></span>ranges_prv</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1216,7 +1219,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">ValueTuple&lt;int, int&gt; [] <a class="el" href="classDotMP_1_1ForAction.html">DotMP.ForAction</a>&lt; T &gt;.ranges</td>
+          <td class="memname">ValueTuple&lt;int, int&gt; [] <a class="el" href="classDotMP_1_1ForAction.html">DotMP.ForAction</a>&lt; T &gt;.ranges_prv</td>
         </tr>
       </table>
   </td>
@@ -1240,7 +1243,7 @@ Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname"><a class="el" href="Wrappers_8cs.html#a107239b805750bf99cb04c47c78f71c9">ActionSelector</a> <a class="el" href="classDotMP_1_1ForAction.html">DotMP.ForAction</a>&lt; T &gt;.selector</td>
+          <td class="memname"><a class="el" href="Chunk_8cs.html#a107239b805750bf99cb04c47c78f71c9">ActionSelector</a> <a class="el" href="classDotMP_1_1ForAction.html">DotMP.ForAction</a>&lt; T &gt;.selector</td>
         </tr>
       </table>
   </td>
@@ -1303,8 +1306,32 @@ Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="af6766205a5f277bda14d825a243b5b26"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#af6766205a5f277bda14d825a243b5b26">&#9670;&nbsp;</a></span>ranges</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">ValueTuple&lt;int, int&gt; [] <a class="el" href="classDotMP_1_1ForAction.html">DotMP.ForAction</a>&lt; T &gt;.ranges</td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">get</span><span class="mlabel">set</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Represents the ranges of collapsed loops for unflattening, ensuring that loops do not have too many iterations. </p>
+
+</div>
+</div>
 <hr/>The documentation for this class was generated from the following file:<ul>
-<li>DotMP/<a class="el" href="Wrappers_8cs.html">Wrappers.cs</a></li>
+<li>DotMP/<a class="el" href="Chunk_8cs.html">Chunk.cs</a></li>
 </ul>
 </div><!-- contents -->
 <!-- start footer part -->
