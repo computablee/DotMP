@@ -36,7 +36,7 @@ test:
 	$(DN) test -c $(BUILD) -l "console;verbosity=detailed" -p:CollectCoverage=true -p:CoverletOutputFormat=opencover DotMP-Tests
 
 build:
-	$(DN) build -c $(BUILD) DotMP
+	$(DN) build -c $(BUILD) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg DotMP
 
 docs: ProcessedREADME.md
 	doxygen
