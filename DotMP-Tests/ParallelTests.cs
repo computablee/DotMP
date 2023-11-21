@@ -1452,6 +1452,18 @@ namespace DotMPTests
         }
 
         /// <summary>
+        /// Verifies that for loops which overflow internal indices should throw an exception.
+        /// </summary>
+        [Fact]
+        public void Overflow_for_should_except()
+        {
+            Assert.Throws<DotMP.Exceptions.TooManyIterationsException>(() =>
+            {
+                DotMP.Parallel.ParallelForCollapse((0, 256), (0, 256), (0, 256), (0, 256), (i, j, k, l) => { });
+            });
+        }
+
+        /// <summary>
         /// Verifies that invalid parameters throw exceptions.
         /// </summary>
         [Fact]
@@ -1465,6 +1477,16 @@ namespace DotMPTests
             Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
             {
                 DotMP.Parallel.ParallelFor(-1, 10, i => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelForCollapse((10, 20), (-1, 10), (i, j) => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelForCollapse((10, 5), (0, 20), (i, j) => { });
             });
 
             Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
