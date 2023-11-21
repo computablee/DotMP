@@ -13,10 +13,10 @@
     <PackageReadmeFile>ProcessedREADME.md</PackageReadmeFile>
     <PackageTags>hpc,parallel,openmp,parallelization,high performance computing,threading</PackageTags>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
-    <PackageReleaseNotes>Add IScheduler interface for user-defined schedulers and work-stealing scheduler. Better atomics support. Performance improvements and bug fixes.</PackageReleaseNotes>
+    <PackageReleaseNotes>Add IScheduler interface for user-defined schedulers and work-stealing scheduler. Better atomics support. Performance improvements and bug fixes. Explicit support for .NET 8.</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <DebugType>pdbonly</DebugType>
-    <DebugSymbols>true</DebugSymbols>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
   </PropertyGroup>
 
   <ItemGroup>
