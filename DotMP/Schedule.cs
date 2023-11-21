@@ -163,373 +163,373 @@ namespace DotMP
     #region Schedulers
     namespace Schedulers
     {
-    /// <summary>
-    /// Implementation of static scheduling.
-    /// </summary>
-    internal sealed class StaticScheduler : Schedule
-    {
         /// <summary>
-        /// Struct to ensure that the curr_iter variables cannot reside on the same cache line.
-        /// Avoids false sharing bottlenecks.
+        /// Implementation of static scheduling.
         /// </summary>
-        [StructLayout(LayoutKind.Sequential, Pack = 64, Size = 64)]
-        private struct IterWrapper
+        internal sealed class StaticScheduler : Schedule
         {
             /// <summary>
-            /// A thread's current iteration.
+            /// Struct to ensure that the curr_iter variables cannot reside on the same cache line.
+            /// Avoids false sharing bottlenecks.
             /// </summary>
-            internal int curr_iter;
-        }
-        /// <summary>
-        /// The chunk size.
-        /// </summary>
-        private uint chunk_size;
-        /// <summary>
-        /// End of the loop, exclusive.
-        /// </summary>
-        private int end;
-        /// <summary>
-        /// Bookkeeping to check which iteration each thread is on.
-        /// </summary>
-        private IterWrapper[] curr_iters;
-        /// <summary>
-        /// How much to advance by after each chunk.
-        /// </summary>
-        private int advance_by;
-
-        /// <summary>
-        /// Override method for LoopInit, is called when first starting a static loop.
-        /// </summary>
-        /// <param name="start">The start of the loop, inclusive.</param>
-        /// <param name="end">The end of the loop, exclusive.</param>
-        /// <param name="num_threads">The number of threads.</param>
-        /// <param name="chunk_size">The chunk size.</param>
-        public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
-        {
-            this.chunk_size = chunk_size;
-            this.end = end;
-            advance_by = (int)(chunk_size * num_threads);
-            curr_iters = new IterWrapper[num_threads];
-            for (int i = 0; i < num_threads; i++)
-                curr_iters[i].curr_iter = start + ((int)chunk_size * i);
-        }
-
-        /// <summary>
-        /// Override method for LoopNext, is called to get the bounds of the next chunk to execute.
-        /// </summary>
-        /// <param name="thread_id">The thread ID.</param>
-        /// <param name="start">The start of the chunk, inclusive.</param>
-        /// <param name="end">The end of the chunk, exclusive.</param>
-        public override void LoopNext(int thread_id, out int start, out int end)
-        {
-            start = curr_iters[thread_id].curr_iter;
-            end = Math.Min(start + (int)chunk_size, this.end);
-            curr_iters[thread_id].curr_iter += advance_by;
-        }
-    }
-
-    /// <summary>
-    /// Implementation of dynamic scheduling.
-    /// </summary>
-    internal sealed class DynamicScheduler : Schedule
-    {
-        /// <summary>
-        /// The chunk size.
-        /// </summary>
-        private uint chunk_size;
-        /// <summary>
-        /// Start of the loop, inclusive.
-        /// </summary>
-        private int start;
-        /// <summary>
-        /// End of the loop, exclusive.
-        /// </summary>
-        private int end;
-
-        /// <summary>
-        /// Override method for LoopInit, is called when first starting a dynamic loop.
-        /// </summary>
-        /// <param name="start">The start of the loop, inclusive.</param>
-        /// <param name="end">The end of the loop, exclusive.</param>
-        /// <param name="num_threads">The number of threads.</param>
-        /// <param name="chunk_size">The chunk size.</param>
-        public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
-        {
-            this.chunk_size = chunk_size;
-            this.start = start;
-            this.end = end;
-        }
-
-        /// <summary>
-        /// Override method for LoopNext, is called to get the bounds of the next chunk to execute.
-        /// </summary>
-        /// <param name="thread_id">The thread ID.</param>
-        /// <param name="start">The start of the chunk, inclusive.</param>
-        /// <param name="end">The end of the chunk, exclusive.</param>
-        public override void LoopNext(int thread_id, out int start, out int end)
-        {
-            start = Interlocked.Add(ref this.start, (int)chunk_size) - (int)chunk_size;
-            end = Math.Min(start + (int)chunk_size, this.end);
-        }
-    }
-
-    /// <summary>
-    /// Implementation of guided scheduling.
-    /// </summary>
-    internal sealed class GuidedScheduler : Schedule
-    {
-        /// <summary>
-        /// The chunk size.
-        /// </summary>
-        private uint chunk_size;
-        /// <summary>
-        /// Number of threads.
-        /// </summary>
-        private uint num_threads;
-        /// <summary>
-        /// Start of the loop, inclusive.
-        /// </summary>
-        private int start;
-        /// <summary>
-        /// End of the loop, exclusive.
-        /// </summary>
-        private int end;
-        /// <summary>
-        /// Lock for scheduling purposes.
-        /// </summary>
-        private object sched_lock;
-
-        /// <summary>
-        /// Override method for LoopInit, is called when first starting a guided loop.
-        /// </summary>
-        /// <param name="start">The start of the loop, inclusive.</param>
-        /// <param name="end">The end of the loop, exclusive.</param>
-        /// <param name="num_threads">The number of threads.</param>
-        /// <param name="chunk_size">The chunk size.</param>
-        public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
-        {
-            this.chunk_size = chunk_size;
-            this.start = start;
-            this.end = end;
-            this.num_threads = num_threads;
-            this.sched_lock = new object();
-        }
-
-        /// <summary>
-        /// Override method for LoopNext, is called to get the bounds of the next chunk to execute.
-        /// </summary>
-        /// <param name="thread_id">The thread ID.</param>
-        /// <param name="start">The start of the chunk, inclusive.</param>
-        /// <param name="end">The end of the chunk, exclusive.</param>
-        public override void LoopNext(int thread_id, out int start, out int end)
-        {
-            int chunk_size;
-
-            lock (sched_lock)
+            [StructLayout(LayoutKind.Sequential, Pack = 64, Size = 64)]
+            private struct IterWrapper
             {
-                start = this.start;
-                chunk_size = (int)Math.Max(this.chunk_size, (this.end - start) / (num_threads * 2));
+                /// <summary>
+                /// A thread's current iteration.
+                /// </summary>
+                internal int curr_iter;
+            }
+            /// <summary>
+            /// The chunk size.
+            /// </summary>
+            private uint chunk_size;
+            /// <summary>
+            /// End of the loop, exclusive.
+            /// </summary>
+            private int end;
+            /// <summary>
+            /// Bookkeeping to check which iteration each thread is on.
+            /// </summary>
+            private IterWrapper[] curr_iters;
+            /// <summary>
+            /// How much to advance by after each chunk.
+            /// </summary>
+            private int advance_by;
 
-                this.start += chunk_size;
+            /// <summary>
+            /// Override method for LoopInit, is called when first starting a static loop.
+            /// </summary>
+            /// <param name="start">The start of the loop, inclusive.</param>
+            /// <param name="end">The end of the loop, exclusive.</param>
+            /// <param name="num_threads">The number of threads.</param>
+            /// <param name="chunk_size">The chunk size.</param>
+            public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
+            {
+                this.chunk_size = chunk_size;
+                this.end = end;
+                advance_by = (int)(chunk_size * num_threads);
+                curr_iters = new IterWrapper[num_threads];
+                for (int i = 0; i < num_threads; i++)
+                    curr_iters[i].curr_iter = start + ((int)chunk_size * i);
             }
 
-            end = Math.Min(start + chunk_size, this.end);
-        }
-    }
-
-    /// <summary>
-    /// Placeholder for the runtime scheduler.
-    /// Is not meant to be called directly. The Parallel.FixArgs method should detect its existence and swap it out for another scheduler with implementations.
-    /// </summary>
-    internal sealed class RuntimeScheduler : Schedule
-    {
-        /// <summary>
-        /// Should not be called.
-        /// </summary>
-        /// <param name="start">Unused.</param>
-        /// <param name="end">Unused.</param>
-        /// <param name="num_threads">Unused.</param>
-        /// <param name="chunk_size">Unused.</param>
-        /// <exception cref="NotImplementedException">Always thrown.</exception>
-        public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
-        {
-            throw new NotImplementedException("The runtime scheduler isn't meant to be called directly.");
-        }
-
-        /// <summary>
-        /// Should not be called.
-        /// </summary>
-        /// <param name="thread_id">Unused.</param>
-        /// <param name="start">Unused.</param>
-        /// <param name="end">Unused.</param>
-        /// <exception cref="NotImplementedException">Always thrown.</exception>
-        public override void LoopNext(int thread_id, out int start, out int end)
-        {
-            throw new NotImplementedException("The runtime scheduler isn't meant to be called directly.");
-        }
-    }
-
-    /// <summary>
-    /// Implementation of work-stealing scheduling.
-    /// </summary>
-    internal sealed class WorkStealingScheduler : Schedule
-    {
-        /// <summary>
-        /// Queue struct, ensuring that no two values share a cache line.
-        /// This avoids false sharing issues.
-        /// </summary>
-        [StructLayout(LayoutKind.Explicit, Size = 256)]
-        private struct Queue
-        {
             /// <summary>
-            /// Start of the queue.
+            /// Override method for LoopNext, is called to get the bounds of the next chunk to execute.
             /// </summary>
-            [FieldOffset(0)] internal int start;
-            /// <summary>
-            /// End of the queue.
-            /// </summary>
-            [FieldOffset(64)] internal int end;
-            /// <summary>
-            /// Whether or not there is work remaining in the queue.
-            /// </summary>
-            [FieldOffset(128)] internal bool work_remaining;
-            /// <summary>
-            /// Lock for this queue.
-            /// </summary>
-            [FieldOffset(192)] internal object qlock;
-        }
-
-        /// <summary>
-        /// Each thread's queue.
-        /// </summary>
-        private Queue[] queues;
-        /// <summary>
-        /// Chunk size to use.
-        /// </summary>
-        private uint chunk_size;
-        /// <summary>
-        /// Number of threads.
-        /// </summary>
-        private uint num_threads;
-        /// <summary>
-        /// Counts the remaining threads with work so threads know when to stop attempting to steal.
-        /// </summary>
-        private volatile uint threads_with_remaining_work;
-
-        /// <summary>
-        /// Override method for LoopInit, is called when first starting a work-stealing loop.
-        /// </summary>
-        /// <param name="start">The start of the loop, inclusive.</param>
-        /// <param name="end">The end of the loop, exclusive.</param>
-        /// <param name="num_threads">The number of threads.</param>
-        /// <param name="chunk_size">The chunk size.</param>
-        public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
-        {
-            this.queues = new Queue[num_threads];
-            this.chunk_size = chunk_size;
-            this.threads_with_remaining_work = num_threads;
-            this.num_threads = num_threads;
-
-            int ctr = start;
-            int div = (end - start) / (int)num_threads;
-
-            for (int i = 0; i < num_threads - 1; i++)
+            /// <param name="thread_id">The thread ID.</param>
+            /// <param name="start">The start of the chunk, inclusive.</param>
+            /// <param name="end">The end of the chunk, exclusive.</param>
+            public override void LoopNext(int thread_id, out int start, out int end)
             {
-                queues[i].start = ctr;
-                ctr += div;
-                queues[i].end = ctr;
-                queues[i].work_remaining = true;
-                queues[i].qlock = new object();
+                start = curr_iters[thread_id].curr_iter;
+                end = Math.Min(start + (int)chunk_size, this.end);
+                curr_iters[thread_id].curr_iter += advance_by;
+            }
+        }
+
+        /// <summary>
+        /// Implementation of dynamic scheduling.
+        /// </summary>
+        internal sealed class DynamicScheduler : Schedule
+        {
+            /// <summary>
+            /// The chunk size.
+            /// </summary>
+            private uint chunk_size;
+            /// <summary>
+            /// Start of the loop, inclusive.
+            /// </summary>
+            private int start;
+            /// <summary>
+            /// End of the loop, exclusive.
+            /// </summary>
+            private int end;
+
+            /// <summary>
+            /// Override method for LoopInit, is called when first starting a dynamic loop.
+            /// </summary>
+            /// <param name="start">The start of the loop, inclusive.</param>
+            /// <param name="end">The end of the loop, exclusive.</param>
+            /// <param name="num_threads">The number of threads.</param>
+            /// <param name="chunk_size">The chunk size.</param>
+            public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
+            {
+                this.chunk_size = chunk_size;
+                this.start = start;
+                this.end = end;
             }
 
-            queues[num_threads - 1].start = ctr;
-            queues[num_threads - 1].end = end;
-            queues[num_threads - 1].work_remaining = true;
-            queues[num_threads - 1].qlock = new object();
+            /// <summary>
+            /// Override method for LoopNext, is called to get the bounds of the next chunk to execute.
+            /// </summary>
+            /// <param name="thread_id">The thread ID.</param>
+            /// <param name="start">The start of the chunk, inclusive.</param>
+            /// <param name="end">The end of the chunk, exclusive.</param>
+            public override void LoopNext(int thread_id, out int start, out int end)
+            {
+                start = Interlocked.Add(ref this.start, (int)chunk_size) - (int)chunk_size;
+                end = Math.Min(start + (int)chunk_size, this.end);
+            }
         }
 
         /// <summary>
-        /// Override method for LoopNext, is called to get the bounds of the next chunk to execute.
+        /// Implementation of guided scheduling.
         /// </summary>
-        /// <param name="thread_id">The thread ID.</param>
-        /// <param name="start">The start of the chunk, inclusive.</param>
-        /// <param name="end">The end of the chunk, exclusive.</param>
-        public override void LoopNext(int thread_id, out int start, out int end)
+        internal sealed class GuidedScheduler : Schedule
         {
-            do
+            /// <summary>
+            /// The chunk size.
+            /// </summary>
+            private uint chunk_size;
+            /// <summary>
+            /// Number of threads.
+            /// </summary>
+            private uint num_threads;
+            /// <summary>
+            /// Start of the loop, inclusive.
+            /// </summary>
+            private int start;
+            /// <summary>
+            /// End of the loop, exclusive.
+            /// </summary>
+            private int end;
+            /// <summary>
+            /// Lock for scheduling purposes.
+            /// </summary>
+            private object sched_lock;
+
+            /// <summary>
+            /// Override method for LoopInit, is called when first starting a guided loop.
+            /// </summary>
+            /// <param name="start">The start of the loop, inclusive.</param>
+            /// <param name="end">The end of the loop, exclusive.</param>
+            /// <param name="num_threads">The number of threads.</param>
+            /// <param name="chunk_size">The chunk size.</param>
+            public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
             {
-                lock (queues[thread_id].qlock)
+                this.chunk_size = chunk_size;
+                this.start = start;
+                this.end = end;
+                this.num_threads = num_threads;
+                this.sched_lock = new object();
+            }
+
+            /// <summary>
+            /// Override method for LoopNext, is called to get the bounds of the next chunk to execute.
+            /// </summary>
+            /// <param name="thread_id">The thread ID.</param>
+            /// <param name="start">The start of the chunk, inclusive.</param>
+            /// <param name="end">The end of the chunk, exclusive.</param>
+            public override void LoopNext(int thread_id, out int start, out int end)
+            {
+                int chunk_size;
+
+                lock (sched_lock)
                 {
-                    start = queues[thread_id].start;
-                    end = Math.Min(start + (int)chunk_size, queues[thread_id].end);
+                    start = this.start;
+                    chunk_size = (int)Math.Max(this.chunk_size, (this.end - start) / (num_threads * 2));
 
-                    if (start < end)
+                    this.start += chunk_size;
+                }
+
+                end = Math.Min(start + chunk_size, this.end);
+            }
+        }
+
+        /// <summary>
+        /// Placeholder for the runtime scheduler.
+        /// Is not meant to be called directly. The Parallel.FixArgs method should detect its existence and swap it out for another scheduler with implementations.
+        /// </summary>
+        internal sealed class RuntimeScheduler : Schedule
+        {
+            /// <summary>
+            /// Should not be called.
+            /// </summary>
+            /// <param name="start">Unused.</param>
+            /// <param name="end">Unused.</param>
+            /// <param name="num_threads">Unused.</param>
+            /// <param name="chunk_size">Unused.</param>
+            /// <exception cref="NotImplementedException">Always thrown.</exception>
+            public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
+            {
+                throw new NotImplementedException("The runtime scheduler isn't meant to be called directly.");
+            }
+
+            /// <summary>
+            /// Should not be called.
+            /// </summary>
+            /// <param name="thread_id">Unused.</param>
+            /// <param name="start">Unused.</param>
+            /// <param name="end">Unused.</param>
+            /// <exception cref="NotImplementedException">Always thrown.</exception>
+            public override void LoopNext(int thread_id, out int start, out int end)
+            {
+                throw new NotImplementedException("The runtime scheduler isn't meant to be called directly.");
+            }
+        }
+
+        /// <summary>
+        /// Implementation of work-stealing scheduling.
+        /// </summary>
+        internal sealed class WorkStealingScheduler : Schedule
+        {
+            /// <summary>
+            /// Queue struct, ensuring that no two values share a cache line.
+            /// This avoids false sharing issues.
+            /// </summary>
+            [StructLayout(LayoutKind.Explicit, Size = 256)]
+            private struct Queue
+            {
+                /// <summary>
+                /// Start of the queue.
+                /// </summary>
+                [FieldOffset(0)] internal int start;
+                /// <summary>
+                /// End of the queue.
+                /// </summary>
+                [FieldOffset(64)] internal int end;
+                /// <summary>
+                /// Whether or not there is work remaining in the queue.
+                /// </summary>
+                [FieldOffset(128)] internal bool work_remaining;
+                /// <summary>
+                /// Lock for this queue.
+                /// </summary>
+                [FieldOffset(192)] internal object qlock;
+            }
+
+            /// <summary>
+            /// Each thread's queue.
+            /// </summary>
+            private Queue[] queues;
+            /// <summary>
+            /// Chunk size to use.
+            /// </summary>
+            private uint chunk_size;
+            /// <summary>
+            /// Number of threads.
+            /// </summary>
+            private uint num_threads;
+            /// <summary>
+            /// Counts the remaining threads with work so threads know when to stop attempting to steal.
+            /// </summary>
+            private volatile uint threads_with_remaining_work;
+
+            /// <summary>
+            /// Override method for LoopInit, is called when first starting a work-stealing loop.
+            /// </summary>
+            /// <param name="start">The start of the loop, inclusive.</param>
+            /// <param name="end">The end of the loop, exclusive.</param>
+            /// <param name="num_threads">The number of threads.</param>
+            /// <param name="chunk_size">The chunk size.</param>
+            public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
+            {
+                this.queues = new Queue[num_threads];
+                this.chunk_size = chunk_size;
+                this.threads_with_remaining_work = num_threads;
+                this.num_threads = num_threads;
+
+                int ctr = start;
+                int div = (end - start) / (int)num_threads;
+
+                for (int i = 0; i < num_threads - 1; i++)
+                {
+                    queues[i].start = ctr;
+                    ctr += div;
+                    queues[i].end = ctr;
+                    queues[i].work_remaining = true;
+                    queues[i].qlock = new object();
+                }
+
+                queues[num_threads - 1].start = ctr;
+                queues[num_threads - 1].end = end;
+                queues[num_threads - 1].work_remaining = true;
+                queues[num_threads - 1].qlock = new object();
+            }
+
+            /// <summary>
+            /// Override method for LoopNext, is called to get the bounds of the next chunk to execute.
+            /// </summary>
+            /// <param name="thread_id">The thread ID.</param>
+            /// <param name="start">The start of the chunk, inclusive.</param>
+            /// <param name="end">The end of the chunk, exclusive.</param>
+            public override void LoopNext(int thread_id, out int start, out int end)
+            {
+                do
+                {
+                    lock (queues[thread_id].qlock)
                     {
-                        queues[thread_id].start += (int)chunk_size;
-                        return;
+                        start = queues[thread_id].start;
+                        end = Math.Min(start + (int)chunk_size, queues[thread_id].end);
+
+                        if (start < end)
+                        {
+                            queues[thread_id].start += (int)chunk_size;
+                            return;
+                        }
+                    }
+
+                    StealHandler(thread_id);
+                }
+                while (threads_with_remaining_work > 0);
+            }
+
+            /// <summary>
+            /// Handles whether or not to steal and how to process the results from a steal.
+            /// </summary>
+            /// <param name="thread_id">The thread ID.</param>
+            private void StealHandler(int thread_id)
+            {
+                if (queues[thread_id].work_remaining)
+                {
+                    Interlocked.Decrement(ref threads_with_remaining_work);
+                    queues[thread_id].work_remaining = false;
+                }
+
+                if (DoSteal(thread_id))
+                {
+                    Interlocked.Increment(ref threads_with_remaining_work);
+                    queues[thread_id].work_remaining = true;
+                }
+            }
+
+            /// <summary>
+            /// Perform a steal.
+            /// </summary>
+            /// <param name="thread_id">The thread ID.</param>
+            /// <returns>Whether or not the steal was successful.</returns>
+            private bool DoSteal(int thread_id)
+            {
+                int rng = Random.Shared.Next((int)num_threads);
+                int new_start, new_end;
+
+                lock (queues[rng].qlock)
+                {
+                    if (queues[rng].start < queues[rng].end)
+                    {
+                        int steal_size = (queues[rng].end - queues[rng].start + 1) / 2;
+
+                        new_start = queues[rng].start;
+                        new_end = queues[rng].start + steal_size;
+
+                        queues[rng].start = new_end;
+                    }
+                    else
+                    {
+                        return false;
                     }
                 }
 
-                StealHandler(thread_id);
-            }
-            while (threads_with_remaining_work > 0);
-        }
-
-        /// <summary>
-        /// Handles whether or not to steal and how to process the results from a steal.
-        /// </summary>
-        /// <param name="thread_id">The thread ID.</param>
-        private void StealHandler(int thread_id)
-        {
-            if (queues[thread_id].work_remaining)
-            {
-                Interlocked.Decrement(ref threads_with_remaining_work);
-                queues[thread_id].work_remaining = false;
-            }
-
-            if (DoSteal(thread_id))
-            {
-                Interlocked.Increment(ref threads_with_remaining_work);
-                queues[thread_id].work_remaining = true;
-            }
-        }
-
-        /// <summary>
-        /// Perform a steal.
-        /// </summary>
-        /// <param name="thread_id">The thread ID.</param>
-        /// <returns>Whether or not the steal was successful.</returns>
-        private bool DoSteal(int thread_id)
-        {
-            int rng = Random.Shared.Next((int)num_threads);
-            int new_start, new_end;
-
-            lock (queues[rng].qlock)
-            {
-                if (queues[rng].start < queues[rng].end)
+                lock (queues[thread_id].qlock)
                 {
-                    int steal_size = (queues[rng].end - queues[rng].start + 1) / 2;
-
-                    new_start = queues[rng].start;
-                    new_end = queues[rng].start + steal_size;
-
-                    queues[rng].start = new_end;
+                    queues[thread_id].start = new_start;
+                    queues[thread_id].end = new_end;
                 }
-                else
-                {
-                    return false;
-                }
-            }
 
-            lock (queues[thread_id].qlock)
-            {
-                queues[thread_id].start = new_start;
-                queues[thread_id].end = new_end;
+                return true;
             }
-
-            return true;
         }
-    }
     }
     #endregion
 }
