@@ -204,6 +204,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
+        /// <exception cref="TooManyIterationsException">Thrown if there are too many iterations to handle.</exception> 
         public static void ForCollapse((int, int) firstRange, (int, int) secondRange, Action<int, int> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange });
@@ -231,6 +232,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
+        /// <exception cref="TooManyIterationsException">Thrown if there are too many iterations to handle.</exception>
         public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Action<int, int, int> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange, thirdRange });
@@ -260,6 +262,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
+        /// <exception cref="TooManyIterationsException">Thrown if there are too many iterations to handle.</exception>
         public static void ForCollapse((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Action<int, int, int, int> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action, new (int, int)[] { firstRange, secondRange, thirdRange, fourthRange });
@@ -287,6 +290,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
+        /// <exception cref="TooManyIterationsException">Thrown if there are too many iterations to handle.</exception>
         public static void ForCollapse((int, int)[] ranges, Action<int[]> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<object> forAction = new ForAction<object>(action, ranges);
@@ -394,6 +398,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
+        /// <exception cref="TooManyIterationsException">Thrown if there are too many iterations to handle.</exception>
         public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, Operations op, ref T reduce_to, ActionRef2<T> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<T> forAction = new ForAction<T>(action, new (int, int)[] { firstRange, secondRange });
@@ -426,6 +431,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
+        /// <exception cref="TooManyIterationsException">Thrown if there are too many iterations to handle.</exception>
         public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, Operations op, ref T reduce_to, ActionRef3<T> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<T> forAction = new ForAction<T>(action, new (int, int)[] { firstRange, secondRange, thirdRange });
@@ -460,6 +466,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
+        /// <exception cref="TooManyIterationsException">Thrown if there are too many iterations to handle.</exception>
         public static void ForReductionCollapse<T>((int, int) firstRange, (int, int) secondRange, (int, int) thirdRange, (int, int) fourthRange, Operations op, ref T reduce_to, ActionRef4<T> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<T> forAction = new ForAction<T>(action, new (int, int)[] { firstRange, secondRange, thirdRange, fourthRange });
@@ -492,6 +499,7 @@ namespace DotMP
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
         /// <exception cref="InvalidArgumentsException">Thrown if any provided arguments are invalid.</exception>
+        /// <exception cref="TooManyIterationsException">Thrown if there are too many iterations to handle.</exception>
         public static void ForReductionCollapse<T>((int, int)[] ranges, Operations op, ref T reduce_to, ActionRefN<T> action, IScheduler schedule = null, uint? chunk_size = null)
         {
             ForAction<T> forAction = new ForAction<T>(action, ranges);
