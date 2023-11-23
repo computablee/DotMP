@@ -899,8 +899,6 @@ namespace DotMP
             TaskingContainer tc = new TaskingContainer();
             int tasks_remaining;
 
-            Barrier();
-
             do if (tc.GetNextTask(out Action do_action, out ulong uuid, out tasks_remaining))
                 {
                     do_action();
