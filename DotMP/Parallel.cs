@@ -53,6 +53,10 @@ namespace DotMP
         /// Current thread num, cached.
         /// </summary>
         private static ThreadLocal<int> thread_num = new ThreadLocal<int>(() => Convert.ToInt32(Thread.CurrentThread.Name));
+        /// <summary>
+        /// The level of task nesting, to determine when to enact barriers and reset the DAG.
+        /// </summary>
+        private static ThreadLocal<uint> task_nesting = new ThreadLocal<uint>(() => 0);
 
         /// <summary>
         /// Fixes the arguments for a parallel for loop.
@@ -891,13 +895,18 @@ namespace DotMP
         /// Is injected into a Thread's work by the Region constructor, but can also be called manually.
         /// The injection is done to ensure that Parallel.Taskwait() is called before a Parallel.ParallelRegion() terminates,
         /// guaranteeing all tasks submitted complete.
-        /// Acts as an implicit Barrier().
+        /// Acts as an implicit Barrier() if it is not called from within a task.
         /// </summary>
         public static void Taskwait()
         {
+            if (task_nesting.Value > 0)
+                throw new ImproperTaskwaitUsageException("Using the default taskwait from within a task deadlocks. Try specifying the task to wait on as an argument.");
+
             ForkedRegion fr = new ForkedRegion();
             TaskingContainer tc = new TaskingContainer();
             int tasks_remaining;
+
+            ++task_nesting.Value;
 
             do if (tc.GetNextTask(out Action do_action, out ulong uuid, out tasks_remaining))
                 {
@@ -906,11 +915,47 @@ namespace DotMP
                 }
             while (tasks_remaining > 0);
 
-            Barrier();
+            if (--task_nesting.Value == 0)
+            {
+                Master(() => Console.WriteLine("Encountering barrier, resetting DAG."));
+                Barrier();
+                tc.ResetDAG();
+                Barrier();
+            }
+        }
+        
+        /// <summary>
+        /// Wait for a task in the queue to complete.
+        /// Acts as an implicit Barrier() if it is not called from within a task.
+        /// </summary>
+        /// <param name="task">The task to wait on.</param>
+        public static void Taskwait(TaskUUID task)
+        {
+            ForkedRegion fr = new ForkedRegion();
+            TaskingContainer tc = new TaskingContainer();
+            int tasks_remaining;
 
-            tc.ResetDAG();
+            ++task_nesting.Value;
 
-            Barrier();
+            do if (tc.GetNextTask(out Action do_action, out ulong uuid, out tasks_remaining))
+                {
+                    do_action();
+                    tc.CompleteTask(uuid);
+                }
+            while (!tc.TaskIsComplete(task.GetUUID()));
+
+            if (--task_nesting.Value == 0)
+            {
+                Master(() => Console.WriteLine("Encountering barrier."));
+                Barrier();
+
+                if (tasks_remaining == 0)
+                {
+                    Master(() => Console.WriteLine("Resetting DAG."));
+                    tc.ResetDAG();
+                    Barrier();
+                }
+            }
         }
 
         /// <summary>
