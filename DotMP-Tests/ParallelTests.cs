@@ -1540,6 +1540,28 @@ namespace DotMPTests
         }
 
         /// <summary>
+        /// Checks that nested taskwait works.
+        /// </summary>
+        [Fact]
+        public void Nested_taskwait_works()
+        {
+            DotMP.Parallel.ParallelMaster(() =>
+            {
+                DotMP.Parallel.Task(() =>
+                {
+                    Console.WriteLine("Parent task.");
+
+                    var child = DotMP.Parallel.Task(() =>
+                    {
+                        Console.WriteLine("Child task.");
+                    });
+
+                    DotMP.Parallel.Taskwait(child);
+                });
+            });
+        }
+
+        /// <summary>
         /// A sample workload for DotMP.Parallel.ParallelFor().
         /// </summary>
         /// <param name="inParallel">Whether or not to enable parallelism.</param>
