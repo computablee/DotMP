@@ -171,5 +171,15 @@ namespace DotMP
         {
             rw_lock.Dispose();
         }
+
+        /// <summary>
+        /// Determines if a task has been completed.
+        /// </summary>
+        /// <param name="id">The ID of the task to check completion.</param>
+        /// <returns>Whether or not the task has been completed.</returns>
+        internal bool TaskIsComplete(T id)
+        {
+            return completed.ContainsKey(id);
+        }
     }
 }

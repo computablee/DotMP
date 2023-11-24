@@ -105,6 +105,16 @@ namespace DotMP
         {
             dag.CompleteItem(uuid);
         }
+
+        /// <summary>
+        /// Determines if a task has been completed.
+        /// </summary>
+        /// <param name="uuid">The ID of the task to check completion.</param>
+        /// <returns>Whether or not the task has been completed.</returns>
+        internal bool TaskIsComplete(ulong uuid)
+        {
+            return dag.TaskIsComplete(uuid);
+        }
     }
 
     /// <summary>
