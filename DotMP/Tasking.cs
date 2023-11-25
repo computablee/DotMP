@@ -5,11 +5,11 @@
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
-
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
  * License for more details.
-
+ *
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
  * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
@@ -48,6 +48,17 @@ namespace DotMP
                 dag.Dispose();
                 dag = new DAG<ulong, Action>();
             });
+        }
+
+        /// <summary>
+        /// Resets the DAG to a default state.
+        /// Allows the garbage collector to collect unused data.
+        /// Unlike ResetDAG(), this version is not thread-safe!
+        /// </summary>
+        internal void ResetDAGNotThreadSafe()
+        {
+            dag.Dispose();
+            dag = new DAG<ulong, Action>();
         }
 
         /// <summary>
@@ -104,6 +115,16 @@ namespace DotMP
         internal void CompleteTask(ulong uuid)
         {
             dag.CompleteItem(uuid);
+        }
+
+        /// <summary>
+        /// Determines if a task has been completed.
+        /// </summary>
+        /// <param name="uuid">The ID of the task to check completion.</param>
+        /// <returns>Whether or not the task has been completed.</returns>
+        internal bool TaskIsComplete(ulong uuid)
+        {
+            return dag.TaskIsComplete(uuid);
         }
     }
 

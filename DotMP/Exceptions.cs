@@ -77,4 +77,16 @@ namespace DotMP.Exceptions
         /// <param name="msg">The message to associate with the exception.</param>
         public TooManyIterationsException(string msg) : base(msg) { }
     }
+
+    /// <summary>
+    /// Exception thrown if the wrong taskwait overload was used from within a task.
+    /// </summary>
+    public class ImproperTaskwaitUsageException : Exception
+    {
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        public ImproperTaskwaitUsageException(string msg) : base(msg) { }
+    }
 }

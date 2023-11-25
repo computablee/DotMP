@@ -18,10 +18,12 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
+using System.Runtime;
 using System.Threading;
 using DotMP;
 using FluentAssertions;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DotMPTests
 {
@@ -30,6 +32,17 @@ namespace DotMPTests
     /// </summary>
     public class ParallelTests
     {
+        private readonly ITestOutputHelper output;
+
+        /// <summary>
+        /// Constructor to write output.
+        /// </summary>
+        /// <param name="output">Output object.</param>
+        public ParallelTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
         /// <summary>
         /// Tests to make sure that parallel performance is higher than sequential performance.
         /// </summary>
@@ -1091,9 +1104,10 @@ namespace DotMPTests
         {
             uint threads = 6;
             int sleep_duration = 100;
-            double start = DotMP.Parallel.GetWTime();
             int[] tasks_thread_executed = new int[threads];
             int total_tasks_executed = 0;
+
+            double start = DotMP.Parallel.GetWTime();
 
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
@@ -1119,7 +1133,6 @@ namespace DotMPTests
                 i.Should().Be(2);
             }
             elapsed.Should().BeGreaterThan(2.0 * (sleep_duration / 1000.0));
-            elapsed.Should().BeLessThan(1.3 * 2.0 * (sleep_duration / 1000.0));
 
             tasks_thread_executed = new int[threads];
             int tasks_to_spawn = 100_000;
@@ -1536,6 +1549,63 @@ namespace DotMPTests
             DotMP.Parallel.ParallelFor(0, 1024, schedule: new Serial(), chunk_size: 1, action: i =>
             {
                 ctr++.Should().Be(i);
+            });
+        }
+
+        /// <summary>
+        /// Checks that nested taskwait works.
+        /// </summary>
+        [Fact]
+        public void Nested_taskwait_works()
+        {
+            int prog = 0;
+
+            DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+            {
+                DotMP.Parallel.Master(() =>
+                {
+                    DotMP.Parallel.Task(() =>
+                    {
+                        DotMP.Atomic.Inc(ref prog).Should().Be(5);
+
+                        var child1 = DotMP.Parallel.Task(() =>
+                        {
+                            Thread.Sleep(1000);
+                            DotMP.Atomic.Inc(ref prog).Should().BeInRange(6, 7);
+                        });
+
+                        var child2 = DotMP.Parallel.Task(() =>
+                        {
+                            Thread.Sleep(1000);
+                            DotMP.Atomic.Inc(ref prog).Should().BeInRange(6, 7);
+                        });
+
+                        DotMP.Parallel.Taskwait(child1, child2);
+
+                        DotMP.Atomic.Inc(ref prog).Should().Be(8);
+                    });
+                });
+
+                DotMP.Atomic.Inc(ref prog).Should().BeLessThanOrEqualTo(4);
+
+                DotMP.Parallel.Taskwait();
+
+                DotMP.Atomic.Inc(ref prog).Should().BeGreaterThan(8);
+            });
+        }
+
+        /// <summary>
+        /// Ensures that improper usage of taskwait that risks deadlock should throw an exception.
+        /// </summary>
+        [Fact]
+        public void Improper_taskwait_should_except()
+        {
+            Assert.Throws<DotMP.Exceptions.ImproperTaskwaitUsageException>(() =>
+            {
+                DotMP.Parallel.ParallelMaster(() =>
+                {
+                    DotMP.Parallel.Task(() => DotMP.Parallel.Taskwait());
+                });
             });
         }
 

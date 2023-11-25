@@ -53,6 +53,14 @@ namespace DotMP
         /// Current thread num, cached.
         /// </summary>
         private static ThreadLocal<int> thread_num = new ThreadLocal<int>(() => Convert.ToInt32(Thread.CurrentThread.Name));
+        /// <summary>
+        /// The level of task nesting, to determine when to enact barriers and reset the DAG.
+        /// </summary>
+        private static ThreadLocal<uint> task_nesting = new ThreadLocal<uint>(() => 0);
+        /// <summary>
+        /// Determines if the current threadpool has been marked to terminate.
+        /// </summary>
+        internal static volatile bool canceled = false;
 
         /// <summary>
         /// Fixes the arguments for a parallel for loop.
@@ -597,10 +605,22 @@ namespace DotMP
                 num_threads ??= Parallel.num_threads;
 
             ForkedRegion freg = new ForkedRegion(num_threads.Value, action);
+
+            if (barrier is not null) barrier.Dispose();
             barrier = new Barrier((int)num_threads.Value);
+
+            task_nesting.Dispose();
+            task_nesting = new ThreadLocal<uint>(() => 0);
+
+            TaskingContainer tc = new TaskingContainer();
+            tc.ResetDAGNotThreadSafe();
+
             freg.StartThreadpool();
+
             freg.reg.num_threads = 1;
+
             single_thread.Clear();
+            barrier.Dispose();
             barrier = new Barrier(1);
         }
 
@@ -887,32 +907,65 @@ namespace DotMP
         }
 
         /// <summary>
-        /// Wait for all tasks in the queue to complete.
-        /// Is injected into a Thread's work by the Region constructor, but can also be called manually.
-        /// The injection is done to ensure that Parallel.Taskwait() is called before a Parallel.ParallelRegion() terminates,
-        /// guaranteeing all tasks submitted complete.
-        /// Acts as an implicit Barrier().
+        /// Wait for selected tasks in the queue to complete, or for the full queue to empty if no tasks are specified.
+        /// Acts as an implicit Barrier() if it is not called from within a task.
         /// </summary>
-        public static void Taskwait()
+        /// <param name="tasks">The tasks to wait on.</param>
+        /// <exception cref="ImproperTaskwaitUsageException">Thrown if a parameter-less taskwait is called from within a thread, which leads to deadlock.</exception> 
+        public static void Taskwait(params TaskUUID[] tasks)
         {
+            Func<int, bool> check;
             ForkedRegion fr = new ForkedRegion();
             TaskingContainer tc = new TaskingContainer();
             int tasks_remaining;
+            int tasks_completed = 0;
 
-            Barrier();
+            if (tasks.Length == 0)
+            {
+                if (task_nesting.Value > 0)
+                    throw new ImproperTaskwaitUsageException("Using the default taskwait from within a task will result in a deadlock. Try specifying the task to wait on as an argument.");
 
-            do if (tc.GetNextTask(out Action do_action, out ulong uuid, out tasks_remaining))
+                check = tr => tr > 0;
+            }
+            else
+            {
+                check = _ =>
+                {
+                    while (tasks_completed < tasks.Length && tc.TaskIsComplete(tasks[tasks_completed].GetUUID()))
+                        ++tasks_completed;
+
+                    return tasks_completed != tasks.Length;
+                };
+            }
+
+            if (task_nesting.Value == 0)
+                Barrier();
+
+            ++task_nesting.Value;
+
+            do
+            {
+                if (canceled)
+                    throw new ThreadInterruptedException();
+
+                if (tc.GetNextTask(out Action do_action, out ulong uuid, out tasks_remaining))
                 {
                     do_action();
                     tc.CompleteTask(uuid);
                 }
-            while (tasks_remaining > 0);
+            }
+            while (check(tasks_remaining));
 
-            Barrier();
+            if (--task_nesting.Value == 0)
+            {
+                Barrier();
 
-            tc.ResetDAG();
-
-            Barrier();
+                if (tasks_remaining == 0)
+                {
+                    tc.ResetDAG();
+                    Barrier();
+                }
+            }
         }
 
         /// <summary>
