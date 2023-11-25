@@ -611,7 +611,7 @@ namespace DotMP
 
             task_nesting.Dispose();
             task_nesting = new ThreadLocal<uint>(() => 0);
-            
+
             TaskingContainer tc = new TaskingContainer();
             tc.ResetDAGNotThreadSafe();
 
@@ -905,7 +905,7 @@ namespace DotMP
             TaskingContainer tc = new TaskingContainer();
             return tc.EnqueueTask(action, depends);
         }
-        
+
         /// <summary>
         /// Wait for selected tasks in the queue to complete, or for the full queue to empty if no tasks are specified.
         /// Acts as an implicit Barrier() if it is not called from within a task.
@@ -924,7 +924,7 @@ namespace DotMP
             {
                 if (task_nesting.Value > 0)
                     throw new ImproperTaskwaitUsageException("Using the default taskwait from within a task will result in a deadlock. Try specifying the task to wait on as an argument.");
-                
+
                 check = tr => tr > 0;
             }
             else
