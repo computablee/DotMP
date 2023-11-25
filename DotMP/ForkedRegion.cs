@@ -65,10 +65,12 @@ namespace DotMP
                 catch (Exception ex)
                 {
                     this.ex ??= ex;
+                    Parallel.canceled = true;
 
-                    for (int i = 0; i < num_threads; i++)
-                        if (i != tid)
-                            threads[i].Interrupt();
+                    if (ex is not ThreadInterruptedException)
+                        for (int i = 0; i < num_threads; i++)
+                            if (i != tid)
+                                threads[i].Interrupt();
                 }
             });
         }
@@ -170,6 +172,7 @@ namespace DotMP
         internal void StartThreadpool()
         {
             in_parallel = true;
+            Parallel.canceled = false;
 
             for (int i = 0; i < reg.num_threads; i++)
                 reg.threads[i].Start();
