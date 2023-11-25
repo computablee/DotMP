@@ -94,6 +94,9 @@ Package Functions</h2></td></tr>
 <tr class="memitem:ac8a90cb5a67af507b970c633509c0138"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1TaskingContainer.html#ac8a90cb5a67af507b970c633509c0138">ResetDAG</a> ()</td></tr>
 <tr class="memdesc:ac8a90cb5a67af507b970c633509c0138"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the <a class="el" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies.">DAG</a> to a default state. Allows the garbage collector to collect unused data.  <a href="classDotMP_1_1TaskingContainer.html#ac8a90cb5a67af507b970c633509c0138">More...</a><br /></td></tr>
 <tr class="separator:ac8a90cb5a67af507b970c633509c0138"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1e101a9f5e54f7d0d14dab6368806ac5"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1TaskingContainer.html#a1e101a9f5e54f7d0d14dab6368806ac5">ResetDAGNotThreadSafe</a> ()</td></tr>
+<tr class="memdesc:a1e101a9f5e54f7d0d14dab6368806ac5"><td class="mdescLeft">&#160;</td><td class="mdescRight">Resets the <a class="el" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies.">DAG</a> to a default state. Allows the garbage collector to collect unused data. Unlike <a class="el" href="classDotMP_1_1TaskingContainer.html#ac8a90cb5a67af507b970c633509c0138" title="Resets the DAG to a default state. Allows the garbage collector to collect unused data.">ResetDAG()</a>, this version is not thread-safe!  <a href="classDotMP_1_1TaskingContainer.html#a1e101a9f5e54f7d0d14dab6368806ac5">More...</a><br /></td></tr>
+<tr class="separator:a1e101a9f5e54f7d0d14dab6368806ac5"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6a2d03f43d0760e4195970f9afd6ecc"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1TaskingContainer.html#ad6a2d03f43d0760e4195970f9afd6ecc">GetNextTask</a> (out Action action, out ulong uuid, out int tasks_remaining)</td></tr>
 <tr class="memdesc:ad6a2d03f43d0760e4195970f9afd6ecc"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the next task from the queue.  <a href="classDotMP_1_1TaskingContainer.html#ad6a2d03f43d0760e4195970f9afd6ecc">More...</a><br /></td></tr>
 <tr class="separator:ad6a2d03f43d0760e4195970f9afd6ecc"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -106,6 +109,9 @@ Package Functions</h2></td></tr>
 <tr class="memitem:a2835596e671d06676f106a4beaee7aee"><td class="memItemLeft" align="right" valign="top">void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1TaskingContainer.html#a2835596e671d06676f106a4beaee7aee">CompleteTask</a> (ulong uuid)</td></tr>
 <tr class="memdesc:a2835596e671d06676f106a4beaee7aee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Mark task as completed to remove as a dependency in the <a class="el" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies.">DAG</a>.  <a href="classDotMP_1_1TaskingContainer.html#a2835596e671d06676f106a4beaee7aee">More...</a><br /></td></tr>
 <tr class="separator:a2835596e671d06676f106a4beaee7aee"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abdb12eb36cf7fba2b4f7e23010eceb52"><td class="memItemLeft" align="right" valign="top">bool&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1TaskingContainer.html#abdb12eb36cf7fba2b4f7e23010eceb52">TaskIsComplete</a> (ulong uuid)</td></tr>
+<tr class="memdesc:abdb12eb36cf7fba2b4f7e23010eceb52"><td class="mdescLeft">&#160;</td><td class="mdescRight">Determines if a task has been completed.  <a href="classDotMP_1_1TaskingContainer.html#abdb12eb36cf7fba2b4f7e23010eceb52">More...</a><br /></td></tr>
+<tr class="separator:abdb12eb36cf7fba2b4f7e23010eceb52"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
@@ -361,6 +367,68 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Resets the <a class="el" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies.">DAG</a> to a default state. Allows the garbage collector to collect unused data. </p>
+
+</div>
+</div>
+<a id="a1e101a9f5e54f7d0d14dab6368806ac5"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1e101a9f5e54f7d0d14dab6368806ac5">&#9670;&nbsp;</a></span>ResetDAGNotThreadSafe()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">void DotMP.TaskingContainer.ResetDAGNotThreadSafe </td>
+          <td>(</td>
+          <td class="paramname"></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">package</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Resets the <a class="el" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies.">DAG</a> to a default state. Allows the garbage collector to collect unused data. Unlike <a class="el" href="classDotMP_1_1TaskingContainer.html#ac8a90cb5a67af507b970c633509c0138" title="Resets the DAG to a default state. Allows the garbage collector to collect unused data.">ResetDAG()</a>, this version is not thread-safe! </p>
+
+</div>
+</div>
+<a id="abdb12eb36cf7fba2b4f7e23010eceb52"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abdb12eb36cf7fba2b4f7e23010eceb52">&#9670;&nbsp;</a></span>TaskIsComplete()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">bool DotMP.TaskingContainer.TaskIsComplete </td>
+          <td>(</td>
+          <td class="paramtype">ulong&#160;</td>
+          <td class="paramname"><em>uuid</em></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">package</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Determines if a task has been completed. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">uuid</td><td>The ID of the task to check completion.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>Whether or not the task has been completed.</dd></dl>
 
 </div>
 </div>
