@@ -113,8 +113,8 @@ namespace DotMP
         /// <returns>The new value stored as a result of the operation.</returns>
         public static uint Sub(ref uint target, uint value)
         {
-            int neg = -(int)value;
-            return Interlocked.Add(ref target, Unsafe.As<int, uint>(ref neg));
+            uint neg = ~value + 1;
+            return Interlocked.Add(ref target, neg);
         }
 
         /// <summary>
@@ -246,8 +246,8 @@ namespace DotMP
         /// <returns>The new value stored as a result of the operation.</returns>
         public static ulong Sub(ref ulong target, ulong value)
         {
-            long neg = -(long)value;
-            return Interlocked.Add(ref target, Unsafe.As<long, ulong>(ref neg));
+            ulong neg = ~value + 1;
+            return Interlocked.Add(ref target, neg);
         }
 
         /// <summary>
