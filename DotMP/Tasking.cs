@@ -51,6 +51,17 @@ namespace DotMP
         }
 
         /// <summary>
+        /// Resets the DAG to a default state.
+        /// Allows the garbage collector to collect unused data.
+        /// Unlike ResetDAG(), this version is not thread-safe!
+        /// </summary>
+        internal void ResetDAGNotThreadSafe()
+        {
+            dag.Dispose();
+            dag = new DAG<ulong, Action>();
+        }
+
+        /// <summary>
         /// Gets the next task from the queue.
         /// </summary>
         /// <param name="action">The body of the task to be executed.</param>
