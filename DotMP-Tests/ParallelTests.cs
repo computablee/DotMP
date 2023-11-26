@@ -1610,6 +1610,18 @@ namespace DotMPTests
         }
 
         /// <summary>
+        /// Ensures that overflows in the schedulers properly throw exceptions.
+        /// </summary>
+        [Fact]
+        public void Boundary_parallelfor_should_except()
+        {
+            Assert.Throws<DotMP.Exceptions.InternalSchedulerException>(() =>
+            {
+                DotMP.Parallel.ParallelFor(0, int.MaxValue, i => { });
+            });
+        }
+
+        /// <summary>
         /// A sample workload for DotMP.Parallel.ParallelFor().
         /// </summary>
         /// <param name="inParallel">Whether or not to enable parallelism.</param>
