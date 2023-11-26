@@ -1366,10 +1366,7 @@ namespace DotMP
 
             WorkShare ws = new WorkShare();
 
-            while (ordered[id.ToString()] != ws.thread.working_iter)
-            {
-                freg.reg.spin[tid].SpinOnce();
-            }
+            while (ordered[id.ToString()] != ws.working_iter) ;
 
             action();
 
