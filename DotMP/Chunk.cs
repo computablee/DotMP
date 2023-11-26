@@ -1,6 +1,24 @@
+/*
+ * DotMP - A collection of powerful abstractions for parallel programming in .NET with an OpenMP-like API. 
+ * Copyright (C) 2023 Phillip Allen Lane
+ *
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+ * License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 using System;
 using System.Linq;
+using DotMP.Exceptions;
 
+/* jscpd:ignore-start */
 namespace DotMP
 {
     /// <summary>
@@ -161,12 +179,51 @@ namespace DotMP
         /// <summary>
         /// Represents the ranges of collapsed loops for future unflattening.
         /// </summary>
-        private ValueTuple<int, int>[] ranges;
+        private ValueTuple<int, int>[] ranges_prv;
 
         /// <summary>
-        /// Array of indices to pass to actions.
+        /// Represents the ranges of collapsed loops for unflattening, ensuring that loops do not have too many iterations.
+        /// </summary>
+        private ValueTuple<int, int>[] ranges
+        {
+            get => ranges_prv;
+            set
+            {
+                int total_iters = 1;
+
+                try
+                {
+                    foreach ((int start, int end) in value)
+                    {
+                        if (end < start)
+                            throw new InvalidArgumentsException(string.Format("Start of loop ({0}) must be less than end of loop ({1}).", start, end));
+
+                        if (start < 0 || end < 0)
+                            throw new InvalidArgumentsException(string.Format("Start ({0}) and end ({1}) of loop must both be positive integers.", start, end));
+
+                        total_iters = checked(total_iters * (end - start));
+                    }
+                }
+                catch (OverflowException)
+                {
+                    throw new TooManyIterationsException(string.Format("Parallel-for loop has too many iterations (exceeds {0}).", int.MaxValue));
+                }
+                finally
+                {
+                    ranges_prv = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Array representing the starting indices.
         /// </summary>
         private int[] indices;
+
+        /// <summary>
+        /// Array representing the ending indices.
+        /// </summary>
+        private int[] end_indices;
 
         /// <summary>
         /// Array which represents the length of collapsed loops in each dimension.
@@ -248,6 +305,7 @@ namespace DotMP
             IsCollapse = true;
             IsReduction = false;
             indices = new int[4];
+            end_indices = new int[4];
             diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
         }
 
@@ -264,6 +322,7 @@ namespace DotMP
             IsCollapse = true;
             IsReduction = false;
             indices = new int[ranges.Length];
+            end_indices = new int[ranges.Length];
             diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
         }
 
@@ -308,6 +367,7 @@ namespace DotMP
             IsCollapse = true;
             IsReduction = true;
             indices = new int[4];
+            end_indices = new int[4];
             diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
         }
 
@@ -324,6 +384,7 @@ namespace DotMP
             IsCollapse = true;
             IsReduction = true;
             indices = new int[ranges.Length];
+            end_indices = new int[ranges.Length];
             diffs = ranges.Select(r => r.Item2 - r.Item1).ToArray();
         }
 
@@ -331,47 +392,45 @@ namespace DotMP
         /// Computes the indices for collapsed loops with 2 indices.
         /// </summary>
         /// <param name="curr_iter">The current iteration to unflatten.</param>
-        /// <param name="diff2">The difference in the second pair of indices.</param>
         /// <param name="start1">The start of the first pair of indices.</param>
         /// <param name="start2">The start of the second pair of indices.</param>
-        /// <returns>The two indices.</returns>
-        private ValueTuple<int, int> ComputeIndices2(int curr_iter, int diff2, int start1, int start2)
+        /// <param name="diff2">The divisor to divrem by.</param>
+        /// <param name="i">The first computed index.</param>
+        /// <param name="j">The second computed index.</param>
+        private void ComputeIndices2(int curr_iter, int start1, int start2, int diff2, out int i, out int j)
         {
-            int i, j;
             i = Math.DivRem(curr_iter, diff2, out j);
             i += start1;
             j += start2;
-
-            return (i, j);
         }
 
         /// <summary>
         /// Computes the indices for collapsed loops with 3 indices.
         /// </summary>
         /// <param name="curr_iter">The current iteration to unflatten.</param>
-        /// <param name="diff2">The difference in the second pair of indices.</param>
-        /// <param name="diff3">The difference in the third pair of indices.</param>
         /// <param name="start1">The start of the first pair of indices.</param>
         /// <param name="start2">The start of the second pair of indices.</param>
         /// <param name="start3">The start of the third pair of indices.</param>
-        /// <returns>The three indices.</returns>
-        private ValueTuple<int, int, int> ComputeIndices3(int curr_iter, int diff2, int diff3, int start1, int start2, int start3)
+        /// <param name="diff2">The difference in the second pair of indices.</param>
+        /// <param name="diff3">The difference in the third pair of indices.</param>
+        /// <param name="i">The first computed index.</param>
+        /// <param name="j">The second computed index.</param>
+        /// <param name="k">The third computed index.</param>
+        private void ComputeIndices3(int curr_iter, int start1, int start2, int start3, int diff2, int diff3, out int i, out int j, out int k)
         {
-            int i, j, k;
             i = Math.DivRem(curr_iter, diff2 * diff3, out j);
             j = Math.DivRem(j, diff3, out k);
             i += start1;
             j += start2;
             k += start3;
-
-            return (i, j, k);
         }
 
         /// <summary>
         /// Computes the indices for collapsed loops with 4 or more indices.
         /// </summary>
         /// <param name="curr_iter">The current iteration to unflatten.</param>
-        private void ComputeIndicesN(int curr_iter)
+        /// <param name="indices">The array to store indices in.</param>
+        private void ComputeIndicesN(int curr_iter, int[] indices)
         {
             int mod = curr_iter;
             for (int r = 0; r < ranges.Length - 1; r++)
@@ -395,7 +454,6 @@ namespace DotMP
 
         /// <summary>
         /// Executes a chunk using the action selected by ForAction.selector
-        /// TODO: Optimize this whole function.
         /// </summary>
         /// <param name="curr_iter">A reference to the current iteration.</param>
         /// <param name="start">The start of the chunk, inclusive.</param>
@@ -405,7 +463,6 @@ namespace DotMP
         {
             switch (selector)
             {
-                /* jscpd:ignore-start */
                 case ActionSelector.Regular:
                     for (curr_iter = start; curr_iter < end; curr_iter++)
                     {
@@ -421,85 +478,165 @@ namespace DotMP
                 case ActionSelector.Collapse2:
                     int start1 = ranges[0].Item1;
                     int start2 = ranges[1].Item1;
-                    int diff1 = ranges[0].Item2 - start1;
-                    int diff2 = ranges[1].Item2 - start2;
+                    int end1 = ranges[0].Item2;
+                    int end2 = ranges[1].Item2;
+                    int diff2 = end2 - start2;
 
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndices2(start, start1, start2, diff2, out int istart, out int jstart);
+                    ComputeIndices2(end, start1, start2, diff2, out int iend, out int jend);
+
+                    while (istart != iend || jstart != jend)
                     {
-                        (int i, int j) = ComputeIndices2(curr_iter, diff2, start1, start2);
-                        omp_col_2(i, j);
+                        omp_col_2(istart, jstart);
+
+                        if (++jstart == end2)
+                        {
+                            jstart = start2;
+                            ++istart;
+                        }
                     }
                     break;
                 case ActionSelector.Collapse3:
                     start1 = ranges[0].Item1;
                     start2 = ranges[1].Item1;
                     int start3 = ranges[2].Item1;
-                    diff1 = ranges[0].Item2 - start1;
-                    diff2 = ranges[1].Item2 - start2;
-                    int diff3 = ranges[2].Item2 - start3;
+                    end2 = ranges[1].Item2;
+                    int end3 = ranges[2].Item2;
+                    diff2 = end2 - start2;
+                    int diff3 = end3 - start3;
 
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndices3(start, start1, start2, start3, diff2, diff3, out istart, out jstart, out int kstart);
+                    ComputeIndices3(end, start1, start2, start3, diff2, diff3, out iend, out jend, out int kend);
+
+                    while (istart != iend || jstart != jend || kstart != kend)
                     {
-                        (int i, int j, int k) = ComputeIndices3(curr_iter, diff2, diff3, start1, start2, start3);
-                        omp_col_3(i, j, k);
+                        omp_col_3(istart, jstart, kstart);
+
+                        if (++kstart == end3)
+                        {
+                            kstart = start3;
+                            ++jstart;
+                        }
+
+                        if (jstart == end2)
+                        {
+                            jstart = start2;
+                            ++istart;
+                        }
                     }
                     break;
                 case ActionSelector.Collapse4:
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndicesN(start, indices);
+                    ComputeIndicesN(end, end_indices);
+
+                    while (!indices.SequenceEqual(end_indices))
                     {
-                        ComputeIndicesN(curr_iter);
                         omp_col_4(indices[0], indices[1], indices[2], indices[3]);
+
+                        for (int i = 3; i >= 0; i--)
+                            if (++indices[i] == ranges[i].Item2 && i > 0)
+                                indices[i] = ranges[i].Item1;
+                            else
+                                break;
                     }
                     break;
                 case ActionSelector.CollapseN:
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndicesN(start, indices);
+                    ComputeIndicesN(end, end_indices);
+
+                    while (!indices.SequenceEqual(end_indices))
                     {
-                        ComputeIndicesN(curr_iter);
                         omp_col_n(indices);
+
+                        for (int i = indices.Length - 1; i >= 0; i--)
+                            if (++indices[i] == ranges[i].Item2 && i > 0)
+                                indices[i] = ranges[i].Item1;
+                            else
+                                break;
                     }
                     break;
                 case ActionSelector.ReductionCollapse2:
                     start1 = ranges[0].Item1;
                     start2 = ranges[1].Item1;
-                    diff1 = ranges[0].Item2 - start1;
-                    diff2 = ranges[1].Item2 - start2;
+                    end1 = ranges[0].Item2;
+                    end2 = ranges[1].Item2;
+                    diff2 = end2 - start2;
 
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndices2(start, start1, start2, diff2, out istart, out jstart);
+                    ComputeIndices2(end, start1, start2, diff2, out iend, out jend);
+
+                    while (istart != iend || jstart != jend)
                     {
-                        (int i, int j) = ComputeIndices2(curr_iter, diff2, start1, start2);
-                        omp_red_col_2(ref local, i, j);
+                        omp_red_col_2(ref local, istart, jstart);
+
+                        if (++jstart == end2)
+                        {
+                            jstart = start2;
+                            ++istart;
+                        }
                     }
                     break;
                 case ActionSelector.ReductionCollapse3:
                     start1 = ranges[0].Item1;
                     start2 = ranges[1].Item1;
                     start3 = ranges[2].Item1;
-                    diff1 = ranges[0].Item2 - start1;
-                    diff2 = ranges[1].Item2 - start2;
-                    diff3 = ranges[2].Item2 - start3;
+                    end2 = ranges[1].Item2;
+                    end3 = ranges[2].Item2;
+                    diff2 = end2 - start2;
+                    diff3 = end3 - start3;
 
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndices3(start, start1, start2, start3, diff2, diff3, out istart, out jstart, out kstart);
+                    ComputeIndices3(end, start1, start2, start3, diff2, diff3, out iend, out jend, out kend);
+
+                    while (istart != iend || jstart != jend || kstart != kend)
                     {
-                        (int i, int j, int k) = ComputeIndices3(curr_iter, diff2, diff3, start1, start2, start3);
-                        omp_red_col_3(ref local, i, j, k);
+                        omp_red_col_3(ref local, istart, jstart, kstart);
+
+                        if (++kstart == end3)
+                        {
+                            kstart = start3;
+                            ++jstart;
+                        }
+
+                        if (jstart == end2)
+                        {
+                            jstart = start2;
+                            ++istart;
+                        }
                     }
                     break;
                 case ActionSelector.ReductionCollapse4:
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndicesN(start, indices);
+                    ComputeIndicesN(end, end_indices);
+
+                    while (!indices.SequenceEqual(end_indices))
                     {
-                        ComputeIndicesN(curr_iter);
                         omp_red_col_4(ref local, indices[0], indices[1], indices[2], indices[3]);
+
+                        for (int i = 3; i >= 0; i--)
+                            if (++indices[i] == ranges[i].Item2 && i > 0)
+                                indices[i] = ranges[i].Item1;
+                            else
+                                break;
                     }
                     break;
                 case ActionSelector.ReductionCollapseN:
-                    for (curr_iter = start; curr_iter < end; curr_iter++)
+                    ComputeIndicesN(start, indices);
+                    ComputeIndicesN(end, end_indices);
+
+                    while (!indices.SequenceEqual(end_indices))
                     {
-                        ComputeIndicesN(curr_iter);
                         omp_red_col_n(ref local, indices);
+
+                        for (int i = indices.Length - 1; i >= 0; i--)
+                            if (++indices[i] == ranges[i].Item2 && i > 0)
+                                indices[i] = ranges[i].Item1;
+                            else
+                                break;
                     }
                     break;
-                    /* jscpd:ignore-end */
             }
         }
     }
 }
+/* jscpd:ignore-end */

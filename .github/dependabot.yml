@@ -43,7 +43,7 @@ updates:
       prefix: "nuget"
 
   - package-ecosystem: "nuget"
-    directory: "./benchmarks/HeatTransfer/"
+    directory: "./benchmarks/"
     schedule:
       interval: "weekly"
     labels:

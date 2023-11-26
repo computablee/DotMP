@@ -30,19 +30,19 @@ examples-seq:
 	$(DN) build -c $(BUILD) examples/Serial/KNN
 
 tests:
-	$(DN) build -c $(BUILD) DotMP-Tests
+	$(DN) build -c Debug DotMP-Tests
 
 test:
-	$(DN) test -c $(BUILD) -l "console;verbosity=detailed" -p:CollectCoverage=true -p:CoverletOutputFormat=opencover DotMP-Tests
+	$(DN) test -c Debug -l "console;verbosity=detailed" -p:CollectCoverage=true -p:CoverletOutputFormat=opencover DotMP-Tests
 
 build:
-	$(DN) build -c $(BUILD) DotMP
+	$(DN) build -c $(BUILD) -p:IncludeSymbols=true -p:SymbolPackageFormat=snupkg DotMP
 
 docs: ProcessedREADME.md
 	doxygen
 
-pack: ProcessedREADME.md
-	$(DN) pack -c $(BUILD) DotMP
+pack: ProcessedREADME.md build
+	$(DN) pack -c $(BUILD) /p:ContinuousIntegrationBuild=true DotMP
 
 clean:
 	rm -f ProcessedREADME.md

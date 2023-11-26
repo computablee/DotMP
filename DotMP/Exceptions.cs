@@ -1,6 +1,22 @@
+/*
+ * DotMP - A collection of powerful abstractions for parallel programming in .NET with an OpenMP-like API. 
+ * Copyright (C) 2023 Phillip Allen Lane
+ *
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+ * License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
 using System;
 
-namespace DotMP
+namespace DotMP.Exceptions
 {
     /// <summary>
     /// Exception thrown if a parallel-only construct is used outside of a parallel region.
@@ -36,5 +52,53 @@ namespace DotMP
         /// </summary>
         /// <param name="msg">The message to associate with the exception.</param>
         public CannotPerformNestedWorksharingException(string msg) : base(msg) { }
+    }
+
+    /// <summary>
+    /// Exception thrown if invalid arguments are specified to DotMP functions.
+    /// </summary>
+    public class InvalidArgumentsException : Exception
+    {
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        public InvalidArgumentsException(string msg) : base(msg) { }
+    }
+
+    /// <summary>
+    /// Exception thrown if a for loop has too many iterations and would cause the schedulers to fail.
+    /// </summary>
+    public class TooManyIterationsException : Exception
+    {
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        public TooManyIterationsException(string msg) : base(msg) { }
+    }
+
+    /// <summary>
+    /// Exception thrown if the wrong taskwait overload was used from within a task.
+    /// </summary>
+    public class ImproperTaskwaitUsageException : Exception
+    {
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        public ImproperTaskwaitUsageException(string msg) : base(msg) { }
+    }
+
+    /// <summary>
+    /// Exception thrown if the internal schedulers encounter an overflow.
+    /// </summary>
+    public class InternalSchedulerException : Exception
+    {
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        public InternalSchedulerException(string msg) : base(msg) { }
     }
 }

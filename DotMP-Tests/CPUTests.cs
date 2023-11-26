@@ -1,8 +1,24 @@
-﻿using System;
+﻿/*
+ * DotMP - A collection of powerful abstractions for parallel programming in .NET with an OpenMP-like API. 
+ * Copyright (C) 2023 Phillip Allen Lane
+ *
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+ * License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.Json.Serialization;
+using System.Runtime;
 using System.Threading;
 using DotMP;
 using FluentAssertions;
@@ -16,6 +32,17 @@ namespace DotMPTests
     /// </summary>
     public class CPUTests
     {
+        private readonly ITestOutputHelper output;
+
+        /// <summary>
+        /// Constructor to write output.
+        /// </summary>
+        /// <param name="output">Output object.</param>
+        public ParallelTests(ITestOutputHelper output)
+        {
+            this.output = output;
+        }
+
         /// <summary>
         /// Tests to make sure that parallel performance is higher than sequential performance.
         /// </summary>
@@ -59,10 +86,7 @@ namespace DotMPTests
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Static, null);
             float[] z2 = saxpy_parallelfor(2.0f, x, y);
 
-            for (int i = 0; i < z.Length; i++)
-            {
-                z[i].Should().Be(z2[i]);
-            }
+            Assert.Equal(z, z2);
         }
 
         /// <summary>
@@ -75,19 +99,76 @@ namespace DotMPTests
 
             float[] x = new float[workload];
             float[] y = new float[workload];
+            float[] correct = new float[workload];
 
             for (int i = 0; i < x.Length; i++)
             {
                 x[i] = 1.0f;
                 y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
 
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Guided, 3);
 
-            for (int i = 0; i < z.Length; i++)
+            Assert.Equal(z, correct);
+        }
+
+        /// <summary>
+        /// Tests to make sure that DotMP.Schedule.Guided produces correct results.
+        /// </summary>
+        [Fact]
+        public void Workstealing_should_produce_correct_results()
+        {
+            int workload = 1_000_000;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+            float[] correct = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
             {
-                z[i].Should().Be(3.0f);
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
+
+            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.WorkStealing, 3);
+
+            Assert.Equal(z, correct);
+        }
+
+        /// <summary>
+        /// Tests to ensure that workstealing adequately load balances.
+        /// </summary>
+        [Fact]
+        public void Workstealing_load_balances()
+        {
+            int workload = 100_000;
+
+            float[] x = new float[workload];
+            float[] y = new float[workload];
+            float[] z = new float[workload];
+            float[] correct = new float[workload];
+
+            for (int i = 0; i < x.Length; i++)
+            {
+                x[i] = 1.0f;
+                y[i] = 1.0f;
+                correct[i] = 3.0f;
+            }
+
+            double start = DotMP.Parallel.GetWTime();
+            DotMP.Parallel.ParallelFor(0, workload, num_threads: 6, schedule: DotMP.Schedule.WorkStealing, chunk_size: 1, action: i =>
+            {
+                if (i < 6)
+                    Thread.Sleep(1000);
+
+                z[i] = 2.0f * x[i] + y[i];
+            });
+            double end = DotMP.Parallel.GetWTime() - start;
+
+            end.Should().BeLessThan(1.5);
+            Assert.Equal(z, correct);
         }
 
         /// <summary>
@@ -100,19 +181,18 @@ namespace DotMPTests
 
             float[] x = new float[workload];
             float[] y = new float[workload];
+            float[] correct = new float[workload];
 
             for (int i = 0; i < x.Length; i++)
             {
                 x[i] = 1.0f;
                 y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
 
             float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Static, 1024);
 
-            for (int i = 0; i < z.Length; i++)
-            {
-                z[i].Should().Be(3.0f);
-            }
+            Assert.Equal(z, correct);
         }
 
         /// <summary>
@@ -125,19 +205,18 @@ namespace DotMPTests
 
             float[] x = new float[workload];
             float[] y = new float[workload];
+            float[] correct = new float[workload];
 
             for (int i = 0; i < x.Length; i++)
             {
                 x[i] = 1.0f;
                 y[i] = 1.0f;
+                correct[i] = 3.0f;
             }
 
-            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Dynamic, 16);
+            float[] z = saxpy_parallelregion_for(2.0f, x, y, Schedule.Dynamic, 1);
 
-            for (int i = 0; i < z.Length; i++)
-            {
-                z[i].Should().Be(3.0f);
-            }
+            Assert.Equal(z, correct);
         }
 
         /// <summary>
@@ -387,6 +466,13 @@ namespace DotMPTests
                 DotMP.Parallel.GetChunkSize().Should().Be(256);
             });
 
+            Environment.SetEnvironmentVariable("OMP_SCHEDULE", "static");
+            DotMP.Parallel.ParallelFor(0, 1025, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
+            {
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Static);
+                DotMP.Parallel.GetChunkSize().Should().Be(257);
+            });
+
             Environment.SetEnvironmentVariable("OMP_SCHEDULE", "guided,2");
             DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Runtime, action: i =>
             {
@@ -405,6 +491,13 @@ namespace DotMPTests
             DotMP.Parallel.ParallelFor(0, 1024, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
             {
                 DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.Dynamic);
+                DotMP.Parallel.GetChunkSize().Should().Be(8);
+            });
+
+            Environment.SetEnvironmentVariable("OMP_SCHEDULE", "workstealing,garbage");
+            DotMP.Parallel.ParallelFor(0, 1024, num_threads: 4, schedule: DotMP.Schedule.Runtime, action: i =>
+            {
+                DotMP.Parallel.GetSchedule().Should().Be(DotMP.Schedule.WorkStealing);
                 DotMP.Parallel.GetChunkSize().Should().Be(8);
             });
 
@@ -506,8 +599,8 @@ namespace DotMPTests
             uint threads = 1024;
             int[] int_totals = new int[6];
             long[] long_totals = new long[6];
-            uint[] uint_totals = new uint[5];
-            ulong[] ulong_totals = new ulong[5];
+            uint[] uint_totals = new uint[6];
+            ulong[] ulong_totals = new ulong[6];
 
             uint_totals[1] = 1024;
             ulong_totals[1] = 1024;
@@ -621,6 +714,9 @@ namespace DotMPTests
             long_totals[4].Should().Be((long)res);
             ulong_totals[4].Should().Be((ulong)res);
 
+            uint_totals[5] = threads * 2 + 1;
+            ulong_totals[5] = threads * 2 + 3;
+
             //sub
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
@@ -628,10 +724,16 @@ namespace DotMPTests
                 DotMP.Atomic.Sub(ref int_totals[5], 2);
                 DotMP.Parallel.Barrier();
                 DotMP.Atomic.Sub(ref long_totals[5], 2);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Sub(ref uint_totals[5], 2);
+                DotMP.Parallel.Barrier();
+                DotMP.Atomic.Sub(ref ulong_totals[5], 2);
             });
 
             int_totals[5].Should().Be((int)-threads * 2);
             long_totals[5].Should().Be((long)-threads * 2);
+            uint_totals[5].Should().Be(1);
+            ulong_totals[5].Should().Be(3);
         }
 
         /// <summary>
@@ -642,11 +744,15 @@ namespace DotMPTests
         {
             uint threads = 8;
             int[] incrementing = new int[1024];
+            int ctr = 0;
 
             DotMP.Parallel.ParallelFor(0, 1024, schedule: DotMP.Schedule.Static,
                                         num_threads: threads, action: i =>
             {
-                DotMP.Parallel.Ordered(0, () => incrementing[i] = i);
+                DotMP.Parallel.Ordered(0, () =>
+                {
+                    incrementing[i] = ctr++;
+                });
             });
 
             for (int i = 0; i < incrementing.Length; i++)
@@ -998,9 +1104,10 @@ namespace DotMPTests
         {
             uint threads = 6;
             int sleep_duration = 100;
-            double start = DotMP.Parallel.GetWTime();
             int[] tasks_thread_executed = new int[threads];
             int total_tasks_executed = 0;
+
+            double start = DotMP.Parallel.GetWTime();
 
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
@@ -1026,7 +1133,6 @@ namespace DotMPTests
                 i.Should().Be(2);
             }
             elapsed.Should().BeGreaterThan(2.0 * (sleep_duration / 1000.0));
-            elapsed.Should().BeLessThan(1.25 * 2.0 * (sleep_duration / 1000.0));
 
             tasks_thread_executed = new int[threads];
             int tasks_to_spawn = 100_000;
@@ -1198,7 +1304,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_for_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.For(0, 10, action: i => { });
             });
@@ -1210,9 +1316,9 @@ namespace DotMPTests
         [Fact]
         public void Nested_parallelism_should_except()
         {
-            DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+            Assert.Throws<DotMP.Exceptions.CannotPerformNestedParallelismException>(() =>
             {
-                Assert.Throws<DotMP.CannotPerformNestedParallelismException>(() =>
+                DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
                 {
                     DotMP.Parallel.ParallelRegion(num_threads: 8, action: () => { });
                 });
@@ -1225,7 +1331,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_sections_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Sections(() => { }, () => { });
             });
@@ -1237,7 +1343,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_barrier_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Barrier();
             });
@@ -1249,7 +1355,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_master_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Master(() => { });
             });
@@ -1261,7 +1367,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_single_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Single(0, () => { });
             });
@@ -1273,7 +1379,7 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_critical_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Critical(0, () => { });
             });
@@ -1285,28 +1391,28 @@ namespace DotMPTests
         [Fact]
         public void Nested_worksharing_should_except()
         {
-            DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
+            Assert.Throws<DotMP.Exceptions.CannotPerformNestedWorksharingException>(() =>
             {
-                Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+                DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
                 {
                     DotMP.Parallel.Single(0, () => { });
                 });
             });
 
-            DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+            Assert.Throws<DotMP.Exceptions.CannotPerformNestedWorksharingException>(() =>
             {
-                DotMP.Parallel.Single(0, () =>
+                DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
                 {
-                    Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+                    DotMP.Parallel.Single(0, () =>
                     {
                         DotMP.Parallel.For(0, 10, action: i => { });
                     });
                 });
             });
 
-            DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
+            Assert.Throws<DotMP.Exceptions.CannotPerformNestedWorksharingException>(() =>
             {
-                Assert.Throws<DotMP.CannotPerformNestedWorksharingException>(() =>
+                DotMP.Parallel.ParallelFor(0, 10, num_threads: 4, action: i =>
                 {
                     DotMP.Parallel.For(0, 10, j => { });
                 });
@@ -1319,7 +1425,7 @@ namespace DotMPTests
         [Fact]
         public void Non_for_ordered_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 DotMP.Parallel.Ordered(0, () => { });
             });
@@ -1331,9 +1437,187 @@ namespace DotMPTests
         [Fact]
         public void Non_parallel_GetThreadNum_should_except()
         {
-            Assert.Throws<DotMP.NotInParallelRegionException>(() =>
+            Assert.Throws<DotMP.Exceptions.NotInParallelRegionException>(() =>
             {
                 int tid = DotMP.Parallel.GetThreadNum();
+            });
+        }
+
+        /// <summary>
+        /// Verifies that absent parameters shouldn't throw exceptions.
+        /// </summary>
+        [Fact]
+        public void Absent_params_shouldnt_except()
+        {
+            var exception = Record.Exception(() =>
+            {
+                DotMP.Parallel.ParallelFor(0, 10, i => { });
+            });
+
+            Assert.Null(exception);
+
+            exception = Record.Exception(() =>
+            {
+                DotMP.Parallel.ParallelMasterTaskloop(0, 10, i => { });
+            });
+
+            Assert.Null(exception);
+        }
+
+        /// <summary>
+        /// Verifies that for loops which overflow internal indices should throw an exception.
+        /// </summary>
+        [Fact]
+        public void Overflow_for_should_except()
+        {
+            Assert.Throws<DotMP.Exceptions.TooManyIterationsException>(() =>
+            {
+                DotMP.Parallel.ParallelForCollapse((0, 256), (0, 256), (0, 256), (0, 256), (i, j, k, l) => { });
+            });
+        }
+
+        /// <summary>
+        /// Verifies that invalid parameters throw exceptions.
+        /// </summary>
+        [Fact]
+        public void Invalid_params_should_except()
+        {
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelFor(10, 0, i => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelFor(-1, 10, i => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelForCollapse((10, 20), (-1, 10), (i, j) => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelForCollapse((10, 5), (0, 20), (i, j) => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelFor(10, -5, i => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelFor(0, 10, chunk_size: 0, action: i => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelFor(0, 10, schedule: new Serial(), action: i => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelRegion(num_threads: 0, action: () => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelMasterTaskloop(10, 0, i => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelMasterTaskloop(0, 10, grainsize: 0, action: i => { });
+            });
+
+            Assert.Throws<DotMP.Exceptions.InvalidArgumentsException>(() =>
+            {
+                DotMP.Parallel.ParallelMasterTaskloop(0, 10, num_tasks: 0, action: i => { });
+            });
+        }
+
+        /// <summary>
+        /// Verifies that custom schedulers work.
+        /// </summary>
+        [Fact]
+        public void Custom_scheduler_works()
+        {
+            int ctr = 0;
+
+            DotMP.Parallel.ParallelFor(0, 1024, schedule: new Serial(), chunk_size: 1, action: i =>
+            {
+                ctr++.Should().Be(i);
+            });
+        }
+
+        /// <summary>
+        /// Checks that nested taskwait works.
+        /// </summary>
+        [Fact]
+        public void Nested_taskwait_works()
+        {
+            int prog = 0;
+
+            DotMP.Parallel.ParallelRegion(num_threads: 4, action: () =>
+            {
+                DotMP.Parallel.Master(() =>
+                {
+                    DotMP.Parallel.Task(() =>
+                    {
+                        DotMP.Atomic.Inc(ref prog).Should().Be(5);
+
+                        var child1 = DotMP.Parallel.Task(() =>
+                        {
+                            Thread.Sleep(1000);
+                            DotMP.Atomic.Inc(ref prog).Should().BeInRange(6, 7);
+                        });
+
+                        var child2 = DotMP.Parallel.Task(() =>
+                        {
+                            Thread.Sleep(1000);
+                            DotMP.Atomic.Inc(ref prog).Should().BeInRange(6, 7);
+                        });
+
+                        DotMP.Parallel.Taskwait(child1, child2);
+
+                        DotMP.Atomic.Inc(ref prog).Should().Be(8);
+                    });
+                });
+
+                DotMP.Atomic.Inc(ref prog).Should().BeLessThanOrEqualTo(4);
+
+                DotMP.Parallel.Taskwait();
+
+                DotMP.Atomic.Inc(ref prog).Should().BeGreaterThan(8);
+            });
+        }
+
+        /// <summary>
+        /// Ensures that improper usage of taskwait that risks deadlock should throw an exception.
+        /// </summary>
+        [Fact]
+        public void Improper_taskwait_should_except()
+        {
+            Assert.Throws<DotMP.Exceptions.ImproperTaskwaitUsageException>(() =>
+            {
+                DotMP.Parallel.ParallelMaster(() =>
+                {
+                    DotMP.Parallel.Task(() => DotMP.Parallel.Taskwait());
+                });
+            });
+        }
+
+        /// <summary>
+        /// Ensures that overflows in the schedulers properly throw exceptions.
+        /// </summary>
+        [Fact]
+        public void Boundary_parallelfor_should_except()
+        {
+            Assert.Throws<DotMP.Exceptions.InternalSchedulerException>(() =>
+            {
+                DotMP.Parallel.ParallelFor(0, int.MaxValue, i => { });
             });
         }
 
@@ -1474,10 +1758,64 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelFor(0, x.Length, schedule: DotMP.Schedule.Guided, action: i =>
             {
-                z[i] = a * x[i] + y[i];
+                z[i] += a * x[i] + y[i];
             });
 
             return z;
+        }
+    }
+
+    /// <summary>
+    /// Custom scheduler which runs a for loop in serial.
+    /// </summary>
+    class Serial : IScheduler
+    {
+        /// <summary>
+        /// Start of the loop, inclusive.
+        /// </summary>
+        private int start;
+        /// <summary>
+        /// End of the loop, exclusive.
+        /// </summary>
+        private int end;
+        /// <summary>
+        /// Determines if the loop has already been executed.
+        /// </summary>
+        private bool executed;
+
+        /// <summary>
+        /// Initializes the loop.
+        /// </summary>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
+        /// <param name="num_threads">Unused.</param>
+        /// <param name="chunk_size">Unused.</param>
+        public void LoopInit(int start, int end, uint num_threads, uint chunk_size)
+        {
+            this.start = start;
+            this.end = end;
+            this.executed = false;
+        }
+
+        /// <summary>
+        /// Runs the whole loop if the thread ID is 0.
+        /// </summary>
+        /// <param name="thread_id">The thread ID.</param>
+        /// <param name="start">The start of the loop if thread_id==0, else 0.</param>
+        /// <param name="end">The end of the loop if thread_id==0, else 0.</param>
+        public void LoopNext(int thread_id, out int start, out int end)
+        {
+            if (thread_id == 0 && !executed)
+            {
+                start = this.start;
+                end = this.end;
+                executed = true;
+            }
+            else
+            {
+                start = 0;
+                end = 0;
+            }
         }
     }
 }

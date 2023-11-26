@@ -1,3 +1,20 @@
+/*
+ * DotMP - A collection of powerful abstractions for parallel programming in .NET with an OpenMP-like API. 
+ * Copyright (C) 2023 Phillip Allen Lane
+ *
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+ * License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+using System.Runtime.CompilerServices;
 using System.Threading;
 
 namespace DotMP
@@ -86,6 +103,18 @@ namespace DotMP
         public static uint Add(ref uint target, uint value)
         {
             return Interlocked.Add(ref target, value);
+        }
+
+        /// <summary>
+        /// Subtracts two 32-bit unsigned integers and replaces the first integer with the difference, as an atomic operation.
+        /// </summary>
+        /// <param name="target">The destination integer to be replaced.</param>
+        /// <param name="value">The value to subtract from the destination integer.</param>
+        /// <returns>The new value stored as a result of the operation.</returns>
+        public static uint Sub(ref uint target, uint value)
+        {
+            uint neg = ~value + 1;
+            return Interlocked.Add(ref target, neg);
         }
 
         /// <summary>
@@ -207,6 +236,18 @@ namespace DotMP
         public static ulong Add(ref ulong target, ulong value)
         {
             return Interlocked.Add(ref target, value);
+        }
+
+        /// <summary>
+        /// Subtracts two 64-bit unsigned integers and replaces the first integer with the difference, as an atomic operation.
+        /// </summary>
+        /// <param name="target">The destination integer to be replaced.</param>
+        /// <param name="value">The value to subtract from the destination integer.</param>
+        /// <returns>The new value stored as a result of the operation.</returns>
+        public static ulong Sub(ref ulong target, ulong value)
+        {
+            ulong neg = ~value + 1;
+            return Interlocked.Add(ref target, neg);
         }
 
         /// <summary>

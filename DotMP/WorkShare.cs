@@ -1,40 +1,26 @@
-﻿using System.Collections.Generic;
+﻿/*
+ * DotMP - A collection of powerful abstractions for parallel programming in .NET with an OpenMP-like API. 
+ * Copyright (C) 2023 Phillip Allen Lane
+ *
+ * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
+ * General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
+ * (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+ * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+ * License for more details.
+ *
+ * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
+ * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+ */
+
+using System.Collections.Generic;
 using System.Threading;
 using System;
+using DotMP.Exceptions;
 
 namespace DotMP
 {
-    /// <summary>
-    /// Encapsulates a Thread object with information about its progress through a parallel for loop.
-    /// For keeping track of its progress through a parallel for loop, we keep track of the current next iteration of the loop to be worked on, and the iteration the current thread is currently working on.
-    /// </summary>
-    internal class Thr
-    {
-        /// <summary>
-        /// The Thread object to be encapsulated.
-        /// </summary>
-        internal Thread thread;
-        /// <summary>
-        /// The current iteration of the parallel for loop.
-        /// </summary>
-        volatile internal int curr_iter;
-        /// <summary>
-        /// The iteration the thread is currently working on.
-        /// </summary>
-        internal int working_iter;
-
-        /// <summary>
-        /// Creates a Thr object with the specified Thread object.
-        /// </summary>
-        /// <param name="thread">The Thread object to be encapsulated.</param>
-        internal Thr(Thread thread)
-        {
-            this.thread = thread;
-            curr_iter = 0;
-            working_iter = 0;
-        }
-    }
-
     /// <summary>
     /// Contains all relevant information about a parallel for loop.
     /// Contains a collection of Thr objects, the loop's start and end iterations, the chunk size, the number of threads, and the number of threads that have completed their work.
@@ -44,15 +30,19 @@ namespace DotMP
         /// <summary>
         /// The threads to be used in the parallel for loop.
         /// </summary>
-        private static Thr[] threads;
+        private static Thread[] threads;
+        /// <summary>
+        /// The working iterations of each thread.
+        /// </summary>
+        private static int[] working_iters;
         /// <summary>
         /// Get Thr object based on current thread ID.
         /// </summary>
-        internal Thr thread
+        internal int working_iter
         {
             get
             {
-                return threads[Parallel.GetThreadNum()];
+                return working_iters[Parallel.GetThreadNum()];
             }
         }
         /// <summary>
@@ -67,24 +57,6 @@ namespace DotMP
             get
             {
                 return start_pv;
-            }
-            private set
-            {
-                start_pv = value;
-            }
-        }
-        /// <summary>
-        /// A generic lock to be used within the parallel for loop.
-        /// </summary>
-        private static object ws_lock_pv = new object();
-        /// <summary>
-        /// Getter for the singleton object WorkShare.ws_lock_pv.
-        /// </summary>
-        internal object ws_lock
-        {
-            get
-            {
-                return ws_lock_pv;
             }
         }
         /// <summary>
@@ -134,11 +106,11 @@ namespace DotMP
         /// <summary>
         /// The schedule to be used in the parallel for loop.
         /// </summary>
-        private static Schedule? schedule_pv;
+        private static IScheduler schedule_pv;
         /// <summary>
         /// Getter and setter for singleton object WorkShare.schedule_pv.
         /// </summary>
-        internal Schedule? schedule
+        internal IScheduler schedule
         {
             get
             {
@@ -160,12 +132,14 @@ namespace DotMP
         {
             get
             {
-                if (in_for_pv == null)
+                int tid = Parallel.GetThreadNum();
+
+                if (in_for_pv == null || tid >= in_for_pv.Length)
                 {
                     return false;
                 }
 
-                return in_for_pv[Parallel.GetThreadNum()];
+                return in_for_pv[tid];
             }
             set
             {
@@ -183,16 +157,15 @@ namespace DotMP
         /// <param name="chunk_size">The chunk size to use.</param>
         /// <param name="op">The operation for reduction, null if not a reduction.</param>
         /// <param name="schedule">The Parallel.Schedule to use.</param>
-        internal WorkShare(uint num_threads, Thread[] threads, int start, int end, uint chunk_size, Operations? op, Schedule schedule)
+        internal WorkShare(uint num_threads, Thread[] threads, int start, int end, uint chunk_size, Operations? op, IScheduler schedule)
         {
             this.end = end;
             this.num_threads = num_threads;
             this.op = op;
             Parallel.Master(() =>
             {
-                WorkShare.threads = new Thr[num_threads];
-                for (int i = 0; i < num_threads; i++)
-                    WorkShare.threads[i] = new Thr(threads[i]);
+                WorkShare.threads = threads;
+                working_iters = new int[num_threads];
                 reduction_list = new List<dynamic>();
                 in_for_pv = new bool[num_threads];
                 start_pv = start;
@@ -205,15 +178,6 @@ namespace DotMP
         /// Default constructor.
         /// </summary>
         internal WorkShare() { }
-
-        /// <summary>
-        /// Advance the start by some value.
-        /// </summary>
-        /// <param name="advance_by">The value to advance start by.</param>
-        internal void Advance(int advance_by)
-        {
-            start += advance_by;
-        }
 
         /// <summary>
         /// Add a value to reduction_list.
@@ -275,6 +239,50 @@ namespace DotMP
                 default:
                     break;
             }
+        }
+
+        /// <summary>
+        /// Performs a parallel for loop according to the scheduling policy provided.
+        /// </summary>
+        /// <typeparam name="T">The type of reductions, if applicable.</typeparam>
+        /// <param name="forAction">The function to be executed.</param>
+        /// <exception cref="InternalSchedulerException">Thrown if the internal schedulers throw an exception.</exception> 
+        internal void PerformLoop<T>(ForAction<T> forAction)
+        {
+            int start = this.start;
+            int end = this.end;
+            uint num_threads = this.num_threads;
+            uint chunk_size = this.chunk_size;
+            IScheduler scheduler = schedule;
+            int thread_id = Parallel.GetThreadNum();
+
+            T local = default;
+            if (forAction.IsReduction)
+                SetLocal(ref local);
+
+            try
+            {
+                Parallel.Master(() => scheduler.LoopInit(start, end, num_threads, chunk_size));
+                Parallel.Barrier();
+
+                int chunk_start, chunk_end;
+                ref int curr_iter = ref working_iters[thread_id];
+
+                do
+                {
+                    scheduler.LoopNext(thread_id, out chunk_start, out chunk_end);
+                    if (chunk_start < chunk_end)
+                        forAction.PerformLoop(ref curr_iter, chunk_start, chunk_end, ref local);
+                }
+                while (chunk_start < chunk_end);
+            }
+            catch (OverflowException)
+            {
+                throw new InternalSchedulerException(string.Format("An internal overflow exception has occurred within the loop scheduler. This most often happens when the upper bound of the loop is too close to {0}.", int.MaxValue));
+            }
+
+            if (forAction.IsReduction)
+                AddReductionValue(local);
         }
     }
 }
