@@ -33,14 +33,14 @@ public class Overhead
     [GlobalSetup]
     public void Setup()
     {
-	buf = new DotMP.GPU.Buffer<int>(new int[1, 1], DotMP.GPU.Buffer.Behavior.NoCopy);
+        buf = new DotMP.GPU.Buffer<int>(new int[1, 1], DotMP.GPU.Buffer.Behavior.NoCopy);
     }
 
     //run the simulation
     [Benchmark]
     public void TestOverhead()
     {
-	DotMP.GPU.Parallel.ParallelForCollapse((0, 500), (0, 500), buf, (i, j, buf) => { });
+        DotMP.GPU.Parallel.ParallelForCollapse((0, 500), (0, 500), buf, (i, j, buf) => { });
     }
 }
 

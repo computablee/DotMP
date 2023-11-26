@@ -37,17 +37,17 @@ public class Overhead
     [GlobalSetup]
     public void Setup()
     {
-	var context = Context.CreateDefault();
-	var accelerator = context.Devices[1].CreateAccelerator(context);
-	kernel = accelerator.LoadStreamKernel<ArrayView1D<int, Stride1D.Dense>>(arr => { });
-	data = accelerator.Allocate1D<int>(1); 
+        var context = Context.CreateDefault();
+        var accelerator = context.Devices[1].CreateAccelerator(context);
+        kernel = accelerator.LoadStreamKernel<ArrayView1D<int, Stride1D.Dense>>(arr => { });
+        data = accelerator.Allocate1D<int>(1);
     }
 
     //run the simulation
     [Benchmark]
     public void TestOverhead()
     {
-	kernel((1, 256), data);
+        kernel((1, 256), data);
     }
 }
 
