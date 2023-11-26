@@ -5,11 +5,11 @@
  * This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
  * General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
  * (at your option) any later version.
-
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
  * implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
  * License for more details.
-
+ *
  * You should have received a copy of the GNU Lesser General Public License along with this library; if not,
  * write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
  */
@@ -17,6 +17,7 @@
 using System.Collections.Generic;
 using System.Threading;
 using System;
+using DotMP.Exceptions;
 
 namespace DotMP
 {
@@ -245,6 +246,7 @@ namespace DotMP
         /// </summary>
         /// <typeparam name="T">The type of reductions, if applicable.</typeparam>
         /// <param name="forAction">The function to be executed.</param>
+        /// <exception cref="InternalSchedulerException">Thrown if the internal schedulers throw an exception.</exception> 
         internal void PerformLoop<T>(ForAction<T> forAction)
         {
             int start = this.start;
@@ -258,19 +260,26 @@ namespace DotMP
             if (forAction.IsReduction)
                 SetLocal(ref local);
 
-            Parallel.Master(() => scheduler.LoopInit(start, end, num_threads, chunk_size));
-            Parallel.Barrier();
-
-            int chunk_start, chunk_end;
-            ref int curr_iter = ref working_iters[thread_id];
-
-            do
+            try
             {
-                scheduler.LoopNext(thread_id, out chunk_start, out chunk_end);
-                if (chunk_start < chunk_end)
-                    forAction.PerformLoop(ref curr_iter, chunk_start, chunk_end, ref local);
+                Parallel.Master(() => scheduler.LoopInit(start, end, num_threads, chunk_size));
+                Parallel.Barrier();
+
+                int chunk_start, chunk_end;
+                ref int curr_iter = ref working_iters[thread_id];
+
+                do
+                {
+                    scheduler.LoopNext(thread_id, out chunk_start, out chunk_end);
+                    if (chunk_start < chunk_end)
+                        forAction.PerformLoop(ref curr_iter, chunk_start, chunk_end, ref local);
+                }
+                while (chunk_start < chunk_end);
             }
-            while (chunk_start < chunk_end);
+            catch (OverflowException)
+            {
+                throw new InternalSchedulerException(string.Format("An internal overflow exception has occurred within the loop scheduler. This most often happens when the upper bound of the loop is too close to {0}.", int.MaxValue));
+            }
 
             if (forAction.IsReduction)
                 AddReductionValue(local);
