@@ -204,14 +204,18 @@ namespace DotMP
             /// <param name="end">The end of the loop, exclusive.</param>
             /// <param name="num_threads">The number of threads.</param>
             /// <param name="chunk_size">The chunk size.</param>
+            /// <exception cref="OverflowException">Thrown if there's an internal scheduler overflow.</exception> 
             public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
             {
-                this.chunk_size = chunk_size;
-                this.end = end;
-                advance_by = (int)(chunk_size * num_threads);
-                curr_iters = new IterWrapper[num_threads];
-                for (int i = 0; i < num_threads; i++)
-                    curr_iters[i].curr_iter = start + ((int)chunk_size * i);
+                checked
+                {
+                    this.chunk_size = chunk_size;
+                    this.end = end;
+                    advance_by = (int)(chunk_size * num_threads);
+                    curr_iters = new IterWrapper[num_threads];
+                    for (int i = 0; i < num_threads; i++)
+                        curr_iters[i].curr_iter = start + ((int)chunk_size * i);
+                }
             }
 
             /// <summary>
@@ -220,11 +224,15 @@ namespace DotMP
             /// <param name="thread_id">The thread ID.</param>
             /// <param name="start">The start of the chunk, inclusive.</param>
             /// <param name="end">The end of the chunk, exclusive.</param>
+            /// <exception cref="OverflowException">Thrown if there's an internal scheduler overflow.</exception> 
             public override void LoopNext(int thread_id, out int start, out int end)
             {
-                start = curr_iters[thread_id].curr_iter;
-                end = Math.Min(start + (int)chunk_size, this.end);
-                curr_iters[thread_id].curr_iter += advance_by;
+                checked
+                {
+                    start = curr_iters[thread_id].curr_iter;
+                    end = Math.Min(start + (int)chunk_size, this.end);
+                    curr_iters[thread_id].curr_iter += advance_by;
+                }
             }
         }
 
@@ -266,10 +274,14 @@ namespace DotMP
             /// <param name="thread_id">The thread ID.</param>
             /// <param name="start">The start of the chunk, inclusive.</param>
             /// <param name="end">The end of the chunk, exclusive.</param>
+            /// <exception cref="OverflowException">Thrown if there's an internal scheduler overflow.</exception> 
             public override void LoopNext(int thread_id, out int start, out int end)
             {
-                start = Interlocked.Add(ref this.start, (int)chunk_size) - (int)chunk_size;
-                end = Math.Min(start + (int)chunk_size, this.end);
+                checked
+                {
+                    start = Interlocked.Add(ref this.start, (int)chunk_size) - (int)chunk_size;
+                    end = Math.Min(start + (int)chunk_size, this.end);
+                }
             }
         }
 
@@ -321,19 +333,23 @@ namespace DotMP
             /// <param name="thread_id">The thread ID.</param>
             /// <param name="start">The start of the chunk, inclusive.</param>
             /// <param name="end">The end of the chunk, exclusive.</param>
+            /// <exception cref="OverflowException">Thrown if there's an internal scheduler overflow.</exception> 
             public override void LoopNext(int thread_id, out int start, out int end)
             {
-                int chunk_size;
-
-                lock (sched_lock)
+                checked
                 {
-                    start = this.start;
-                    chunk_size = (int)Math.Max(this.chunk_size, (this.end - start) / (num_threads * 2));
+                    int chunk_size;
 
-                    this.start += chunk_size;
+                    lock (sched_lock)
+                    {
+                        start = this.start;
+                        chunk_size = (int)Math.Max(this.chunk_size, (this.end - start) / (num_threads * 2));
+
+                        this.start += chunk_size;
+                    }
+
+                    end = Math.Min(start + chunk_size, this.end);
                 }
-
-                end = Math.Min(start + chunk_size, this.end);
             }
         }
 
@@ -423,29 +439,33 @@ namespace DotMP
             /// <param name="end">The end of the loop, exclusive.</param>
             /// <param name="num_threads">The number of threads.</param>
             /// <param name="chunk_size">The chunk size.</param>
+            /// <exception cref="OverflowException">Thrown if there's an internal scheduler overflow.</exception> 
             public override void LoopInit(int start, int end, uint num_threads, uint chunk_size)
             {
-                this.queues = new Queue[num_threads];
-                this.chunk_size = chunk_size;
-                this.threads_with_remaining_work = num_threads;
-                this.num_threads = num_threads;
-
-                int ctr = start;
-                int div = (end - start) / (int)num_threads;
-
-                for (int i = 0; i < num_threads - 1; i++)
+                checked
                 {
-                    queues[i].start = ctr;
-                    ctr += div;
-                    queues[i].end = ctr;
-                    queues[i].work_remaining = true;
-                    queues[i].qlock = new object();
-                }
+                    this.queues = new Queue[num_threads];
+                    this.chunk_size = chunk_size;
+                    this.threads_with_remaining_work = num_threads;
+                    this.num_threads = num_threads;
 
-                queues[num_threads - 1].start = ctr;
-                queues[num_threads - 1].end = end;
-                queues[num_threads - 1].work_remaining = true;
-                queues[num_threads - 1].qlock = new object();
+                    int ctr = start;
+                    int div = (end - start) / (int)num_threads;
+
+                    for (int i = 0; i < num_threads - 1; i++)
+                    {
+                        queues[i].start = ctr;
+                        ctr += div;
+                        queues[i].end = ctr;
+                        queues[i].work_remaining = true;
+                        queues[i].qlock = new object();
+                    }
+
+                    queues[num_threads - 1].start = ctr;
+                    queues[num_threads - 1].end = end;
+                    queues[num_threads - 1].work_remaining = true;
+                    queues[num_threads - 1].qlock = new object();
+                }
             }
 
             /// <summary>
@@ -454,25 +474,29 @@ namespace DotMP
             /// <param name="thread_id">The thread ID.</param>
             /// <param name="start">The start of the chunk, inclusive.</param>
             /// <param name="end">The end of the chunk, exclusive.</param>
+            /// <exception cref="OverflowException">Thrown if there's an internal scheduler overflow.</exception> 
             public override void LoopNext(int thread_id, out int start, out int end)
             {
-                do
+                checked
                 {
-                    lock (queues[thread_id].qlock)
+                    do
                     {
-                        start = queues[thread_id].start;
-                        end = Math.Min(start + (int)chunk_size, queues[thread_id].end);
-
-                        if (start < end)
+                        lock (queues[thread_id].qlock)
                         {
-                            queues[thread_id].start += (int)chunk_size;
-                            return;
-                        }
-                    }
+                            start = queues[thread_id].start;
+                            end = Math.Min(start + (int)chunk_size, queues[thread_id].end);
 
-                    StealHandler(thread_id);
+                            if (start < end)
+                            {
+                                queues[thread_id].start += (int)chunk_size;
+                                return;
+                            }
+                        }
+
+                        StealHandler(thread_id);
+                    }
+                    while (threads_with_remaining_work > 0);
                 }
-                while (threads_with_remaining_work > 0);
             }
 
             /// <summary>
@@ -499,35 +523,39 @@ namespace DotMP
             /// </summary>
             /// <param name="thread_id">The thread ID.</param>
             /// <returns>Whether or not the steal was successful.</returns>
+            /// <exception cref="OverflowException">Thrown if there's an internal scheduler overflow.</exception> 
             private bool DoSteal(int thread_id)
             {
-                int rng = Random.Shared.Next((int)num_threads);
-                int new_start, new_end;
-
-                lock (queues[rng].qlock)
+                checked
                 {
-                    if (queues[rng].start < queues[rng].end)
+                    int rng = Random.Shared.Next((int)num_threads);
+                    int new_start, new_end;
+
+                    lock (queues[rng].qlock)
                     {
-                        int steal_size = (queues[rng].end - queues[rng].start + 1) / 2;
+                        if (queues[rng].start < queues[rng].end)
+                        {
+                            int steal_size = (queues[rng].end - queues[rng].start + 1) / 2;
 
-                        new_start = queues[rng].start;
-                        new_end = queues[rng].start + steal_size;
+                            new_start = queues[rng].start;
+                            new_end = queues[rng].start + steal_size;
 
-                        queues[rng].start = new_end;
+                            queues[rng].start = new_end;
+                        }
+                        else
+                        {
+                            return false;
+                        }
                     }
-                    else
+
+                    lock (queues[thread_id].qlock)
                     {
-                        return false;
+                        queues[thread_id].start = new_start;
+                        queues[thread_id].end = new_end;
                     }
-                }
 
-                lock (queues[thread_id].qlock)
-                {
-                    queues[thread_id].start = new_start;
-                    queues[thread_id].end = new_end;
+                    return true;
                 }
-
-                return true;
             }
         }
     }
