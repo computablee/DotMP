@@ -1,9 +1,10 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,177,92,203"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,209,92,235"/>
 <area shape="rect" id="node2" href="$classDotMP_1_1Exceptions_1_1CannotPerformNestedParallelismException.html" title="Exception thrown if a Parallel.ParallelRegion is created inside of another Parallel...." alt="" coords="140,5,380,47"/>
 <area shape="rect" id="node3" href="$classDotMP_1_1Exceptions_1_1CannotPerformNestedWorksharingException.html" title="Exception thrown if a Parallel.Single is created inside of a Parallel.For or Parallel...." alt="" coords="140,71,380,112"/>
 <area shape="rect" id="node4" href="$classDotMP_1_1Exceptions_1_1ImproperTaskwaitUsageException.html" title="Exception thrown if the wrong taskwait overload was used from within a task." alt="" coords="159,136,361,177"/>
-<area shape="rect" id="node5" href="$classDotMP_1_1Exceptions_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions." alt="" coords="167,201,353,243"/>
-<area shape="rect" id="node6" href="$classDotMP_1_1Exceptions_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel&#45;only construct is used outside of a parallel region." alt="" coords="147,267,373,308"/>
-<area shape="rect" id="node7" href="$classDotMP_1_1Exceptions_1_1TooManyIterationsException.html" title="Exception thrown if a for loop has too many iterations and would cause the schedulers to fail." alt="" coords="160,332,360,373"/>
+<area shape="rect" id="node5" href="$classDotMP_1_1Exceptions_1_1InternalSchedulerException.html" title="Exception thrown if the internal schedulers encounter an overflow." alt="" coords="164,201,356,243"/>
+<area shape="rect" id="node6" href="$classDotMP_1_1Exceptions_1_1InvalidArgumentsException.html" title="Exception thrown if invalid arguments are specified to DotMP functions." alt="" coords="167,267,353,308"/>
+<area shape="rect" id="node7" href="$classDotMP_1_1Exceptions_1_1NotInParallelRegionException.html" title="Exception thrown if a parallel&#45;only construct is used outside of a parallel region." alt="" coords="147,332,373,373"/>
+<area shape="rect" id="node8" href="$classDotMP_1_1Exceptions_1_1TooManyIterationsException.html" title="Exception thrown if a for loop has too many iterations and would cause the schedulers to fail." alt="" coords="160,397,360,439"/>
 </map>
