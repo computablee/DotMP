@@ -25,6 +25,19 @@
 
   <ItemGroup>
     <PackageReference Include="ILGPU" Version="1.5.1" />
+    <PackageReference Include="T4.Build" Version="0.2.4" />
+
+    <None Include="GPU/AcceleratorHandler.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GPU/AcceleratorHandler.tt</DependentUpon>
+    </None>
+
+    <None Include="GPU/Gpu.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>GPU/Gpu.tt</DependentUpon>
+    </None>
   </ItemGroup>
 
 </Project>
