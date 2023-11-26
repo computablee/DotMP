@@ -9,6 +9,8 @@ docs/*
 .vscode
 *.opencover.xml
 *.sln
+AcceleratorHandler.cs
+Gpu.cs
 ProcessedREADME.md
 
 # User-specific files

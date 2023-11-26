@@ -160,12 +160,14 @@ namespace DotMP
         {
             get
             {
-                if (in_for_pv == null)
+                int tid = Parallel.GetThreadNum();
+
+                if (in_for_pv == null || tid >= in_for_pv.Length)
                 {
                     return false;
                 }
 
-                return in_for_pv[Parallel.GetThreadNum()];
+                return in_for_pv[tid];
             }
             set
             {

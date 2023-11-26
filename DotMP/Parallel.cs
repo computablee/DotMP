@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
+using System.ComponentModel;
 using System.Threading;
+using System.Diagnostics.CodeAnalysis;
 
 namespace DotMP
 {
@@ -14,15 +17,15 @@ namespace DotMP
         /// <summary>
         /// The dictionary for critical regions.
         /// </summary>
-        private static volatile Dictionary<int, object> critical_lock = new Dictionary<int, object>();
+        private static volatile Dictionary<string, object> critical_lock = new Dictionary<string, object>();
         /// <summary>
         /// The dictionary for single regions.
         /// </summary>
-        private static volatile HashSet<int> single_thread = new HashSet<int>();
+        private static volatile HashSet<string> single_thread = new HashSet<string>();
         /// <summary>
         /// The dictionary for ordered regions.
         /// </summary>
-        private static volatile Dictionary<int, int> ordered = new Dictionary<int, int>();
+        private static volatile Dictionary<string, int> ordered = new Dictionary<string, int>();
         /// <summary>
         /// Barrier object for DotMP.Parallel.Barrier()
         /// </summary>
@@ -104,6 +107,17 @@ namespace DotMP
                         break;
                 }
             }
+        }
+
+        /// <summary>
+        /// Formats the caller information for determining uniqueness of a call.
+        /// </summary>
+        /// <param name="filename">The calling file.</param>
+        /// <param name="linenum">The calling line number.</param>
+        /// <returns>A formatted string representing "{filename}:{linenum}"</returns>
+        private static string FormatCaller(string filename, int linenum)
+        {
+            return string.Format("{0}:{1}", filename, linenum);
         }
 
         /// <summary>
@@ -950,13 +964,57 @@ namespace DotMP
         /// Creates a critical region.
         /// A critical region is a region of code that can only be executed by one thread at a time.
         /// If a thread encounters a critical region while another thread is inside a critical region, it will wait until the other thread is finished.
+        /// 
+        /// THIS METHOD IS NOW DEPRECATED.
         /// </summary>
         /// <param name="id">The ID of the critical region. Must be unique per region but consistent across all threads.</param>
         /// <param name="action">The action to be performed in the critical region.</param>
         /// <returns>The ID of the critical region.</returns>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        [Obsolete("This version of Critical is deprecated. Omit the id parameter for the updated version. This overload will be removed in a future release.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [ExcludeFromCodeCoverage]
         public static int Critical(int id, Action action)
         {
+            if (!InParallel())
+            {
+                throw new NotInParallelRegionException("Cannot use DotMP Critical outside of a parallel region.");
+            }
+
+            object lock_obj;
+
+            lock (critical_lock)
+            {
+                if (!critical_lock.ContainsKey(id.ToString()))
+                {
+                    critical_lock.Add(id.ToString(), new object());
+                }
+
+                lock_obj = critical_lock[id.ToString()];
+            }
+
+            lock (lock_obj)
+            {
+                action();
+            }
+
+            return id;
+        }
+
+        /// <summary>
+        /// Creates a critical region.
+        /// A critical region is a region of code that can only be executed by one thread at a time.
+        /// If a thread encounters a critical region while another thread is inside a critical region, it will wait until the other thread is finished.
+        /// </summary>
+        /// <param name="action">The action to be performed in the critical region.</param>
+        /// <param name="line">The line number this method was called from.</param>
+        /// <param name="path">The path to the file this method was called from.</param>
+        /// <returns>The ID of the critical region.</returns>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        public static void Critical(Action action, [CallerFilePath] string path = "", [CallerLineNumber] int line = 0)
+        {
+            string id = FormatCaller(path, line);
+
             if (!InParallel())
             {
                 throw new NotInParallelRegionException("Cannot use DotMP Critical outside of a parallel region.");
@@ -978,8 +1036,6 @@ namespace DotMP
             {
                 action();
             }
-
-            return id;
         }
 
         /// <summary>
@@ -1034,13 +1090,67 @@ namespace DotMP
         /// Creates a single region.
         /// A single region is only executed once per Parallel.ParallelRegion.
         /// The first thread to encounter the single region marks the region as encountered, then executes it.
+        /// 
+        /// THIS METHOD IS NOW DEPRECATED.
         /// </summary>
         /// <param name="id">The ID of the single region. Must be unique per region but consistent across all threads.</param>
         /// <param name="action">The action to be performed in the single region.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
         /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
+        [Obsolete("This version of Single is deprecated. Omit the id parameter for the updated version. This overload will be removed in a future release.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [ExcludeFromCodeCoverage]
         public static void Single(int id, Action action)
         {
+            var freg = new ForkedRegion();
+            bool new_single = false;
+
+            if (!freg.in_parallel)
+            {
+                throw new NotInParallelRegionException("Cannot use DotMP Single outside of a parallel region.");
+            }
+
+            var ws = new WorkShare();
+
+            if (ws.in_for)
+            {
+                throw new CannotPerformNestedWorksharingException("Cannot use DotMP Single nested within other worksharing constructs.");
+            }
+
+            Interlocked.Increment(ref freg.in_workshare);
+
+            lock (single_thread)
+            {
+                if (!single_thread.Contains(id.ToString()))
+                {
+                    single_thread.Add(id.ToString());
+                    new_single = true;
+                }
+            }
+
+            if (new_single)
+            {
+                action();
+            }
+
+            Interlocked.Decrement(ref freg.in_workshare);
+
+            Barrier();
+        }
+
+        /// <summary>
+        /// Creates a single region.
+        /// A single region is only executed once per Parallel.ParallelRegion.
+        /// The first thread to encounter the single region marks the region as encountered, then executes it.
+        /// </summary>
+        /// <param name="action">The action to be performed in the single region.</param>
+        /// <param name="line">The line number this method was called from.</param>
+        /// <param name="path">The path to the file this method was called from.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        /// <exception cref="CannotPerformNestedWorksharingException">Thrown when nested inside another worksharing region.</exception>
+        public static void Single(Action action, [CallerFilePath] string path = "", [CallerLineNumber] int line = 0)
+        {
+            string id = FormatCaller(path, line);
             var freg = new ForkedRegion();
             bool new_single = false;
 
@@ -1081,10 +1191,15 @@ namespace DotMP
         /// Creates an ordered region.
         /// An ordered region is a region of code that is executed in order inside of a For() or ForReduction&lt;T&gt;() loop.
         /// This also acts as an implicit Critical() region.
+        /// 
+        /// THIS METHOD IS NOW DEPRECATED.
         /// </summary>
         /// <param name="id">The ID of the ordered region. Must be unique per region but consistent across all threads.</param>
         /// <param name="action">The action to be performed in the ordered region.</param>
         /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        [Obsolete("This version of Ordered is deprecated. Omit the id parameter for the updated version. This overload will be removed in a future release.")]
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        [ExcludeFromCodeCoverage]
         public static void Ordered(int id, Action action)
         {
             var freg = new ForkedRegion();
@@ -1098,6 +1213,49 @@ namespace DotMP
 
             lock (ordered)
             {
+                if (!ordered.ContainsKey(id.ToString()))
+                {
+                    ordered.Add(id.ToString(), 0);
+                }
+                Thread.MemoryBarrier();
+            }
+
+            WorkShare ws = new WorkShare();
+
+            while (ordered[id.ToString()] != ws.thread.working_iter)
+            {
+                freg.reg.spin[tid].SpinOnce();
+            }
+
+            action();
+
+            lock (ordered)
+            {
+                ordered[id.ToString()]++;
+            }
+        }
+
+        /// <summary>
+        /// Creates an ordered region.
+        /// An ordered region is a region of code that is executed in order inside of a For() or ForReduction&lt;T&gt;() loop.
+        /// This also acts as an implicit Critical() region.
+        /// </summary>
+        /// <param name="action">The action to be performed in the ordered region.</param>
+        /// <param name="line">The line number this method was called from.</param>
+        /// <param name="path">The path to the file this method was called from.</param>
+        /// <exception cref="NotInParallelRegionException">Thrown when not in a parallel region.</exception>
+        public static void Ordered(Action action, [CallerFilePath] string path = "", [CallerLineNumber] int line = 0)
+        {
+            string id = FormatCaller(path, line);
+            var freg = new ForkedRegion();
+
+            if (!freg.in_parallel)
+            {
+                throw new NotInParallelRegionException("Cannot use DotMP Ordered outside of a parallel region.");
+            }
+
+            lock (ordered)
+            {
                 if (!ordered.ContainsKey(id))
                 {
                     ordered.Add(id, 0);
@@ -1107,10 +1265,7 @@ namespace DotMP
 
             WorkShare ws = new WorkShare();
 
-            while (ordered[id] != ws.thread.working_iter)
-            {
-                freg.reg.spin[tid].SpinOnce();
-            }
+            while (ordered[id] != ws.thread.working_iter) ;
 
             action();
 
