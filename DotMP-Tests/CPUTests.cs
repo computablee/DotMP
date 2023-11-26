@@ -38,7 +38,7 @@ namespace DotMPTests
         /// Constructor to write output.
         /// </summary>
         /// <param name="output">Output object.</param>
-        public ParallelTests(ITestOutputHelper output)
+        public CPUTests(ITestOutputHelper output)
         {
             this.output = output;
         }
