@@ -95,14 +95,17 @@ namespace DotMPTests
                     else
                         iters_hit[i, j].Should().Be(0);
 
-            /*iters_hit = null;
+            iters_hit = null;
 
             int[,,] iters_hit_3 = new int[128, 128, 64];
 
-            DotMP.Parallel.ParallelForCollapse((35, 64), (16, 100), (10, 62), num_threads: 8, chunk_size: 3, schedule: Schedule.Dynamic, action: (i, j, k) =>
+            using (var buf = new Buffer<int>(iters_hit_3, DotMP.GPU.Buffer.Behavior.ToFrom))
             {
-                DotMP.Atomic.Inc(ref iters_hit_3[i, j, k]);
-            });
+                DotMP.GPU.Parallel.ParallelForCollapse((35, 64), (16, 100), (10, 62), buf, action: (i, j, k, iters_hit_3) =>
+                {
+                    iters_hit_3[i, j, k]++;
+                });
+            }
 
             for (int i = 0; i < 128; i++)
                 for (int j = 0; j < 128; j++)
@@ -112,9 +115,14 @@ namespace DotMPTests
                         else
                             iters_hit_3[i, j, k].Should().Be(0);
 
-            iters_hit_3 = null;*/
+            iters_hit_3 = null;
         }
 
+        /// <summary>
+        /// Randomly initialize an array of type T.
+        /// </summary>
+        /// <typeparam name="T">The type to initialize to.</typeparam>
+        /// <param name="arr">The allocated array to store values into.</param>
         private void random_init<T>(T[] arr)
         {
             Random r = new Random();
