@@ -1425,7 +1425,7 @@ namespace DotMP
         {
             var freg = new ForkedRegion();
 
-            return (freg.reg is not null)
+            return freg.in_parallel
                     ? (int)freg.reg.num_threads
                     : 1;
         }
