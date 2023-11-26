@@ -89,4 +89,16 @@ namespace DotMP.Exceptions
         /// <param name="msg">The message to associate with the exception.</param>
         public ImproperTaskwaitUsageException(string msg) : base(msg) { }
     }
+
+    /// <summary>
+    /// Exception thrown if the internal schedulers encounter an overflow.
+    /// </summary>
+    public class InternalSchedulerException : Exception
+    {
+        /// <summary>
+        /// Constructor with a message.
+        /// </summary>
+        /// <param name="msg">The message to associate with the exception.</param>
+        public InternalSchedulerException(string msg) : base(msg) { }
+    }
 }
