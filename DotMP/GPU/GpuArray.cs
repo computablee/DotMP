@@ -33,7 +33,7 @@ namespace DotMP.GPU
         /// <summary>
         /// The ILGPU view for 1D arrays.
         /// </summary>
-        //private ArrayView1D<T, Stride1D.Dense> view1d;
+        private ArrayView1D<T, Stride1D.Dense> view1d;
 
         /// <summary>
         /// The ILGPU view for 2D arrays.
@@ -43,7 +43,7 @@ namespace DotMP.GPU
         /// <summary>
         /// The ILGPU view for 3D arrays.
         /// </summary>
-        //private ArrayView3D<T, Stride3D.DenseZY> view3d;
+        private ArrayView3D<T, Stride3D.DenseZY> view3d;
 
         /// <summary>
         /// Number of dimensions.
@@ -58,29 +58,28 @@ namespace DotMP.GPU
         {
             switch (buf.Dimensions)
             {
-                /*case 1:
+                default:
+                case 1:
                     view1d = buf.View1D;
                     // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
                     view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
                     // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
                     view3d = new Buffer<T>(new T[1, 1, 1], Buffer.Behavior.NoCopy).View3D;
-                    break;*/
-                default:
+                    break;
                 case 2:
                     // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                    //view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
+                    view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
                     view2d = buf.View2D;
                     // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                    //view3d = new Buffer<T>(new T[1, 1, 1], Buffer.Behavior.NoCopy).View3D;
+                    view3d = new Buffer<T>(new T[1, 1, 1], Buffer.Behavior.NoCopy).View3D;
                     break;
-                    /*case 3:
-                    default:
-                        // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                        view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
-                        // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                        view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
-                        view3d = buf.View3D;
-                        break;*/
+                case 3:
+                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                    view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
+                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
+                    view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
+                    view3d = buf.View3D;
+                    break;
             }
 
             dims = buf.Dimensions;
@@ -91,10 +90,10 @@ namespace DotMP.GPU
         /// </summary>
         /// <param name="idx">The ID to index into.</param>
         /// <returns>The data at that ID.</returns>
-        //public ref T this[int idx]
-        //{
-        //    get => ref view1d[idx];
-        //}
+        public ref T this[int idx]
+        {
+            get => ref view1d[idx];
+        }
 
         /// <summary>
         /// Overload for [,] operator.
@@ -114,10 +113,10 @@ namespace DotMP.GPU
         /// <param name="j">The second ID to index into.</param>
         /// <param name="k">The third ID to index into.</param>
         /// <returns>The data at that ID.</returns>
-        //public ref T this[int i, int j, int k]
-        //{
-        //    get => ref view3d[i, j, k];
-        //}
+        public ref T this[int i, int j, int k]
+        {
+            get => ref view3d[i, j, k];
+        }
 
         /// <summary>
         /// Gets the length of the array.
@@ -128,13 +127,13 @@ namespace DotMP.GPU
             {
                 switch (dims)
                 {
-                    //case 1:
+                    case 1:
                     default:
-                    //    return view1d.IntLength;
+                        return view1d.IntLength;
                     case 2:
                         return view2d.IntLength;
-                        //case 3:
-                        //    return view3d.IntLength;
+                    case 3:
+                        return view3d.IntLength;
                 }
             }
         }
