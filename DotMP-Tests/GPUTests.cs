@@ -14,7 +14,7 @@ using Xunit.Abstractions;
 namespace DotMPTests
 {
     /// <summary>
-    /// CPU tests for the DotMP library.
+    /// GPU tests for the DotMP library.
     /// </summary>
     public class GPUTests
     {
