@@ -75,9 +75,10 @@ $(function() {
 </td></tr>
 <tr><td><img src="inherit_graph_1.png" border="0" usemap="#aDotMP_8DAG_3_01T_00_01U_01_4" alt=""/>
 <map name="aDotMP_8DAG_3_01T_00_01U_01_4" id="aDotMP_8DAG_3_01T_00_01U_01_4">
-<area shape="rect" title=" " alt="" coords="5,31,104,57"/>
-<area shape="rect" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies." alt="" coords="152,5,304,32"/>
-<area shape="rect" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in..." alt="" coords="153,56,303,83"/>
+<area shape="rect" title=" " alt="" coords="5,56,104,83"/>
+<area shape="rect" href="classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies." alt="" coords="164,5,316,32"/>
+<area shape="rect" href="classDotMP_1_1GPU_1_1Buffer.html" title="Buffer to manage GPU memory. Should only be created on the CPU." alt="" coords="152,56,328,83"/>
+<area shape="rect" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in..." alt="" coords="165,107,315,133"/>
 </map>
 </td></tr>
 <tr><td><img src="inherit_graph_2.png" border="0" usemap="#aDotMP_8DAG_3_01ulong_00_01Action_01_4" alt=""/>
@@ -107,12 +108,32 @@ $(function() {
 <area shape="rect" href="classDotMP_1_1ForkedRegion.html" title="Contains the Region object and controls for creating and starting a parallel region." alt="" coords="5,5,160,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_6.png" border="0" usemap="#aDotMP_8IntWrapper" alt=""/>
+<tr><td><img src="inherit_graph_6.png" border="0" usemap="#aDotMP_8GPU_8AcceleratorHandler" alt=""/>
+<map name="aDotMP_8GPU_8AcceleratorHandler" id="aDotMP_8GPU_8AcceleratorHandler">
+<area shape="rect" href="classDotMP_1_1GPU_1_1AcceleratorHandler.html" title="The handler class managing GPU acceleration." alt="" coords="5,5,229,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_7.png" border="0" usemap="#aDotMP_8GPU_8GPUArray_3_01T_01_4" alt=""/>
+<map name="aDotMP_8GPU_8GPUArray_3_01T_01_4" id="aDotMP_8GPU_8GPUArray_3_01T_01_4">
+<area shape="rect" href="structDotMP_1_1GPU_1_1GPUArray.html" title="Wrapper object for representing arrays on the GPU." alt="" coords="5,5,205,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_8.png" border="0" usemap="#aDotMP_8GPU_8Index" alt=""/>
+<map name="aDotMP_8GPU_8Index" id="aDotMP_8GPU_8Index">
+<area shape="rect" href="structDotMP_1_1GPU_1_1Index.html" title="Represents an index passed as the first index argument." alt="" coords="5,5,140,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_9.png" border="0" usemap="#aDotMP_8GPU_8Parallel" alt=""/>
+<map name="aDotMP_8GPU_8Parallel" id="aDotMP_8GPU_8Parallel">
+<area shape="rect" href="classDotMP_1_1GPU_1_1Parallel.html" title="The main class of DotMP&#39;s GPU API, powered by the ILGPU project. Contains all the main methods for co..." alt="" coords="5,5,152,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_10.png" border="0" usemap="#aDotMP_8IntWrapper" alt=""/>
 <map name="aDotMP_8IntWrapper" id="aDotMP_8IntWrapper">
 <area shape="rect" href="classDotMP_1_1IntWrapper.html" title="Wrapper around integers as a reference type." alt="" coords="5,5,144,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_7.png" border="0" usemap="#aDotMP_8IScheduler" alt=""/>
+<tr><td><img src="inherit_graph_11.png" border="0" usemap="#aDotMP_8IScheduler" alt=""/>
 <map name="aDotMP_8IScheduler" id="aDotMP_8IScheduler">
 <area shape="rect" href="interfaceDotMP_1_1IScheduler.html" title="Interface for user&#45;defined schedulers." alt="" coords="5,155,140,182"/>
 <area shape="rect" href="classDotMP_1_1Schedule.html" title="Represents the various scheduling strategies for parallel for loops. Detailed explanations of each sc..." alt="" coords="194,130,321,157"/>
@@ -124,60 +145,65 @@ $(function() {
 <area shape="rect" href="classDotMP_1_1Schedulers_1_1WorkStealingScheduler.html" title="Implementation of work&#45;stealing scheduling." alt="" coords="387,240,615,281"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_8.png" border="0" usemap="#aDotMP_8Lock" alt=""/>
+<tr><td><img src="inherit_graph_12.png" border="0" usemap="#aDotMP_8Lock" alt=""/>
 <map name="aDotMP_8Lock" id="aDotMP_8Lock">
 <area shape="rect" href="classDotMP_1_1Lock.html" title="A lock that can be used in a parallel region. Also contains instance methods for locking...." alt="" coords="5,5,103,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_9.png" border="0" usemap="#aDotMP_8Parallel" alt=""/>
+<tr><td><img src="inherit_graph_13.png" border="0" usemap="#aDotMP_8Parallel" alt=""/>
 <map name="aDotMP_8Parallel" id="aDotMP_8Parallel">
 <area shape="rect" href="classDotMP_1_1Parallel.html" title="The main class of DotMP. Contains all the main methods for parallelism. For users,..." alt="" coords="5,5,120,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_10.png" border="0" usemap="#aDotMP_8Region" alt=""/>
+<tr><td><img src="inherit_graph_14.png" border="0" usemap="#aDotMP_8Region" alt=""/>
 <map name="aDotMP_8Region" id="aDotMP_8Region">
 <area shape="rect" href="classDotMP_1_1Region.html" title="Contains relevant internal information about parallel regions, including the threads and the function..." alt="" coords="5,5,117,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_11.png" border="0" usemap="#aDotMP_8Schedulers_8StaticScheduler_8IterWrapper" alt=""/>
+<tr><td><img src="inherit_graph_15.png" border="0" usemap="#aDotMP_8Schedulers_8StaticScheduler_8IterWrapper" alt=""/>
 <map name="aDotMP_8Schedulers_8StaticScheduler_8IterWrapper" id="aDotMP_8Schedulers_8StaticScheduler_8IterWrapper">
 <area shape="rect" href="structDotMP_1_1Schedulers_1_1StaticScheduler_1_1IterWrapper.html" title="Struct to ensure that the curr_iter variables cannot reside on the same cache line...." alt="" coords="5,5,252,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_12.png" border="0" usemap="#aDotMP_8Schedulers_8WorkStealingScheduler_8Queue" alt=""/>
+<tr><td><img src="inherit_graph_16.png" border="0" usemap="#aDotMP_8Schedulers_8WorkStealingScheduler_8Queue" alt=""/>
 <map name="aDotMP_8Schedulers_8WorkStealingScheduler_8Queue" id="aDotMP_8Schedulers_8WorkStealingScheduler_8Queue">
 <area shape="rect" href="structDotMP_1_1Schedulers_1_1WorkStealingScheduler_1_1Queue.html" title="Queue struct, ensuring that no two values share a cache line. This avoids false sharing issues." alt="" coords="5,5,233,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_13.png" border="0" usemap="#aDotMP_8SectionsContainer" alt=""/>
+<tr><td><img src="inherit_graph_17.png" border="0" usemap="#aDotMP_8SectionsContainer" alt=""/>
 <map name="aDotMP_8SectionsContainer" id="aDotMP_8SectionsContainer">
 <area shape="rect" href="classDotMP_1_1SectionsContainer.html" title="Static class that contains necessary information for sections. Sections allow for the user to submit ..." alt="" coords="5,5,191,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_14.png" border="0" usemap="#aDotMP_8Shared_3_01U_01_4" alt=""/>
+<tr><td><img src="inherit_graph_18.png" border="0" usemap="#aDotMP_8Shared_3_01U_01_4" alt=""/>
 <map name="aDotMP_8Shared_3_01U_01_4" id="aDotMP_8Shared_3_01U_01_4">
 <area shape="rect" href="classDotMP_1_1Shared.html" title=" " alt="" coords="5,13,157,39"/>
 <area shape="rect" href="classDotMP_1_1SharedEnumerable.html" title="A specialization of Shared for items that can be indexed with square brackets. The DotMP&#45;parallelized..." alt="" coords="205,5,396,47"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_15.png" border="0" usemap="#aDotMP_8TaskingContainer" alt=""/>
+<tr><td><img src="inherit_graph_19.png" border="0" usemap="#aDotMP_8TaskingContainer" alt=""/>
 <map name="aDotMP_8TaskingContainer" id="aDotMP_8TaskingContainer">
 <area shape="rect" href="classDotMP_1_1TaskingContainer.html" title="A simple container for a Queue&lt;Action&gt; for managing tasks. Will grow in complexity as dependencies ar..." alt="" coords="5,5,184,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_16.png" border="0" usemap="#aDotMP_8TaskUUID" alt=""/>
+<tr><td><img src="inherit_graph_20.png" border="0" usemap="#aDotMP_8TaskUUID" alt=""/>
 <map name="aDotMP_8TaskUUID" id="aDotMP_8TaskUUID">
 <area shape="rect" href="classDotMP_1_1TaskUUID.html" title="Task UUID as returned from Parallel.Task." alt="" coords="5,5,136,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_17.png" border="0" usemap="#aDotMP_8WorkShare" alt=""/>
+<tr><td><img src="inherit_graph_21.png" border="0" usemap="#aDotMP_8WorkShare" alt=""/>
 <map name="aDotMP_8WorkShare" id="aDotMP_8WorkShare">
 <area shape="rect" href="classDotMP_1_1WorkShare.html" title="Contains all relevant information about a parallel for loop. Contains a collection of Thr objects,..." alt="" coords="5,5,143,32"/>
 </map>
 </td></tr>
-<tr><td><img src="inherit_graph_18.png" border="0" usemap="#aDotMPTests_8ParallelTests" alt=""/>
-<map name="aDotMPTests_8ParallelTests" id="aDotMPTests_8ParallelTests">
-<area shape="rect" href="classDotMPTests_1_1ParallelTests.html" title="Tests for the DotMP library." alt="" coords="5,5,188,32"/>
+<tr><td><img src="inherit_graph_22.png" border="0" usemap="#aDotMPTests_8CPUTests" alt=""/>
+<map name="aDotMPTests_8CPUTests" id="aDotMPTests_8CPUTests">
+<area shape="rect" href="classDotMPTests_1_1CPUTests.html" title="CPU tests for the DotMP library." alt="" coords="5,5,168,32"/>
+</map>
+</td></tr>
+<tr><td><img src="inherit_graph_23.png" border="0" usemap="#aDotMPTests_8GPUTests" alt=""/>
+<map name="aDotMPTests_8GPUTests" id="aDotMPTests_8GPUTests">
+<area shape="rect" href="classDotMPTests_1_1GPUTests.html" title="CPU tests for the DotMP library." alt="" coords="5,5,168,32"/>
 </map>
 </td></tr>
 </table>

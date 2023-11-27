@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['queue_307',['Queue',['../structDotMP_1_1Schedulers_1_1WorkStealingScheduler_1_1Queue.html',1,'DotMP::Schedulers::WorkStealingScheduler']]]
+  ['parallel_424',['Parallel',['../classDotMP_1_1GPU_1_1Parallel.html',1,'DotMP.GPU.Parallel'],['../classDotMP_1_1Parallel.html',1,'DotMP.Parallel']]]
 ];

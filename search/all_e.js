@@ -1,6 +1,26 @@
 var searchData=
 [
-  ['qlock_192',['qlock',['../structDotMP_1_1Schedulers_1_1WorkStealingScheduler_1_1Queue.html#abd32a163176e0f845195e1f13d369c40',1,'DotMP::Schedulers::WorkStealingScheduler::Queue']]],
-  ['queue_193',['Queue',['../structDotMP_1_1Schedulers_1_1WorkStealingScheduler_1_1Queue.html',1,'DotMP::Schedulers::WorkStealingScheduler']]],
-  ['queues_194',['queues',['../classDotMP_1_1Schedulers_1_1WorkStealingScheduler.html#a6e963bcda5e475d19ed4d63187d0b229',1,'DotMP::Schedulers::WorkStealingScheduler']]]
+  ['offset_228',['offset',['../structDotMP_1_1GPU_1_1Index.html#a9fe92d7795a98e2f5c950af9f5611dd3',1,'DotMP::GPU::Index']]],
+  ['omp_5fcol_5f2_229',['omp_col_2',['../classDotMP_1_1ForAction.html#aefc1f702300130334815cf5b1a00ac2e',1,'DotMP::ForAction']]],
+  ['omp_5fcol_5f3_230',['omp_col_3',['../classDotMP_1_1ForAction.html#ac3b407d854d4bf5891c5315193e94ece',1,'DotMP::ForAction']]],
+  ['omp_5fcol_5f4_231',['omp_col_4',['../classDotMP_1_1ForAction.html#a7ae7419fdcfa23f3e2ba1558e5f20264',1,'DotMP::ForAction']]],
+  ['omp_5fcol_5fn_232',['omp_col_n',['../classDotMP_1_1ForAction.html#a3742f6fb85315525fc6bc4318da087bb',1,'DotMP::ForAction']]],
+  ['omp_5ffn_233',['omp_fn',['../classDotMP_1_1ForAction.html#a182c48918feab289eef9fa051c19194a',1,'DotMP.ForAction.omp_fn()'],['../classDotMP_1_1Region.html#a8b47660ccc8e238df34688a39f2c8846',1,'DotMP.Region.omp_fn()']]],
+  ['omp_5fred_234',['omp_red',['../classDotMP_1_1ForAction.html#a80e20120f1c95e6234dae8e7a1c1415f',1,'DotMP::ForAction']]],
+  ['omp_5fred_5fcol_5f2_235',['omp_red_col_2',['../classDotMP_1_1ForAction.html#aeaeff8748f35ea6a5f3502a585a54183',1,'DotMP::ForAction']]],
+  ['omp_5fred_5fcol_5f3_236',['omp_red_col_3',['../classDotMP_1_1ForAction.html#affdf7de77294dde1b83ce3cfe41b9b3b',1,'DotMP::ForAction']]],
+  ['omp_5fred_5fcol_5f4_237',['omp_red_col_4',['../classDotMP_1_1ForAction.html#ad334ebf9a191d3b174d3baaf1d072153',1,'DotMP::ForAction']]],
+  ['omp_5fred_5fcol_5fn_238',['omp_red_col_n',['../classDotMP_1_1ForAction.html#adab739dbde910ba65d60ec602d4aa7a9',1,'DotMP::ForAction']]],
+  ['op_239',['op',['../classDotMP_1_1WorkShare.html#a6634d9c02d5866e509f27386bfa1b99b',1,'DotMP::WorkShare']]],
+  ['operations_240',['Operations',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346',1,'DotMP']]],
+  ['operations_2ecs_241',['Operations.cs',['../Operations_8cs.html',1,'']]],
+  ['operator_20int_242',['operator int',['../structDotMP_1_1GPU_1_1Index.html#a04ff467e0a32b729561b2dd3f9526819',1,'DotMP::GPU::Index']]],
+  ['operator_20t_243',['operator T',['../classDotMP_1_1Shared.html#aae06c25ad2a512e1d486112d1cb98e9f',1,'DotMP::Shared']]],
+  ['operator_20u_244',['operator U',['../classDotMP_1_1SharedEnumerable.html#aa477daa4c7d8505d92cc57909636c59f',1,'DotMP::SharedEnumerable']]],
+  ['or_245',['Or',['../classDotMP_1_1Atomic.html#a3d8bd944b6145809eb60f215691cf9c4',1,'DotMP.Atomic.Or(ref int target, int value)'],['../classDotMP_1_1Atomic.html#a3ea8e5113b822136d7e72d373d2d5989',1,'DotMP.Atomic.Or(ref uint target, uint value)'],['../classDotMP_1_1Atomic.html#a651f6b93528cda8e07d3cfdbb625ff65',1,'DotMP.Atomic.Or(ref long target, long value)'],['../classDotMP_1_1Atomic.html#a8be099f2d19445c131676b603420c259',1,'DotMP.Atomic.Or(ref ulong target, ulong value)']]],
+  ['ordered_246',['Ordered',['../classDotMP_1_1Parallel.html#a8aaf51a7e2f0be6f3541257764ab982e',1,'DotMP.Parallel.Ordered(int id, Action action)'],['../classDotMP_1_1Parallel.html#abc7647a44eaad9931dadf7373253e8ca',1,'DotMP.Parallel.Ordered(Action action, [CallerFilePath] string path=&quot;&quot;, [CallerLineNumber] int line=0)']]],
+  ['ordered_247',['ordered',['../classDotMP_1_1Parallel.html#a99727ba26b27ab7f8ccd4e43e131faa6',1,'DotMP::Parallel']]],
+  ['ordered_5fworks_248',['Ordered_works',['../classDotMPTests_1_1CPUTests.html#a9516e22737de5d2fb4b285f62bf535e1',1,'DotMPTests::CPUTests']]],
+  ['output_249',['output',['../classDotMPTests_1_1CPUTests.html#a03fde7e18114ed7a7411502d3b60b002',1,'DotMPTests::CPUTests']]],
+  ['overflow_5ffor_5fshould_5fexcept_250',['Overflow_for_should_except',['../classDotMPTests_1_1CPUTests.html#a9cf542fc53734f7b2ce3a3f098e2d3ea',1,'DotMPTests::CPUTests']]]
 ];

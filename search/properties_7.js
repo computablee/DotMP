@@ -1,7 +1,4 @@
 var searchData=
 [
-  ['ranges_590',['ranges',['../classDotMP_1_1ForAction.html#af6766205a5f277bda14d825a243b5b26',1,'DotMP::ForAction']]],
-  ['reduction_5fvalues_591',['reduction_values',['../classDotMP_1_1WorkShare.html#a801c828093592fdbfb4d6658f85b4c25',1,'DotMP::WorkShare']]],
-  ['reg_592',['reg',['../classDotMP_1_1ForkedRegion.html#a2f06280f3a34fe77da626a7cd65bb0e2',1,'DotMP::ForkedRegion']]],
-  ['runtime_593',['Runtime',['../classDotMP_1_1Schedule.html#ad938151822cdde06bc0a2fdcf8ac48ee',1,'DotMP::Schedule']]]
+  ['op_813',['op',['../classDotMP_1_1WorkShare.html#a6634d9c02d5866e509f27386bfa1b99b',1,'DotMP::WorkShare']]]
 ];

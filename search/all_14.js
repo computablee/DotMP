@@ -1,15 +1,6 @@
 var searchData=
 [
-  ['work_5fremaining_276',['work_remaining',['../structDotMP_1_1Schedulers_1_1WorkStealingScheduler_1_1Queue.html#a48cb3944506c888a21d10265fabcf9c8',1,'DotMP::Schedulers::WorkStealingScheduler::Queue']]],
-  ['working_5fiter_277',['working_iter',['../classDotMP_1_1WorkShare.html#acbd91b070e3a3feb487530aacba8f004',1,'DotMP::WorkShare']]],
-  ['working_5fiters_278',['working_iters',['../classDotMP_1_1WorkShare.html#a29ec7011d03930ff0b12f24b1518955f',1,'DotMP::WorkShare']]],
-  ['workload_279',['Workload',['../classDotMPTests_1_1ParallelTests.html#a4c04a723fc9a9374f7f848418858bc47',1,'DotMPTests::ParallelTests']]],
-  ['workshare_280',['WorkShare',['../classDotMP_1_1WorkShare.html',1,'DotMP.WorkShare'],['../classDotMP_1_1WorkShare.html#a7897aa29485f79e222e38e06de8a4104',1,'DotMP.WorkShare.WorkShare(uint num_threads, Thread[] threads, int start, int end, uint chunk_size, Operations? op, IScheduler schedule)'],['../classDotMP_1_1WorkShare.html#a0bda53276ee9ae9b08d845a274f8888b',1,'DotMP.WorkShare.WorkShare()']]],
-  ['workshare_2ecs_281',['WorkShare.cs',['../WorkShare_8cs.html',1,'']]],
-  ['workstealing_282',['WorkStealing',['../classDotMP_1_1Schedule.html#a47784117dd10aaaf94c739656aa30844',1,'DotMP::Schedule']]],
-  ['workstealing_5fload_5fbalances_283',['Workstealing_load_balances',['../classDotMPTests_1_1ParallelTests.html#a0df37fc268217a6e72a65a4685826579',1,'DotMPTests::ParallelTests']]],
-  ['workstealing_5fscheduler_284',['workstealing_scheduler',['../classDotMP_1_1Schedule.html#a972a22130f4e7643e9a79ee01137505b',1,'DotMP::Schedule']]],
-  ['workstealing_5fshould_5fproduce_5fcorrect_5fresults_285',['Workstealing_should_produce_correct_results',['../classDotMPTests_1_1ParallelTests.html#abc9696bc63101d88398b8ca1ec865375',1,'DotMPTests::ParallelTests']]],
-  ['workstealingscheduler_286',['WorkStealingScheduler',['../classDotMP_1_1Schedulers_1_1WorkStealingScheduler.html',1,'DotMP::Schedulers']]],
-  ['ws_5flock_287',['ws_lock',['../classDotMP_1_1Region.html#a3df81abb19865bf08fda557206462437',1,'DotMP::Region']]]
+  ['unmet_5fdependencies_379',['unmet_dependencies',['../classDotMP_1_1DAG.html#ac0dfa3820da4457c21b38d7102a64dce',1,'DotMP::DAG']]],
+  ['unset_380',['Unset',['../classDotMP_1_1Lock.html#a22ed7dfb941d9bfd857ac4933cb35cad',1,'DotMP::Lock']]],
+  ['uuid_381',['uuid',['../classDotMP_1_1TaskUUID.html#a33c84d9706c1a627e3f0fb993892a5df',1,'DotMP::TaskUUID']]]
 ];

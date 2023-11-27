@@ -1,6 +1,6 @@
 var searchData=
 [
-  ['dag_291',['DAG',['../classDotMP_1_1DAG.html',1,'DotMP']]],
-  ['dag_3c_20ulong_2c_20action_20_3e_292',['DAG&lt; ulong, Action &gt;',['../classDotMP_1_1DAG.html',1,'DotMP']]],
-  ['dynamicscheduler_293',['DynamicScheduler',['../classDotMP_1_1Schedulers_1_1DynamicScheduler.html',1,'DotMP::Schedulers']]]
+  ['cannotperformnestedparallelismexception_404',['CannotPerformNestedParallelismException',['../classDotMP_1_1Exceptions_1_1CannotPerformNestedParallelismException.html',1,'DotMP::Exceptions']]],
+  ['cannotperformnestedworksharingexception_405',['CannotPerformNestedWorksharingException',['../classDotMP_1_1Exceptions_1_1CannotPerformNestedWorksharingException.html',1,'DotMP::Exceptions']]],
+  ['cputests_406',['CPUTests',['../classDotMPTests_1_1CPUTests.html',1,'DotMPTests']]]
 ];

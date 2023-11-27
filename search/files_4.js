@@ -1,4 +1,5 @@
 var searchData=
 [
-  ['forkedregion_2ecs_330',['ForkedRegion.cs',['../ForkedRegion_8cs.html',1,'']]]
+  ['dependencygraph_2ecs_455',['DependencyGraph.cs',['../DependencyGraph_8cs.html',1,'']]],
+  ['dotmp_2eassemblyinfo_2ecs_456',['DotMP.AssemblyInfo.cs',['../net6_80_2DotMP_8AssemblyInfo_8cs.html',1,'(Global Namespace)'],['../net7_80_2DotMP_8AssemblyInfo_8cs.html',1,'(Global Namespace)'],['../net8_80_2DotMP_8AssemblyInfo_8cs.html',1,'(Global Namespace)']]]
 ];

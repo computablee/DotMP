@@ -1,5 +1,6 @@
 <map id="Graphical Class Hierarchy" name="Graphical Class Hierarchy">
-<area shape="rect" id="node1" title=" " alt="" coords="5,31,104,57"/>
-<area shape="rect" id="node2" href="$classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies." alt="" coords="152,5,304,32"/>
-<area shape="rect" id="node3" href="$classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in..." alt="" coords="153,56,303,83"/>
+<area shape="rect" id="node1" title=" " alt="" coords="5,56,104,83"/>
+<area shape="rect" id="node2" href="$classDotMP_1_1DAG.html" title="DAG for maintaining task dependencies." alt="" coords="164,5,316,32"/>
+<area shape="rect" id="node3" href="$classDotMP_1_1GPU_1_1Buffer.html" title="Buffer to manage GPU memory. Should only be created on the CPU." alt="" coords="152,56,328,83"/>
+<area shape="rect" id="node4" href="$classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in..." alt="" coords="165,107,315,133"/>
 </map>

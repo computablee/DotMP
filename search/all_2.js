@@ -1,11 +1,25 @@
 var searchData=
 [
-  ['barrier_18',['barrier',['../classDotMP_1_1Parallel.html#ab0213140a805eb755b2c190e277dc383',1,'DotMP::Parallel']]],
-  ['barrier_19',['Barrier',['../classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee',1,'DotMP::Parallel']]],
-  ['binaryand_20',['BinaryAnd',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346a36e074154f23dde2c9bacc92b38ce916',1,'DotMP']]],
-  ['binaryor_21',['BinaryOr',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346a927eda17b355f1a4abd41195b5116645',1,'DotMP']]],
-  ['binaryxor_22',['BinaryXor',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346a04722e95d19d5a46c7271123943c9ea6',1,'DotMP']]],
-  ['booleanand_23',['BooleanAnd',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346a2094d546839cf302d212b7a211db78e7',1,'DotMP']]],
-  ['booleanor_24',['BooleanOr',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346aaea2784d7ec01af0bac72165958accdb',1,'DotMP']]],
-  ['boundary_5fparallelfor_5fshould_5fexcept_25',['Boundary_parallelfor_should_except',['../classDotMPTests_1_1ParallelTests.html#ada00976314d96a53c30bcd8f5abc65cb',1,'DotMPTests::ParallelTests']]]
+  ['absent_5fparams_5fshouldnt_5fexcept_4',['Absent_params_shouldnt_except',['../classDotMPTests_1_1CPUTests.html#ae396c80936e120eec662ff531e66359c',1,'DotMPTests::CPUTests']]],
+  ['accelerator_5',['accelerator',['../classDotMP_1_1GPU_1_1AcceleratorHandler.html#a6ba72f32299602109430e4263a58d3b2',1,'DotMP::GPU::AcceleratorHandler']]],
+  ['acceleratorhandler_6',['AcceleratorHandler',['../classDotMP_1_1GPU_1_1AcceleratorHandler.html#ac234cf237fa7930b105e4cd67586dee4',1,'DotMP.GPU.AcceleratorHandler.AcceleratorHandler()'],['../classDotMP_1_1GPU_1_1AcceleratorHandler.html',1,'DotMP.GPU.AcceleratorHandler']]],
+  ['acceleratorhandler_2ecs_7',['AcceleratorHandler.cs',['../AcceleratorHandler_8cs.html',1,'']]],
+  ['actionref2_3c_20t_20_3e_8',['ActionRef2&lt; T &gt;',['../namespaceDotMP.html#ac0165a3cc6fce186954b17d3fd4e4c7d',1,'DotMP']]],
+  ['actionref3_3c_20t_20_3e_9',['ActionRef3&lt; T &gt;',['../namespaceDotMP.html#ae2409ed820613fcc0228397ff44d540e',1,'DotMP']]],
+  ['actionref4_3c_20t_20_3e_10',['ActionRef4&lt; T &gt;',['../namespaceDotMP.html#aab7f4b9f6a1613fad23eed4914c30227',1,'DotMP']]],
+  ['actionref_3c_20t_20_3e_11',['ActionRef&lt; T &gt;',['../namespaceDotMP.html#a600242288a8229f98e97b493fd7d7200',1,'DotMP']]],
+  ['actionrefn_3c_20t_20_3e_12',['ActionRefN&lt; T &gt;',['../namespaceDotMP.html#a96a05f89610e7f878aa7556572d8b646',1,'DotMP']]],
+  ['actions_5fpv_13',['actions_pv',['../classDotMP_1_1SectionsContainer.html#a7d68b3825bd9fd83f38bfa30836de2e9',1,'DotMP::SectionsContainer']]],
+  ['actionselector_14',['ActionSelector',['../Chunk_8cs.html#a107239b805750bf99cb04c47c78f71c9',1,'Chunk.cs']]],
+  ['add_15',['Add',['../classDotMP_1_1Atomic.html#af053c310227341d7159ffc26ad08080e',1,'DotMP.Atomic.Add(ref uint target, uint value)'],['../classDotMP_1_1Atomic.html#aad5db70a725981066261c957acabb146',1,'DotMP.Atomic.Add(ref ulong target, ulong value)'],['../classDotMP_1_1Atomic.html#a746e8ae3a59e33f335f941a70f0ad170',1,'DotMP.Atomic.Add(ref long target, long value)'],['../classDotMP_1_1Atomic.html#ae9c42691bb52de3eca53ab9b11a181f3',1,'DotMP.Atomic.Add(ref int target, int value)'],['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346aec211f7c20af43e742bf2570c3cb84f9',1,'DotMP.Add()']]],
+  ['additem_16',['AddItem',['../classDotMP_1_1DAG.html#a02cb3d351b470f8c03a725b07748d3e4',1,'DotMP::DAG']]],
+  ['addoffset_17',['AddOffset',['../structDotMP_1_1GPU_1_1Index.html#a9004c2d4130e0a931dca8042ec37e5a3',1,'DotMP::GPU::Index']]],
+  ['addreductionvalue_18',['AddReductionValue',['../classDotMP_1_1WorkShare.html#a5e28fe402f9d717b3fe8ec5b63502137',1,'DotMP::WorkShare']]],
+  ['advance_5fby_19',['advance_by',['../classDotMP_1_1Schedulers_1_1StaticScheduler.html#a0a39ec4fe02ae4e2c89a9c74e2556627',1,'DotMP::Schedulers::StaticScheduler']]],
+  ['and_20',['And',['../classDotMP_1_1Atomic.html#a83d59eee41e944db5b10d512ace6d62e',1,'DotMP.Atomic.And(ref ulong target, ulong value)'],['../classDotMP_1_1Atomic.html#af8cbefa4e7428114b50a2a22862fb311',1,'DotMP.Atomic.And(ref long target, long value)'],['../classDotMP_1_1Atomic.html#a415d4d7d93e9773fa1fd8d7ebb40de59',1,'DotMP.Atomic.And(ref uint target, uint value)'],['../classDotMP_1_1Atomic.html#a6255772fda834fc1058f5b8508b61370',1,'DotMP.Atomic.And(ref int target, int value)']]],
+  ['assemblyattributes_2ecs_21',['AssemblyAttributes.cs',['../AssemblyAttributes_8cs.html',1,'']]],
+  ['associations_22',['associations',['../classDotMP_1_1DAG.html#a3b7c2efa06ff1087f8d9d2983a89edc3',1,'DotMP::DAG']]],
+  ['atomic_23',['Atomic',['../classDotMP_1_1Atomic.html',1,'DotMP']]],
+  ['atomic_2ecs_24',['Atomic.cs',['../Atomic_8cs.html',1,'']]],
+  ['atomic_5fworks_25',['Atomic_works',['../classDotMPTests_1_1CPUTests.html#a1cd296359457dc36d1561c8fcc0ce2ef',1,'DotMPTests::CPUTests']]]
 ];

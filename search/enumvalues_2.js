@@ -1,6 +1,4 @@
 var searchData=
 [
-  ['max_574',['Max',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346a6a061313d22e51e0f25b7cd4dc065233',1,'DotMP']]],
-  ['min_575',['Min',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346a78d811e98514cd165dda532286610fd2',1,'DotMP']]],
-  ['multiply_576',['Multiply',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346ae257376d913f3b53cbb4a9b19d770648',1,'DotMP']]]
+  ['from_792',['From',['../classDotMP_1_1GPU_1_1Buffer.html#a39ea20a45b4e11bf5a327c268c57ea6ea5da618e8e4b89c66fe86e32cdafde142',1,'DotMP::GPU::Buffer']]]
 ];

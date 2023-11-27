@@ -76,7 +76,7 @@ $(function() {
 </div><!--header-->
 <div class="contents">
 
-<p>The main class of <a class="el" href="namespaceDotMP.html">DotMP</a>. Contains all the main methods for parallelism. For users, this is the main class you want to worry about, along with <a class="el" href="classDotMP_1_1Lock.html" title="A lock that can be used in a parallel region. Also contains instance methods for locking....">Lock</a>, <a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">Shared</a>, and <a class="el" href="classDotMP_1_1Atomic.html" title="Provides atomic operations for integral types as a wrapper around the Interlocked class....">Atomic</a>  
+<p>The main class of <a class="el" href="namespaceDotMP.html">DotMP</a>. Contains all the main methods for parallelism. For users, this is the main class you want to worry about, along with <a class="el" href="classDotMP_1_1Lock.html" title="A lock that can be used in a parallel region. Also contains instance methods for locking....">Lock</a>, <a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">Shared</a>, <a class="el" href="classDotMP_1_1Atomic.html" title="Provides atomic operations for integral types as a wrapper around the Interlocked class....">Atomic</a>, and <a class="el" href="namespaceDotMP_1_1GPU.html">GPU</a>.  
  <a href="classDotMP_1_1Parallel.html#details">More...</a></p>
 <table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pub-static-methods"></a>
@@ -171,6 +171,9 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a79148a921477136e2e534760b9486654"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654">Critical</a> (int id, Action action)</td></tr>
 <tr class="memdesc:a79148a921477136e2e534760b9486654"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a critical region. A critical region is a region of code that can only be executed by one thread at a time. If a thread encounters a critical region while another thread is inside a critical region, it will wait until the other thread is finished.  <a href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654">More...</a><br /></td></tr>
 <tr class="separator:a79148a921477136e2e534760b9486654"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a669c4c9c5c8fecddb8c29134175b31a6"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a669c4c9c5c8fecddb8c29134175b31a6">Critical</a> (Action action, [CallerFilePath] string path=&quot;&quot;, [CallerLineNumber] int line=0)</td></tr>
+<tr class="memdesc:a669c4c9c5c8fecddb8c29134175b31a6"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a critical region. A critical region is a region of code that can only be executed by one thread at a time. If a thread encounters a critical region while another thread is inside a critical region, it will wait until the other thread is finished.  <a href="classDotMP_1_1Parallel.html#a669c4c9c5c8fecddb8c29134175b31a6">More...</a><br /></td></tr>
+<tr class="separator:a669c4c9c5c8fecddb8c29134175b31a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a6f0d650ed727baeee5ad8b5b8f18bbee"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee">Barrier</a> ()</td></tr>
 <tr class="memdesc:a6f0d650ed727baeee5ad8b5b8f18bbee"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a barrier. All threads must reach the barrier before any thread can continue. This is useful for synchronization. Many functions inside the <a class="el" href="classDotMP_1_1Parallel.html" title="The main class of DotMP. Contains all the main methods for parallelism. For users,...">Parallel</a> class act as implicit barriers. Also acts as a memory barrier.  <a href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee">More...</a><br /></td></tr>
 <tr class="separator:a6f0d650ed727baeee5ad8b5b8f18bbee"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -183,9 +186,15 @@ Static Public Member Functions</h2></td></tr>
 <tr class="memitem:a325c61e793664f5c30233a8db2ef951b"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a325c61e793664f5c30233a8db2ef951b">Single</a> (int id, Action action)</td></tr>
 <tr class="memdesc:a325c61e793664f5c30233a8db2ef951b"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a single region. A single region is only executed once per <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">Parallel.ParallelRegion</a>. The first thread to encounter the single region marks the region as encountered, then executes it.  <a href="classDotMP_1_1Parallel.html#a325c61e793664f5c30233a8db2ef951b">More...</a><br /></td></tr>
 <tr class="separator:a325c61e793664f5c30233a8db2ef951b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1edb5df14a5b0d18c0d754520b254e7f"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a1edb5df14a5b0d18c0d754520b254e7f">Single</a> (Action action, [CallerFilePath] string path=&quot;&quot;, [CallerLineNumber] int line=0)</td></tr>
+<tr class="memdesc:a1edb5df14a5b0d18c0d754520b254e7f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates a single region. A single region is only executed once per <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">Parallel.ParallelRegion</a>. The first thread to encounter the single region marks the region as encountered, then executes it.  <a href="classDotMP_1_1Parallel.html#a1edb5df14a5b0d18c0d754520b254e7f">More...</a><br /></td></tr>
+<tr class="separator:a1edb5df14a5b0d18c0d754520b254e7f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:a8aaf51a7e2f0be6f3541257764ab982e"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a8aaf51a7e2f0be6f3541257764ab982e">Ordered</a> (int id, Action action)</td></tr>
 <tr class="memdesc:a8aaf51a7e2f0be6f3541257764ab982e"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an ordered region. An ordered region is a region of code that is executed in order inside of a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. This also acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654" title="Creates a critical region. A critical region is a region of code that can only be executed by one thr...">Critical()</a> region.  <a href="classDotMP_1_1Parallel.html#a8aaf51a7e2f0be6f3541257764ab982e">More...</a><br /></td></tr>
 <tr class="separator:a8aaf51a7e2f0be6f3541257764ab982e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abc7647a44eaad9931dadf7373253e8ca"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#abc7647a44eaad9931dadf7373253e8ca">Ordered</a> (Action action, [CallerFilePath] string path=&quot;&quot;, [CallerLineNumber] int line=0)</td></tr>
+<tr class="memdesc:abc7647a44eaad9931dadf7373253e8ca"><td class="mdescLeft">&#160;</td><td class="mdescRight">Creates an ordered region. An ordered region is a region of code that is executed in order inside of a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. This also acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654" title="Creates a critical region. A critical region is a region of code that can only be executed by one thr...">Critical()</a> region.  <a href="classDotMP_1_1Parallel.html#abc7647a44eaad9931dadf7373253e8ca">More...</a><br /></td></tr>
+<tr class="separator:abc7647a44eaad9931dadf7373253e8ca"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ac4c9ac665dff246a2e16929b5e1ca3f2"><td class="memItemLeft" align="right" valign="top">static int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ac4c9ac665dff246a2e16929b5e1ca3f2">GetNumThreads</a> ()</td></tr>
 <tr class="memdesc:ac4c9ac665dff246a2e16929b5e1ca3f2"><td class="mdescLeft">&#160;</td><td class="mdescRight">Gets the number of active threads. If not inside of a <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">ParallelRegion()</a>, returns 1.  <a href="classDotMP_1_1Parallel.html#ac4c9ac665dff246a2e16929b5e1ca3f2">More...</a><br /></td></tr>
 <tr class="separator:ac4c9ac665dff246a2e16929b5e1ca3f2"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -237,6 +246,9 @@ Static Private Member Functions</h2></td></tr>
 <tr class="memitem:ae2c8f1f0d27757de18577068e59fbcdb"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ae2c8f1f0d27757de18577068e59fbcdb">ValidateParams</a> (int start=0, int end=0, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? <a class="el" href="classDotMP_1_1Parallel.html#a88bb428fedd64b61b2fc001c76417bed">num_threads</a>=null, uint? chunk_size=null, uint? num_tasks=null, uint? grainsize=null)</td></tr>
 <tr class="memdesc:ae2c8f1f0d27757de18577068e59fbcdb"><td class="mdescLeft">&#160;</td><td class="mdescRight">Validates all parameters passed to <a class="el" href="namespaceDotMP.html">DotMP</a> functions.  <a href="classDotMP_1_1Parallel.html#ae2c8f1f0d27757de18577068e59fbcdb">More...</a><br /></td></tr>
 <tr class="separator:ae2c8f1f0d27757de18577068e59fbcdb"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3fa688e465874394dbee80a01b95d54f"><td class="memItemLeft" align="right" valign="top">static string&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a3fa688e465874394dbee80a01b95d54f">FormatCaller</a> (string filename, int linenum)</td></tr>
+<tr class="memdesc:a3fa688e465874394dbee80a01b95d54f"><td class="mdescLeft">&#160;</td><td class="mdescRight">Formats the caller information for determining uniqueness of a call.  <a href="classDotMP_1_1Parallel.html#a3fa688e465874394dbee80a01b95d54f">More...</a><br /></td></tr>
+<tr class="separator:a3fa688e465874394dbee80a01b95d54f"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ad6567152afc4c568b5f11633de61a889"><td class="memItemLeft" align="right" valign="top">static void&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ad6567152afc4c568b5f11633de61a889">For&lt; T &gt;</a> (int start, int end, <a class="el" href="classDotMP_1_1ForAction.html">ForAction</a>&lt; T &gt; forAction, <a class="el" href="interfaceDotMP_1_1IScheduler.html">IScheduler</a> schedule=null, uint? chunk_size=null, <a class="el" href="namespaceDotMP.html#afb991877c15e09400ba2bd2029045346">Operations</a>? op=null)</td></tr>
 <tr class="memdesc:ad6567152afc4c568b5f11633de61a889"><td class="mdescLeft">&#160;</td><td class="mdescRight">Internal handler for For.  <a href="classDotMP_1_1Parallel.html#ad6567152afc4c568b5f11633de61a889">More...</a><br /></td></tr>
 <tr class="separator:ad6567152afc4c568b5f11633de61a889"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -246,15 +258,15 @@ Static Private Member Functions</h2></td></tr>
 </table><table class="memberdecls">
 <tr class="heading"><td colspan="2"><h2 class="groupheader"><a name="pri-static-attribs"></a>
 Static Private Attributes</h2></td></tr>
-<tr class="memitem:a1cd8ec62aad3b04b226dbc1de209c014"><td class="memItemLeft" align="right" valign="top">static volatile Dictionary&lt; int, object &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a1cd8ec62aad3b04b226dbc1de209c014">critical_lock</a> = new Dictionary&lt;int, object&gt;()</td></tr>
-<tr class="memdesc:a1cd8ec62aad3b04b226dbc1de209c014"><td class="mdescLeft">&#160;</td><td class="mdescRight">The dictionary for critical regions.  <a href="classDotMP_1_1Parallel.html#a1cd8ec62aad3b04b226dbc1de209c014">More...</a><br /></td></tr>
-<tr class="separator:a1cd8ec62aad3b04b226dbc1de209c014"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ab4fa9e263e5088f3c981a7d9c9413225"><td class="memItemLeft" align="right" valign="top">static volatile HashSet&lt; int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ab4fa9e263e5088f3c981a7d9c9413225">single_thread</a> = new HashSet&lt;int&gt;()</td></tr>
-<tr class="memdesc:ab4fa9e263e5088f3c981a7d9c9413225"><td class="mdescLeft">&#160;</td><td class="mdescRight">The dictionary for single regions.  <a href="classDotMP_1_1Parallel.html#ab4fa9e263e5088f3c981a7d9c9413225">More...</a><br /></td></tr>
-<tr class="separator:ab4fa9e263e5088f3c981a7d9c9413225"><td class="memSeparator" colspan="2">&#160;</td></tr>
-<tr class="memitem:ae1a397f8dec7f0985de1654ea98e330b"><td class="memItemLeft" align="right" valign="top">static volatile Dictionary&lt; int, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ae1a397f8dec7f0985de1654ea98e330b">ordered</a> = new Dictionary&lt;int, int&gt;()</td></tr>
-<tr class="memdesc:ae1a397f8dec7f0985de1654ea98e330b"><td class="mdescLeft">&#160;</td><td class="mdescRight">The dictionary for ordered regions.  <a href="classDotMP_1_1Parallel.html#ae1a397f8dec7f0985de1654ea98e330b">More...</a><br /></td></tr>
-<tr class="separator:ae1a397f8dec7f0985de1654ea98e330b"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a3c7331e1a898084a03c875850887a7d3"><td class="memItemLeft" align="right" valign="top">static volatile Dictionary&lt; string, object &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a3c7331e1a898084a03c875850887a7d3">critical_lock</a> = new Dictionary&lt;string, object&gt;()</td></tr>
+<tr class="memdesc:a3c7331e1a898084a03c875850887a7d3"><td class="mdescLeft">&#160;</td><td class="mdescRight">The dictionary for critical regions.  <a href="classDotMP_1_1Parallel.html#a3c7331e1a898084a03c875850887a7d3">More...</a><br /></td></tr>
+<tr class="separator:a3c7331e1a898084a03c875850887a7d3"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:ac2c7a2c07f6596b9fb6a347e804b2765"><td class="memItemLeft" align="right" valign="top">static volatile HashSet&lt; string &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ac2c7a2c07f6596b9fb6a347e804b2765">single_thread</a> = new HashSet&lt;string&gt;()</td></tr>
+<tr class="memdesc:ac2c7a2c07f6596b9fb6a347e804b2765"><td class="mdescLeft">&#160;</td><td class="mdescRight">The dictionary for single regions.  <a href="classDotMP_1_1Parallel.html#ac2c7a2c07f6596b9fb6a347e804b2765">More...</a><br /></td></tr>
+<tr class="separator:ac2c7a2c07f6596b9fb6a347e804b2765"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a99727ba26b27ab7f8ccd4e43e131faa6"><td class="memItemLeft" align="right" valign="top">static volatile Dictionary&lt; string, int &gt;&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#a99727ba26b27ab7f8ccd4e43e131faa6">ordered</a> = new Dictionary&lt;string, int&gt;()</td></tr>
+<tr class="memdesc:a99727ba26b27ab7f8ccd4e43e131faa6"><td class="mdescLeft">&#160;</td><td class="mdescRight">The dictionary for ordered regions.  <a href="classDotMP_1_1Parallel.html#a99727ba26b27ab7f8ccd4e43e131faa6">More...</a><br /></td></tr>
+<tr class="separator:a99727ba26b27ab7f8ccd4e43e131faa6"><td class="memSeparator" colspan="2">&#160;</td></tr>
 <tr class="memitem:ab0213140a805eb755b2c190e277dc383"><td class="memItemLeft" align="right" valign="top">static volatile <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee">Barrier</a>&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="classDotMP_1_1Parallel.html#ab0213140a805eb755b2c190e277dc383">barrier</a></td></tr>
 <tr class="memdesc:ab0213140a805eb755b2c190e277dc383"><td class="mdescLeft">&#160;</td><td class="mdescRight">Barrier object for <a class="el" href="classDotMP_1_1Parallel.html#a6f0d650ed727baeee5ad8b5b8f18bbee" title="Creates a barrier. All threads must reach the barrier before any thread can continue....">DotMP.Parallel.Barrier()</a>  <a href="classDotMP_1_1Parallel.html#ab0213140a805eb755b2c190e277dc383">More...</a><br /></td></tr>
 <tr class="separator:ab0213140a805eb755b2c190e277dc383"><td class="memSeparator" colspan="2">&#160;</td></tr>
@@ -269,7 +281,7 @@ Static Private Attributes</h2></td></tr>
 <tr class="separator:a77c8df7653a2a81478df47330d0bb336"><td class="memSeparator" colspan="2">&#160;</td></tr>
 </table>
 <a name="details" id="details"></a><h2 class="groupheader">Detailed Description</h2>
-<div class="textblock"><p>The main class of <a class="el" href="namespaceDotMP.html">DotMP</a>. Contains all the main methods for parallelism. For users, this is the main class you want to worry about, along with <a class="el" href="classDotMP_1_1Lock.html" title="A lock that can be used in a parallel region. Also contains instance methods for locking....">Lock</a>, <a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">Shared</a>, and <a class="el" href="classDotMP_1_1Atomic.html" title="Provides atomic operations for integral types as a wrapper around the Interlocked class....">Atomic</a> </p>
+<div class="textblock"><p>The main class of <a class="el" href="namespaceDotMP.html">DotMP</a>. Contains all the main methods for parallelism. For users, this is the main class you want to worry about, along with <a class="el" href="classDotMP_1_1Lock.html" title="A lock that can be used in a parallel region. Also contains instance methods for locking....">Lock</a>, <a class="el" href="classDotMP_1_1Shared.html" title="A shared variable that can be used in a parallel region. This allows for a variable to be declared in...">Shared</a>, <a class="el" href="classDotMP_1_1Atomic.html" title="Provides atomic operations for integral types as a wrapper around the Interlocked class....">Atomic</a>, and <a class="el" href="namespaceDotMP_1_1GPU.html">GPU</a>. </p>
 </div><h2 class="groupheader">Member Function Documentation</h2>
 <a id="a6f0d650ed727baeee5ad8b5b8f18bbee"></a>
 <h2 class="memtitle"><span class="permalink"><a href="#a6f0d650ed727baeee5ad8b5b8f18bbee">&#9670;&nbsp;</a></span>Barrier()</h2>
@@ -304,8 +316,67 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a669c4c9c5c8fecddb8c29134175b31a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a669c4c9c5c8fecddb8c29134175b31a6">&#9670;&nbsp;</a></span>Critical() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void DotMP.Parallel.Critical </td>
+          <td>(</td>
+          <td class="paramtype">Action&#160;</td>
+          <td class="paramname"><em>action</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">[CallerFilePath] string&#160;</td>
+          <td class="paramname"><em>path</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">[CallerLineNumber] int&#160;</td>
+          <td class="paramname"><em>line</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates a critical region. A critical region is a region of code that can only be executed by one thread at a time. If a thread encounters a critical region while another thread is inside a critical region, it will wait until the other thread is finished. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">action</td><td>The action to be performed in the critical region.</td></tr>
+    <tr><td class="paramname">line</td><td>The line number this method was called from.</td></tr>
+    <tr><td class="paramname">path</td><td>The path to the file this method was called from.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>The ID of the critical region.</dd></dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">NotInParallelRegionException</td><td>Thrown when not in a parallel region.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a79148a921477136e2e534760b9486654"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a79148a921477136e2e534760b9486654">&#9670;&nbsp;</a></span>Critical()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a79148a921477136e2e534760b9486654">&#9670;&nbsp;</a></span>Critical() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -339,6 +410,7 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates a critical region. A critical region is a region of code that can only be executed by one thread at a time. If a thread encounters a critical region while another thread is inside a critical region, it will wait until the other thread is finished. </p>
+<p>THIS METHOD IS NOW DEPRECATED.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>The ID of the critical region. Must be unique per region but consistent across all threads.</td></tr>
@@ -890,6 +962,52 @@ Static Private Attributes</h2></td></tr>
   </table>
   </dd>
 </dl>
+
+</div>
+</div>
+<a id="a3fa688e465874394dbee80a01b95d54f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3fa688e465874394dbee80a01b95d54f">&#9670;&nbsp;</a></span>FormatCaller()</h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static string DotMP.Parallel.FormatCaller </td>
+          <td>(</td>
+          <td class="paramtype">string&#160;</td>
+          <td class="paramname"><em>filename</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">int&#160;</td>
+          <td class="paramname"><em>linenum</em>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span><span class="mlabel">private</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Formats the caller information for determining uniqueness of a call. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">filename</td><td>The calling file.</td></tr>
+    <tr><td class="paramname">linenum</td><td>The calling line number.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>Returns</dt><dd>A formatted string representing "{filename}:{linenum}"</dd></dl>
 
 </div>
 </div>
@@ -1878,8 +1996,66 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="abc7647a44eaad9931dadf7373253e8ca"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abc7647a44eaad9931dadf7373253e8ca">&#9670;&nbsp;</a></span>Ordered() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void DotMP.Parallel.Ordered </td>
+          <td>(</td>
+          <td class="paramtype">Action&#160;</td>
+          <td class="paramname"><em>action</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">[CallerFilePath] string&#160;</td>
+          <td class="paramname"><em>path</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">[CallerLineNumber] int&#160;</td>
+          <td class="paramname"><em>line</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates an ordered region. An ordered region is a region of code that is executed in order inside of a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. This also acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654" title="Creates a critical region. A critical region is a region of code that can only be executed by one thr...">Critical()</a> region. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">action</td><td>The action to be performed in the ordered region.</td></tr>
+    <tr><td class="paramname">line</td><td>The line number this method was called from.</td></tr>
+    <tr><td class="paramname">path</td><td>The path to the file this method was called from.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">NotInParallelRegionException</td><td>Thrown when not in a parallel region.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a8aaf51a7e2f0be6f3541257764ab982e"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a8aaf51a7e2f0be6f3541257764ab982e">&#9670;&nbsp;</a></span>Ordered()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a8aaf51a7e2f0be6f3541257764ab982e">&#9670;&nbsp;</a></span>Ordered() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -1913,6 +2089,7 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates an ordered region. An ordered region is a region of code that is executed in order inside of a <a class="el" href="classDotMP_1_1Parallel.html#aa3e8e137910faf38453900c1fe29fde8" title="Creates a for loop inside a parallel region. A for loop created with For inside of a parallel region ...">For()</a> or ForReduction&lt;T&gt;() loop. This also acts as an implicit <a class="el" href="classDotMP_1_1Parallel.html#a79148a921477136e2e534760b9486654" title="Creates a critical region. A critical region is a region of code that can only be executed by one thr...">Critical()</a> region. </p>
+<p>THIS METHOD IS NOW DEPRECATED.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>The ID of the ordered region. Must be unique per region but consistent across all threads.</td></tr>
@@ -3217,8 +3394,67 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
+<a id="a1edb5df14a5b0d18c0d754520b254e7f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1edb5df14a5b0d18c0d754520b254e7f">&#9670;&nbsp;</a></span>Single() <span class="overload">[1/2]</span></h2>
+
+<div class="memitem">
+<div class="memproto">
+<table class="mlabels">
+  <tr>
+  <td class="mlabels-left">
+      <table class="memname">
+        <tr>
+          <td class="memname">static void DotMP.Parallel.Single </td>
+          <td>(</td>
+          <td class="paramtype">Action&#160;</td>
+          <td class="paramname"><em>action</em>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">[CallerFilePath] string&#160;</td>
+          <td class="paramname"><em>path</em> = <code>&quot;&quot;</code>, </td>
+        </tr>
+        <tr>
+          <td class="paramkey"></td>
+          <td></td>
+          <td class="paramtype">[CallerLineNumber] int&#160;</td>
+          <td class="paramname"><em>line</em> = <code>0</code>&#160;</td>
+        </tr>
+        <tr>
+          <td></td>
+          <td>)</td>
+          <td></td><td></td>
+        </tr>
+      </table>
+  </td>
+  <td class="mlabels-right">
+<span class="mlabels"><span class="mlabel">inline</span><span class="mlabel">static</span></span>  </td>
+  </tr>
+</table>
+</div><div class="memdoc">
+
+<p>Creates a single region. A single region is only executed once per <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">Parallel.ParallelRegion</a>. The first thread to encounter the single region marks the region as encountered, then executes it. </p>
+<dl class="params"><dt>Parameters</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">action</td><td>The action to be performed in the single region.</td></tr>
+    <tr><td class="paramname">line</td><td>The line number this method was called from.</td></tr>
+    <tr><td class="paramname">path</td><td>The path to the file this method was called from.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="exception"><dt>Exceptions</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">NotInParallelRegionException</td><td>Thrown when not in a parallel region.</td></tr>
+    <tr><td class="paramname">CannotPerformNestedWorksharingException</td><td>Thrown when nested inside another worksharing region.</td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
 <a id="a325c61e793664f5c30233a8db2ef951b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a325c61e793664f5c30233a8db2ef951b">&#9670;&nbsp;</a></span>Single()</h2>
+<h2 class="memtitle"><span class="permalink"><a href="#a325c61e793664f5c30233a8db2ef951b">&#9670;&nbsp;</a></span>Single() <span class="overload">[2/2]</span></h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3252,6 +3488,7 @@ Static Private Attributes</h2></td></tr>
 </div><div class="memdoc">
 
 <p>Creates a single region. A single region is only executed once per <a class="el" href="classDotMP_1_1Parallel.html#a46b434b01754e4a98bed3b2372241f11" title="Creates a parallel region. The body of a parallel region is executed by as many threads as specified ...">Parallel.ParallelRegion</a>. The first thread to encounter the single region marks the region as encountered, then executes it. </p>
+<p>THIS METHOD IS NOW DEPRECATED.</p>
 <dl class="params"><dt>Parameters</dt><dd>
   <table class="params">
     <tr><td class="paramname">id</td><td>The ID of the single region. Must be unique per region but consistent across all threads.</td></tr>
@@ -3579,8 +3816,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="a1cd8ec62aad3b04b226dbc1de209c014"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#a1cd8ec62aad3b04b226dbc1de209c014">&#9670;&nbsp;</a></span>critical_lock</h2>
+<a id="a3c7331e1a898084a03c875850887a7d3"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a3c7331e1a898084a03c875850887a7d3">&#9670;&nbsp;</a></span>critical_lock</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3589,7 +3826,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">volatile Dictionary&lt;int, object&gt; DotMP.Parallel.critical_lock = new Dictionary&lt;int, object&gt;()</td>
+          <td class="memname">volatile Dictionary&lt;string, object&gt; DotMP.Parallel.critical_lock = new Dictionary&lt;string, object&gt;()</td>
         </tr>
       </table>
   </td>
@@ -3627,8 +3864,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ae1a397f8dec7f0985de1654ea98e330b"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ae1a397f8dec7f0985de1654ea98e330b">&#9670;&nbsp;</a></span>ordered</h2>
+<a id="a99727ba26b27ab7f8ccd4e43e131faa6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a99727ba26b27ab7f8ccd4e43e131faa6">&#9670;&nbsp;</a></span>ordered</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3637,7 +3874,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">volatile Dictionary&lt;int, int&gt; DotMP.Parallel.ordered = new Dictionary&lt;int, int&gt;()</td>
+          <td class="memname">volatile Dictionary&lt;string, int&gt; DotMP.Parallel.ordered = new Dictionary&lt;string, int&gt;()</td>
         </tr>
       </table>
   </td>
@@ -3651,8 +3888,8 @@ Static Private Attributes</h2></td></tr>
 
 </div>
 </div>
-<a id="ab4fa9e263e5088f3c981a7d9c9413225"></a>
-<h2 class="memtitle"><span class="permalink"><a href="#ab4fa9e263e5088f3c981a7d9c9413225">&#9670;&nbsp;</a></span>single_thread</h2>
+<a id="ac2c7a2c07f6596b9fb6a347e804b2765"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#ac2c7a2c07f6596b9fb6a347e804b2765">&#9670;&nbsp;</a></span>single_thread</h2>
 
 <div class="memitem">
 <div class="memproto">
@@ -3661,7 +3898,7 @@ Static Private Attributes</h2></td></tr>
   <td class="mlabels-left">
       <table class="memname">
         <tr>
-          <td class="memname">volatile HashSet&lt;int&gt; DotMP.Parallel.single_thread = new HashSet&lt;int&gt;()</td>
+          <td class="memname">volatile HashSet&lt;string&gt; DotMP.Parallel.single_thread = new HashSet&lt;string&gt;()</td>
         </tr>
       </table>
   </td>

@@ -1,5 +1,4 @@
 var searchData=
 [
-  ['parallel_305',['Parallel',['../classDotMP_1_1Parallel.html',1,'DotMP']]],
-  ['paralleltests_306',['ParallelTests',['../classDotMPTests_1_1ParallelTests.html',1,'DotMPTests']]]
+  ['notinparallelregionexception_423',['NotInParallelRegionException',['../classDotMP_1_1Exceptions_1_1NotInParallelRegionException.html',1,'DotMP::Exceptions']]]
 ];
