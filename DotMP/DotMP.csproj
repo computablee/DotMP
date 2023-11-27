@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net6.0;net7.0;net8.0</TargetFrameworks>
+    <TargetFrameworks>netstandard2.1;net471;net6.0;net7.0;net8.0</TargetFrameworks>
     <RootNamespace>DotMP</RootNamespace>
     <PackageId>DotMP</PackageId>
     <Version>1.6.0</Version>
@@ -21,6 +21,11 @@
 
   <ItemGroup>
     <None Include="../ProcessedREADME.md" Pack="true" PackagePath="." />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.0.0" />
   </ItemGroup>
 
 </Project>

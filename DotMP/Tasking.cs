@@ -148,7 +148,7 @@ namespace DotMP
         /// </summary>
         internal TaskUUID()
         {
-            uuid = Interlocked.Increment(ref next_uuid);
+            uuid = Atomic.Inc(ref next_uuid);
         }
 
         /// <summary>

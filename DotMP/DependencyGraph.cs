@@ -19,8 +19,6 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Threading;
 
-#nullable enable
-
 namespace DotMP
 {
     /// <summary>
@@ -48,7 +46,6 @@ namespace DotMP
     /// </summary>
     internal class DAG<T, U> : IDisposable
         where T : struct
-        where U : class?
     {
         /// <summary>
         /// Counter for remaining tasks in queue.
@@ -113,9 +110,9 @@ namespace DotMP
                 else
                     satisfies_dependency[d].Add(id);
 
-            unmet_dependencies.TryAdd(id, new IntWrapper(dependency_count));
+            unmet_dependencies.Add(id, new IntWrapper(dependency_count));
 
-            satisfies_dependency.TryAdd(id, new List<T>());
+            satisfies_dependency.Add(id, new List<T>());
 
             if (dependency_count == 0)
                 no_dependencies.Add(id);
@@ -130,7 +127,7 @@ namespace DotMP
         /// <param name="id">The ID of the item returned from the DAG.</param>
         /// <param name="tasks_remaining">The number of tasks remaining in the queue.</param>
         /// <returns>Whether or not there was an item to be returned.</returns>
-        internal bool GetNextItem(out U? item, out T id, out int tasks_remaining)
+        internal bool GetNextItem(out U item, out T id, out int tasks_remaining)
         {
             tasks_remaining = this.tasks_remaining;
 
@@ -140,7 +137,7 @@ namespace DotMP
             }
             else
             {
-                item = null;
+                item = default;
                 return false;
             }
         }

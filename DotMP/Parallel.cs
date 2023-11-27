@@ -74,7 +74,11 @@ namespace DotMP
         /// <param name="num_threads">The number of threads to be used in the loop.</param>
         private static void FixArgs(int start, int end, ref IScheduler sched, ref uint? chunk_size, uint num_threads)
         {
+#if NET6_0_OR_GREATER
             sched ??= Schedule.Static;
+#else
+            if (sched == null) sched = Schedule.Static;
+#endif
 
             if (sched == Schedule.Runtime)
             {
@@ -161,16 +165,16 @@ namespace DotMP
             if (start < 0 || end < 0)
                 throw new InvalidArgumentsException(string.Format("Start ({0}) and end ({1}) of loop must both be positive integers.", start, end));
 
-            if (num_threads is not null && num_threads < 1)
+            if (num_threads != null && num_threads < 1)
                 throw new InvalidArgumentsException(string.Format("Number of threads ({0}) should be a positive integer.", num_threads));
 
-            if (chunk_size is not null && chunk_size < 1)
+            if (chunk_size != null && chunk_size < 1)
                 throw new InvalidArgumentsException(string.Format("Chunk size ({0}) should be a positive integer.", chunk_size));
 
-            if ((num_tasks is not null && num_tasks < 1) || (grainsize is not null && grainsize < 1))
+            if ((num_tasks != null && num_tasks < 1) || (grainsize != null && grainsize < 1))
                 throw new InvalidArgumentsException(string.Format("Number of tasks ({0}) and grain size ({1}) must both be positive integers.", num_tasks, grainsize));
 
-            if (schedule is not null && schedule is not StaticScheduler && schedule is not DynamicScheduler && schedule is not GuidedScheduler && schedule is not RuntimeScheduler && schedule is not WorkStealingScheduler && chunk_size is null)
+            if (schedule != null && !(schedule is StaticScheduler) && !(schedule is DynamicScheduler) && !(schedule is GuidedScheduler) && !(schedule is RuntimeScheduler) && !(schedule is WorkStealingScheduler) && chunk_size is null)
                 throw new InvalidArgumentsException(string.Format("Chunk size must be specified with user-defined schedulers, as it cannot be inferred."));
         }
 
@@ -346,12 +350,12 @@ namespace DotMP
             Barrier();
 
             ws.in_for = true;
-            Interlocked.Increment(ref freg.in_workshare);
+            Atomic.Inc(ref freg.in_workshare);
 
             ws.PerformLoop(forAction);
 
             ws.in_for = false;
-            Interlocked.Decrement(ref freg.in_workshare);
+            Atomic.Dec(ref freg.in_workshare);
             Barrier();
 
             Master(ordered.Clear);
@@ -602,11 +606,15 @@ namespace DotMP
             if (num_threads == null && Parallel.num_threads == 0)
                 num_threads = (uint)GetNumProcs();
             else
+#if NET6_0_OR_GREATER
                 num_threads ??= Parallel.num_threads;
+#else
+                if (num_threads == null) num_threads = Parallel.num_threads;
+#endif
 
             ForkedRegion freg = new ForkedRegion(num_threads.Value, action);
 
-            if (barrier is not null) barrier.Dispose();
+            if (barrier != null) barrier.Dispose();
             barrier = new Barrier((int)num_threads.Value);
 
             task_nesting.Dispose();
@@ -996,7 +1004,7 @@ namespace DotMP
                     grainsize = (uint)((end - start) / fr.reg.num_threads) / 8;
                     if (grainsize < 1) grainsize = 1;
                 }
-                else if (num_tasks is not null)
+                else if (num_tasks != null)
                 {
                     grainsize = (uint)(end - start) / num_tasks;
                     if (grainsize < 1) grainsize = 1;
@@ -1202,7 +1210,7 @@ namespace DotMP
                 throw new CannotPerformNestedWorksharingException("Cannot use DotMP Single nested within other worksharing constructs.");
             }
 
-            Interlocked.Increment(ref freg.in_workshare);
+            Atomic.Inc(ref freg.in_workshare);
 
             lock (single_thread)
             {
@@ -1218,7 +1226,7 @@ namespace DotMP
                 action();
             }
 
-            Interlocked.Decrement(ref freg.in_workshare);
+            Atomic.Dec(ref freg.in_workshare);
 
             Barrier();
         }
@@ -1270,7 +1278,7 @@ namespace DotMP
         {
             var freg = new ForkedRegion();
 
-            return (freg.reg is not null)
+            return (freg.reg != null)
                     ? (int)freg.reg.num_threads
                     : 1;
         }

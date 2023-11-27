@@ -64,10 +64,15 @@ namespace DotMP
                 }
                 catch (Exception ex)
                 {
+#if NET6_0_OR_GREATER
                     this.ex ??= ex;
+#else
+                    if (this.ex == null)
+                        this.ex = ex;
+#endif
                     Parallel.canceled = true;
 
-                    if (ex is not ThreadInterruptedException)
+                    if (!(ex is ThreadInterruptedException))
                         for (int i = 0; i < num_threads; i++)
                             if (i != tid)
                                 threads[i].Interrupt();
@@ -182,7 +187,7 @@ namespace DotMP
 
             in_parallel = false;
 
-            if (reg.ex is not null)
+            if (reg.ex != null)
                 System.Runtime.ExceptionServices.ExceptionDispatchInfo.Capture(reg.ex).Throw();
         }
     }
