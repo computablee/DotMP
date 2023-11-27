@@ -13,12 +13,19 @@ jobs:
 
     steps:
     - uses: actions/checkout@v4
+
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 8.0.x
+
+    - name: Install Mono
+      run: sudo apt-get install mono-complete -y
+      shell: bash
+
     - name: Run integration tests
       run: dotnet test --verbosity normal -p:CollectCoverage=true -p:CoverletOutputFormat=opencover DotMP-Tests
+
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
