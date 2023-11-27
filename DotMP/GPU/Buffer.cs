@@ -66,7 +66,7 @@ namespace DotMP.GPU
         /// <summary>
         /// The ILGPU buffer for 3D arrays.
         /// </summary>
-        private MemoryBuffer3D<T, Stride3D.DenseZY> buf3d;
+        private MemoryBuffer3D<T, Stride3D.DenseXY> buf3d;
 
         /// <summary>
         /// Behavior of the data, as specified by Behavior.
@@ -182,11 +182,11 @@ namespace DotMP.GPU
             {
                 case Buffer.Behavior.To:
                 case Buffer.Behavior.ToFrom:
-                    buf3d = AcceleratorHandler.accelerator.Allocate3DDenseZY(data);
+                    buf3d = AcceleratorHandler.accelerator.Allocate3DDenseXY<T>(data);
                     break;
                 case Buffer.Behavior.From:
                 case Buffer.Behavior.NoCopy:
-                    buf3d = AcceleratorHandler.accelerator.Allocate3DDenseZY<T>((data.GetLength(0), data.GetLength(1), data.GetLength(2)));
+                    buf3d = AcceleratorHandler.accelerator.Allocate3DDenseXY<T>((data.GetLength(0), data.GetLength(1), data.GetLength(2)));
                     break;
             }
 
@@ -240,6 +240,6 @@ namespace DotMP.GPU
         /// <summary>
         /// Get the view of the memory for the GPU.
         /// </summary>
-        internal ArrayView3D<T, Stride3D.DenseZY> View3D { get => buf3d.View; }
+        internal ArrayView3D<T, Stride3D.DenseXY> View3D { get => buf3d.View; }
     }
 }
