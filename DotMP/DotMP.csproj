@@ -4,7 +4,7 @@
     <TargetFrameworks>netstandard2.1;net471;net6.0;net7.0;net8.0</TargetFrameworks>
     <RootNamespace>DotMP</RootNamespace>
     <PackageId>DotMP</PackageId>
-    <Version>1.6.0</Version>
+    <Version>1.6.1</Version>
     <Authors>Phillip Allen Lane,et al.</Authors>
     <PackageDescription>A library for fork-join parallelism in .NET, with an OpenMP-like API.</PackageDescription>
     <RepositoryUrl>https://github.com/computablee/DotMP</RepositoryUrl>
@@ -13,7 +13,7 @@
     <PackageReadmeFile>ProcessedREADME.md</PackageReadmeFile>
     <PackageTags>hpc,parallel,openmp,parallelization,high performance computing,threading</PackageTags>
     <PackageLicenseExpression>LGPL-2.1-only</PackageLicenseExpression>
-    <PackageReleaseNotes>Add IScheduler interface for user-defined schedulers and work-stealing scheduler. Better atomics support. Performance improvements and bug fixes. Explicit support for .NET 8.</PackageReleaseNotes>
+    <PackageReleaseNotes>Add support for .NET Framework 4.7.1 and .NET Standard 2.1.</PackageReleaseNotes>
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
     <IncludeSymbols>true</IncludeSymbols>
     <SymbolPackageFormat>snupkg</SymbolPackageFormat>
