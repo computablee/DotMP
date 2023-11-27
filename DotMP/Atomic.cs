@@ -70,6 +70,7 @@ namespace DotMP
             return Interlocked.Decrement(ref target);
         }
 
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Performs a bitwise And operation on two specified 32-bit integers and replaces the first integer with the result, as an atomic operation.
         /// </summary>
@@ -91,6 +92,7 @@ namespace DotMP
         {
             return Interlocked.Or(ref target, value);
         }
+#endif
         #endregion
 
         #region UInt32
@@ -102,7 +104,11 @@ namespace DotMP
         /// <returns>The new value stored as a result of the operation.</returns>
         public static uint Add(ref uint target, uint value)
         {
+#if NET6_0_OR_GREATER
             return Interlocked.Add(ref target, value);
+#else
+            return unchecked((uint)Interlocked.Add(ref Unsafe.As<uint, int>(ref target), Unsafe.As<uint, int>(ref value)));
+#endif
         }
 
         /// <summary>
@@ -114,7 +120,11 @@ namespace DotMP
         public static uint Sub(ref uint target, uint value)
         {
             uint neg = ~value + 1;
+#if NET6_0_OR_GREATER
             return Interlocked.Add(ref target, neg);
+#else
+            return unchecked((uint)Interlocked.Add(ref Unsafe.As<uint, int>(ref target), Unsafe.As<uint, int>(ref neg)));
+#endif
         }
 
         /// <summary>
@@ -124,7 +134,11 @@ namespace DotMP
         /// <returns>The new value stored as a result of the operation.</returns>
         public static uint Inc(ref uint target)
         {
+#if NET6_0_OR_GREATER
             return Interlocked.Increment(ref target);
+#else
+            return unchecked((uint)Interlocked.Increment(ref Unsafe.As<uint, int>(ref target)));
+#endif
         }
 
         /// <summary>
@@ -134,9 +148,14 @@ namespace DotMP
         /// <returns>The new value stored as a result of the operation.</returns>
         public static uint Dec(ref uint target)
         {
+#if NET6_0_OR_GREATER
             return Interlocked.Decrement(ref target);
+#else
+            return unchecked((uint)Interlocked.Decrement(ref Unsafe.As<uint, int>(ref target)));
+#endif
         }
 
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Performs a bitwise And operation on two specified 32-bit unsigned integers and replaces the first integer with the result, as an atomic operation.
         /// </summary>
@@ -158,6 +177,7 @@ namespace DotMP
         {
             return Interlocked.Or(ref target, value);
         }
+#endif
         #endregion
 
         #region Int64
@@ -203,6 +223,7 @@ namespace DotMP
             return Interlocked.Decrement(ref target);
         }
 
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Performs a bitwise And operation on two specified 64-bit integers and replaces the first integer with the result, as an atomic operation.
         /// </summary>
@@ -224,6 +245,7 @@ namespace DotMP
         {
             return Interlocked.Or(ref target, value);
         }
+#endif
         #endregion
 
         #region UInt64
@@ -235,7 +257,11 @@ namespace DotMP
         /// <returns>The new value stored as a result of the operation.</returns>
         public static ulong Add(ref ulong target, ulong value)
         {
+#if NET6_0_OR_GREATER
             return Interlocked.Add(ref target, value);
+#else
+            return unchecked((ulong)Interlocked.Add(ref Unsafe.As<ulong, long>(ref target), Unsafe.As<ulong, long>(ref value)));
+#endif
         }
 
         /// <summary>
@@ -247,7 +273,11 @@ namespace DotMP
         public static ulong Sub(ref ulong target, ulong value)
         {
             ulong neg = ~value + 1;
+#if NET6_0_OR_GREATER
             return Interlocked.Add(ref target, neg);
+#else
+            return unchecked((ulong)Interlocked.Add(ref Unsafe.As<ulong, long>(ref target), Unsafe.As<ulong, long>(ref neg)));
+#endif
         }
 
         /// <summary>
@@ -257,7 +287,11 @@ namespace DotMP
         /// <returns>The new value stored as a result of the operation.</returns>
         public static ulong Inc(ref ulong target)
         {
+#if NET6_0_OR_GREATER
             return Interlocked.Increment(ref target);
+#else
+            return unchecked((ulong)Interlocked.Increment(ref Unsafe.As<ulong, long>(ref target)));
+#endif
         }
 
         /// <summary>
@@ -267,9 +301,14 @@ namespace DotMP
         /// <returns>The new value stored as a result of the operation.</returns>
         public static ulong Dec(ref ulong target)
         {
+#if NET6_0_OR_GREATER
             return Interlocked.Decrement(ref target);
+#else
+            return unchecked((ulong)Interlocked.Decrement(ref Unsafe.As<ulong, long>(ref target)));
+#endif
         }
 
+#if NET6_0_OR_GREATER
         /// <summary>
         /// Performs a bitwise And operation on two specified 64-bit unsigned integers and replaces the first integer with the result, as an atomic operation.
         /// </summary>
@@ -291,6 +330,7 @@ namespace DotMP
         {
             return Interlocked.Or(ref target, value);
         }
+#endif
         #endregion
     }
 }

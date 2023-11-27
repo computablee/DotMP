@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using System.Text.Json.Serialization;
 using System.Threading;
 using DotMP;
 using DotMP.GPU;
@@ -13,6 +12,7 @@ using Xunit.Abstractions;
 
 namespace DotMPTests
 {
+#if NET6_0_OR_GREATER
     /// <summary>
     /// GPU tests for the DotMP library.
     /// </summary>
@@ -133,4 +133,5 @@ namespace DotMPTests
             }
         }
     }
+#endif
 }

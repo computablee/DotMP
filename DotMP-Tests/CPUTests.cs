@@ -292,10 +292,10 @@ namespace DotMPTests
             DotMP.Parallel.ParallelForReductionCollapse((256, 512), (512, 600),
                                                         op: Operations.Add, reduce_to: ref total_iters_executed,
                                                         num_threads: 8, chunk_size: 7, schedule: Schedule.Static,
-                                                        action: (ref int total_iters_executed, int i, int j) =>
+                                                        action: (ref int total_iters_executed_loc, int i, int j) =>
             {
                 DotMP.Atomic.Inc(ref iters_hit[i, j]);
-                total_iters_executed += 1;
+                total_iters_executed_loc += 1;
             });
 
             for (int i = 0; i < 1024; i++)
@@ -315,10 +315,10 @@ namespace DotMPTests
             DotMP.Parallel.ParallelForReductionCollapse((35, 64), (16, 100), (10, 62),
                                                         op: Operations.Add, reduce_to: ref total_iters_executed,
                                                         num_threads: 8, chunk_size: 3, schedule: Schedule.Dynamic,
-                                                        action: (ref int total_iters_executed, int i, int j, int k) =>
+                                                        action: (ref int total_iters_executed_loc, int i, int j, int k) =>
             {
                 DotMP.Atomic.Inc(ref iters_hit_3[i, j, k]);
-                total_iters_executed += 1;
+                total_iters_executed_loc += 1;
             });
 
             for (int i = 0; i < 128; i++)
@@ -339,10 +339,10 @@ namespace DotMPTests
             DotMP.Parallel.ParallelForReductionCollapse((1, 31), (10, 16), (5, 20), (21, 30),
                                                         op: Operations.Add, reduce_to: ref total_iters_executed,
                                                         num_threads: 8, chunk_size: 11, schedule: Schedule.Static,
-                                                        action: (ref int total_iters_executed, int i, int j, int k, int l) =>
+                                                        action: (ref int total_iters_executed_loc, int i, int j, int k, int l) =>
             {
                 DotMP.Atomic.Inc(ref iters_hit_4[i, j, k, l]);
-                total_iters_executed += 1;
+                total_iters_executed_loc += 1;
             });
 
             total_iters_executed.Should().Be((31 - 1) * (16 - 10) * (20 - 5) * (30 - 21));
@@ -351,10 +351,10 @@ namespace DotMPTests
             DotMP.Parallel.ParallelForReductionCollapse(new (int, int)[] { (1, 31), (10, 16), (5, 20), (21, 30) },
                                                         op: Operations.Add, reduce_to: ref total_iters_executed,
                                                         num_threads: 8, chunk_size: 11, schedule: Schedule.Static,
-                                                        action: (ref int total_iters_executed, int[] indices) =>
+                                                        action: (ref int total_iters_executed_loc, int[] indices) =>
             {
                 DotMP.Atomic.Inc(ref iters_hit_4[indices[0], indices[1], indices[2], indices[3]]);
-                total_iters_executed += 1;
+                total_iters_executed_loc += 1;
             });
 
             total_iters_executed.Should().Be((31 - 1) * (16 - 10) * (20 - 5) * (30 - 21));
@@ -663,6 +663,7 @@ namespace DotMPTests
             long_totals[2].Should().Be((long)threads * 2);
             ulong_totals[2].Should().Be((ulong)threads * 2);
 
+#if NET6_0_OR_GREATER
             //and
             DotMP.Parallel.ParallelRegion(num_threads: threads, action: () =>
             {
@@ -712,6 +713,7 @@ namespace DotMPTests
             uint_totals[4].Should().Be((uint)res);
             long_totals[4].Should().Be((long)res);
             ulong_totals[4].Should().Be((ulong)res);
+#endif
 
             uint_totals[5] = threads * 2 + 1;
             ulong_totals[5] = threads * 2 + 3;
@@ -766,14 +768,14 @@ namespace DotMPTests
         [Fact]
         public void Reduction_works()
         {
-            int total = 0;
+            int total_int = 0;
 
-            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
+            DotMP.Parallel.ParallelForReduction(0, 1024, DotMP.Operations.Add, ref total_int, num_threads: 8, chunk_size: 1, schedule: DotMP.Schedule.Static, action: (ref int total, int i) =>
             {
                 total += i;
             });
 
-            total.Should().Be(1024 * 1023 / 2);
+            total_int.Should().Be(1024 * 1023 / 2);
 
             long total_long = 0;
 
@@ -1691,7 +1693,7 @@ namespace DotMPTests
 
             DotMP.Parallel.ParallelRegion(() =>
             {
-                Interlocked.Add(ref threads_spawned, 1);
+                DotMP.Atomic.Inc(ref threads_spawned);
             });
 
             return threads_spawned;

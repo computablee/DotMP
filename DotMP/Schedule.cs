@@ -34,7 +34,7 @@ namespace DotMP
         /// <param name="end">The end of the loop, exclusive.</param>
         /// <param name="num_threads">The number of threads.</param>
         /// <param name="chunk_size">Provided chunk size.</param>
-        public void LoopInit(int start, int end, uint num_threads, uint chunk_size);
+        void LoopInit(int start, int end, uint num_threads, uint chunk_size);
 
         /// <summary>
         /// Called between each chunk to calculate the bounds of the next chunk.
@@ -42,7 +42,7 @@ namespace DotMP
         /// <param name="thread_id">The thread ID to provide a chunk to.</param>
         /// <param name="start">The start of the chunk, inclusive.</param>
         /// <param name="end">The end of the chunk, exclusive.</param>
-        public void LoopNext(int thread_id, out int start, out int end);
+        void LoopNext(int thread_id, out int start, out int end);
     }
     #endregion
 
@@ -431,6 +431,12 @@ namespace DotMP
             /// Counts the remaining threads with work so threads know when to stop attempting to steal.
             /// </summary>
             private volatile uint threads_with_remaining_work;
+#if !NET6_0_OR_GREATER
+            /// <summary>
+            /// Random instance for compatibility with non-.NET 6 compiles.
+            /// </summary>
+            private ThreadLocal<Random> localRandom;
+#endif
 
             /// <summary>
             /// Override method for LoopInit, is called when first starting a work-stealing loop.
@@ -465,6 +471,10 @@ namespace DotMP
                     queues[num_threads - 1].end = end;
                     queues[num_threads - 1].work_remaining = true;
                     queues[num_threads - 1].qlock = new object();
+
+#if !NET6_0_OR_GREATER
+                    localRandom = new ThreadLocal<Random>(() => new Random());
+#endif
                 }
             }
 
@@ -505,17 +515,19 @@ namespace DotMP
             /// <param name="thread_id">The thread ID.</param>
             private void StealHandler(int thread_id)
             {
+#pragma warning disable CS0420
                 if (queues[thread_id].work_remaining)
                 {
-                    Interlocked.Decrement(ref threads_with_remaining_work);
+                    Atomic.Dec(ref threads_with_remaining_work);
                     queues[thread_id].work_remaining = false;
                 }
 
                 if (DoSteal(thread_id))
                 {
-                    Interlocked.Increment(ref threads_with_remaining_work);
+                    Atomic.Inc(ref threads_with_remaining_work);
                     queues[thread_id].work_remaining = true;
                 }
+#pragma warning restore CS0420
             }
 
             /// <summary>
@@ -528,7 +540,11 @@ namespace DotMP
             {
                 checked
                 {
+#if NET6_0_OR_GREATER
                     int rng = Random.Shared.Next((int)num_threads);
+#else
+                    int rng = localRandom.Value.Next((int)num_threads);
+#endif
                     int new_start, new_end;
 
                     lock (queues[rng].qlock)
