@@ -89,28 +89,9 @@ namespace DotMP.GPU
         private T[,,] data3d;
 
         /// <summary>
-        /// Handler int for the number of dimensions in the array.
-        /// </summary>
-        private int dims;
-
-        /// <summary>
         /// The number of dimensions in the array.
         /// </summary>
-        internal int Dimensions
-        {
-            get
-            {
-                return dims;
-            }
-
-            private set
-            {
-                if (value < 1 || value > 3)
-                    throw new ArgumentOutOfRangeException("Number of dimensions must be between 1 and 3.");
-
-                dims = value;
-            }
-        }
+        internal int Dimensions { get; private set; }
 
         /// <summary>
         /// Constructor for buffer object. Allocates a 1D array on the GPU and makes it available for the next GPU kernel.
