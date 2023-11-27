@@ -1,0 +1,488 @@
+/*
+* DotMP - A collection of powerful abstractions for parallel programming in .NET with an OpenMP-like API. 
+* Copyright (C) 2023 Phillip Allen Lane
+*
+* This library is free software; you can redistribute it and/or modify it under the terms of the GNU Lesser
+* General Public License as published by the Free Software Foundation; either version 2.1 of the License, or
+* (at your option) any later version.
+*
+* This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without even the
+* implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public
+* License for more details.
+*
+* You should have received a copy of the GNU Lesser General Public License along with this library; if not,
+* write to the Free Software Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA 02110-1301 USA.
+*/
+
+<#@ template debug="false" hostspecific="false" language="C#" #>
+<#@ output extension=".cs" #>
+<# var letters = new char[] { 'T', 'U', 'V', 'W', 'X', 'Y', 'Z', 'A', 'B', 'C', 'D', 'E', 'F' };
+   int max = 13; #>
+
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using ILGPU;
+using ILGPU.Runtime;
+
+namespace DotMP.GPU
+{
+    /// <summary>
+    /// The handler class managing GPU acceleration.
+    /// </summary>
+    internal sealed class AcceleratorHandler
+    {
+        /// <summary>
+        /// Determines if a GPU context has been initialized yet.
+        /// </summary>
+        private static bool initialized = false;
+        /// <summary>
+        /// The GPU context.
+        /// </summary>
+        private static Context context;
+        /// <summary>
+        /// The accelerator object.
+        /// </summary>
+        internal static Accelerator accelerator;
+        /// <summary>
+        /// Block size to use for kernels.
+        /// </summary>
+        private static int block_size;
+        /// <summary>
+        /// Kernel cache.
+        /// </summary>
+        private static Dictionary<string, Delegate> kernels = new Dictionary<string, Delegate>();
+        /// <summary>
+        /// Index cache for 1D kernels.
+        /// </summary>
+        private static Dictionary<string, ValueTuple<int, int, Buffer<int>>> indices1d = new Dictionary<string, ValueTuple<int, int, Buffer<int>>>();
+        /// <summary>
+        /// Index cache for 2D kernels.
+        /// </summary>
+        private static Dictionary<string, ValueTuple<int, int, int, int, Buffer<int>, Buffer<int>>> indices2d =
+            new Dictionary<string, ValueTuple<int, int, int, int, Buffer<int>, Buffer<int>>>();
+        /// <summary>
+        /// Index cache for 3D kernels.
+        /// </summary>
+        private static Dictionary<string, ValueTuple<ValueTuple<int, int>, ValueTuple<int, int>, ValueTuple<int, int>, Buffer<int>, Buffer<int>, Buffer<int>>> indices3d =
+            new Dictionary<string, ValueTuple<ValueTuple<int, int>, ValueTuple<int, int>, ValueTuple<int, int>, Buffer<int>, Buffer<int>, Buffer<int>>>();
+
+        /// <summary>
+        /// Default constructor. If this is the first time it's called, it initializes all relevant singleton data.
+        /// </summary>
+        internal AcceleratorHandler()
+        {
+            if (initialized) return;
+
+            context = Context.Create()
+                .Optimize(OptimizationLevel.O2)
+                .Inlining(InliningMode.Aggressive)
+                .AllAccelerators()
+                //.Math(MathMode.Fast32BitOnly)
+                .ToContext();
+            var selectedDevice = context.Devices[0];
+
+            foreach (var d in context.Devices)
+            {
+                Console.WriteLine("Detected {0} accelerator.", d.ToString());
+
+                if (selectedDevice.AcceleratorType == AcceleratorType.CPU && d.AcceleratorType == AcceleratorType.OpenCL)
+                    selectedDevice = d;
+                if (selectedDevice.AcceleratorType != AcceleratorType.Cuda && d.AcceleratorType == AcceleratorType.Cuda)
+                    selectedDevice = d;
+            }
+
+            accelerator = selectedDevice.CreateAccelerator(context);
+            //accelerator = context.Devices[0].CreateAccelerator(context);
+
+            Console.WriteLine("Using {0} accelerator.", accelerator.AcceleratorType.ToString());
+            initialized = true;
+            block_size = accelerator.AcceleratorType == AcceleratorType.CPU ? 16 : 256;
+        }
+
+        /// <summary>
+        /// Synchronize pending operations.
+        /// </summary>
+        private void Synchronize() => accelerator.Synchronize();
+
+<# for (int c = 1; c <= max; c++) { #>
+        /// <summary>
+        /// Get the kernel associated with this lambda.
+        /// </summary>
+        /// <param name="action">The action provided on the CPU.</param>
+        /// <param name="src">The calling location.</param>
+        /// <returns>The GPU kernel.</returns>
+        private Action<KernelConfig, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > GetKernel<
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >(Action<Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? ", " : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+        {
+            if (!kernels.ContainsKey(src))
+                kernels.Add(src, accelerator.LoadStreamKernel(action));
+
+            return (Action<KernelConfig, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #> 
+            >) kernels[src];
+        }
+<# } #>
+
+<# for (int c = 1; c <= max - 1; c++) { #>
+        /// <summary>
+        /// Get the kernel associated with this lambda.
+        /// </summary>
+        /// <param name="action">The action provided on the CPU.</param>
+        /// <param name="src">The calling location.</param>
+        /// <returns>The GPU kernel.</returns>
+        private Action<KernelConfig, Index, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > GetKernel<
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >(Action<Index, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? ", " : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+        {
+            if (!kernels.ContainsKey(src))
+                kernels.Add(src, accelerator.LoadStreamKernel(action));
+
+            return (Action<KernelConfig, Index, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #> 
+            >) kernels[src];
+        }
+<# } #>
+
+<# for (int c = 1; c <= max - 2; c++) { #>
+        /// <summary>
+        /// Get the kernel associated with this lambda.
+        /// </summary>
+        /// <param name="action">The action provided on the CPU.</param>
+        /// <param name="src">The calling location.</param>
+        /// <returns>The GPU kernel.</returns>
+        private Action<KernelConfig, Index, Index, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > GetKernel<
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >(Action<Index, Index, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? ", " : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+        {
+            if (!kernels.ContainsKey(src))
+                kernels.Add(src, accelerator.LoadStreamKernel(action));
+
+            return (Action<KernelConfig, Index, Index, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #> 
+            >) kernels[src];
+        }
+<# } #>
+
+        /// <summary>
+        /// Precomputes and caches the indices for a 1D for loop.
+        /// </summary>
+        /// <param name="range">The range of the for loop.</param>
+        /// <param name="src">The calling location in the source code.</param>
+        /// <returns>The calculated index.</returns>
+        internal Index Get1DIdx((int, int) range, string src)
+        {
+            if (indices1d.ContainsKey(src))
+            {
+                var data = indices1d[src];
+                if (data.Item1 == range.Item1 && data.Item2 == range.Item2)
+                    return new Index(data.Item3);
+                else
+                    data.Item3.Dispose();
+            }
+
+            int[] indices = new int[range.Item2 - range.Item1];
+
+            for (int i = 0; i < indices.Length; i++)
+                indices[i] = i + range.Item1;
+
+            var buf = new Buffer<int>(indices, Buffer.Behavior.To);
+            indices1d[src] = (range.Item1, range.Item2, buf);
+            return new Index(buf);
+        }
+
+        /// <summary>
+        /// Precomputes and caches the indices for a 2D for loop.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The inner range of the for loop.</param>
+        /// <param name="src">The calling location in the source code.</param>
+        /// <returns>A tuple of calculated indices.</returns>
+        internal ValueTuple<Index, Index> Get2DIdx((int, int) range1, (int, int) range2, string src)
+        {
+            if (indices2d.ContainsKey(src))
+            {
+                var data = indices2d[src];
+                if (data.Item1 == range1.Item1 && data.Item2 == range1.Item2 &&
+                    data.Item3 == range2.Item1 && data.Item4 == range2.Item2)
+                    return (new Index(data.Item5), new Index(data.Item6));
+                else
+                {
+                    data.Item5.Dispose();
+                    data.Item6.Dispose();
+                }
+            }
+
+            int[] indi = new int[(range1.Item2 - range1.Item1) * (range2.Item2 - range2.Item1)];
+            int[] indj = new int[(range1.Item2 - range1.Item1) * (range2.Item2 - range2.Item1)];
+
+            int ci = range1.Item1, cj = range2.Item1;
+
+            for (int i = 0; i < indi.Length; i++)
+            {
+                indi[i] = ci;
+                indj[i] = cj;
+
+                if (++cj == range2.Item2)
+                {
+                    cj = range2.Item1;
+                    ++ci;
+                }
+            }
+
+            var b1 = new Buffer<int>(indi, Buffer.Behavior.To);
+            var b2 = new Buffer<int>(indj, Buffer.Behavior.To);
+            indices2d[src] = (range1.Item1, range1.Item2, range2.Item1, range2.Item2, b1, b2);
+
+            return (new Index(b1), new Index(b2));
+        }
+
+        /// <summary>
+        /// Precomputes and caches the indices for a 3D for loop.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The middle range of the for loop.</param>
+        /// <param name="range3">The inner range of the for loop.</param>
+        /// <param name="src">The calling location in the source code.</param>
+        /// <returns>A tuple of calculated indices.</returns>
+        internal ValueTuple<Index, Index, Index> Get3DIdx((int, int) range1, (int, int) range2, (int, int) range3, string src)
+        {
+            if (indices3d.ContainsKey(src))
+            {
+                var data = indices3d[src];
+                if (data.Item1.Item1 == range1.Item1 && data.Item1.Item2 == range1.Item2 &&
+                    data.Item2.Item1 == range2.Item1 && data.Item2.Item2 == range2.Item2 &&
+                    data.Item3.Item1 == range3.Item1 && data.Item3.Item2 == range3.Item2)
+                    return (new Index(data.Item4), new Index(data.Item5), new Index(data.Item6));
+                else
+                {
+                    data.Item4.Dispose();
+                    data.Item5.Dispose();
+                    data.Item6.Dispose();
+                }
+            }
+
+            int[] indi = new int[(range1.Item2 - range1.Item1) * (range2.Item2 - range2.Item1) * (range3.Item2 - range3.Item1)];
+            int[] indj = new int[(range1.Item2 - range1.Item1) * (range2.Item2 - range2.Item1) * (range3.Item2 - range3.Item1)];
+            int[] indk = new int[(range1.Item2 - range1.Item1) * (range2.Item2 - range2.Item1) * (range3.Item2 - range3.Item1)];
+
+            int ci = range1.Item1, cj = range2.Item1, ck = range3.Item1;
+
+            for (int i = 0; i < indi.Length; i++)
+            {
+                indi[i] = ci;
+                indj[i] = cj;
+                indk[i] = ck;
+
+                if (++ck == range3.Item2)
+                {
+                    ck = range3.Item1;
+
+                    if (++cj == range2.Item2)
+                    {
+                        cj = range2.Item1;
+                        ++ci;
+                    }
+                }
+            }
+
+            var b1 = new Buffer<int>(indi, Buffer.Behavior.To);
+            var b2 = new Buffer<int>(indj, Buffer.Behavior.To);
+            var b3 = new Buffer<int>(indk, Buffer.Behavior.To);
+            indices3d[src] = ((range1.Item1, range1.Item2), (range2.Item1, range2.Item2), (range3.Item1, range3.Item2), b1, b2, b3);
+
+            return (new Index(b1), new Index(b2), new Index(b3));
+        }
+
+
+<# for (int c = 1; c <= max; c++) { #>
+        /// <summary>
+        /// Dispatches a linear kernel with the given number of parameters.
+        /// </summary>
+        /// <param name="range1">The range of the for loop.</param>
+<# for (int i = 0; i < c; i++) { #>
+        /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
+<# } #>
+        /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
+        internal void DispatchKernel<
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >((int, int) range1,
+<# for (int i = 0; i < c; i++) { #> Buffer<<#= letters[i] #>> buf<#= i + 1 #>, <# } #>
+        Action<Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+        {
+            var idx = Get1DIdx(range1, src);
+            var len = range1.Item2 - range1.Item1;
+
+            var kernel = GetKernel(action, src);
+
+<# for (int i = 0; i < c; i++) { #>
+            var gpu<#= i + 1 #> = new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>);
+<# } #>
+
+            kernel((len / block_size, block_size), idx
+<# for (int i = 0; i < c; i++) { #>
+            , gpu<#= i + 1 #>
+<# } #>
+            );
+
+            int not_done = len % block_size;
+
+            if (not_done > 0)
+            {
+                int offset = len - not_done;
+                idx.AddOffset(offset);
+
+                kernel((1, not_done), idx
+<# for (int i = 0; i < c; i++) { #>
+                , gpu<#= i + 1 #>
+<# } #>
+                );
+            }
+
+            Synchronize();
+        }
+<# } #>
+
+<# for (int c = 1; c <= max - 1; c++) { #>
+        /// <summary>
+        /// Dispatches a 2D kernel with the given number of parameters.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The inner range of the for loop.</param>
+<# for (int i = 0; i < c; i++) { #>
+        /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
+<# } #>
+        /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
+        internal void DispatchKernel<
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >((int, int) range1, (int, int) range2,
+<# for (int i = 0; i < c; i++) { #> Buffer<<#= letters[i] #>> buf<#= i + 1 #>, <# } #>
+        Action<Index, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+        {
+            var len = (range1.Item2 - range1.Item1) * (range2.Item2 - range2.Item1);
+            (var i, var j) = Get2DIdx(range1, range2, src);
+
+            var kernel = GetKernel(action, src);
+
+<# for (int i = 0; i < c; i++) { #>
+            var gpu<#= i + 1 #> = new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>);
+<# } #>
+
+            kernel((len / block_size, block_size), i, j
+<# for (int i = 0; i < c; i++) { #>
+            , gpu<#= i + 1 #>
+<# } #>
+            );
+
+            int not_done = len % block_size;
+
+            if (not_done > 0)
+            {
+                int offset = len - not_done;
+                i.AddOffset(offset);
+                j.AddOffset(offset);
+
+                kernel((1, not_done), i, j
+<# for (int i = 0; i < c; i++) { #>
+                , gpu<#= i + 1 #>
+<# } #>
+                );
+            }
+
+            Synchronize();
+        }
+<# } #>
+
+<# for (int c = 1; c <= max - 2; c++) { #>
+        /// <summary>
+        /// Dispatches a 3D kernel with the given number of parameters.
+        /// </summary>
+        /// <param name="range1">The outer range of the for loop.</param>
+        /// <param name="range2">The middle range of the for loop.</param>
+        /// <param name="range3">The inner range of the for loop.</param>
+<# for (int i = 0; i < c; i++) { #>
+        /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
+<# } #>
+        /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
+        internal void DispatchKernel<
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >((int, int) range1, (int, int) range2, (int, int) range3,
+<# for (int i = 0; i < c; i++) { #> Buffer<<#= letters[i] #>> buf<#= i + 1 #>, <# } #>
+        Action<Index, Index, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+        {
+            var len = (range1.Item2 - range1.Item1) * (range2.Item2 - range2.Item1) * (range3.Item2 - range3.Item1);
+            (var i, var j, var k) = Get3DIdx(range1, range2, range3, src);
+
+            var kernel = GetKernel(action, src);
+
+<# for (int i = 0; i < c; i++) { #>
+            var gpu<#= i + 1 #> = new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>);
+<# } #>
+
+            kernel((len / block_size, block_size), i, j, k
+<# for (int i = 0; i < c; i++) { #>
+            , gpu<#= i + 1 #>
+<# } #>
+            );
+
+            int not_done = len % block_size;
+
+            if (not_done > 0)
+            {
+                int offset = len - not_done;
+                i.AddOffset(offset);
+                j.AddOffset(offset);
+                k.AddOffset(offset);
+
+                kernel((1, not_done), i, j, k
+<# for (int i = 0; i < c; i++) { #>
+                , gpu<#= i + 1 #>
+<# } #>
+                );
+            }
+
+            Synchronize();
+        }
+<# } #>
+    }
+}
