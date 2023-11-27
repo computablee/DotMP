@@ -41,7 +41,7 @@ build:
 docs: ProcessedREADME.md
 	doxygen
 
-pack: ProcessedREADME.md build
+pack: ProcessedREADME.md
 	$(DN) pack -c $(BUILD) /p:ContinuousIntegrationBuild=true DotMP
 
 clean:
