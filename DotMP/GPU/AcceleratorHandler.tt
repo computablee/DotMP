@@ -252,7 +252,6 @@ namespace DotMP.GPU
                 }
             }
 
-            Console.WriteLine("Computed new indices...");
             var b1 = new Buffer<int>(indi, Buffer.Behavior.To);
             var b2 = new Buffer<int>(indj, Buffer.Behavior.To);
             indices2d[src] = (range1.Item1, range1.Item2, range2.Item1, range2.Item2, b1, b2);
