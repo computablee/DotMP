@@ -29,6 +29,6 @@ jobs:
     - name: Upload coverage reports to Codecov
       uses: codecov/codecov-action@v3
       with:
-        files: coverage.net6.0.opencover.xml
+        files: coverage.net8.0.opencover.xml
         directory: DotMP-Tests
         token: ${{ secrets.CODECOV_TOKEN }}
