@@ -1,5 +1,6 @@
 var searchData=
 [
+  ['random_5finit_3c_20t_20_3e_293',['random_init&lt; T &gt;',['../classDotMPTests_1_1GPUTests.html#ae5281bc939ed89ba38c7f109beabe821',1,'DotMPTests::GPUTests']]],
   ['ranges_294',['ranges',['../classDotMP_1_1ForAction.html#af6766205a5f277bda14d825a243b5b26',1,'DotMP::ForAction']]],
   ['ranges_5fprv_295',['ranges_prv',['../classDotMP_1_1ForAction.html#aaba11677e84e10776148f4c895d4f9de',1,'DotMP::ForAction']]],
   ['reduction_5fcollapse_5fworks_296',['Reduction_collapse_works',['../classDotMPTests_1_1CPUTests.html#aa8650df7d73c506083f0061d18c73e15',1,'DotMPTests::CPUTests']]],

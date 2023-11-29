@@ -11,9 +11,7 @@ var searchData=
   ['booleanand_35',['BooleanAnd',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346a2094d546839cf302d212b7a211db78e7',1,'DotMP']]],
   ['booleanor_36',['BooleanOr',['../namespaceDotMP.html#afb991877c15e09400ba2bd2029045346aaea2784d7ec01af0bac72165958accdb',1,'DotMP']]],
   ['boundary_5fparallelfor_5fshould_5fexcept_37',['Boundary_parallelfor_should_except',['../classDotMPTests_1_1CPUTests.html#ac762b682f54cb2e0a0e3c66a8e753389',1,'DotMPTests::CPUTests']]],
-  ['buf1d_38',['buf1d',['../classDotMP_1_1GPU_1_1Buffer.html#acce3288de8973540f1d6807b0f2ffce4',1,'DotMP::GPU::Buffer']]],
-  ['buf2d_39',['buf2d',['../classDotMP_1_1GPU_1_1Buffer.html#a2ad06089cd61d38c7263874b03096a5f',1,'DotMP::GPU::Buffer']]],
-  ['buf3d_40',['buf3d',['../classDotMP_1_1GPU_1_1Buffer.html#a61bc3e1f62bd96586f6a087f5495d2c4',1,'DotMP::GPU::Buffer']]],
-  ['buffer_41',['Buffer',['../classDotMP_1_1GPU_1_1Buffer.html#a60fdea83ce30b6f7ef40eb3e72e7db9c',1,'DotMP.GPU.Buffer.Buffer(T[,,] data, Buffer.Behavior behavior)'],['../classDotMP_1_1GPU_1_1Buffer.html#a8ea08ab6deafa16d864051f0eaf7d74b',1,'DotMP.GPU.Buffer.Buffer(T[,] data, Buffer.Behavior behavior)'],['../classDotMP_1_1GPU_1_1Buffer.html#ac15871b5470d0e841ed5436a176d3e66',1,'DotMP.GPU.Buffer.Buffer(T[] data, Buffer.Behavior behavior)'],['../classDotMP_1_1GPU_1_1Buffer.html',1,'DotMP.GPU.Buffer&lt; T &gt;']]],
-  ['buffer_2ecs_42',['Buffer.cs',['../Buffer_8cs.html',1,'']]]
+  ['buf_38',['buf',['../classDotMP_1_1GPU_1_1Buffer.html#a8b41695615732cb45f1fe3caa2737a7e',1,'DotMP::GPU::Buffer']]],
+  ['buffer_39',['Buffer',['../classDotMP_1_1GPU_1_1Buffer.html#a0f542238c946bd0077308351eb143029',1,'DotMP.GPU.Buffer.Buffer(T[,,] data, Buffer.Behavior behavior)'],['../classDotMP_1_1GPU_1_1Buffer.html#a258d297ec0d1d461b4631bfa734a952b',1,'DotMP.GPU.Buffer.Buffer(T[,] data, Buffer.Behavior behavior)'],['../classDotMP_1_1GPU_1_1Buffer.html#ac15871b5470d0e841ed5436a176d3e66',1,'DotMP.GPU.Buffer.Buffer(T[] data, Buffer.Behavior behavior)'],['../classDotMP_1_1GPU_1_1Buffer.html',1,'DotMP.GPU.Buffer&lt; T &gt;']]],
+  ['buffer_2ecs_40',['Buffer.cs',['../Buffer_8cs.html',1,'']]]
 ];
