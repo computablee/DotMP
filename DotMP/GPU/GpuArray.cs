@@ -33,22 +33,17 @@ namespace DotMP.GPU
         /// <summary>
         /// The ILGPU view for 1D arrays.
         /// </summary>
-        private ArrayView1D<T, Stride1D.Dense> view1d;
+        private ArrayView1D<T, Stride1D.Dense> view;
 
         /// <summary>
-        /// The ILGPU view for 2D arrays.
+        /// Stride of Y dimension.
         /// </summary>
-        private ArrayView2D<T, Stride2D.DenseY> view2d;
+        private int stride_y;
 
         /// <summary>
-        /// The ILGPU view for 3D arrays.
+        /// Stride of Z dimension.
         /// </summary>
-        private ArrayView3D<T, Stride3D.DenseXY> view3d;
-
-        /// <summary>
-        /// Number of dimensions.
-        /// </summary>
-        private int dims;
+        private int stride_z;
 
         /// <summary>
         /// Constructor.
@@ -56,33 +51,8 @@ namespace DotMP.GPU
         /// <param name="buf">The Buffer to create an array from.</param>
         internal GPUArray(Buffer<T> buf)
         {
-            switch (buf.Dimensions)
-            {
-                default:
-                case 1:
-                    view1d = buf.View1D;
-                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                    view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
-                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                    view3d = new Buffer<T>(new T[1, 1, 1], Buffer.Behavior.NoCopy).View3D;
-                    break;
-                case 2:
-                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                    view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
-                    view2d = buf.View2D;
-                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                    view3d = new Buffer<T>(new T[1, 1, 1], Buffer.Behavior.NoCopy).View3D;
-                    break;
-                case 3:
-                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                    view1d = new Buffer<T>(new T[1], Buffer.Behavior.NoCopy).View1D;
-                    // BAND-AID FIX: Cannot use empty ArrayViews on OpenCL devices.
-                    view2d = new Buffer<T>(new T[1, 1], Buffer.Behavior.NoCopy).View2D;
-                    view3d = buf.View3D;
-                    break;
-            }
-
-            dims = buf.Dimensions;
+            view = buf.View;
+            (stride_y, stride_z) = buf.Strides;
         }
 
         /// <summary>
@@ -92,7 +62,7 @@ namespace DotMP.GPU
         /// <returns>The data at that ID.</returns>
         public ref T this[int idx]
         {
-            get => ref view1d[idx];
+            get => ref view[idx];
         }
 
         /// <summary>
@@ -103,7 +73,7 @@ namespace DotMP.GPU
         /// <returns>The data at that ID.</returns>
         public ref T this[int i, int j]
         {
-            get => ref view2d[i, j];
+            get => ref view[(i * stride_y) + j];
         }
 
         /// <summary>
@@ -115,27 +85,12 @@ namespace DotMP.GPU
         /// <returns>The data at that ID.</returns>
         public ref T this[int i, int j, int k]
         {
-            get => ref view3d[i, j, k];
+            get => ref view[(i * stride_y * stride_z) + (j * stride_z) + k];
         }
 
         /// <summary>
         /// Gets the length of the array.
         /// </summary>
-        public int Length
-        {
-            get
-            {
-                switch (dims)
-                {
-                    case 1:
-                    default:
-                        return view1d.IntLength;
-                    case 2:
-                        return view2d.IntLength;
-                    case 3:
-                        return view3d.IntLength;
-                }
-            }
-        }
+        public int Length { get => view.IntLength; }
     }
 }

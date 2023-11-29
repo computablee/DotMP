@@ -48,7 +48,7 @@ namespace DotMP.GPU
         /// <param name="buf">Buffer representing the indices.</param>
         internal Index(Buffer<int> buf)
         {
-            this.lookup = buf.View1D;
+            lookup = buf.View;
             offset = 0;
             idx = -1;
         }
