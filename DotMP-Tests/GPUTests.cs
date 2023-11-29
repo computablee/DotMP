@@ -12,7 +12,6 @@ using Xunit.Abstractions;
 
 namespace DotMPTests
 {
-#if NET6_0_OR_GREATER
     /// <summary>
     /// GPU tests for the DotMP library.
     /// </summary>
@@ -35,16 +34,29 @@ namespace DotMPTests
             random_init(y);
 
             {
+#if NET6_0_OR_GREATER
                 using var a_gpu = new DotMP.GPU.Buffer<double>(a, DotMP.GPU.Buffer.Behavior.To);
                 using var x_gpu = new DotMP.GPU.Buffer<double>(x, DotMP.GPU.Buffer.Behavior.To);
                 using var y_gpu = new DotMP.GPU.Buffer<double>(y, DotMP.GPU.Buffer.Behavior.To);
                 using var res_gpu = new DotMP.GPU.Buffer<float>(res, DotMP.GPU.Buffer.Behavior.From);
+#else
+                var a_gpu = new DotMP.GPU.Buffer<double>(a, DotMP.GPU.Buffer.Behavior.To);
+                var x_gpu = new DotMP.GPU.Buffer<double>(x, DotMP.GPU.Buffer.Behavior.To);
+                var y_gpu = new DotMP.GPU.Buffer<double>(y, DotMP.GPU.Buffer.Behavior.To);
+                var res_gpu = new DotMP.GPU.Buffer<float>(res, DotMP.GPU.Buffer.Behavior.From);
+#endif
 
                 DotMP.GPU.Parallel.ParallelFor(0, a.Length, a_gpu, x_gpu, y_gpu, res_gpu,
-                    (i, a, x, y, res) =>
+                    (i, a_kernel, x_kernel, y_kernel, res_kernel) =>
                 {
-                    res[i] = (float)(a[i] * x[i] + y[i]);
+                    res_kernel[i] = (float)(a_kernel[i] * x_kernel[i] + y_kernel[i]);
                 });
+#if !NET6_0_OR_GREATER
+                a_gpu.Dispose();
+                x_gpu.Dispose();
+                y_gpu.Dispose();
+                res_gpu.Dispose();
+#endif
             }
 
             for (int i = 0; i < a.Length; i++)
@@ -54,13 +66,13 @@ namespace DotMPTests
 
             Assert.Equal(res_cpu, res);
 
-            double[] a_old = a.Select(a => a).ToArray();
+            double[] a_old = a.Select(a_l => a_l).ToArray();
 
             using (var a_gpu = new DotMP.GPU.Buffer<double>(a, DotMP.GPU.Buffer.Behavior.ToFrom))
             {
-                DotMP.GPU.Parallel.ParallelFor(0, a.Length, a_gpu, (i, a) =>
+                DotMP.GPU.Parallel.ParallelFor(0, a.Length, a_gpu, (i, a_kernel) =>
                 {
-                    a[i]++;
+                    a_kernel[i]++;
                 });
             }
 
@@ -82,9 +94,9 @@ namespace DotMPTests
 
             using (var buf = new Buffer<int>(iters_hit, DotMP.GPU.Buffer.Behavior.ToFrom))
             {
-                DotMP.GPU.Parallel.ParallelForCollapse((258, 512), (512, 600), buf, (i, j, iters_hit) =>
+                DotMP.GPU.Parallel.ParallelForCollapse((258, 512), (512, 600), buf, (i, j, iters_hit_kernel) =>
                 {
-                    iters_hit[i, j]++;
+                    iters_hit_kernel[i, j]++;
                 });
             }
 
@@ -101,9 +113,9 @@ namespace DotMPTests
 
             using (var buf = new Buffer<int>(iters_hit_3, DotMP.GPU.Buffer.Behavior.ToFrom))
             {
-                DotMP.GPU.Parallel.ParallelForCollapse((35, 64), (16, 100), (10, 62), buf, action: (i, j, k, iters_hit_3) =>
+                DotMP.GPU.Parallel.ParallelForCollapse((35, 64), (16, 100), (10, 62), buf, (i, j, k, iters_hit_3_kernel) =>
                 {
-                    iters_hit_3[i, j, k]++;
+                    iters_hit_3_kernel[i, j, k]++;
                 });
             }
 
@@ -116,6 +128,112 @@ namespace DotMPTests
                             iters_hit_3[i, j, k].Should().Be(0);
 
             iters_hit_3 = null;
+        }
+
+        /// <summary>
+        /// Tests to ensure that 1D buffers work.
+        /// </summary>
+        [Fact]
+        public void One_dimensional_buffer_works()
+        {
+            float[] to_set = new float[1000];
+
+            using (var to_set_buffer = new Buffer<float>(to_set, DotMP.GPU.Buffer.Behavior.ToFrom))
+            {
+                DotMP.GPU.Parallel.ParallelFor(0, to_set.Length, to_set_buffer, (i, to_set_kernel) =>
+                {
+                    to_set_kernel[i] = 4;
+                });
+            }
+
+            to_set.Should().AllBeEquivalentTo(4);
+        }
+
+        /// <summary>
+        /// Tests to ensure that 2D buffers work.
+        /// </summary>
+        [Fact]
+        public void Two_dimensional_buffer_works()
+        {
+            float[,] to_set = new float[500, 20];
+
+            using (var to_set_buffer = new Buffer<float>(to_set, DotMP.GPU.Buffer.Behavior.ToFrom))
+            {
+                DotMP.GPU.Parallel.ParallelForCollapse((0, 500), (0, 20), to_set_buffer, (i, j, to_set_kernel) =>
+                {
+                    to_set_kernel[i, j] = 4;
+                });
+            }
+
+            for (int i = 0; i < 500; i++)
+                for (int j = 0; j < 20; j++)
+                    to_set[i, j].Should().Be(4);
+
+            to_set = new float[20, 500];
+
+            using (var to_set_buffer = new Buffer<float>(to_set, DotMP.GPU.Buffer.Behavior.ToFrom))
+            {
+                DotMP.GPU.Parallel.ParallelForCollapse((0, 20), (0, 500), to_set_buffer, (i, j, to_set_kernel) =>
+                {
+                    to_set_kernel[i, j] = 4;
+                });
+            }
+
+            for (int i = 0; i < 20; i++)
+                for (int j = 0; j < 500; j++)
+                    to_set[i, j].Should().Be(4);
+        }
+
+        /// <summary>
+        /// Tests to ensure that 3D buffers work.
+        /// </summary>
+        [Fact]
+        public void Three_dimensional_buffer_works()
+        {
+            float[,,] to_set = new float[200, 200, 15];
+
+            using (var to_set_buffer = new Buffer<float>(to_set, DotMP.GPU.Buffer.Behavior.ToFrom))
+            {
+                DotMP.GPU.Parallel.ParallelForCollapse((0, 200), (0, 200), (0, 15), to_set_buffer, (i, j, k, to_set_kernel) =>
+                {
+                    to_set_kernel[i, j, k] = 4;
+                });
+            }
+
+            for (int i = 0; i < 200; i++)
+                for (int j = 0; j < 200; j++)
+                    for (int k = 0; k < 15; k++)
+                        to_set[i, j, k].Should().Be(4);
+
+            to_set = new float[200, 15, 200];
+
+            using (var to_set_buffer = new Buffer<float>(to_set, DotMP.GPU.Buffer.Behavior.ToFrom))
+            {
+                DotMP.GPU.Parallel.ParallelForCollapse((0, 200), (0, 15), (0, 200), to_set_buffer, (i, j, k, to_set_kernel) =>
+                {
+                    to_set_kernel[i, j, k] = 4;
+                });
+            }
+
+            for (int i = 0; i < 200; i++)
+                for (int j = 0; j < 15; j++)
+                    for (int k = 0; k < 200; k++)
+                        to_set[i, j, k].Should().Be(4);
+
+            to_set = new float[15, 200, 200];
+
+            using (var to_set_buffer = new Buffer<float>(to_set, DotMP.GPU.Buffer.Behavior.ToFrom))
+            {
+                DotMP.GPU.Parallel.ParallelForCollapse((0, 15), (0, 200), (0, 200), to_set_buffer, (i, j, k, to_set_kernel) =>
+                {
+                    to_set_kernel[i, j, k] = 4;
+                });
+            }
+
+            for (int i = 0; i < 15; i++)
+                for (int j = 0; j < 200; j++)
+                    for (int k = 0; k < 200; k++)
+                        to_set[i, j, k].Should().Be(4);
         }
 
         /// <summary>
@@ -133,5 +251,4 @@ namespace DotMPTests
             }
         }
     }
-#endif
 }
