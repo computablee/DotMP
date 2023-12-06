@@ -1,6 +1,6 @@
 # DotMP
 
-![Nuget](https://img.shields.io/nuget/v/DotMP.svg?style=flat-square)
+[![Nuget](https://img.shields.io/nuget/v/DotMP.svg?style=flat-square)](https://www.nuget.org/packages/DotMP)
 ![Build](https://github.com/computablee/DotMP/actions/workflows/compile.yml/badge.svg)
 ![Tests](https://github.com/computablee/DotMP/actions/workflows/integration.yml/badge.svg)
 [![Quality](https://github.com/computablee/DotMP/actions/workflows/lint.yml/badge.svg)](https://github.com/marketplace/actions/super-linter)
@@ -14,11 +14,23 @@ Inspired by the fork-join paradigm of OpenMP, and attempts to replicate the Open
 
 Prior users of OpenMP should find DotMP to be fairly intuitive, though there are some important differences.
 
-[Link to repository](https://github.com/computablee/DotMP/tree/main)
+The repository and all source code [can be found here](https://github.com/computablee/DotMP/tree/main).
+For extensive documentation (including documentation of internal and private methods), an up-to-date copy of the Doxygen docs is hosted [here](https://computablee.github.io/DotMP/).
+For a comprehensive tutorial on DotMP, [check out the wiki](https://github.com/computablee/DotMP/wiki).
 
-[Link to documentation](https://computablee.github.io/DotMP/)
+## Installing DotMP
 
-[Link to wiki](https://github.com/computablee/DotMP/wiki)
+Check out [DotMP on NuGet](https://www.nuget.org/packages/DotMP).
+
+DotMP can be installed from the NuGet command line interface via the following command:
+```
+dotnet add package DotMP --version 1.6.1
+```
+You can also using the following PackageReference:
+```xml
+<PackageReference Include="DotMP" Version="1.6.1" />
+```
+Check the [wiki](https://github.com/computablee/DotMP/wiki#building-dotmp-from-source) for instructions on building DotMP from source.
 
 ## Contributors
 
