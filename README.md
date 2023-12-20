@@ -22,7 +22,7 @@ For a comprehensive tutorial on DotMP, [check out the wiki](https://github.com/c
 
 Check out [DotMP on NuGet](https://www.nuget.org/packages/DotMP).
 
-DotMP can be installed from the NuGet command line interface via the following command:
+DotMP can be installed from the NuGet command-line interface via the following command:
 ```
 dotnet add package DotMP --version 1.6.1
 ```
