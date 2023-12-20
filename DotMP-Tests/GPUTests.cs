@@ -130,6 +130,7 @@ namespace DotMPTests
             iters_hit_3 = null;
         }
 
+        /* jscpd:ignore-start */
         /// <summary>
         /// Tests to ensure that 1D buffers work.
         /// </summary>
@@ -161,13 +162,13 @@ namespace DotMPTests
             {
                 DotMP.GPU.Parallel.ParallelForCollapse((0, 500), (0, 20), to_set_buffer, (i, j, to_set_kernel) =>
                 {
-                    to_set_kernel[i, j] = 4;
+                    to_set_kernel[i, j] = 5;
                 });
             }
 
             for (int i = 0; i < 500; i++)
                 for (int j = 0; j < 20; j++)
-                    to_set[i, j].Should().Be(4);
+                    to_set[i, j].Should().Be(5);
 
             to_set = new float[20, 500];
 
@@ -175,13 +176,13 @@ namespace DotMPTests
             {
                 DotMP.GPU.Parallel.ParallelForCollapse((0, 20), (0, 500), to_set_buffer, (i, j, to_set_kernel) =>
                 {
-                    to_set_kernel[i, j] = 4;
+                    to_set_kernel[i, j] = 6;
                 });
             }
 
             for (int i = 0; i < 20; i++)
                 for (int j = 0; j < 500; j++)
-                    to_set[i, j].Should().Be(4);
+                    to_set[i, j].Should().Be(6);
         }
 
         /// <summary>
@@ -196,14 +197,14 @@ namespace DotMPTests
             {
                 DotMP.GPU.Parallel.ParallelForCollapse((0, 200), (0, 200), (0, 15), to_set_buffer, (i, j, k, to_set_kernel) =>
                 {
-                    to_set_kernel[i, j, k] = 4;
+                    to_set_kernel[i, j, k] = 7;
                 });
             }
 
             for (int i = 0; i < 200; i++)
                 for (int j = 0; j < 200; j++)
                     for (int k = 0; k < 15; k++)
-                        to_set[i, j, k].Should().Be(4);
+                        to_set[i, j, k].Should().Be(7);
 
             to_set = new float[200, 15, 200];
 
@@ -211,14 +212,14 @@ namespace DotMPTests
             {
                 DotMP.GPU.Parallel.ParallelForCollapse((0, 200), (0, 15), (0, 200), to_set_buffer, (i, j, k, to_set_kernel) =>
                 {
-                    to_set_kernel[i, j, k] = 4;
+                    to_set_kernel[i, j, k] = 8;
                 });
             }
 
             for (int i = 0; i < 200; i++)
                 for (int j = 0; j < 15; j++)
                     for (int k = 0; k < 200; k++)
-                        to_set[i, j, k].Should().Be(4);
+                        to_set[i, j, k].Should().Be(8);
 
             to_set = new float[15, 200, 200];
 
@@ -226,15 +227,16 @@ namespace DotMPTests
             {
                 DotMP.GPU.Parallel.ParallelForCollapse((0, 15), (0, 200), (0, 200), to_set_buffer, (i, j, k, to_set_kernel) =>
                 {
-                    to_set_kernel[i, j, k] = 4;
+                    to_set_kernel[i, j, k] = 9;
                 });
             }
 
             for (int i = 0; i < 15; i++)
                 for (int j = 0; j < 200; j++)
                     for (int k = 0; k < 200; k++)
-                        to_set[i, j, k].Should().Be(4);
+                        to_set[i, j, k].Should().Be(9);
         }
+        /* jscpd:ignore-end */
 
         /// <summary>
         /// Randomly initialize an array of type T.

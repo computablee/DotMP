@@ -135,6 +135,7 @@ namespace DotMP.GPU
             this.data2d = data;
             buf = AcceleratorHandler.accelerator.Allocate1D<T>(data.Length);
 
+            /* jscpd:ignore-start */
             if (behavior == Buffer.Behavior.To || behavior == Buffer.Behavior.ToFrom)
             {
                 fixed (T* data_ptr = data)
@@ -143,6 +144,7 @@ namespace DotMP.GPU
                     buf.View.BaseView.CopyFromCPU(data_span);
                 }
             }
+            /* jscpd:ignore-end */
 
             stride_y = data.GetLength(1);
             stride_z = 0;
@@ -162,6 +164,7 @@ namespace DotMP.GPU
             this.data3d = data;
             buf = AcceleratorHandler.accelerator.Allocate1D<T>(data.Length);
 
+            /* jscpd:ignore-start */
             if (behavior == Buffer.Behavior.To || behavior == Buffer.Behavior.ToFrom)
             {
                 fixed (T* data_ptr = data)
@@ -170,6 +173,7 @@ namespace DotMP.GPU
                     buf.View.BaseView.CopyFromCPU(data_span);
                 }
             }
+            /* jscpd:ignore-end */
 
             stride_y = data.GetLength(1);
             stride_z = data.GetLength(2);
