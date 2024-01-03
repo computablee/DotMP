@@ -1,24 +1,43 @@
+using System;
+using System.Collections.Generic;
+using ILGPU;
+using ILGPU.Runtime;
+
 namespace DotMP.GPU
 {
+    /// <summary>
+    /// Handles the code for performing reductions.
+    /// </summary>
     internal static class ReductionKernels
     {
-        private static Action<KernelConfig, GPUArray arr, Index idx, int len> reduce_action;
+        /// <summary>
+        /// The reduce action after being translated to the GPU.
+        /// </summary>
+        private static Dictionary<Type, Delegate> reduce_action = new Dictionary<Type, Delegate>();
 
-        private static bool action_obtained = false;
-
-        private static void Power2RoundDown(int x)
+        /// <summary>
+        /// Gets the greatest power of 2 less than or equal to x.
+        /// </summary>
+        /// <param name="x">The value to compute from.</param>
+        /// <returns>The computed value.</returns>
+        internal static int Power2RoundDown(int x)
         {
-            --x;
             x |= x >> 1;
             x |= x >> 2;
             x |= x >> 4;
             x |= x >> 8;
             x |= x >> 16;
-            ++x;
-            x >>= 1;
+            return x ^ (x >> 1);
         }
 
-        private static void Reduce(GPUArray arr, Index idx, int len)
+        /// <summary>
+        /// The reduction kernel to run on the GPU.
+        /// </summary>
+        /// <param name="arr">The array of values to reduce over.</param>
+        /// <param name="idx">The Index variable representing a thread's global index.</param>
+        /// <param name="len">The length of the array.</param>
+        private static void Reduce<T>(ArrayView1D<T, Stride1D.Dense> arr, Index idx, int len)
+            where T : unmanaged
         {
             int start_from = Power2RoundDown(len);
 
@@ -27,20 +46,23 @@ namespace DotMP.GPU
 
             for (int i = start_from >> 1; i > 0; i >>= 1)
             {
-                arr[idx] += arr[idx + i];
+                arr[(int)idx] += arr[idx + i];
             }
         }
 
-        internal static Action<KernelConfig, GPUArray arr, Index idx, int len> GetReduce()
+        /// <summary>
+        /// Gets the reduction kernel, caching it for future use.
+        /// </summary>
+        /// <returns>The reduction kernel, translated to a CUDA or OpenCL kernel.</returns>
+        internal static Action<KernelConfig, ArrayView1D<T, Stride1D.Dense>, Index, int> GetReduce<T>()
+            where T : unmanaged
         {
-            if (!action_obtained)
+            if (!reduce_action.ContainsKey(typeof(T)))
             {
-                AcceleratorHandler handler = new AcceleratorHandler();
-                reduce_action = handler.accelerator.LoadStreamKernel(Reduce);
-                action_obtained = true;
+                reduce_action.Add(typeof(T), AcceleratorHandler.accelerator.LoadStreamKernel(Reduce));
             }
 
-            return reduce_action;
+            return (Action<KernelConfig, ArrayView1D<T, Stride1D.Dense>, Index, int>)reduce_action[typeof(T)];
         }
     }
 }

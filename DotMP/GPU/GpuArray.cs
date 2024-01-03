@@ -93,4 +93,43 @@ namespace DotMP.GPU
         /// </summary>
         public int Length { get => view.IntLength; }
     }
+
+    /// <summary>
+    /// Wrapper object for representing scalars on the GPU.
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    [ExcludeFromCodeCoverage]
+    public struct GPUScalar<T>
+        where T : unmanaged
+    {
+        /// <summary>
+        /// The ILGPU view for the reduction.
+        /// </summary>
+        internal ArrayView1D<T, Stride1D.Dense> view { get; private set; }
+
+        /// <summary>
+        /// The Index object to reference.
+        /// </summary>
+        private Index idx;
+
+        /// <summary>
+        /// Constructor.
+        /// </summary>
+        /// <param name="buf">The Buffer to create an array from.</param>
+        internal GPUScalar(ArrayView1D<T, Stride1D.Dense> view, Index idx)
+        {
+            this.view = view;
+            this.idx = idx;
+        }
+
+        /// <summary>
+        /// Overload for [] operator.
+        /// </summary>
+        /// <param name="idx">The ID to index into.</param>
+        /// <returns>The data at that ID.</returns>
+        public ref T Get()
+        {
+            return ref view[idx];
+        }
+    }
 }

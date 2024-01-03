@@ -48,6 +48,7 @@ clean:
 	rm -f ProcessedREADME.md
 	rm -rf docs
 	rm -rf DotMP/bin DotMP/obj
+	rm -rf DotMP/GPU/AcceleratorHandler.cs DotMP/GPU/Gpu.cs
 	rm -rf DotMP-Tests/bin DotMP-Tests/obj
 	rm -rf DotMP-Tests/*.opencover.xml
 	rm -rf examples/CSParallel/ConjugateGradient/bin examples/CSParallel/ConjugateGradient/obj

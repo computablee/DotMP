@@ -74,6 +74,38 @@ namespace DotMP.GPU
 
 <# for (int c = 1; c <= max - 1; c++) { #>
         /// <summary>
+        /// Creates a GPU parallel for-reduction loop.
+        /// The body of the kernel is run on a GPU target.
+        /// For-reduction loops utilize a tree reduction to reduce down to a single value.
+        /// </summary>
+        /// <param name="start">The start of the loop, inclusive.</param>
+        /// <param name="end">The end of the loop, exclusive.</param>
+<# for (int i = 0; i < c; i++) { #>
+        /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
+<# } #>
+        /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="line">The line number this method was called from.</param>
+        /// <param name="path">The path to the file this method was called from.</param>
+        public static void ParallelFor<R, 
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >(int start, int end, ref R reduce_to,
+<# for (int i = 0; i < c; i++) { #> Buffer<<#= letters[i] #>> buf<#= i + 1 #>, <# } #>
+        Action<GPUScalar<R>, Index, 
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > action, [CallerFilePath] string path = "", [CallerLineNumber] int line = 0)
+<# for (int i = 0; i < c; i++) { #> where <#= letters[i] #> : unmanaged <# } #>
+            where R : unmanaged
+        {
+            var handler = new AcceleratorHandler();
+            string src = FormatCaller(path, line);
+            handler.DispatchKernel((start, end), ref reduce_to,
+<# for (int i = 0; i < c; i++) { #> buf<#= i + 1 #>, <# } #>
+            action, src);
+        }
+<# } #>
+
+<# for (int c = 1; c <= max - 1; c++) { #>
+        /// <summary>
         /// Creates a collapsed GPU parallel for loop.
         /// The body of the kernel is run on a GPU target.
         /// </summary>

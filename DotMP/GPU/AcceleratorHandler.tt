@@ -132,6 +132,34 @@ namespace DotMP.GPU
         }
 <# } #>
 
+<# for (int c = 1; c <= max; c++) { #>
+        /// <summary>
+        /// Get the kernel associated with this lambda.
+        /// </summary>
+        /// <param name="action">The action provided on the CPU.</param>
+        /// <param name="src">The calling location.</param>
+        /// <returns>The GPU kernel.</returns>
+        private Action<KernelConfig, GPUScalar<R>, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > GetKernel<R, 
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >(Action<GPUScalar<R>, Index, 
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? ", " : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+            where R : unmanaged
+        {
+            if (!kernels.ContainsKey(src))
+                kernels.Add(src, accelerator.LoadStreamKernel(action));
+
+            return (Action<KernelConfig, GPUScalar<R>, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #> 
+            >) kernels[src];
+        }
+<# } #>
+
 <# for (int c = 1; c <= max - 1; c++) { #>
         /// <summary>
         /// Get the kernel associated with this lambda.
@@ -366,6 +394,67 @@ namespace DotMP.GPU
 <# } #>
                 );
             }
+
+            Synchronize();
+        }
+<# } #>
+
+<# for (int c = 1; c <= max - 1; c++) { #>
+        /// <summary>
+        /// Dispatches a linear reduction kernel with the given number of parameters.
+        /// </summary>
+        /// <param name="range1">The range of the for loop.</param>
+<# for (int i = 0; i < c; i++) { #>
+        /// <param name="buf<#= i + 1 #>">Buffer #<#= i + 1 #> to run the kernel with.</param>
+<# } #>
+        /// <param name="action">The kernel to run on the GPU.</param>
+        /// <param name="src">The originating caller location.</param>
+        internal void DispatchKernel<R, 
+<# for (int i = 0; i < c; i++) { #> <#= letters[i] + ((i != c - 1) ? "," : "") #> <# } #>
+        >((int, int) range1, ref R reduce_to,
+<# for (int i = 0; i < c; i++) { #> Buffer<<#= letters[i] #>> buf<#= i + 1 #>, <# } #>
+        Action<GPUScalar<R>, Index,
+<# for (int i = 0; i < c; i++) { #> GPUArray<<#= letters[i] #>><#= (i != c - 1) ? "," : "" #> <# } #>
+        > action, string src)
+<# for (int i = 0; i < c; i++) { #>
+            where <#= letters[i] #> : unmanaged
+<# } #>
+            where R : unmanaged
+        {
+            var idx = Get1DIdx(range1, src);
+            var len = range1.Item2 - range1.Item1;
+            var red = accelerator.Allocate1D<R>(len);
+            var red_usr = new GPUScalar<R>(red.View, idx);
+
+            var kernel = GetKernel(action, src);
+
+<# for (int i = 0; i < c; i++) { #>
+            var gpu<#= i + 1 #> = new GPUArray<<#= letters[i] #>>(buf<#= i + 1 #>);
+<# } #>
+
+            kernel((len / block_size, block_size), red_usr, idx
+<# for (int i = 0; i < c; i++) { #>
+            , gpu<#= i + 1 #>
+<# } #>
+            );
+
+            int not_done = len % block_size;
+
+            if (not_done > 0)
+            {
+                int offset = len - not_done;
+                idx.AddOffset(offset);
+
+                kernel((1, not_done), red_usr, idx
+<# for (int i = 0; i < c; i++) { #>
+                , gpu<#= i + 1 #>
+<# } #>
+                );
+            }
+
+            Synchronize();
+
+            ReductionKernels.GetReduce<R>()((ReductionKernels.Power2RoundDown(len) / block_size, block_size), red_usr.view, idx, len);
 
             Synchronize();
         }

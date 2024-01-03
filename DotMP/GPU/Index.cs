@@ -54,12 +54,20 @@ namespace DotMP.GPU
         }
 
         /// <summary>
-        /// Adds an offset in preperation for a followup kernel.
+        /// Adds an offset in preparation for a followup kernel.
         /// </summary>
         /// <param name="offset">The offset to set.</param>
         internal void AddOffset(int offset)
         {
             this.offset = offset;
+        }
+
+        /// <summary>
+        /// Removes an offset in preparation for a reduction.
+        /// </summary>
+        internal void ResetOffset()
+        {
+            this.offset = 0;
         }
 
         /// <summary>
