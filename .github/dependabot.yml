@@ -43,7 +43,67 @@ updates:
       prefix: "nuget"
 
   - package-ecosystem: "nuget"
-    directory: "./benchmarks/"
+    directory: "./benchmarks/GPUHeatTransfer"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependency"
+      - "nuget"
+    commit-message:
+      prefix: "nuget"
+    groups:
+      bench:
+        patterns:
+          - "BenchmarkDotNet"
+          - "BenchmarkDotNet.*"
+
+  - package-ecosystem: "nuget"
+    directory: "./benchmarks/GPUOverhead"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependency"
+      - "nuget"
+    commit-message:
+      prefix: "nuget"
+    groups:
+      bench:
+        patterns:
+          - "BenchmarkDotNet"
+          - "BenchmarkDotNet.*"
+
+  - package-ecosystem: "nuget"
+    directory: "./benchmarks/HeatTransfer"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependency"
+      - "nuget"
+    commit-message:
+      prefix: "nuget"
+    groups:
+      bench:
+        patterns:
+          - "BenchmarkDotNet"
+          - "BenchmarkDotNet.*"
+
+  - package-ecosystem: "nuget"
+    directory: "./benchmarks/ILGPUOverhead"
+    schedule:
+      interval: "weekly"
+    labels:
+      - "dependency"
+      - "nuget"
+    commit-message:
+      prefix: "nuget"
+    groups:
+      bench:
+        patterns:
+          - "BenchmarkDotNet"
+          - "BenchmarkDotNet.*"
+
+  - package-ecosystem: "nuget"
+    directory: "./benchmarks/Misc"
     schedule:
       interval: "weekly"
     labels:
