@@ -1,3 +1,9 @@
+## This project has a new home!
+
+Due to GitHub's unfortunate new practice of using repositories to train Microsoft LLMs, I have made the difficult decision to migrate all of my projects to [Codeberg](https://codeberg.org/).
+
+[This project's new home can be found here.](https://codeberg.org/computablee/DotMP)
+
 # DotMP
 
 [![Nuget](https://img.shields.io/nuget/v/DotMP.svg?style=flat-square)](https://www.nuget.org/packages/DotMP)
